@@ -1,0 +1,298 @@
+import { Observable } from '../../core/observable';
+import { shuffled } from '../../core/shuffle';
+import { loadSettings, saveSettings, num, bool } from '../../core/settings';
+import type { Player } from '../../core/roster';
+
+/**
+ * „მაფია“ — **წამყვანის გარეშე**: ღამეს აპი ატარებს, ტელეფონი წრეზე გადადის
+ * და თითოეული თავის ქმედებას ფარულად ასრულებს.
+ *
+ * პორტი: `Splash/Games/Mafia/MafiaEngine.swift`.
+ */
+
+export type MafiaRole = 'civilian' | 'mafia' | 'doctor' | 'detective';
+
+export const roleTitle: Record<MafiaRole, string> = {
+  civilian: 'მოქალაქე',
+  mafia: 'მაფია',
+  doctor: 'ექიმი',
+  detective: 'დეტექტივი',
+};
+
+/** SF Symbol-ის სახელები — `icon()` თარგმნის ამ პლატფორმისთვის. */
+export const roleIcon: Record<MafiaRole, string> = {
+  civilian: 'person.fill',
+  mafia: 'scope',
+  doctor: 'cross.case.fill',
+  detective: 'magnifyingglass',
+};
+
+export type MafiaPhase =
+  | 'setup'
+  | 'reveal'    // როლების დარიგება
+  | 'night'     // ტელეფონი წრეზე — თითოეული თავის ქმედებას ასრულებს
+  | 'morning'   // ვინ დაიღუპა
+  | 'dayVote'   // ქალაქი ხმას აძლევს
+  | 'dayResult' // ვინ გავიდა და რა როლი ჰქონდა
+  | 'gameOver';
+
+export type MafiaWinner = 'city' | 'mafia';
+
+export interface MafiaSettings {
+  mafiaCount: number;
+  includeDoctor: boolean;
+  includeDetective: boolean;
+}
+
+const KEY = 'splash.mafia.settings.v1';
+const DEFAULTS: MafiaSettings = { mafiaCount: 1, includeDoctor: true, includeDetective: true };
+
+export class MafiaEngine extends Observable {
+  readonly players: Player[];
+  settings: MafiaSettings;
+
+  phase: MafiaPhase = 'setup';
+  night = 1;
+  roles: Record<string, MafiaRole> = {};
+  eliminated = new Set<string>();
+
+  revealIndex = 0;
+  nightIndex = 0;
+
+  mafiaVotes: Record<string, number> = {};
+  savedID: string | null = null;
+  checkedID: string | null = null;
+  checkResult: boolean | null = null;
+
+  killedID: string | null = null;
+  votedOutID: string | null = null;
+  winner: MafiaWinner | null = null;
+
+  constructor(players: Player[]) {
+    super();
+    this.players = players;
+    this.settings = loadSettings<MafiaSettings>(KEY, DEFAULTS, (s) => ({
+      mafiaCount: num(s.mafiaCount, DEFAULTS.mafiaCount, 1, 6),
+      includeDoctor: bool(s.includeDoctor, DEFAULTS.includeDoctor),
+      includeDetective: bool(s.includeDetective, DEFAULTS.includeDetective),
+    }));
+    this.clampSettings();
+  }
+
+  // MARK: - წარმოებული
+
+  get alive(): Player[] {
+    return this.players.filter((p) => !this.eliminated.has(p.id));
+  }
+  /** მაფია ქალაქზე მეტი ვერასდროს იქნება. */
+  get maxMafia(): number {
+    return Math.max(1, Math.floor((this.players.length - 1) / 3));
+  }
+
+  get currentRevealPlayer(): Player | null {
+    return this.players[this.revealIndex] ?? null;
+  }
+  get currentNightPlayer(): Player | null {
+    return this.alive[this.nightIndex] ?? null;
+  }
+
+  roleOf(player: Player): MafiaRole {
+    return this.roles[player.id] ?? 'civilian';
+  }
+  player(id: string): Player | undefined {
+    return this.players.find((p) => p.id === id);
+  }
+  playersWith(role: MafiaRole): Player[] {
+    return this.players.filter((p) => this.roles[p.id] === role);
+  }
+
+  get killed(): Player | null {
+    return this.killedID ? (this.player(this.killedID) ?? null) : null;
+  }
+  get votedOut(): Player | null {
+    return this.votedOutID ? (this.player(this.votedOutID) ?? null) : null;
+  }
+  get checked(): Player | null {
+    return this.checkedID ? (this.player(this.checkedID) ?? null) : null;
+  }
+
+  get finalPoints(): Record<string, number> {
+    if (this.winner === null) return {};
+    const points: Record<string, number> = {};
+    if (this.winner === 'city') {
+      for (const p of this.players) if (this.roles[p.id] !== 'mafia') points[p.id] = 2;
+    } else {
+      for (const p of this.playersWith('mafia')) points[p.id] = 3;
+    }
+    return points;
+  }
+
+  get results(): { player: Player; score: number }[] {
+    const points = this.finalPoints;
+    return this.players.map((p) => ({ player: p, score: points[p.id] ?? 0 }));
+  }
+
+  // MARK: - თამაშის დაწყება
+
+  startGame(): void {
+    this.clampSettings();
+    const pool = shuffled(this.players);
+    this.roles = {};
+
+    let i = 0;
+    for (let n = 0; n < this.settings.mafiaCount && i < pool.length; n++) this.roles[pool[i++].id] = 'mafia';
+    if (this.settings.includeDoctor && i < pool.length) this.roles[pool[i++].id] = 'doctor';
+    if (this.settings.includeDetective && i < pool.length) this.roles[pool[i++].id] = 'detective';
+    for (; i < pool.length; i++) this.roles[pool[i].id] = 'civilian';
+
+    this.eliminated = new Set();
+    this.night = 1;
+    this.revealIndex = 0;
+    this.winner = null;
+    this.killedID = null;
+    this.votedOutID = null;
+    this.phase = 'reveal';
+    this.notify();
+  }
+
+  advanceReveal(): void {
+    if (this.revealIndex + 1 < this.players.length) {
+      this.revealIndex += 1;
+      this.notify();
+    } else {
+      this.beginNight();
+    }
+  }
+
+  // MARK: - ღამე
+
+  private beginNight(): void {
+    this.nightIndex = 0;
+    this.mafiaVotes = {};
+    this.savedID = null;
+    this.checkedID = null;
+    this.checkResult = null;
+    this.killedID = null;
+    this.phase = 'night';
+    this.notify();
+  }
+
+  /** მოქალაქეს ღამით ქმედება არ აქვს — ტელეფონი მაინც გადადის, რომ როლი არ გაიცეს. */
+  skipNightTurn(): void {
+    this.advanceNight();
+  }
+
+  mafiaChoose(target: Player): void {
+    this.mafiaVotes[target.id] = (this.mafiaVotes[target.id] ?? 0) + 1;
+    this.advanceNight();
+  }
+
+  doctorSave(target: Player): void {
+    this.savedID = target.id;
+    this.advanceNight();
+  }
+
+  detectiveCheck(target: Player): void {
+    this.checkedID = target.id;
+    this.checkResult = this.roleOf(target) === 'mafia';
+    this.notify();
+  }
+
+  detectiveDone(): void {
+    this.advanceNight();
+  }
+
+  private advanceNight(): void {
+    if (this.nightIndex + 1 < this.alive.length) {
+      this.nightIndex += 1;
+      this.notify();
+    } else {
+      this.resolveNight();
+    }
+  }
+
+  private resolveNight(): void {
+    // ყველაზე მეტი ხმის მქონე მსხვერპლი; ფრეს შემთხვევაში შემთხვევითი.
+    const values = Object.values(this.mafiaVotes);
+    if (values.length > 0) {
+      const best = Math.max(...values);
+      const top = Object.keys(this.mafiaVotes).filter((id) => this.mafiaVotes[id] === best);
+      const target = top[Math.floor(Math.random() * top.length)];
+      if (target && target !== this.savedID) {
+        this.killedID = target;
+        this.eliminated.add(target);
+      }
+    }
+    this.phase = 'morning';
+    this.evaluate();
+    this.notify();
+  }
+
+  // MARK: - დღე
+
+  beginVote(): void {
+    this.phase = 'dayVote';
+    this.notify();
+  }
+
+  voteOut(player: Player): void {
+    this.votedOutID = player.id;
+    this.eliminated.add(player.id);
+    this.phase = 'dayResult';
+    this.evaluate();
+    this.notify();
+  }
+
+  continueGame(): void {
+    if (this.winner !== null) return;
+    this.night += 1;
+    this.beginNight();
+  }
+
+  restart(): void {
+    this.startGame();
+  }
+  backToSetup(): void {
+    this.phase = 'setup';
+    this.notify();
+  }
+
+  // MARK: - გამარჯვების შემოწმება
+
+  private evaluate(): void {
+    const mafiaAlive = this.alive.filter((p) => this.roles[p.id] === 'mafia').length;
+    const othersAlive = this.alive.length - mafiaAlive;
+
+    if (mafiaAlive === 0) {
+      this.winner = 'city';
+      this.phase = 'gameOver';
+    } else if (mafiaAlive >= othersAlive) {
+      this.winner = 'mafia';
+      this.phase = 'gameOver';
+    }
+  }
+
+  // MARK: - პარამეტრები
+
+  setMafiaCount(n: number): void {
+    this.settings = { ...this.settings, mafiaCount: Math.min(Math.max(1, n), this.maxMafia) };
+    this.persist();
+  }
+  setDoctor(on: boolean): void {
+    this.settings = { ...this.settings, includeDoctor: on };
+    this.persist();
+  }
+  setDetective(on: boolean): void {
+    this.settings = { ...this.settings, includeDetective: on };
+    this.persist();
+  }
+
+  private clampSettings(): void {
+    this.settings.mafiaCount = Math.min(Math.max(1, this.settings.mafiaCount), this.maxMafia);
+  }
+
+  private persist(): void {
+    saveSettings(KEY, this.settings);
+    this.notify();
+  }
+}
