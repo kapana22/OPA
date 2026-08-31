@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,7 @@ import { familyTitle, type GameFamily, type PartyGame } from '../src/games/types
 import { useNightLog, useRecentGames, useRoster } from '../src/state/state';
 import { ALL_FILTER, accepts, filterKey, filterTitle, newestFirst, visibleFilters, type HomeFilter } from '../src/state/homeFilter';
 import { Haptics } from '../src/core/haptics';
+import { useDialog } from '../src/ui/Dialog';
 
 const FAMILIES: GameFamily[] = ['bluff', 'loud', 'reading', 'candid'];
 
@@ -27,6 +28,7 @@ export default function Home() {
   const roster = useRoster();
   const night = useNightLog();
   const recent = useRecentGames();
+  const dialog = useDialog();
 
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<HomeFilter>(ALL_FILTER);
@@ -50,10 +52,14 @@ export default function Home() {
       return;
     }
     if (roster.count < game.minPlayers) {
-      Alert.alert('ჯერ ცოტანი ხართ', `${game.title} — მინიმუმ ${game.minPlayers} მოთამაშე სჭირდება.`, [
-        { text: 'მოთამაშეების დამატება', onPress: () => router.push('/players') },
-        { text: 'კარგი', style: 'cancel' },
-      ]);
+      dialog({
+        title: 'ჯერ ცოტანი ხართ',
+        message: `${game.title} — მინიმუმ ${game.minPlayers} მოთამაშე სჭირდება.`,
+        actions: [
+          { label: 'მოთამაშეების დამატება', primary: true, onPress: () => router.push('/players') },
+          { label: 'კარგი' },
+        ],
+      });
       return;
     }
     recent.record(game.id);
@@ -66,10 +72,14 @@ export default function Home() {
     const pool = isFiltering ? results : GameCatalog;
     const playable = pool.filter((g) => !g.comingSoon && roster.count >= g.minPlayers);
     if (playable.length === 0) {
-      Alert.alert('ჯერ ცოტანი ხართ', 'დაამატე მოთამაშეები და სცადე თავიდან.', [
-        { text: 'მოთამაშეების დამატება', onPress: () => router.push('/players') },
-        { text: 'კარგი', style: 'cancel' },
-      ]);
+      dialog({
+        title: 'ჯერ ცოტანი ხართ',
+        message: 'დაამატე მოთამაშეები და სცადე თავიდან.',
+        actions: [
+          { label: 'მოთამაშეების დამატება', primary: true, onPress: () => router.push('/players') },
+          { label: 'კარგი' },
+        ],
+      });
       return;
     }
     open(playable[Math.floor(Math.random() * playable.length)]);

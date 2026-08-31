@@ -1,11 +1,12 @@
 import React from 'react';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Radius, Space, body, title as titleFont } from '../src/theme/theme';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { PrimaryButton, GhostButton } from '../src/ui/Buttons';
 import { useNightLog, useRoster } from '../src/state/state';
+import { useDialog } from '../src/ui/Dialog';
 
 /** პორტი: `Splash/App/ScoreboardView.swift`. */
 export default function Scoreboard() {
@@ -13,26 +14,28 @@ export default function Scoreboard() {
   const insets = useSafeAreaInsets();
   const roster = useRoster();
   const night = useNightLog();
+  const dialog = useDialog();
 
   const board = roster.leaderboard;
   const hasScores = board.some((p) => p.score > 0);
 
   const askReset = () =>
-    Alert.alert(
-      'ახალი საღამო?',
-      'ქულები განულდება და საღამოს ჟურნალიც თავიდან დაიწყება. მოთამაშეები რჩება.',
-      [
-        { text: 'გაუქმება', style: 'cancel' },
+    dialog({
+      title: 'ახალი საღამო?',
+      message: 'ქულები განულდება და საღამოს ჟურნალიც თავიდან დაიწყება. მოთამაშეები რჩება.',
+      actions: [
         {
-          text: 'დიახ',
-          style: 'destructive',
+          label: 'დიახ',
+          primary: true,
+          destructive: true,
           onPress: () => {
             roster.resetScores();
             night.reset();
           },
         },
+        { label: 'გაუქმება' },
       ],
-    );
+    });
 
   return (
     <View style={{ flex: 1 }}>

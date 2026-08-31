@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -12,6 +12,7 @@ import { Pressable } from '../src/ui/Pressable';
 import { useRoster } from '../src/state/state';
 import { MAX_PLAYERS } from '../src/core/roster';
 import { Haptics } from '../src/core/haptics';
+import { useDialog } from '../src/ui/Dialog';
 
 /**
  * პორტი: `Splash/App/PlayersView.swift`.
@@ -28,6 +29,7 @@ export default function Players() {
 
   const [newName, setNewName] = useState('');
   const [reordering, setReordering] = useState(false);
+  const dialog = useDialog();
 
   const canAdd = newName.trim().length > 0 && roster.count < MAX_PLAYERS;
 
@@ -38,17 +40,16 @@ export default function Players() {
     Haptics.medium();
   };
 
+  // `Alert.prompt` მხოლოდ iOS-ზეა — Android-ზე სახელის შეცვლა საერთოდ არ იმუშავებდა.
   const rename = (id: string, current: string) => {
-    Alert.prompt?.(
-      'სახელის შეცვლა',
-      undefined,
-      [
-        { text: 'გაუქმება', style: 'cancel' },
-        { text: 'შენახვა', onPress: (value?: string) => value && roster.rename(id, value) },
+    dialog({
+      title: 'სახელის შეცვლა',
+      input: { placeholder: 'სახელი', initial: current },
+      actions: [
+        { label: 'შენახვა', primary: true, onPress: (value) => roster.rename(id, value) },
+        { label: 'გაუქმება' },
       ],
-      'plain-text',
-      current,
-    );
+    });
   };
 
   return (

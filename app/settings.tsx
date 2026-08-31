@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Switch, Text, View } from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -12,6 +12,7 @@ import { Pressable } from '../src/ui/Pressable';
 import { Sound } from '../src/core/sound';
 import { Haptics } from '../src/core/haptics';
 import { ContentShoe } from '../src/core/contentShoe';
+import { useDialog } from '../src/ui/Dialog';
 
 /** პორტი: `Splash/App/SettingsView.swift`. */
 export default function Settings() {
@@ -21,6 +22,7 @@ export default function Settings() {
   const [soundOn, setSoundOn] = useState(Sound.isEnabled);
   const [hapticsOn, setHapticsOn] = useState(Haptics.isEnabled);
   const [didReset, setDidReset] = useState(false);
+  const dialog = useDialog();
 
   const toggleSound = (value: boolean) => {
     setSoundOn(value);
@@ -36,22 +38,24 @@ export default function Settings() {
 
   const askReset = () => {
     Haptics.tap();
-    Alert.alert(
-      'კონტენტის მეხსიერება განულდეს?',
-      'აპს ახსოვს, რომელი სიტყვები და კითხვები უკვე ითამაშეთ — ამიტომ ისინი მალე არ მეორდება. განულების შემდეგ ყველა კატეგორია თავიდან იწყება.',
-      [
-        { text: 'გაუქმება', style: 'cancel' },
+    dialog({
+      title: 'კონტენტის მეხსიერება განულდეს?',
+      message:
+        'აპს ახსოვს, რომელი სიტყვები და კითხვები უკვე ითამაშეთ — ამიტომ ისინი მალე არ მეორდება. განულების შემდეგ ყველა კატეგორია თავიდან იწყება.',
+      actions: [
         {
-          text: 'განულება',
-          style: 'destructive',
+          label: 'განულება',
+          primary: true,
+          destructive: true,
           onPress: () => {
             ContentShoe.forgetAll();
             setDidReset(true);
             Haptics.success();
           },
         },
+        { label: 'გაუქმება' },
       ],
-    );
+    });
   };
 
   return (

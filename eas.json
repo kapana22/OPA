@@ -1,0 +1,17 @@
+{
+  "cli": { "version": ">= 23.0.0", "appVersionSource": "remote" },
+  "build": {
+    "preview": {
+      "//": "სატესტო APK — პირდაპირ ტელეფონზე დასაყენებელი, Play Store-ის გარეშე.",
+      "distribution": "internal",
+      "channel": "preview",
+      "android": { "buildType": "apk" }
+    },
+    "production": {
+      "//": "მაღაზიისთვის — Android App Bundle, per-ABI მიწოდებით.",
+      "channel": "production",
+      "autoIncrement": true
+    }
+  },
+  "submit": { "production": {} }
+}

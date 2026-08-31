@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors } from '../src/theme/theme';
 import { AppStateProvider } from '../src/state/state';
+import { DialogProvider } from '../src/ui/Dialog';
 
 /**
  * აპის ფესვი.
@@ -19,6 +20,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: Colors.ink }}>
       <SafeAreaProvider>
         <AppStateProvider>
+          <DialogProvider>
           <StatusBar style="light" />
           <Stack
             screenOptions={{
@@ -33,6 +35,7 @@ export default function RootLayout() {
             <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="rules/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
           </Stack>
+          </DialogProvider>
         </AppStateProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

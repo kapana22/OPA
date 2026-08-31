@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../theme/theme';
 import { icon as sf } from '../theme/icons';
@@ -7,6 +7,7 @@ import { Haptics } from '../core/haptics';
 import { Sound } from '../core/sound';
 import { Pressable } from './Pressable';
 import { SplashBackground } from './SplashBackground';
+import { useDialog } from './Dialog';
 
 /** პორტი: `Splash/Components/Cards.swift` + `GameExitButton.swift`. */
 
@@ -100,27 +101,29 @@ export function GlyphIcon({
 
 /** თამაშიდან გასვლა დადასტურებით — მიმდინარე რაუნდი იკარგება. */
 export function GameExitButton({ onExit }: { onExit: () => void }) {
-  const [busy, setBusy] = useState(false);
+  const dialog = useDialog();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel="თამაშიდან გასვლა"
-      disabled={busy}
       onPress={() => {
         Haptics.tap();
-        setBusy(true);
-        Alert.alert('თამაშიდან გასვლა?', 'მიმდინარე რაუნდი დაიკარგება.', [
-          { text: 'გაგრძელება', style: 'cancel', onPress: () => setBusy(false) },
-          {
-            text: 'გასვლა',
-            style: 'destructive',
-            onPress: () => {
-              setBusy(false);
-              Sound.stop();
-              onExit();
+        dialog({
+          title: 'თამაშიდან გასვლა?',
+          message: 'მიმდინარე რაუნდი დაიკარგება.',
+          actions: [
+            { label: 'გაგრძელება' },
+            {
+              label: 'გასვლა',
+              primary: true,
+              destructive: true,
+              onPress: () => {
+                Sound.stop();
+                onExit();
+              },
             },
-          },
-        ]);
+          ],
+        });
       }}
       style={styles.exitButton}
     >

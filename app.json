@@ -28,6 +28,12 @@
       "expo-audio",
       "expo-font"
     ],
-    "scheme": "megobrebi"
+    "scheme": "megobrebi",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    }
   }
 }
