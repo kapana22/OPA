@@ -2,6 +2,7 @@ import { registerGame } from './registry';
 import { MostLikelyFlow } from './mostlikely/Flow';
 import { NeverFlow } from './never/Flow';
 import { PointOneFlow } from './pointone/Flow';
+import { BombFlow } from './bomb/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -13,5 +14,6 @@ import { PointOneFlow } from './pointone/Flow';
 registerGame('mostlikely', MostLikelyFlow);
 registerGame('never', NeverFlow);
 registerGame('pointone', PointOneFlow);
+registerGame('bomb', BombFlow);
 
 export {};

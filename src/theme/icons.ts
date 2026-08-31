@@ -80,6 +80,8 @@ const MAP: Record<string, IconName> = {
   'hands.clap.fill': 'hand-clap',
   'crown.fill': 'crown',
   'flag.checkered': 'flag-checkered',
+  'timer': 'timer-sand',
+  'burst.fill': 'flare',
   'scope': 'target',
   'cross.case.fill': 'medical-bag',
   'arrow.triangle.2.circlepath': 'sync',
