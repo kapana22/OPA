@@ -3,6 +3,9 @@ import { MostLikelyFlow } from './mostlikely/Flow';
 import { NeverFlow } from './never/Flow';
 import { PointOneFlow } from './pointone/Flow';
 import { BombFlow } from './bomb/Flow';
+import { ImpostorFlow } from './impostor/Flow';
+import { SpyFlow } from './spy/Flow';
+import { NoLaughFlow } from './nolaugh/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -15,5 +18,8 @@ registerGame('mostlikely', MostLikelyFlow);
 registerGame('never', NeverFlow);
 registerGame('pointone', PointOneFlow);
 registerGame('bomb', BombFlow);
+registerGame('impostor', ImpostorFlow);
+registerGame('spy', SpyFlow);
+registerGame('nolaugh', NoLaughFlow);
 
 export {};

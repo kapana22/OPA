@@ -277,3 +277,106 @@ export function RankRow({
     </View>
   );
 }
+
+/** ჩამრთველის რიგი — სათაური, ახსნა და გადამრთველი. */
+export function ToggleRow({
+  title,
+  subtitle,
+  value,
+  onChange,
+}: {
+  title: string;
+  subtitle: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="switch"
+      accessibilityLabel={title}
+      accessibilityState={{ checked: value }}
+      onPress={() => {
+        Haptics.tap();
+        onChange(!value);
+      }}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
+    >
+      <View style={{ flex: 1, gap: 2 }}>
+        <Text style={[body(15, '700'), { color: Colors.textPrimary }]}>{title}</Text>
+        <Text style={[caption(12), { color: Colors.textSecondary }]}>{subtitle}</Text>
+      </View>
+      <MaterialCommunityIcons
+        name={value ? 'toggle-switch' : 'toggle-switch-off-outline'}
+        size={34}
+        color={value ? Colors.phosphor : Colors.textSecondary}
+      />
+    </Pressable>
+  );
+}
+
+/** ციფრის მომატება-მოკლება — `Stepper`-ის შემცვლელი. */
+export function Stepper({
+  value,
+  min,
+  max,
+  tint = Colors.phosphor,
+  onChange,
+}: {
+  value: number;
+  min: number;
+  max: number;
+  tint?: string;
+  onChange: (v: number) => void;
+}) {
+  const step = (delta: number) => {
+    const next = Math.min(Math.max(min, value + delta), max);
+    if (next === value) return;
+    Haptics.tap();
+    onChange(next);
+  };
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="შემცირება"
+        accessibilityState={{ disabled: value <= min }}
+        disabled={value <= min}
+        onPress={() => step(-1)}
+        style={[stepperStyles.button, { opacity: value <= min ? 0.35 : 1 }]}
+      >
+        <MaterialCommunityIcons name="minus" size={18} color={Colors.textPrimary} />
+      </Pressable>
+
+      <Text style={[titleFont(22), { color: tint, minWidth: 28, textAlign: 'center', fontVariant: ['tabular-nums'] }]}>
+        {value}
+      </Text>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="გაზრდა"
+        accessibilityState={{ disabled: value >= max }}
+        disabled={value >= max}
+        onPress={() => step(1)}
+        style={[stepperStyles.button, { opacity: value >= max ? 0.35 : 1 }]}
+      >
+        <MaterialCommunityIcons name="plus" size={18} color={Colors.textPrimary} />
+      </Pressable>
+    </View>
+  );
+}
+
+const stepperStyles = StyleSheet.create({
+  button: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.surfaceHigh,
+  },
+});
+
+/** თხელი გამყოფი ხაზი ბარათის შიგნით. */
+export function Divider() {
+  return <View style={{ height: 1, backgroundColor: Colors.stroke }} />;
+}
