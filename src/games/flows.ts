@@ -1,5 +1,7 @@
 import { registerGame } from './registry';
 import { MostLikelyFlow } from './mostlikely/Flow';
+import { NeverFlow } from './never/Flow';
+import { PointOneFlow } from './pointone/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -9,5 +11,7 @@ import { MostLikelyFlow } from './mostlikely/Flow';
  * ანუ ნაწილობრივი პორტიც აპს არ ტეხს.
  */
 registerGame('mostlikely', MostLikelyFlow);
+registerGame('never', NeverFlow);
+registerGame('pointone', PointOneFlow);
 
 export {};

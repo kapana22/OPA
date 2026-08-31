@@ -79,6 +79,7 @@ const MAP: Record<string, IconName> = {
   'arrow.up.arrow.down': 'swap-vertical',
   'hands.clap.fill': 'hand-clap',
   'crown.fill': 'crown',
+  'flag.checkered': 'flag-checkered',
   'scope': 'target',
   'cross.case.fill': 'medical-bag',
   'arrow.triangle.2.circlepath': 'sync',
