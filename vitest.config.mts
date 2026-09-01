@@ -17,6 +17,8 @@ export default defineConfig({
     alias: [
       { find: /.*\/core\/haptics$/, replacement: resolve(root, 'tests/stubs/haptics.ts') },
       { find: /.*\/core\/sound$/, replacement: resolve(root, 'tests/stubs/sound.ts') },
+      { find: /.*\/core\/tiltSensor$/, replacement: resolve(root, 'tests/stubs/tiltSensor.ts') },
+      { find: /.*\/core\/screen$/, replacement: resolve(root, 'tests/stubs/screen.ts') },
     ],
   },
   test: { include: ['tests/**/*.test.ts'] },
