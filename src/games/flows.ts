@@ -10,6 +10,7 @@ import { WordRushFlow } from './wordrush/Flow';
 import { TruthDareFlow } from './truthdare/Flow';
 import { DareCardFlow } from './darecard/Flow';
 import { RuleCardFlow } from './rulecard/Flow';
+import { WhoWroteFlow } from './whowrote/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -29,5 +30,6 @@ registerGame('wordrush', WordRushFlow);
 registerGame('truthdare', TruthDareFlow);
 registerGame('darecard', DareCardFlow);
 registerGame('rulecard', RuleCardFlow);
+registerGame('whowrote', WhoWroteFlow);
 
 export {};
