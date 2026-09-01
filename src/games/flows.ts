@@ -16,6 +16,8 @@ import { WavelengthFlow } from './wavelength/Flow';
 import { TableReadFlow } from './tableread/Flow';
 import { CharadesFlow } from './charades/Flow';
 import { WhoAmIFlow } from './whoami/Flow';
+import { AliasFlow } from './alias/Flow';
+import { MafiaFlow } from './mafia/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -41,5 +43,7 @@ registerGame('wavelength', WavelengthFlow);
 registerGame('tableread', TableReadFlow);
 registerGame('charades', CharadesFlow);
 registerGame('whoami', WhoAmIFlow);
+registerGame('alias', AliasFlow);
+registerGame('mafia', MafiaFlow);
 
 export {};

@@ -124,7 +124,7 @@ export default function Settings() {
         <View style={{ flex: 1 }} />
 
         <View style={{ paddingBottom: insets.bottom + Space.m }}>
-          <PrimaryButton title="მზადაა" tint={Colors.phosphor} onPress={() => router.back()} />
+          <PrimaryButton title="მზადაა" tint={Colors.phosphor} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
       </View>
     </View>

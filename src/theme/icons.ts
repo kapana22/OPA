@@ -93,6 +93,8 @@ const MAP: Record<string, IconName> = {
   'cross.case.fill': 'medical-bag',
   'arrow.triangle.2.circlepath': 'sync',
   'arrow.clockwise.circle.fill': 'refresh-circle',
+  'zzz': 'sleep',
+  'sunrise.fill': 'weather-sunset-up',
 };
 
 /** SF Symbol-ის სახელი → ამ პლატფორმის აიქონი. უცნობი სახელი წრედ იხატება. */

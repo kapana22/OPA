@@ -80,7 +80,7 @@ export default function Scoreboard() {
             />
           ) : null}
           <GhostButton title="ახალი საღამო" icon="arrow.clockwise" onPress={askReset} />
-          <GhostButton title="დახურვა" icon="xmark" onPress={() => router.back()} />
+          <GhostButton title="დახურვა" icon="xmark" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
       </View>
     </View>

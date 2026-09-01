@@ -173,7 +173,7 @@ export default function Players() {
         )}
 
         <View style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 12 }}>
-          <PrimaryButton title="მზად ვართ" icon="checkmark" tint={Colors.neonCyan} onPress={() => router.back()} />
+          <PrimaryButton title="მზად ვართ" icon="checkmark" tint={Colors.neonCyan} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
       </View>
     </View>

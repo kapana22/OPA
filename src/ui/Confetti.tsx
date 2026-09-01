@@ -93,7 +93,7 @@ export function Confetti({ count = 40 }: { count?: number }) {
   }, [count, width]);
 
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+    <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
       {pieces.map(({ key, ...p }) => (
         <Piece key={key} {...p} height={height} />
       ))}

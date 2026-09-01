@@ -21,6 +21,13 @@ export default function GameHost() {
   const router = useRouter();
   const roster = useRoster();
 
+  /**
+   * გასვლა. ღრმა ბმულით გახსნისას (ან განახლების შემდეგ) უკან დასაბრუნებელი
+   * ისტორია არ არსებობს და `back()` ჩუმად ჩავარდებოდა — თამაშიდან გამოსვლა
+   * კი ყოველთვის უნდა მუშაობდეს.
+   */
+  const exit = () => (router.canGoBack() ? router.back() : router.replace('/'));
+
   const game = findGame(String(id));
   const Flow = game ? gameFlow(game.id) : undefined;
   const tint = game ? Colors[game.accent] : Colors.neonCyan;
@@ -29,7 +36,7 @@ export default function GameHost() {
     <View style={{ flex: 1 }}>
       <SplashBackground tint={tint} />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        {Flow ? <Flow roster={roster} onExit={() => router.back()} /> : <ComingSoon />}
+        {Flow ? <Flow roster={roster} onExit={exit} /> : <ComingSoon />}
       </SafeAreaView>
     </View>
   );

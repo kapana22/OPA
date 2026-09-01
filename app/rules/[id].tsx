@@ -63,7 +63,7 @@ export default function Rules() {
         </ScrollView>
 
         <View style={{ alignSelf: 'stretch', paddingHorizontal: 20, paddingBottom: insets.bottom + Space.m }}>
-          <PrimaryButton title="გასაგებია" tint={accent} onPress={() => router.back()} />
+          <PrimaryButton title="გასაგებია" tint={accent} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
       </View>
     </View>

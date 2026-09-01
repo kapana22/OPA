@@ -19,7 +19,7 @@ export function SplashBackground({ tint = Colors.neonCyan }: { tint?: string }) 
   const d = useMemo(() => splashPath({ lobes: 8, wobble: 0.26, seed: 11, size }), [size]);
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: Colors.ink }]} pointerEvents="none">
+    <View style={[StyleSheet.absoluteFill, { backgroundColor: Colors.ink, pointerEvents: 'none' }]}>
       <Svg
         width={size}
         height={size}
