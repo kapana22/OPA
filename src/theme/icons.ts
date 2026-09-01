@@ -86,6 +86,7 @@ const MAP: Record<string, IconName> = {
   'person.fill.xmark': 'account-remove',
   'person.fill.questionmark': 'account-question-outline',
   'face.smiling': 'emoticon-happy-outline',
+  'figure.run': 'run',
   'party.popper.fill': 'party-popper',
   'exclamationmark.circle.fill': 'alert-circle',
   'scope': 'target',

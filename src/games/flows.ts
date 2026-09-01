@@ -6,6 +6,8 @@ import { BombFlow } from './bomb/Flow';
 import { ImpostorFlow } from './impostor/Flow';
 import { SpyFlow } from './spy/Flow';
 import { NoLaughFlow } from './nolaugh/Flow';
+import { WordRushFlow } from './wordrush/Flow';
+import { TruthDareFlow } from './truthdare/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -21,5 +23,7 @@ registerGame('bomb', BombFlow);
 registerGame('impostor', ImpostorFlow);
 registerGame('spy', SpyFlow);
 registerGame('nolaugh', NoLaughFlow);
+registerGame('wordrush', WordRushFlow);
+registerGame('truthdare', TruthDareFlow);
 
 export {};
