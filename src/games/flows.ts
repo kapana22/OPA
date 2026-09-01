@@ -11,6 +11,7 @@ import { TruthDareFlow } from './truthdare/Flow';
 import { DareCardFlow } from './darecard/Flow';
 import { RuleCardFlow } from './rulecard/Flow';
 import { WhoWroteFlow } from './whowrote/Flow';
+import { TwoTruthsFlow } from './twotruths/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -31,5 +32,6 @@ registerGame('truthdare', TruthDareFlow);
 registerGame('darecard', DareCardFlow);
 registerGame('rulecard', RuleCardFlow);
 registerGame('whowrote', WhoWroteFlow);
+registerGame('twotruths', TwoTruthsFlow);
 
 export {};
