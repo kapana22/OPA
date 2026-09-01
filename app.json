@@ -3,12 +3,25 @@
     "name": "მეგობრები",
     "slug": "splash-rn",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ge.splash.megobrebi"
+      "bundleIdentifier": "ge.splash.megobrebi",
+      "infoPlist": {
+        "UISupportedInterfaceOrientations": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ],
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationPortraitUpsideDown",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -31,15 +44,16 @@
         "expo-build-properties",
         {
           "android": {
-            "extraProperties": {
-              "org.gradle.jvmargs": "-Xmx4096m -XX:MaxMetaspaceSize=2048m -Dfile.encoding=UTF-8",
-              "reactNativeArchitectures": "armeabi-v7a,arm64-v8a",
-              "android.enableMinifyInReleaseBuilds": "true",
-              "android.enableShrinkResourcesInReleaseBuilds": "true"
-            }
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "buildArchs": [
+              "armeabi-v7a",
+              "arm64-v8a"
+            ]
           }
         }
-      ]
+      ],
+      "./plugins/withReleaseSigning"
     ],
     "scheme": "megobrebi",
     "runtimeVersion": {

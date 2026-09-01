@@ -6,6 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors } from '../src/theme/theme';
 import { AppStateProvider } from '../src/state/state';
 import { DialogProvider } from '../src/ui/Dialog';
+import { usePortraitDefault } from '../src/core/portraitDefault';
 
 /**
  * აპის ფესვი.
@@ -16,6 +17,8 @@ import { DialogProvider } from '../src/ui/Dialog';
  * თორემ შენახული შემადგენლობა პირველივე კადრში დაიკარგებოდა.
  */
 export default function RootLayout() {
+  usePortraitDefault();
+
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: Colors.ink }}>
       <SafeAreaProvider>

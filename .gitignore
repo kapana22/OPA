@@ -4,3 +4,22 @@ dist/
 web-build/
 *.log
 .DS_Store
+
+# iOS — prebuild-ით გენერირებული; Pods და build არასდროს იკომიტება
+ios/Pods/
+ios/build/
+ios/.xcode.env.local
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+
+# Android — ბილდის გამონატანი
+android/app/build/
+android/build/
+android/.gradle/
+android/.kotlin/
+android/local.properties
+
+# ხელმოწერის გასაღებები — არასდროს რეპოში
+*.keystore
+!android/app/debug.keystore
+*.jks
