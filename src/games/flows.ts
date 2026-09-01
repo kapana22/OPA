@@ -12,6 +12,7 @@ import { DareCardFlow } from './darecard/Flow';
 import { RuleCardFlow } from './rulecard/Flow';
 import { WhoWroteFlow } from './whowrote/Flow';
 import { TwoTruthsFlow } from './twotruths/Flow';
+import { WavelengthFlow } from './wavelength/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -33,5 +34,6 @@ registerGame('darecard', DareCardFlow);
 registerGame('rulecard', RuleCardFlow);
 registerGame('whowrote', WhoWroteFlow);
 registerGame('twotruths', TwoTruthsFlow);
+registerGame('wavelength', WavelengthFlow);
 
 export {};
