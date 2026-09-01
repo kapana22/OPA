@@ -13,6 +13,7 @@ import { RuleCardFlow } from './rulecard/Flow';
 import { WhoWroteFlow } from './whowrote/Flow';
 import { TwoTruthsFlow } from './twotruths/Flow';
 import { WavelengthFlow } from './wavelength/Flow';
+import { TableReadFlow } from './tableread/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -35,5 +36,6 @@ registerGame('rulecard', RuleCardFlow);
 registerGame('whowrote', WhoWroteFlow);
 registerGame('twotruths', TwoTruthsFlow);
 registerGame('wavelength', WavelengthFlow);
+registerGame('tableread', TableReadFlow);
 
 export {};
