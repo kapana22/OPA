@@ -8,6 +8,8 @@ import { SpyFlow } from './spy/Flow';
 import { NoLaughFlow } from './nolaugh/Flow';
 import { WordRushFlow } from './wordrush/Flow';
 import { TruthDareFlow } from './truthdare/Flow';
+import { DareCardFlow } from './darecard/Flow';
+import { RuleCardFlow } from './rulecard/Flow';
 
 /**
  * თამაშის ეკრანების რეგისტრაცია.
@@ -25,5 +27,7 @@ registerGame('spy', SpyFlow);
 registerGame('nolaugh', NoLaughFlow);
 registerGame('wordrush', WordRushFlow);
 registerGame('truthdare', TruthDareFlow);
+registerGame('darecard', DareCardFlow);
+registerGame('rulecard', RuleCardFlow);
 
 export {};
