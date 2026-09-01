@@ -26,7 +26,20 @@
     "plugins": [
       "expo-router",
       "expo-audio",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraProperties": {
+              "org.gradle.jvmargs": "-Xmx4096m -XX:MaxMetaspaceSize=2048m -Dfile.encoding=UTF-8",
+              "reactNativeArchitectures": "armeabi-v7a,arm64-v8a",
+              "android.enableMinifyInReleaseBuilds": "true",
+              "android.enableShrinkResourcesInReleaseBuilds": "true"
+            }
+          }
+        }
+      ]
     ],
     "scheme": "megobrebi",
     "runtimeVersion": {
