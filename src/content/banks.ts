@@ -6,7 +6,7 @@ import { ContentShoe } from '../core/contentShoe';
  * კონტენტის ბაზები.
  *
  * წყარო `Splash/Data/*.swift`-ია, ამოღებული `tools/extract-banks.mjs`-ით და
- * Word-ის ექსპორტთან ჯვარედინად შემოწმებული (ორივემ 5,600 უნდა თქვას).
+ * Word-ის ექსპორტთან ჯვარედინად შემოწმებული (ორივემ 6,764 უნდა თქვას).
  * ატრიბუტები — ემოჯი, კითხვის ტონი, დილემის სამი ველი — მხოლოდ Swift-ის
  * წყაროშია, ამიტომ JSON-ს არ ვენდობით.
  *
@@ -16,7 +16,6 @@ import { ContentShoe } from '../core/contentShoe';
 
 // MARK: - ტიპები
 
-export type Level = 'easy' | 'medium' | 'hard';
 export type PromptRegister = 'mild' | 'playful' | 'bold';
 export type TruthDareHeat = 'family' | 'party' | 'spicy';
 export type DareKind = 'solo' | 'group' | 'target' | 'duel';
@@ -28,10 +27,10 @@ export interface CategoryBase {
   emoji: string;
 }
 export interface WordCategory extends CategoryBase {
-  words: { text: string; level: Level }[];
+  words: string[];
 }
 export interface PairCategory extends CategoryBase {
-  pairs: { a: string; b: string; difficulty: Level }[];
+  pairs: { a: string; b: string }[];
 }
 export interface PromptCategory extends CategoryBase {
   prompts: { text: string; register: PromptRegister }[];
@@ -109,27 +108,18 @@ function textBank(categories: TextCategory[]) {
 
 // MARK: - სიტყვების ბანკები
 
-/** `level === null` = ყველა დონე; თუ ფილტრმა ცარიელი დატოვა, სრული სია ბრუნდება. */
-function filtered(cat: WordCategory, level: Level | null): string[] {
-  if (!level) return cat.words.map((w) => w.text);
-  const picked = cat.words.filter((w) => w.level === level).map((w) => w.text);
-  return picked.length > 0 ? picked : cat.words.map((w) => w.text);
-}
-
 function wordBank(categories: WordCategory[]) {
-  const all = unique(categories.flatMap((c) => c.words.map((w) => w.text)));
+  const all = unique(categories.flatMap((c) => c.words));
   return {
     categories,
     all,
     category: (id: string | null | undefined) => find(categories, id),
-    levelOf: (cat: WordCategory, word: string): Level => cat.words.find((w) => w.text === word)?.level ?? 'medium',
-    filtered,
     /** შემთხვევითი კატეგორია — `BombEngine`-ს სჭირდება, როცა დასტა ამოიწურა. */
     randomCategory: (): WordCategory => categories[Math.floor(Math.random() * categories.length)],
-    deck: (categoryID: string | null | undefined, level: Level | null = null) => {
+    deck: (categoryID: string | null | undefined) => {
       const cat = find(categories, categoryID);
-      if (cat) return shuffled(filtered(cat, level));
-      return shuffled(unique(categories.flatMap((c) => filtered(c, level))));
+      if (cat) return shuffled(cat.words);
+      return shuffled(all);
     },
   };
 }
@@ -150,7 +140,7 @@ export const PairBank = {
   deck: (categoryID: string | null | undefined) =>
     shuffled(PairBank.pairs(categoryID).map((p) => `${p.a}|${p.b}`)),
   /** გასაღებით პოვნა — წყვილიც და კატეგორიაც. */
-  pair: (key: string): { pair: { a: string; b: string; difficulty: Level }; category: PairCategory } | undefined => {
+  pair: (key: string): { pair: { a: string; b: string }; category: PairCategory } | undefined => {
     for (const c of B.PairBank) {
       const found = c.pairs.find((p) => `${p.a}|${p.b}` === key);
       if (found) return { pair: found, category: c };

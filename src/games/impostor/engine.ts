@@ -46,6 +46,8 @@ const DEFAULTS: ImpostorSettings = {
   discussionSeconds: 180,
   categoryID: null,
 };
+/** განხილვის დრო წამებში; 0 = ტაიმერის გარეშე. */
+const DISCUSSION = [30, 600] as const;
 
 export class ImpostorEngine extends Observable {
   readonly players: Player[];
@@ -76,7 +78,7 @@ export class ImpostorEngine extends Observable {
       impostorCount: num(s.impostorCount, DEFAULTS.impostorCount, 1, 6),
       impostorKnowsCategory: bool(s.impostorKnowsCategory, DEFAULTS.impostorKnowsCategory),
       impostorCanGuess: bool(s.impostorCanGuess, DEFAULTS.impostorCanGuess),
-      discussionSeconds: num(s.discussionSeconds, DEFAULTS.discussionSeconds, 30, 600),
+      discussionSeconds: s.discussionSeconds === 0 ? 0 : num(s.discussionSeconds, DEFAULTS.discussionSeconds, ...DISCUSSION),
       categoryID: categoryID(s.categoryID, (id) => WordBank.category(id) !== undefined),
     }));
     this.clampSettings();
@@ -208,13 +210,13 @@ export class ImpostorEngine extends Observable {
 
   /** ხუთი მცდარი ვარიანტი + სწორი, არეული. */
   private makeGuessOptions(): string[] {
-    const others = shuffled(this.category.words.map((w) => w.text).filter((w) => w !== this.secretWord)).slice(0, 5);
+    const others = shuffled(this.category.words.filter((w) => w !== this.secretWord)).slice(0, 5);
     return shuffled([...others, this.secretWord]);
   }
 
   private drawWord(category: WordCategory): string {
     const key = `word.${category.id}`;
-    const shoe = this.shoes[key] ?? new ContentShoe(key, category.words.map((w) => w.text));
+    const shoe = this.shoes[key] ?? new ContentShoe(key, category.words);
     this.shoes[key] = shoe;
     return shoe.draw() ?? '—';
   }
@@ -237,8 +239,9 @@ export class ImpostorEngine extends Observable {
     this.settings = { ...this.settings, impostorCanGuess: value };
     this.persist();
   }
+  /** 0 = ტაიმერის გარეშე („∞“) — `DiscussionPanel` ამას იცნობს. */
   setDiscussionSeconds(value: number): void {
-    this.settings = { ...this.settings, discussionSeconds: Math.min(Math.max(30, value), 600) };
+    this.settings = { ...this.settings, discussionSeconds: value === 0 ? 0 : num(value, DEFAULTS.discussionSeconds, ...DISCUSSION) };
     this.persist();
   }
   setCategory(id: string | null): void {

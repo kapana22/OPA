@@ -14,20 +14,20 @@ import {
 
 const EXPECTED: [string, number, number][] = [
   // [ბანკი, კატეგორია, ერთეული]
-  ['WordBank', 33, 1416],
-  ['CharadesBank', 11, 440],
-  ['PairBank', 16, 489],
-  ['PromptBank', 10, 448],
-  ['SpectrumBank', 5, 200],
-  ['DilemmaBank', 5, 220],
-  ['AnswerPromptBank', 5, 240],
-  ['IdentityBank', 5, 331],
-  ['LaughBank', 5, 220],
-  ['NeverBank', 5, 240],
-  ['PointOneBank', 5, 220],
-  ['StandardsBank', 5, 220],
-  ['TenButBank', 5, 220],
-  ['TwoTruthsBank', 6, 240],
+  ['WordBank', 33, 1694],
+  ['CharadesBank', 11, 553],
+  ['PairBank', 16, 593],
+  ['PromptBank', 10, 659],
+  ['SpectrumBank', 5, 291],
+  ['DilemmaBank', 5, 316],
+  ['AnswerPromptBank', 5, 355],
+  ['IdentityBank', 5, 437],
+  ['LaughBank', 5, 247],
+  ['NeverBank', 5, 230],
+  ['PointOneBank', 5, 290],
+  ['StandardsBank', 5, 238],
+  ['TenButBank', 5, 215],
+  ['TwoTruthsBank', 6, 227],
 ];
 
 const SIZES: Record<string, { cats: number; items: number }> = {
@@ -54,18 +54,18 @@ describe('კონტენტის მთლიანობა', () => {
   });
 
   it('ბარათული ბანკები', () => {
-    expect(DareCardBank.all).toHaveLength(111);
-    expect(RuleCardBank.all).toHaveLength(105);
+    expect(DareCardBank.all).toHaveLength(105);
+    expect(RuleCardBank.all).toHaveLength(97);
     expect(TruthDareBank.sets).toHaveLength(3);
-    expect(TruthDareBank.sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0)).toBe(240);
+    expect(TruthDareBank.sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0)).toBe(217);
   });
 
-  it('სულ 5600 ერთეული', () => {
+  it('სულ 6764 ერთეული', () => {
     const total =
       Object.values(SIZES).reduce((n, s) => n + s.items, 0) +
       DareCardBank.all.length + RuleCardBank.all.length +
       TruthDareBank.sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0);
-    expect(total).toBe(5600);
+    expect(total).toBe(6764);
   });
 
   it('ყველა კატეგორიას აქვს ემოჯი და სახელი — JSON-ის ექსპორტს ეს აკლდა', () => {
@@ -80,9 +80,9 @@ describe('კონტენტის მთლიანობა', () => {
     expect(cats.filter((c) => !c.emoji || !c.name || !c.id)).toEqual([]);
   });
 
-  it('კითხვის ტონი შენარჩუნებულია — 448 ჩანაწერი', () => {
+  it('კითხვის ტონი შენარჩუნებულია — 659 ჩანაწერი', () => {
     const entries = PromptBank.allEntries;
-    expect(entries).toHaveLength(448);
+    expect(entries).toHaveLength(659);
     expect(entries.filter((p) => !['mild', 'playful', 'bold'].includes(p.register))).toEqual([]);
   });
 
@@ -92,18 +92,17 @@ describe('კონტენტის მთლიანობა', () => {
     expect(first).toEqual({ question: 'რით იწყებ დილას?', a: 'ყავით', b: 'ჩაით' });
   });
 
-  it('სირთულის დონეები სწორია', () => {
-    const words = WordBank.categories.flatMap((c) => c.words);
-    expect(words.filter((w) => !['easy', 'medium', 'hard'].includes(w.level))).toEqual([]);
-    expect(words.filter((w) => w.level === 'easy').length).toBeGreaterThan(0);
-    expect(words.filter((w) => w.level === 'hard').length).toBeGreaterThan(0);
+  it('სიტყვა კატეგორიაში არ მეორდება', () => {
+    for (const c of WordBank.categories) {
+      expect(new Set(c.words).size).toBe(c.words.length);
+    }
   });
 
   it('„შვება“ ჩვეულებრივ დასტაში არ დევს — სარქველია', () => {
     const main = RuleCardBank.mainDeck();
     const reliefs = new Set(RuleCardBank.byKind('relief').map((c) => c.text));
     expect(main.filter((t) => reliefs.has(t))).toEqual([]);
-    expect(RuleCardBank.reliefDeck()).toHaveLength(10);
+    expect(RuleCardBank.reliefDeck()).toHaveLength(5);
   });
 });
 
@@ -130,7 +129,7 @@ describe('სიცხარის დონეები ერთმანე�
   it('DareCard-ს ორივე ნიშანი აქვს — ტიპიც და სიცხარეც', () => {
     expect(DareCardBank.all.filter((c) => !c.kind || !c.heat)).toEqual([]);
     expect(DareCardBank.byHeat('family')).toHaveLength(38);
-    expect(DareCardBank.byHeat('party')).toHaveLength(39);
-    expect(DareCardBank.byHeat('spicy')).toHaveLength(34);
+    expect(DareCardBank.byHeat('party')).toHaveLength(37);
+    expect(DareCardBank.byHeat('spicy')).toHaveLength(30);
   });
 });

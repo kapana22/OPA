@@ -7,9 +7,11 @@ import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHead
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { TwoTruthsEngine } from './engine';
 
@@ -74,7 +76,7 @@ export function TwoTruthsFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader
           title="ორი სიმართლე, ერთი ტყუილი"
           subtitle={`${engine.players.length} მოთამაშე`}
@@ -82,12 +84,12 @@ function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => vo
         />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 10 }}>
             <Step n="1" text="ერთი წერს სამ ამბავს თავის თავზე — ორი მართალია, ერთი მოგონილი." />
             <Step n="2" text="ტელეფონი წრეზე გადადის და დანარჩენები ფარულად ირჩევენ ტყუილს." />
-            <Step n="3" text="ტყუილი ცხადდება: მპოვნელს +2, ავტორს კი +1 ყოველ მოტყუებულზე." />
+            <Step n="3" text="ტყუილი ცხადდება: მპოვნელს +2, ავტორს კი +1 ყოველ მოტყუებულზე — არაუმეტეს +3." />
           </View>
         </GlassCard>
 
@@ -99,9 +101,10 @@ function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => vo
               selected={engine.settings.everyonePlays}
               onPress={() => engine.setEveryonePlays(true)}
             />
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {TURN_OPTIONS.map((count) => (
                 <CategoryChip
+                  compact
                   key={count}
                   label={String(count)}
                   selected={!engine.settings.everyonePlays && engine.settings.fixedTurns === count}
@@ -134,7 +137,7 @@ function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => vo
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დაწყება"
           icon="play.fill"
@@ -181,33 +184,33 @@ function Pass({
 }) {
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>{kicker}</Text>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>{kicker}</Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>{headline}</Text>
+      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>{headline}</Text>
 
       <Text
-        style={[titleFont(36), styles.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
+        style={[titleFont(36), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
         adjustsFontSizeToFit
         numberOfLines={2}
       >
         {playerName}
       </Text>
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard>
-          <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary }]}>{note}</Text>
+          <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>{note}</Text>
         </GlassCard>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title={actionTitle} icon={icon} tint={Colors.neonMagenta} onPress={onStart} />
       </View>
     </View>
@@ -233,7 +236,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <View style={{ gap: 1 }}>
           <Text style={[body(17, '700'), { color: Colors.textPrimary }]} numberOfLines={1}>
@@ -242,7 +245,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
           <Text style={[caption(12), { color: Colors.textSecondary }]}>ორი მართალი, ერთი მოგონილი</Text>
         </View>
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.turnIndex + 1} / {engine.totalTurns}
         </Text>
       </View>
@@ -332,7 +335,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
                 <View style={{ flex: 1 }} />
                 {count >= LIMIT - 20 ? (
                   <Text
-                    style={[caption(12), styles.digits, { color: count >= LIMIT ? Colors.neonMagenta : Colors.textSecondary }]}
+                    style={[caption(12), Layout.digits, { color: count >= LIMIT ? Colors.neonMagenta : Colors.textSecondary }]}
                   >
                     {count} / {LIMIT}
                   </Text>
@@ -342,14 +345,14 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
           );
         })}
 
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 12 }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 12 }]}>
           {lie === null
             ? 'მონიშნე, რომელი მოიგონე — ამის გარეშე ვერ გააგრძელებ.'
             : 'მზად ხარ. ღილაკზე დაჭერისთანავე ეკრანი დაიმალება.'}
         </Text>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="მზადაა — გადაცემა"
           icon="checkmark"
@@ -373,10 +376,10 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
 function Guess({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.guesserIndex + 1} / {engine.guessers.length}
         </Text>
       </View>
@@ -385,13 +388,13 @@ function Guess({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
         <Text style={[body(15, '700'), { color: Colors.phosphor }]} numberOfLines={1}>
           {engine.currentGuesser?.name ?? '—'}
         </Text>
-        <Text style={[titleFont(28), styles.centered, { color: Colors.textPrimary }]}>რომელია ტყუილი?</Text>
+        <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]}>რომელია ტყუილი?</Text>
         <Text style={[body(13, '500'), { color: Colors.textSecondary }]} numberOfLines={1}>
           ავტორი — {engine.author.name}
         </Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 6, gap: 12 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { paddingVertical: 6, gap: 12 }]}>
         {[0, 1, 2].map((position) => (
           <Pressable
             key={position}
@@ -412,7 +415,7 @@ function Guess({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
       </ScrollView>
 
       <Text
-        style={[caption(12), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32, paddingBottom: Space.m }]}
+        style={[caption(12), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32, paddingBottom: Space.m }]}
       >
         აირჩიე ის, რომელიც არ გჯერა — არჩევანს ვერავინ დაინახავს.
       </Text>
@@ -457,7 +460,7 @@ function Result({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => voi
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -468,18 +471,18 @@ function Result({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => voi
       </View>
 
       <Text
-        style={[titleFont(27), styles.centered, { color: head.color, paddingHorizontal: 24 }]}
+        style={[titleFont(27), Layout.centered, { color: head.color, paddingHorizontal: 24 }]}
         adjustsFontSizeToFit
         numberOfLines={2}
       >
         {head.title}
       </Text>
 
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {head.subtitle}
       </Text>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 4, gap: 12 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { paddingVertical: 4, gap: 12 }]}>
         <GlassCard>
           <View style={{ gap: 14 }}>
             {[0, 1, 2].map((position) => {
@@ -524,7 +527,7 @@ function Result({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => voi
                     </View>
                   ) : null}
                   <View style={{ flex: 1 }} />
-                  <Text style={[body(15, '900'), styles.digits, { color: Colors.phosphor }]}>
+                  <Text style={[body(15, '900'), Layout.digits, { color: Colors.phosphor }]}>
                     +{engine.pointsFor(player)}
                   </Text>
                 </View>
@@ -534,7 +537,7 @@ function Result({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => voi
         ) : null}
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.isLastTurn ? 'შედეგები' : 'შემდეგი ჯერი'}
           icon="chevron.right"
@@ -557,14 +560,11 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     PodiumAward.apply(engine.results, roster);
     Haptics.win();
-  }, [applied, engine, roster]);
+  });
 
   const top = engine.ranking[0];
   const champion = top && engine.totalFor(top) > 0 ? top : null;
@@ -578,29 +578,28 @@ function Summary({
           <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
         </View>
 
-        <Text style={[titleFont(28), styles.centered, { color: Colors.phosphor }]}>ბლეფის ოსტატი</Text>
+        <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>ბლეფის ოსტატი</Text>
 
-        <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+        <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
           {champion ? `${champion.name} — ${engine.totalFor(champion)} ქულა` : 'ამ პარტიაში ქულა ვერავინ აიღო'}
         </Text>
 
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
           საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
         </Text>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
+        <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
           {engine.ranking.map((player, rank) => (
             <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.totalFor(player)} highlight={rank === 0} />
           ))}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Colors.neonMagenta}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -614,13 +613,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 20, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: Space.m },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   stepBadge: {
     width: 22,
     height: 22,

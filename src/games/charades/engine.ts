@@ -224,6 +224,12 @@ export class CharadesEngine extends Observable {
 
   /** აპი ფონში/წინა პლანზე — სენსორი ჩერდება და ნული თავიდან იზომება. */
   handleScenePhase(active: boolean): void {
+    // ათვლაც ჩერდება — თორემ თამაში ფონში დაიწყებოდა და პირველი სიტყვა ჯიბეში გავიდოდა.
+    if (this.phase === 'countdown') {
+      if (active) this.startCountdown();
+      else this.countdownTimer.stop();
+      return;
+    }
     if (this.phase !== 'playing') return;
     if (active) this.tilt.resume();
     else this.tilt.pause();

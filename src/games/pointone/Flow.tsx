@@ -7,11 +7,13 @@ import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHead
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { PointOneBank } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { PointOneEngine } from './engine';
@@ -47,17 +49,18 @@ export function PointOneFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: PointOneEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="მიუთითე ერთზე" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {ROUND_OPTIONS.map((count) => (
                 <CategoryChip
+                  compact
                   key={count}
                   label={String(count)}
                   selected={engine.settings.rounds === count}
@@ -96,7 +99,7 @@ function Setup({ engine, onClose }: { engine: PointOneEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="ყველა"
                 selected={engine.settings.categoryID === null}
@@ -115,7 +118,7 @@ function Setup({ engine, onClose }: { engine: PointOneEngine; onClose: () => voi
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.neonMagenta} onPress={() => engine.startGame()} />
       </View>
     </View>
@@ -127,9 +130,9 @@ function Setup({ engine, onClose }: { engine: PointOneEngine; onClose: () => voi
 function Round({ engine, onExit }: { engine: PointOneEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: Space.m, paddingBottom: Space.m }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.settings.rounds}
         </Text>
         <View style={{ flex: 1 }} />
@@ -139,14 +142,14 @@ function Round({ engine, onExit }: { engine: PointOneEngine; onExit: () => void 
 
       {engine.stage === 'countdown' ? (
         <View style={{ alignItems: 'center', gap: 12 }}>
-          <Text style={[display(120), styles.digits, { color: Colors.neonMagenta }]}>{engine.countdownValue}</Text>
+          <Text style={[display(120), Layout.digits, { color: Colors.neonMagenta }]}>{engine.countdownValue}</Text>
           <Text style={[body(15, '600'), { color: Colors.textSecondary }]}>მოემზადეთ — ერთდროულად უთითებთ</Text>
         </View>
       ) : (
         <>
           <View style={{ paddingHorizontal: 20 }}>
             <GlassCard>
-              <Text style={[titleFont(26), styles.centered, { color: Colors.textPrimary }]}>
+              <Text style={[titleFont(26), Layout.centered, { color: Colors.textPrimary }]}>
                 {engine.currentQuestion}
               </Text>
             </GlassCard>
@@ -154,7 +157,7 @@ function Round({ engine, onExit }: { engine: PointOneEngine; onExit: () => void 
 
           {engine.stage === 'ready' ? (
             <>
-              <View style={{ paddingHorizontal: 24 }}>
+              <View style={Layout.content}>
                 <PrimaryButton
                   title="მზად ხართ"
                   icon="hand.point.up.left.fill"
@@ -162,13 +165,13 @@ function Round({ engine, onExit }: { engine: PointOneEngine; onExit: () => void 
                   onPress={() => engine.begin()}
                 />
               </View>
-              <View style={{ paddingHorizontal: 24 }}>
+              <View style={Layout.content}>
                 <GhostButton title="სხვა კითხვა" icon="shuffle" onPress={() => engine.swapQuestion()} />
               </View>
             </>
           ) : (
             <>
-              <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>
+              <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
                 ვისზეც ყველაზე მეტმა მიუთითა — შეეხე
               </Text>
 
@@ -178,7 +181,7 @@ function Round({ engine, onExit }: { engine: PointOneEngine; onExit: () => void 
                 ))}
               </View>
 
-              <View style={{ paddingHorizontal: 24 }}>
+              <View style={Layout.content}>
                 <PrimaryButton
                   title={engine.isLastRound ? 'შედეგები' : 'შემდეგი'}
                   icon={engine.isLastRound ? 'flag.checkered' : 'chevron.right'}
@@ -211,7 +214,7 @@ function Round({ engine, onExit }: { engine: PointOneEngine; onExit: () => void 
           {engine.ranking.slice(0, 4).map((player) => (
             <View key={player.id} style={styles.standingChip}>
               <Text style={[body(12, '600'), { color: Colors.textSecondary }]}>{player.name}</Text>
-              <Text style={[body(12, '900'), styles.digits, { color: Colors.neonMagenta }]}>
+              <Text style={[body(12, '900'), Layout.digits, { color: Colors.neonMagenta }]}>
                 {engine.totalFor(player)}
               </Text>
             </View>
@@ -236,13 +239,13 @@ function PlayerChip({ engine, player }: { engine: PointOneEngine; player: Player
       ]}
     >
       <Text
-        style={[body(15, '700'), styles.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
+        style={[body(15, '700'), Layout.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
         numberOfLines={1}
         adjustsFontSizeToFit
       >
         {player.name}
       </Text>
-      <Text style={[body(11, '900'), styles.digits, { color: on ? Colors.ink : Colors.textSecondary, opacity: on ? 0.7 : 1 }]}>
+      <Text style={[body(11, '900'), Layout.digits, { color: on ? Colors.ink : Colors.textSecondary, opacity: on ? 0.7 : 1 }]}>
         {engine.totalFor(player)}
       </Text>
     </Pressable>
@@ -260,16 +263,13 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     Sound.play('win');
     Haptics.win();
     // ერთნაირი შედეგი — ერთნაირი ჯილდო; ფრეს ანბანი აღარ წყვეტს.
     PodiumAward.apply(engine.results, roster);
-  }, [applied, engine, roster]);
+  });
 
   const top = engine.ranking[0];
   const champion = top && engine.totalFor(top) > 0 ? top : null;
@@ -297,29 +297,29 @@ function Summary({
           <GlyphIcon name="hand.point.right.fill" size={31} tint={Colors.neonMagenta} />
         </View>
 
-        <Text style={[titleFont(28), styles.centered, { color: Colors.neonMagenta }]}>
+        <Text style={[titleFont(28), Layout.centered, { color: Colors.neonMagenta }]}>
           {champion === null ? 'ქულა ვერავინ აიღო' : 'ღამის ვარსკვლავი'}
         </Text>
 
         {starsLine ? (
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {starsLine}
           </Text>
         ) : null}
 
         {quietLine ? (
           <Text
-            style={[body(13, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.85, paddingHorizontal: 32 }]}
+            style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.85, paddingHorizontal: 32 }]}
           >
             {quietLine}
           </Text>
         ) : null}
 
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
           საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
         </Text>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
+        <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
           {engine.ranking.map((player, rank) => (
             <RankRow
               key={player.id}
@@ -331,13 +331,12 @@ function Summary({
           ))}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10, paddingHorizontal: 24 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Colors.neonMagenta}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -351,12 +350,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 20, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: 12 },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   playerGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 20 },
   playerChip: {
     width: '30%',

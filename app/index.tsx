@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Svg, { Path } from 'react-native-svg';
 
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../src/theme/theme';
 import { icon as sf } from '../src/theme/icons';
@@ -11,7 +10,6 @@ import { SplashBackground } from '../src/ui/SplashBackground';
 import { GameTile } from '../src/ui/GameTile';
 import { SectionLabel } from '../src/ui/Cards';
 import { Pressable } from '../src/ui/Pressable';
-import { splashPath } from '../src/ui/splashShape';
 import { GameCatalog, matches, needles, gamesByIDs } from '../src/games/catalog';
 import { familyTitle, type GameFamily, type PartyGame } from '../src/games/types';
 import { useNightLog, useRecentGames, useRoster } from '../src/state/state';
@@ -100,12 +98,6 @@ export default function Home() {
           <Text style={[display(38), { color: Colors.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit>
             მეგობრები
           </Text>
-          <View style={styles.logoRow}>
-            <Svg width={9} height={9}>
-              <Path d={splashPath({ lobes: 9, wobble: 0.3, seed: 777, size: 9 })} fill={Colors.phosphor} />
-            </Svg>
-            <Text style={[body(13, '600'), { color: Colors.textSecondary }]}>ერთი ტელეფონი, მთელი კომპანია</Text>
-          </View>
         </View>
 
         {/* ── მოთამაშეების ზოლი */}
@@ -352,8 +344,7 @@ function IconButton({ name, label, onPress }: { name: string; label: string; onP
 }
 
 const styles = StyleSheet.create({
-  logo: { alignItems: 'center', gap: 5, paddingTop: 20, paddingBottom: 2 },
-  logoRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  logo: { alignItems: 'center', paddingTop: 20, paddingBottom: 2 },
 
   playersBar: { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: Radius.default, backgroundColor: Colors.surface },
   playersButton: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 12, paddingVertical: 11 },

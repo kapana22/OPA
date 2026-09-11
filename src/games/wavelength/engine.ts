@@ -155,7 +155,10 @@ export class WavelengthEngine extends Observable {
   }
 
   lockGuess(): void {
-    this.lastPoints = this.pointsForDistance(this.distance);
+    // ეკრანი მთელ რიცხვებს აჩვენებს (0…100) — ქულაც იმავე მანძილზე ითვლება,
+    // თორემ ნაჩვენები „4“ ზოგჯერ 3-ის ზოლში ვარდებოდა.
+    const shown = Math.abs(this.mark(this.target) - this.mark(this.guess)) / 100;
+    this.lastPoints = this.pointsForDistance(shown);
     this.tableScore += this.lastPoints;
     const giver = this.clueGiver;
     if (giver) this.clueScores[giver.id] = (this.clueScores[giver.id] ?? 0) + this.lastPoints;

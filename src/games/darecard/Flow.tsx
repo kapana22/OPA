@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
@@ -7,12 +7,14 @@ import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHea
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { dareKindIcon, dareKindLabel, heatName, heatNote, type TruthDareHeat } from '../../content/banks';
 import { PARTY_FORFEITS, forfeitNote, forfeitShort, forfeitTitle } from '../../core/partyForfeit';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { DareCardEngine } from './engine';
 
@@ -45,11 +47,11 @@ export function DareCardFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="Do or Pay" subtitle="ბარათი კარნახობს" onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 10 }}>
             <Step n="1" text="ბარათი ეკრანზეა — ის წყვეტს, ვის ეხება: ერთს, ორს თუ მთელ მაგიდას." />
@@ -76,9 +78,10 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>სიცხარე</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {HEATS.map((heat) => (
                 <CategoryChip
+                  compact
                   key={heat}
                   label={heatName[heat]}
                   selected={engine.settings.heat === heat}
@@ -93,7 +96,7 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ბარათი</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               {CARD_OPTIONS.map((count) => (
                 <CategoryChip
                   key={count}
@@ -107,7 +110,7 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დაწყება"
           icon="play.fill"
@@ -153,9 +156,9 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
 
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(13, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.settings.cards > 0 ? `ბარათი ${engine.drawn} / ${engine.settings.cards}` : `ბარათი ${engine.drawn}`}
         </Text>
         <View style={{ flex: 1 }} />
@@ -180,7 +183,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
           </View>
 
           <Text
-            style={[titleFont(24), styles.centered, { color: Colors.phosphor, paddingHorizontal: 20 }]}
+            style={[titleFont(24), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 20 }]}
             numberOfLines={2}
             adjustsFontSizeToFit
           >
@@ -188,7 +191,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
           </Text>
 
           <Text
-            style={[titleFont(card.text.length > 70 ? 22 : 27), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
+            style={[titleFont(card.text.length > 70 ? 22 : 27), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
             adjustsFontSizeToFit
             numberOfLines={7}
           >
@@ -203,11 +206,11 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
 
       <View style={{ flex: 1 }} />
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         {engine.needsDuelWinner ? (
           <>
             {/* დუელს გამარჯვებული სჭირდება — თორემ ორივეს ერთი და იგივე ეწერება. */}
-            <Text style={[body(13, '700'), styles.centered, { color: Colors.textSecondary }]}>ვინ მოიგო?</Text>
+            <Text style={[body(13, '700'), Layout.centered, { color: Colors.textSecondary }]}>ვინ მოიგო?</Text>
             {engine.holder ? (
               <PrimaryButton
                 title={engine.holder.name}
@@ -260,15 +263,12 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     Sound.play('win');
     Haptics.win();
     PodiumAward.apply(engine.results, roster);
-  }, [applied, engine, roster]);
+  });
 
   const champion = engine.champion;
   const worst = engine.mostForfeits;
@@ -286,25 +286,25 @@ function Summary({
           <GlyphIcon name="flame.fill" size={31} tint={Colors.phosphor} />
         </View>
 
-        <Text style={[titleFont(28), styles.centered, { color: Colors.phosphor }]}>
+        <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>
           {champion === null ? 'არავინ დაიძაბა' : 'ვინც არ დაიხია'}
         </Text>
 
         {champion ? (
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {champion.name} — {engine.doneCount(champion)} შესრულებული ბარათი
           </Text>
         ) : null}
 
         {forfeitLine ? (
           <Text
-            style={[body(13, '600'), styles.centered, { color: Colors.textSecondary, opacity: 0.9, paddingHorizontal: 32 }]}
+            style={[body(13, '600'), Layout.centered, { color: Colors.textSecondary, opacity: 0.9, paddingHorizontal: 32 }]}
           >
             {forfeitLine}
           </Text>
         ) : null}
 
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
           საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
         </Text>
 
@@ -324,7 +324,7 @@ function Summary({
                   <Text style={[caption(10), { color: Colors.textSecondary }]}>{forfeits} ჯარიმა</Text>
                 ) : null}
                 <Text
-                  style={[titleFont(20), styles.digits, { color: rank === 0 ? Colors.phosphor : Colors.textPrimary }]}
+                  style={[titleFont(20), Layout.digits, { color: rank === 0 ? Colors.phosphor : Colors.textPrimary }]}
                 >
                   {engine.doneCount(player)}
                 </Text>
@@ -333,13 +333,12 @@ function Summary({
           })}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Colors.phosphor}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -347,7 +346,6 @@ function Summary({
             title="პარამეტრები"
             icon="slider.horizontal.3"
             onPress={() => {
-              setApplied(false);
               engine.backToSetup();
             }}
           />
@@ -361,12 +359,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: Space.m },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   stepBadge: {
     width: 22,
     height: 22,

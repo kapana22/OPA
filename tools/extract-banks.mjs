@@ -139,26 +139,20 @@ function simpleBank(files, ctor, itemsKey) {
   return cats;
 }
 
-// WordBank / CharadesBank — `easy/medium/hard` ან `words/levels`
+// WordBank / CharadesBank — `WordCategory(..., words: ["…"])`
 function wordCategories(files) {
   const cats = [];
   for (const f of files) {
     for (const args of calls(read(f), 'WordCategory')) {
       const cat = { id: null, name: null, emoji: null, words: [] };
-      const tiers = {};
-      let plainWords = null;
       for (const a of args) {
         const [label, value] = labelled(a);
         if (label === 'id') cat.id = str(value);
         else if (label === 'name') cat.name = str(value);
         else if (label === 'emoji') cat.emoji = str(value);
-        else if (label === 'easy' || label === 'medium' || label === 'hard')
-          tiers[label] = (arrayItems(value) ?? []).map(str).filter((x) => x !== null);
-        else if (label === 'words') plainWords = (arrayItems(value) ?? []).map(str).filter((x) => x !== null);
+        else if (label === 'words')
+          cat.words = (arrayItems(value) ?? []).map(str).filter((x) => x !== null);
       }
-      if (plainWords) cat.words = plainWords.map((text) => ({ text, level: 'medium' }));
-      else for (const level of ['easy', 'medium', 'hard'])
-        for (const text of tiers[level] ?? []) cat.words.push({ text, level });
       if (!cat.id) problems.push(`WordCategory in ${f}: id ვერ წაიკითხა`);
       cats.push(cat);
     }
@@ -169,7 +163,7 @@ function wordCategories(files) {
 banks.WordBank = wordCategories(['WordBank.swift', 'WordBankExtra.swift']);
 banks.CharadesBank = wordCategories(['CharadesBank.swift']);
 
-// PairBank — `PairCategory(..., pairs: [WordPair("a","b",.level)])`
+// PairBank — `PairCategory(..., pairs: [WordPair("a", "b")])`
 banks.PairBank = (() => {
   const cats = [];
   for (const f of ['PairBank.swift', 'PairBankExtra.swift']) {
@@ -183,9 +177,8 @@ banks.PairBank = (() => {
         else if (label === 'pairs')
           for (const p of calls(value, 'WordPair')) {
             const a0 = str(p[0]), b0 = str(p[1]);
-            const d = p[2] !== undefined ? dotCase(p[2]) : 'medium';
             if (a0 === null || b0 === null) { problems.push(`WordPair in ${f}: ${p.join(' | ')}`); continue; }
-            cat.pairs.push({ a: a0, b: b0, difficulty: d ?? 'medium' });
+            cat.pairs.push({ a: a0, b: b0 });
           }
       }
       cats.push(cat);

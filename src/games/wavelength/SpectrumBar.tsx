@@ -52,17 +52,23 @@ export function SpectrumBar({
           {showBands && target != null
             ? [...WavelengthEngine.bands]
                 .sort((a, b) => b.halfWidth - a.halfWidth)
-                .map((band) => (
+                .map((band) => {
+                  // კიდეზე ზოლი იჭრება და არა იწევს — თორემ დახატული ზონა
+                  // `pointsForDistance`-ის რეალურ ზონას აღარ დაემთხვეოდა.
+                  const left = Math.max(0, target - band.halfWidth);
+                  const right = Math.min(1, target + band.halfWidth);
+                  return (
                   <Rect
                     key={band.id}
-                    x={Math.max(0, WIDTH * (target - band.halfWidth))}
+                    x={WIDTH * left}
                     y={OVERHANG}
-                    width={Math.min(WIDTH, WIDTH * band.halfWidth * 2)}
+                    width={WIDTH * (right - left)}
                     height={BAR_HEIGHT}
                     fill="#FFFFFF"
                     opacity={bandOpacity(band.points)}
                   />
-                ))
+                  );
+                })
             : null}
 
           {target != null ? <Needle value={target} color={Colors.textPrimary} filled /> : null}

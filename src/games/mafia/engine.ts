@@ -231,8 +231,10 @@ export class MafiaEngine extends Observable {
   // MARK: - დღე
 
   beginVote(): void {
-    this.phase = 'dayVote';
-    this.notify();
+    this.settleOrContinue(() => {
+      this.phase = 'dayVote';
+      this.notify();
+    });
   }
 
   voteOut(player: Player): void {
@@ -244,9 +246,10 @@ export class MafiaEngine extends Observable {
   }
 
   continueGame(): void {
-    if (this.winner !== null) return;
-    this.night += 1;
-    this.beginNight();
+    this.settleOrContinue(() => {
+      this.night += 1;
+      this.beginNight();
+    });
   }
 
   restart(): void {
@@ -263,13 +266,20 @@ export class MafiaEngine extends Observable {
     const mafiaAlive = this.alive.filter((p) => this.roles[p.id] === 'mafia').length;
     const othersAlive = this.alive.length - mafiaAlive;
 
-    if (mafiaAlive === 0) {
-      this.winner = 'city';
+    // მხოლოდ გამარჯვებულს ვაფიქსირებთ — ფაზას არა: დილის/დღის შედეგის ეკრანი
+    // ჯერ უნდა გამოჩნდეს (ვინ დაიღუპა, ვინ იყო), და მხოლოდ მერე დასასრული.
+    if (mafiaAlive === 0) this.winner = 'city';
+    else if (mafiaAlive >= othersAlive) this.winner = 'mafia';
+  }
+
+  /** შედეგის ეკრანიდან წინ — თუ თამაში უკვე გადაწყდა, დასასრულზე. */
+  private settleOrContinue(next: () => void): void {
+    if (this.winner !== null) {
       this.phase = 'gameOver';
-    } else if (mafiaAlive >= othersAlive) {
-      this.winner = 'mafia';
-      this.phase = 'gameOver';
+      this.notify();
+      return;
     }
+    next();
   }
 
   // MARK: - პარამეტრები

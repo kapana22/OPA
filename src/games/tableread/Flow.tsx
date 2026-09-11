@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, Space, body, caption } from '../../theme/theme';
+import { Colors, Radius, body, caption } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
 import { ScreenHeader } from '../../ui/Cards';
 import { Pressable } from '../../ui/Pressable';
+import { Layout } from '../../ui/layout';
 import { Haptics } from '../../core/haptics';
 import type { GameFlowProps } from '../registry';
 import { HerdFlow } from '../herd/Flow';
@@ -75,12 +76,12 @@ export function TableReadFlow({ roster, onExit }: GameFlowProps) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="Read the Room" subtitle="სამი რეჟიმი, ერთი უნარი" onBack={onExit} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 12 }]}>
+      <ScrollView contentContainerStyle={[Layout.scroll, { gap: 12 }]}>
+        <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 12 }]}>
           სამივეგან ერთსა და იმავეს აკეთებ — ფარულად აჭერ ერთ ღილაკს. განსხვავება ისაა, ვის კითხულობ.
         </Text>
 
@@ -126,8 +127,6 @@ function Chip({ text, tint }: { text: string; tint: string }) {
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 12 },
-  centered: { textAlign: 'center' },
   card: {
     flexDirection: 'row',
     alignItems: 'flex-start',

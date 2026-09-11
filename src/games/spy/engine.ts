@@ -41,6 +41,8 @@ export interface SpyCard {
 
 const KEY = 'splash.spy.settings.v1';
 const DEFAULTS: SpySettings = { undercoverCount: 1, includeMrWhite: false, discussionSeconds: 120, categoryID: null };
+/** განხილვის დრო წამებში; 0 = ტაიმერის გარეშე. */
+const DISCUSSION = [30, 600] as const;
 /** რამდენ ბოლო წყვილს ვუვლით გვერდს, რომ საერთო სიტყვა არ გამეორდეს. */
 const SIMILARITY_WINDOW = 6;
 
@@ -75,7 +77,7 @@ export class SpyEngine extends Observable {
     this.settings = loadSettings<SpySettings>(KEY, DEFAULTS, (s) => ({
       undercoverCount: num(s.undercoverCount, DEFAULTS.undercoverCount, 1, 6),
       includeMrWhite: bool(s.includeMrWhite, DEFAULTS.includeMrWhite),
-      discussionSeconds: num(s.discussionSeconds, DEFAULTS.discussionSeconds, 30, 600),
+      discussionSeconds: s.discussionSeconds === 0 ? 0 : num(s.discussionSeconds, DEFAULTS.discussionSeconds, ...DISCUSSION),
       categoryID: categoryID(s.categoryID, (id) => PairBank.category(id) !== undefined),
     }));
     this.clampSettings();
@@ -153,8 +155,9 @@ export class SpyEngine extends Observable {
     this.settings = { ...this.settings, categoryID: id };
     this.persist();
   }
+  /** 0 = ტაიმერის გარეშე („∞“) — `DiscussionPanel` ამას იცნობს. */
   setDiscussionSeconds(seconds: number): void {
-    this.settings = { ...this.settings, discussionSeconds: Math.min(Math.max(30, seconds), 600) };
+    this.settings = { ...this.settings, discussionSeconds: seconds === 0 ? 0 : num(seconds, DEFAULTS.discussionSeconds, ...DISCUSSION) };
     this.persist();
   }
 
@@ -264,9 +267,15 @@ export class SpyEngine extends Observable {
     this.winner = result;
     const points: Record<string, number> = {};
 
-    if (result === 'civilians') for (const p of this.playersWith('civilian')) points[p.id] = 2;
-    else if (result === 'undercovers') for (const p of this.playersWith('undercover')) points[p.id] = 3;
-    else for (const p of this.playersWith('mrWhite')) points[p.id] = 4;
+    if (result === 'civilians') {
+      for (const p of this.playersWith('civilian')) points[p.id] = 2;
+    } else if (result === 'undercovers') {
+      // გამარჯვება გადარჩენილებმა მოიტანეს — ამოვარდნილ ჯაშუშს არაფერი ერგება,
+      // ცოცხალ Mr White-ს კი იგივე, რაც ჯაშუშს: `evaluate()` მასაც სპეციალურად თვლის.
+      for (const p of this.alive) if (this.roles[p.id] !== 'civilian') points[p.id] = 3;
+    } else {
+      for (const p of this.playersWith('mrWhite')) points[p.id] = 4;
+    }
 
     this.finalPoints = points;
     this.phase = 'gameOver';

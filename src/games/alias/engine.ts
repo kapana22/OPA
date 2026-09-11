@@ -60,6 +60,8 @@ interface SavedLayout {
 const KEY = 'splash.alias.settings.v1';
 const TEAMS_KEY = 'splash.alias.teams.v1';
 const DEFAULTS: AliasSettings = { teamCount: 2, seconds: 60, target: 50, categoryID: null, penalizeSkip: true };
+/** ზღვრები ერთ ადგილას — ჩატვირთვაც და ეკრანიდან შეცვლაც ერთსა და იმავეს ამოწმებს. */
+const LIMITS = { seconds: [15, 180], target: [10, 200] } as const;
 
 export class AliasEngine extends Observable {
   static readonly defaultTeamNames = ['ცისფრები', 'ვარდისფრები', 'მწვანეები', 'ყვითლები'];
@@ -89,8 +91,8 @@ export class AliasEngine extends Observable {
     this.players = players;
     this.settings = loadSettings<AliasSettings>(KEY, DEFAULTS, (s) => ({
       teamCount: num(s.teamCount, DEFAULTS.teamCount, 2, 4),
-      seconds: num(s.seconds, DEFAULTS.seconds, 15, 180),
-      target: num(s.target, DEFAULTS.target, 10, 200),
+      seconds: num(s.seconds, DEFAULTS.seconds, ...LIMITS.seconds),
+      target: num(s.target, DEFAULTS.target, ...LIMITS.target),
       categoryID: categoryID(s.categoryID, (id) => CharadesBank.category(id) !== undefined),
       penalizeSkip: bool(s.penalizeSkip, DEFAULTS.penalizeSkip),
     }));
@@ -429,11 +431,11 @@ export class AliasEngine extends Observable {
   // MARK: - პარამეტრები
 
   setSeconds(value: number): void {
-    this.settings = { ...this.settings, seconds: Math.min(Math.max(15, value), 180) };
+    this.settings = { ...this.settings, seconds: num(value, DEFAULTS.seconds, ...LIMITS.seconds) };
     this.persist();
   }
   setTarget(value: number): void {
-    this.settings = { ...this.settings, target: Math.min(Math.max(10, value), 200) };
+    this.settings = { ...this.settings, target: num(value, DEFAULTS.target, ...LIMITS.target) };
     this.persist();
   }
   setCategory(id: string | null): void {

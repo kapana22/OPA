@@ -156,8 +156,8 @@ export class BombEngine extends Observable {
         this.nextTickAt = this.elapsed + (0.9 - 0.78 * this.tension);
       }
 
+      // ეკრანი ტკაცუნზე არაფერს კითხულობს — ხმა და ვიბრაცია ზემოთ უკვე წავიდა.
       if (this.elapsed >= this.fuse) this.explode();
-      else this.notify();
     });
   }
 

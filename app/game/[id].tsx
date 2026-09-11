@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SplashBackground } from '../../src/ui/SplashBackground';
-import { ComingSoon } from '../../src/ui/Cards';
+import { ComingSoon, Notice } from '../../src/ui/Cards';
 import { Colors } from '../../src/theme/theme';
 import { game as findGame } from '../../src/games/catalog';
 import { gameFlow } from '../../src/games/registry';
@@ -32,11 +32,26 @@ export default function GameHost() {
   const Flow = game ? gameFlow(game.id) : undefined;
   const tint = game ? Colors[game.accent] : Colors.neonCyan;
 
+  // მთავარი ეკრანი ამას ადრევე ამოწმებს, ღრმა ბმული კი — არა. ცარიელი როსტერით
+  // ძრავი ცარიელ ეკრანზე ჩერდება, ამიტომ კარი აქვე იკეტება, გამოსასვლელით.
+  const tooFew = game && !game.comingSoon && roster.count < game.minPlayers;
+
   return (
     <View style={{ flex: 1 }}>
       <SplashBackground tint={tint} />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        {Flow ? <Flow roster={roster} onExit={exit} /> : <ComingSoon />}
+        {tooFew ? (
+          <Notice
+            icon="person.3.fill"
+            title="ჯერ ცოტანი ხართ"
+            text={`${game.title} — მინიმუმ ${game.minPlayers} მოთამაშე სჭირდება.`}
+            onBack={exit}
+          />
+        ) : Flow ? (
+          <Flow roster={roster} onExit={exit} />
+        ) : (
+          <ComingSoon onBack={exit} />
+        )}
       </SafeAreaView>
     </View>
   );

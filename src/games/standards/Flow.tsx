@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { StandardsBank } from '../../content/banks';
 import { TurnRotation } from '../../core/turnRotation';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { StandardsEngine, type StandardsVerdict } from './engine';
 
@@ -46,11 +48,11 @@ export function StandardsFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="ნორმაა თუ არა?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 10 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>როგორ ითვლება ქულა</Text>
@@ -66,9 +68,10 @@ function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => vo
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {TurnRotation.lapOptions.map((laps) => (
                 <CategoryChip
+                  compact
                   key={laps}
                   label={TurnRotation.label(laps)}
                   selected={engine.settings.laps === laps}
@@ -85,7 +88,7 @@ function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => vo
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="ყველა"
                 selected={engine.settings.categoryID === null}
@@ -104,7 +107,7 @@ function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => vo
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Palette.accent} onPress={() => engine.startGame()} />
       </View>
     </View>
@@ -125,9 +128,9 @@ function Rule({ text }: { text: string }) {
 function Intro({ engine, onExit }: { engine: StandardsEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.totalRounds}
         </Text>
         <View style={{ flex: 1 }} />
@@ -139,7 +142,7 @@ function Intro({ engine, onExit }: { engine: StandardsEngine; onExit: () => void
         <GlassCard padding={24}>
           <View style={{ gap: 14, alignItems: 'center' }}>
             <Text style={[body(16, '700'), { color: Palette.tooMuch }]}>ნორმაა თუ გადამეტებაა?</Text>
-            <Text style={[titleFont(26), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
+            <Text style={[titleFont(26), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
               {engine.currentExpectation}
             </Text>
           </View>
@@ -147,20 +150,20 @@ function Intro({ engine, onExit }: { engine: StandardsEngine; onExit: () => void
       </View>
 
       <Text
-        style={[body(17, '900'), styles.centered, { color: Colors.phosphor, paddingHorizontal: 32 }]}
+        style={[body(17, '900'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 32 }]}
         numberOfLines={2}
         adjustsFontSizeToFit
       >
         ამ რაუნდის მკითხავი — {engine.reader?.name ?? '—'}
       </Text>
 
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         ჯერ არაფერს ამბობთ — ტელეფონი წრეზე გადადის
       </Text>
 
       <View style={{ flex: 1 }} />
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დავიწყოთ" icon="chevron.right" tint={Palette.accent} onPress={() => engine.beginVoting()} />
         <GhostButton title="სხვა მოლოდინი" icon="shuffle" onPress={() => engine.swapExpectation()} />
       </View>
@@ -176,13 +179,13 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
   const [prediction, setPrediction] = useState<number | null>(null);
 
   const header = (
-    <View style={styles.topBar}>
+    <View style={Layout.topBar}>
       <GameExitButton onExit={onExit} />
-      <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+      <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
         რაუნდი {engine.round} / {engine.totalRounds}
       </Text>
       <View style={{ flex: 1 }} />
-      <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+      <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
         {engine.voterIndex + 1} / {engine.players.length}
       </Text>
     </View>
@@ -193,22 +196,22 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
       <View style={{ flex: 1, gap: 20 }}>
         {header}
         <View style={{ flex: 1 }} />
-        <Text style={[body(16, '500'), styles.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
         <Text
-          style={[titleFont(36), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
+          style={[titleFont(36), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
           adjustsFontSizeToFit
           numberOfLines={2}
         >
           {engine.currentVoter?.name ?? '—'}
         </Text>
         {engine.currentVoterIsReader ? (
-          <Text style={[body(14, '700'), styles.centered, { color: Colors.phosphor }]}>
+          <Text style={[body(14, '700'), Layout.centered, { color: Colors.phosphor }]}>
             შენ ხარ ამ რაუნდის მკითხავი
           </Text>
         ) : null}
-        <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>დანარჩენები არ იყურებიან</Text>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>დანარჩენები არ იყურებიან</Text>
         <View style={{ flex: 1 }} />
-        <View style={styles.footer}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="ჩემი ჯერია"
             icon="hand.raised.fill"
@@ -231,7 +234,7 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
       {header}
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20, gap: Space.m, paddingTop: 10 }}>
-        <Text style={[body(19, '700'), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}>
+        <Text style={[body(19, '700'), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}>
           {engine.currentExpectation}
         </Text>
 
@@ -260,7 +263,7 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
                   შენ ხარ მკითხავი: ზუსტი პროგნოზი +{StandardsEngine.exactReward}, ერთით აცდენა +
                   {StandardsEngine.closeReward}.
                 </Text>
-                <View style={styles.chipRow}>
+                <View style={Layout.chipRow}>
                   {Array.from({ length: engine.players.length + 1 }, (_, n) => (
                     <CategoryChip key={n} label={String(n)} selected={prediction === n} onPress={() => setPrediction(n)} />
                   ))}
@@ -269,13 +272,13 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
             </GlassCard>
           </View>
         ) : (
-          <Text style={[caption(11), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             უმცირესობაში დარჩენა +{StandardsEngine.minorityReward} ქულაა — გულწრფელად უპასუხე.
           </Text>
         )}
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დაფიქსირება"
           icon="checkmark"
@@ -321,21 +324,21 @@ function Result({ engine, onExit }: { engine: StandardsEngine; onExit: () => voi
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <Text style={[body(16, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
+      <Text style={[body(16, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
         {engine.currentExpectation}
       </Text>
 
       <View style={{ gap: 10, paddingHorizontal: 28 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-          <Text style={[titleFont(34), styles.digits, { color: Palette.normal }]}>{engine.normalVotes}</Text>
+          <Text style={[titleFont(34), Layout.digits, { color: Palette.normal }]}>{engine.normalVotes}</Text>
           <Text style={[titleFont(24), { color: Colors.textSecondary }]}>:</Text>
-          <Text style={[titleFont(34), styles.digits, { color: Palette.tooMuch }]}>{engine.tooMuchVotes}</Text>
+          <Text style={[titleFont(34), Layout.digits, { color: Palette.tooMuch }]}>{engine.tooMuchVotes}</Text>
         </View>
         <View style={{ flexDirection: 'row', gap: 4, height: 20 }}>
           <View style={{ flex: Math.max(0.06, share), borderRadius: 8, backgroundColor: Palette.normal }} />
@@ -348,12 +351,12 @@ function Result({ engine, onExit }: { engine: StandardsEngine; onExit: () => voi
       </View>
 
       {engine.isUnanimous ? (
-        <Text style={[body(13, '500'), styles.centered, { color: Colors.phosphor, paddingHorizontal: 32 }]}>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 32 }]}>
           მაგიდა ერთხმად შეთანხმდა — იშვიათი შემთხვევაა.
         </Text>
       ) : null}
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 2, gap: 7 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { paddingTop: 2, gap: 7 }]}>
         {engine.players.map((player) => {
           const v = engine.verdictFor(player);
           const minority = engine.isInMinority(player);
@@ -374,7 +377,7 @@ function Result({ engine, onExit }: { engine: StandardsEngine; onExit: () => voi
               ) : null}
               {minority ? <Text style={[caption(10), { color: Colors.textSecondary }]}>უმცირესობა</Text> : null}
               {points > 0 ? (
-                <Text style={[body(14, '900'), styles.digits, { color: Colors.phosphor }]}>+{points}</Text>
+                <Text style={[body(14, '900'), Layout.digits, { color: Colors.phosphor }]}>+{points}</Text>
               ) : null}
             </View>
           );
@@ -382,13 +385,13 @@ function Result({ engine, onExit }: { engine: StandardsEngine; onExit: () => voi
       </ScrollView>
 
       {engine.prediction !== null ? (
-        <Text style={[body(13, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
+        <Text style={[body(13, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
           {engine.reader?.name ?? '—'} იწინასწარმეტყველა {engine.prediction} — {gap === 0 ? 'ზუსტად' : `${gap}-ით აცდა`}
         </Text>
       ) : null}
 
       <Text
-        style={[caption(11), styles.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}
+        style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}
       >
         მკითხავს ზუსტი პროგნოზი +{StandardsEngine.exactReward} · ერთით აცდენა +{StandardsEngine.closeReward} ·
         უმცირესობას +{StandardsEngine.minorityReward}
@@ -396,7 +399,7 @@ function Result({ engine, onExit }: { engine: StandardsEngine; onExit: () => voi
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.isLastRound ? 'შედეგები' : 'შემდეგი რაუნდი'}
           icon={engine.isLastRound ? 'flag.checkered' : 'chevron.right'}
@@ -419,14 +422,11 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     PodiumAward.apply(engine.results, roster);
     Haptics.win();
-  }, [applied, engine, roster]);
+  });
 
   const top = engine.ranking[0];
   const champion = top && engine.totalFor(top) > 0 ? top : null;
@@ -442,46 +442,45 @@ function Summary({
           <GlyphIcon name="crown.fill" size={31} tint={Colors.phosphor} />
         </View>
 
-        <Text style={[titleFont(28), styles.centered, { color: Palette.tooMuch }]}>
+        <Text style={[titleFont(28), Layout.centered, { color: Palette.tooMuch }]}>
           {champion === null ? 'ქულა ვერავინ აიღო' : 'მაგიდის მკითხველი'}
         </Text>
 
         {champion ? (
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {champion.name} — ყველაზე ხშირად გამოიცნო, სად გაივლიდა ჯგუფი ხაზს
           </Text>
         ) : null}
 
         <View style={{ gap: 4 }}>
           {softest.length > 0 ? (
-            <Text style={[caption(11), styles.centered, { color: Palette.normal }]}>
+            <Text style={[caption(11), Layout.centered, { color: Palette.normal }]}>
               ყველაზე რბილი — {softest.map((p) => p.name).join(', ')}
             </Text>
           ) : null}
           {strictest.length > 0 ? (
-            <Text style={[caption(11), styles.centered, { color: Palette.tooMuch }]}>
+            <Text style={[caption(11), Layout.centered, { color: Palette.tooMuch }]}>
               ყველაზე მკაცრი — {strictest.map((p) => p.name).join(', ')}
             </Text>
           ) : null}
         </View>
 
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
           საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
         </Text>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
+        <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
           {engine.ranking.map((player, rank) => (
             <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.totalFor(player)} highlight={rank === 0} />
           ))}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Palette.accent}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -495,13 +494,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: 12 },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   verdictButton: {
     flex: 1,
     alignItems: 'center',

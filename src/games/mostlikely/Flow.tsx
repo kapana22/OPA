@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
@@ -6,10 +6,12 @@ import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RankRow, ScreenHeader } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
+import { Layout } from '../../ui/layout';
 import { PromptBank } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { MostLikelyEngine } from './engine';
@@ -48,11 +50,11 @@ export function MostLikelyFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: MostLikelyEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="ვინ არის ყველაზე..." subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რეჟიმი</Text>
@@ -74,9 +76,10 @@ function Setup({ engine, onClose }: { engine: MostLikelyEngine; onClose: () => v
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {ROUND_OPTIONS.map((count) => (
                 <CategoryChip
+                  compact
                   key={count}
                   label={String(count)}
                   selected={engine.settings.rounds === count}
@@ -90,7 +93,7 @@ function Setup({ engine, onClose }: { engine: MostLikelyEngine; onClose: () => v
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip label="ყველა" selected={engine.settings.categoryID === null} onPress={() => engine.setCategory(null)} />
               {PromptBank.categories.map((cat) => (
                 <CategoryChip
@@ -105,7 +108,7 @@ function Setup({ engine, onClose }: { engine: MostLikelyEngine; onClose: () => v
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.startGame()} />
       </View>
     </View>
@@ -117,7 +120,7 @@ function Setup({ engine, onClose }: { engine: MostLikelyEngine; onClose: () => v
 function Prompt({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: Space.l }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(14, '700'), { color: Colors.textSecondary, fontVariant: ['tabular-nums'] }]}>
           რაუნდი {engine.round} / {engine.settings.rounds}
@@ -139,21 +142,21 @@ function Prompt({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => vo
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard padding={28}>
-          <Text style={[titleFont(28), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
+          <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
             {engine.currentPrompt}
           </Text>
         </GlassCard>
       </View>
 
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {engine.isSecret ? 'ფარული რეჟიმი — ტელეფონი წრეზე გადადის' : 'დათვალეთ სამამდე და ერთდროულად მიუთითეთ'}
       </Text>
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.isSecret ? 'კენჭისყრის დაწყება' : 'ვისზე უთითებთ?'}
           icon="hand.point.up.left.fill"
@@ -170,7 +173,7 @@ function Prompt({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => vo
 function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -185,14 +188,14 @@ function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void
           </Text>
         </View>
       ) : (
-        <Text style={[titleFont(28), styles.centered, { color: Colors.textPrimary }]}>ვისზე უთითებთ?</Text>
+        <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]}>ვისზე უთითებთ?</Text>
       )}
 
-      <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {engine.currentPrompt}
       </Text>
 
-      <ScrollView contentContainerStyle={styles.nameGrid}>
+      <ScrollView contentContainerStyle={Layout.nameGrid}>
         {engine.players.map((player) => (
           <Pressable
             key={player.id}
@@ -205,7 +208,7 @@ function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void
             }}
             style={styles.nameCell}
           >
-            <Text style={[body(17, '700'), styles.centered, { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
+            <Text style={[body(17, '700'), Layout.centered, { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
               {player.name}
             </Text>
           </Pressable>
@@ -228,7 +231,7 @@ function Result({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => vo
 
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -238,16 +241,16 @@ function Result({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => vo
         <GlyphIcon name={winners.length > 1 ? 'hands.clap.fill' : 'crown.fill'} size={29} />
       </View>
 
-      <Text style={[titleFont(30), styles.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]} adjustsFontSizeToFit numberOfLines={3}>
+      <Text style={[titleFont(30), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]} adjustsFontSizeToFit numberOfLines={3}>
         {winners.map((p) => p.name).join(' და ')}
       </Text>
 
-      <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {engine.currentPrompt}
       </Text>
 
       {engine.isSecret ? (
-        <View style={{ paddingHorizontal: 24 }}>
+        <View style={Layout.content}>
           <GlassCard>
             <View style={{ gap: 10 }}>
               {engine.players
@@ -280,7 +283,7 @@ function Result({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => vo
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.round >= engine.settings.rounds ? 'შედეგები' : 'შემდეგი კითხვა'}
           icon="chevron.right"
@@ -295,15 +298,12 @@ function Result({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => vo
 // ── შეჯამება
 
 function Summary({ engine, roster, onExit }: { engine: MostLikelyEngine; roster: GameFlowProps['roster']; onExit: () => void }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     // ერთნაირი შედეგი — ერთნაირი ჯილდო; ფრეს ანბანი აღარ წყვეტს.
     PodiumAward.apply(engine.results, roster);
     Haptics.success();
-  }, [applied, engine, roster]);
+  });
 
   const top = engine.ranking[0];
 
@@ -315,32 +315,31 @@ function Summary({ engine, roster, onExit }: { engine: MostLikelyEngine; roster:
         <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
       </View>
 
-      <Text style={[titleFont(28), styles.centered, { color: Colors.phosphor }]}>ღამის გმირი</Text>
+      <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>ღამის გმირი</Text>
 
       {top ? (
         <>
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {top.name} — სულ {engine.totalFor(top)} დასახელება
           </Text>
-          <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+          <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
             საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
           </Text>
         </>
       ) : null}
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
         {engine.ranking.map((player, rank) => (
           <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.totalFor(player)} highlight={rank === 0} />
         ))}
       </ScrollView>
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="თავიდან"
           icon="arrow.clockwise"
           tint={Colors.phosphor}
           onPress={() => {
-            setApplied(false);
             engine.restart();
           }}
         />
@@ -351,12 +350,6 @@ function Summary({ engine, roster, onExit }: { engine: MostLikelyEngine; roster:
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24, paddingTop: Space.m },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -366,7 +359,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     backgroundColor: Colors.surface,
   },
-  nameGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 24, paddingVertical: 8 },
   nameCell: {
     width: '47%',
     flexGrow: 1,

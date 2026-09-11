@@ -6,12 +6,14 @@ import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader } from '../../ui/Cards';
 import { PrimaryButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
+import { Layout } from '../../ui/layout';
 import { useLandscapeOnly } from '../../core/orientationLock';
 import { CharadesBank } from '../../content/banks';
 import { TurnRotation } from '../../core/turnRotation';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { CharadesEngine, type CharadesEntry } from './engine';
 
@@ -48,9 +50,17 @@ export function CharadesFlow({ roster, onExit }: GameFlowProps) {
     case 'turnIntro':
       return <TurnIntro engine={engine} onExit={onExit} />;
     case 'countdown':
-      return <Countdown engine={engine} onExit={onExit} />;
+      return (
+        <Landscape>
+          <Countdown engine={engine} onExit={onExit} />
+        </Landscape>
+      );
     case 'playing':
-      return <Play engine={engine} onExit={onExit} />;
+      return (
+        <Landscape>
+          <Play engine={engine} onExit={onExit} />
+        </Landscape>
+      );
     case 'turnResult':
       return <TurnResult engine={engine} onExit={onExit} />;
     case 'summary':
@@ -63,11 +73,11 @@ export function CharadesFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="Heads Up" subtitle="ტელეფონი შუბლზე" onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 10 }}>
             <Step n="1" text="ერთი მოთამაშე ტელეფონს შუბლზე იჭერს, ეკრანით სხვებისკენ." />
@@ -80,9 +90,10 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>დრო</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {TIME_OPTIONS.map((secs) => (
                 <CategoryChip
+                  compact
                   key={secs}
                   label={`${secs} წმ`}
                   selected={engine.settings.seconds === secs}
@@ -96,9 +107,10 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ჯერი</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {TurnRotation.lapOptions.map((laps) => (
                 <CategoryChip
+                  compact
                   key={laps}
                   label={TurnRotation.label(laps)}
                   selected={engine.settings.laps === laps}
@@ -115,7 +127,7 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="ყველა"
                 selected={engine.settings.categoryID === null}
@@ -159,7 +171,7 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დაწყება"
           icon="play.fill"
@@ -201,7 +213,7 @@ function ScoreStrip({ engine }: { engine: CharadesEngine }) {
             >
               {player.name}
             </Text>
-            <Text style={[body(19, '900'), styles.digits, { color: active ? Colors.phosphor : Colors.textPrimary }]}>
+            <Text style={[body(19, '900'), Layout.digits, { color: active ? Colors.phosphor : Colors.textPrimary }]}>
               {engine.liveScore(player)}
             </Text>
           </View>
@@ -214,9 +226,9 @@ function ScoreStrip({ engine }: { engine: CharadesEngine }) {
 function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(13, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           ჯერი {engine.turnNumber} / {engine.totalTurns}
         </Text>
         <View style={{ flex: 1 }} />
@@ -232,18 +244,18 @@ function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
       <View style={{ flex: 1 }} />
 
       <View style={{ gap: 12, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(30), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={2}>
+        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={2}>
           {engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე
         </Text>
-        <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           მაგიდა სიტყვას გიხსნის — თვითონ სიტყვის თქმის გარეშე.
         </Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <View style={[styles.footer, { gap: 10 }]}>
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
+      <View style={Layout.footer}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
           გამოიცანი — წინ დახარე; ვერ იცნობ — უკან. ტელეფონი ყოველ ჯერზე შუბლთან დააბრუნე.
         </Text>
         <PrimaryButton title="მზად ვარ" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginTurn()} />
@@ -252,24 +264,31 @@ function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
   );
 }
 
+// ── ლანდშაფტი — ათვლასა და თამაშს ერთი ჩაკეტვა ჰყოფნით
+//
+// ცალ-ცალკე რომ ჰქონდეთ, ფაზის გადასვლისას ერთი გამოსვლისას პორტრეტს ითხოვდა,
+// მეორე შესვლისას ლანდშაფტს — ერთ კადრში, ტელეფონი კი უკვე შუბლზეა.
+function Landscape({ children }: { children: React.ReactNode }) {
+  useLandscapeOnly();
+  return <>{children}</>;
+}
+
 // ── ათვლა
 
 function Countdown({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }) {
-  useLandscapeOnly();
-
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 18 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
       <Text
-        style={[body(20, '700'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}
+        style={[body(20, '700'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}
         numberOfLines={2}
         adjustsFontSizeToFit
       >
         {engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე მიიდე
       </Text>
-      <Text style={[styles.huge, styles.digits, { color: Colors.phosphor }]}>{engine.countdown}</Text>
+      <Text style={[styles.huge, Layout.digits, { color: Colors.phosphor }]}>{engine.countdown}</Text>
     </View>
   );
 }
@@ -277,8 +296,6 @@ function Countdown({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
 // ── თამაში (ლანდშაფტი)
 
 function Play({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }) {
-  useLandscapeOnly();
-
   const flash = engine.flash;
   const flashColor = flash?.verdict === 'correct' ? Colors.phosphor : Colors.neonMagenta;
 
@@ -298,7 +315,7 @@ function Play({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }
           <Counter symbol="✓" value={engine.correctCount} color={Colors.phosphor} />
           <View style={{ flex: 1 }} />
           <Text
-            style={[styles.timer, styles.digits, { color: engine.remaining <= 10 ? Colors.neonMagenta : Colors.textPrimary }]}
+            style={[styles.timer, Layout.digits, { color: engine.remaining <= 10 ? Colors.neonMagenta : Colors.textPrimary }]}
           >
             {engine.remaining}
           </Text>
@@ -308,7 +325,7 @@ function Play({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }
 
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text
-            style={[styles.word, styles.centered, { color: flash ? Colors.ink : Colors.textPrimary }]}
+            style={[styles.word, Layout.centered, { color: flash ? Colors.ink : Colors.textPrimary }]}
             numberOfLines={3}
             adjustsFontSizeToFit
           >
@@ -319,7 +336,7 @@ function Play({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }
         <Text
           style={[
             body(13, '600'),
-            styles.centered,
+            Layout.centered,
             { color: flash ? Colors.ink : Colors.textSecondary, opacity: flash ? 0.6 : 1, paddingBottom: 10 },
           ]}
         >
@@ -344,7 +361,7 @@ function Counter({ symbol, value, color }: { symbol: string; value: number; colo
   return (
     <View style={{ alignItems: 'center' }}>
       <Text style={[body(15, '900'), { color }]}>{symbol}</Text>
-      <Text style={[body(22, '900'), styles.digits, { color }]}>{value}</Text>
+      <Text style={[body(22, '900'), Layout.digits, { color }]}>{value}</Text>
     </View>
   );
 }
@@ -354,11 +371,11 @@ function Counter({ symbol, value, color }: { symbol: string; value: number; colo
 function TurnResult({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>ჯერი დასრულდა</Text>
         <View style={{ flex: 1 }} />
-        <Text style={[body(12, '600'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(12, '600'), Layout.digits, { color: Colors.textSecondary }]}>
           ჯერი {engine.turnNumber} / {engine.totalTurns}
         </Text>
       </View>
@@ -367,24 +384,24 @@ function TurnResult({ engine, onExit }: { engine: CharadesEngine; onExit: () => 
         <Text style={[titleFont(24), { color: Colors.phosphor }]} numberOfLines={1} adjustsFontSizeToFit>
           {engine.currentPlayer?.name ?? ''}
         </Text>
-        <Text style={[display(58), styles.digits, { color: Colors.textPrimary }]}>{engine.correctCount}</Text>
+        <Text style={[display(58), Layout.digits, { color: Colors.textPrimary }]}>{engine.correctCount}</Text>
         <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>გამოცნობილი სიტყვა</Text>
         {engine.skippedCount > 0 ? (
-          <Text style={[body(13, '500'), styles.digits, { color: Colors.textSecondary, opacity: 0.8 }]}>
+          <Text style={[body(13, '500'), Layout.digits, { color: Colors.textSecondary, opacity: 0.8 }]}>
             გამოტოვებული — {engine.skippedCount}
           </Text>
         ) : null}
       </View>
 
       {engine.results.length > 0 ? (
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           სადავო სიტყვას შეეხე — ნიშანი შეიცვლება.
         </Text>
       ) : null}
 
       {engine.results.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
-          <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>ამ ჯერის სია ცარიელია.</Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ამ ჯერის სია ცარიელია.</Text>
         </View>
       ) : (
         <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 4, gap: 6 }}>
@@ -394,7 +411,7 @@ function TurnResult({ engine, onExit }: { engine: CharadesEngine; onExit: () => 
         </ScrollView>
       )}
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.isLastTurn ? 'შედეგები' : 'შემდეგი მოთამაშე'}
           icon={engine.isLastTurn ? 'flag.checkered' : 'chevron.right'}
@@ -436,7 +453,7 @@ function WordRow({ engine, entry }: { engine: CharadesEngine; entry: CharadesEnt
           </Text>
         ) : null}
       </View>
-      <Text style={[body(14, '900'), styles.digits, { color: correct ? Colors.phosphor : Colors.textSecondary }]}>
+      <Text style={[body(14, '900'), Layout.digits, { color: correct ? Colors.phosphor : Colors.textSecondary }]}>
         {correct ? '+1' : '0'}
       </Text>
     </Pressable>
@@ -454,14 +471,11 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     PodiumAward.apply(engine.podiumResults, roster);
     Haptics.win();
-  }, [applied, engine, roster]);
+  });
 
   const champion = engine.champion;
 
@@ -473,17 +487,17 @@ function Summary({
         <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
       </View>
 
-      <Text style={[titleFont(26), styles.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}>
+      <Text style={[titleFont(26), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}>
         საუკეთესო გამომცნობი
       </Text>
 
-      <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {champion
           ? `${champion.name} — ${engine.scoreFor(champion)} გამოცნობილი სიტყვა`
           : 'ამ პარტიაში სიტყვა ვერავინ გამოიცნო'}
       </Text>
 
-      <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+      <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
         საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
       </Text>
 
@@ -493,13 +507,12 @@ function Summary({
         ))}
       </ScrollView>
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="თავიდან"
           icon="arrow.clockwise"
           tint={Colors.phosphor}
           onPress={() => {
-            setApplied(false);
             engine.restart();
           }}
         />
@@ -510,13 +523,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: Space.m },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   stepBadge: {
     width: 22,
     height: 22,

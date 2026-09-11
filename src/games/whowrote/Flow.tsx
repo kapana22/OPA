@@ -6,10 +6,12 @@ import { icon as sf } from '../../theme/icons';
 import { CategoryChip, Divider, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
+import { Layout } from '../../ui/layout';
 import { AnswerPromptBank } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { WhoWroteEngine, type Reveal } from './engine';
 
@@ -72,11 +74,11 @@ export function WhoWroteFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: WhoWroteEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="ვინ დაწერა?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         {!engine.canPlay ? (
           <GlassCard>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
@@ -106,9 +108,10 @@ function Setup({ engine, onClose }: { engine: WhoWroteEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {ROUND_OPTIONS.map((count) => (
                 <CategoryChip
+                  compact
                   key={count}
                   label={String(count)}
                   selected={engine.settings.rounds === count}
@@ -122,7 +125,7 @@ function Setup({ engine, onClose }: { engine: WhoWroteEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="ყველა"
                 selected={engine.settings.categoryID === null}
@@ -141,7 +144,7 @@ function Setup({ engine, onClose }: { engine: WhoWroteEngine; onClose: () => voi
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დაწყება"
           icon="play.fill"
@@ -170,9 +173,9 @@ function Step({ n, text }: { n: string; text: string }) {
 function Intro({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: Space.l }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.settings.rounds}
         </Text>
         <View style={{ flex: 1 }} />
@@ -192,21 +195,21 @@ function Intro({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void 
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard padding={28}>
-          <Text style={[titleFont(26), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
+          <Text style={[titleFont(26), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
             {engine.currentPrompt}
           </Text>
         </GlassCard>
       </View>
 
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         წაიკითხეთ ერთად, მერე ტელეფონი წრეზე გაივლის და თითოეული ფარულად დაწერს პასუხს.
       </Text>
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="წერის დაწყება" icon="square.and.pencil" tint={Colors.phosphor} onPress={() => engine.beginWriting()} />
       </View>
     </View>
@@ -234,38 +237,38 @@ function Handoff({
 }) {
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>{counter}</Text>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>{counter}</Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <Text style={[body(16, '500'), styles.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+      <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
 
       <Text
-        style={[titleFont(36), styles.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
+        style={[titleFont(36), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
         adjustsFontSizeToFit
         numberOfLines={2}
       >
         {playerName}
       </Text>
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard>
           <View style={{ gap: 10, alignItems: 'center' }}>
             {prompt ? (
-              <Text style={[body(16, '700'), styles.centered, { color: Colors.textPrimary }]}>{prompt}</Text>
+              <Text style={[body(16, '700'), Layout.centered, { color: Colors.textPrimary }]}>{prompt}</Text>
             ) : null}
-            <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>{note}</Text>
+            <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>{note}</Text>
           </View>
         </GlassCard>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title={actionTitle} icon="hand.tap.fill" tint={Colors.phosphor} onPress={onAction} />
       </View>
     </View>
@@ -286,23 +289,23 @@ function Composer({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => vo
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(15, '700'), { color: Colors.phosphor }]} numberOfLines={1}>
           {engine.currentWriter?.name ?? '—'}
         </Text>
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.writerIndex + 1} / {engine.players.length}
         </Text>
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 18, paddingBottom: 12, gap: Space.m }}
+        contentContainerStyle={[Layout.content, { paddingTop: 18, paddingBottom: 12, gap: Space.m }]}
         keyboardDismissMode="interactive"
       >
         <GlassCard padding={22}>
-          <Text style={[titleFont(22), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={4}>
+          <Text style={[titleFont(22), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={4}>
             {engine.currentPrompt}
           </Text>
         </GlassCard>
@@ -317,18 +320,18 @@ function Composer({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => vo
           style={[body(18, '600'), styles.input, { color: Colors.textPrimary }]}
         />
 
-        <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           რაც უფრო მოულოდნელია პასუხი, მით ძნელია მიხვდნენ, რომ შენ დაწერე.
         </Text>
       </ScrollView>
 
-      <View style={[styles.footer, { gap: 8 }]}>
+      <View style={[Layout.footer, { gap: 8 }]}>
         {text.length >= limit - 20 ? (
           <Text
             style={[
               caption(12),
-              styles.centered,
-              styles.digits,
+              Layout.centered,
+              Layout.digits,
               { color: text.length >= limit - 5 ? Colors.neonMagenta : Colors.textSecondary },
             ]}
           >
@@ -356,25 +359,25 @@ function Composer({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => vo
 function Reading({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(13, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.settings.rounds}
         </Text>
         <View style={{ flex: 1 }} />
-        <Text style={[body(12, '600'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(12, '600'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.readingList.length} პასუხი
         </Text>
       </View>
 
       <View style={{ alignItems: 'center', gap: 6 }}>
         <Text style={[titleFont(26), { color: Colors.phosphor }]}>წაიკითხეთ ხმამაღლა</Text>
-        <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
+        <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
           {engine.currentPrompt}
         </Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 4, gap: 8 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { paddingVertical: 4, gap: 8 }]}>
         {engine.readingList.map((answer, index) => (
           <View key={index} style={styles.answerRow}>
             <View style={styles.answerBadge}>
@@ -385,11 +388,11 @@ function Reading({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => voi
         ))}
       </ScrollView>
 
-      <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.85, paddingHorizontal: 24 }]}>
+      <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.85, paddingHorizontal: 24 }]}>
         ავტორები დამალულია. ჯერ იკამათეთ, მერე ტელეფონი ისევ წრეზე გავა.
       </Text>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="გამოცნობა" icon="chevron.right" tint={Colors.phosphor} onPress={() => engine.beginGuessing()} />
       </View>
     </View>
@@ -403,21 +406,21 @@ function Picker({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(15, '700'), { color: Colors.phosphor }]} numberOfLines={1}>
           {engine.currentGuesser?.name ?? '—'}
         </Text>
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.guesserIndex + 1} / {engine.players.length}
         </Text>
       </View>
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard padding={24}>
           <Text
-            style={[titleFont(answer.length > 34 ? 22 : 28), styles.centered, { color: Colors.textPrimary }]}
+            style={[titleFont(answer.length > 34 ? 22 : 28), Layout.centered, { color: Colors.textPrimary }]}
             adjustsFontSizeToFit
             numberOfLines={5}
           >
@@ -426,9 +429,9 @@ function Picker({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void
         </GlassCard>
       </View>
 
-      <Text style={[body(16, '700'), styles.centered, { color: Colors.textSecondary }]}>ვინ დაწერა?</Text>
+      <Text style={[body(16, '700'), Layout.centered, { color: Colors.textSecondary }]}>ვინ დაწერა?</Text>
 
-      <ScrollView contentContainerStyle={styles.nameGrid}>
+      <ScrollView contentContainerStyle={Layout.nameGrid}>
         {engine.guessOptions.map((player) => (
           <Pressable
             key={player.id}
@@ -440,7 +443,7 @@ function Picker({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void
             }}
             style={styles.nameCell}
           >
-            <Text style={[body(17, '700'), styles.centered, { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
+            <Text style={[body(17, '700'), Layout.centered, { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
               {player.name}
             </Text>
           </Pressable>
@@ -461,19 +464,19 @@ function Result({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.settings.rounds}
         </Text>
         <View style={{ flex: 1 }} />
       </View>
 
-      <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {engine.currentPrompt}
       </Text>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 8, gap: 10 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { paddingVertical: 8, gap: 10 }]}>
         {engine.reveals.map((reveal: Reveal) => (
           <GlassCard key={reveal.id} padding={16}>
             <View style={{ gap: 10 }}>
@@ -501,7 +504,7 @@ function Result({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void
               {scored.map((player) => (
                 <View key={player.id} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={[body(15, '600'), { color: Colors.textPrimary, flex: 1 }]}>{player.name}</Text>
-                  <Text style={[body(15, '900'), styles.digits, { color: Colors.phosphor }]}>
+                  <Text style={[body(15, '900'), Layout.digits, { color: Colors.phosphor }]}>
                     +{engine.roundPoints(player)}
                   </Text>
                 </View>
@@ -511,7 +514,7 @@ function Result({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void
         ) : null}
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.isLastRound ? 'შედეგები' : 'შემდეგი რაუნდი'}
           icon="chevron.right"
@@ -546,14 +549,11 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     PodiumAward.apply(engine.results, roster);
     Haptics.success();
-  }, [applied, engine, roster]);
+  });
 
   const top = engine.ranking[0];
 
@@ -565,32 +565,31 @@ function Summary({
         <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
       </View>
 
-      <Text style={[titleFont(28), styles.centered, { color: Colors.phosphor }]}>გამარჯვებული</Text>
+      <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>გამარჯვებული</Text>
 
       {top ? (
         <>
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {top.name} — {engine.totalFor(top)} ქულა
           </Text>
-          <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+          <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
             საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
           </Text>
         </>
       ) : null}
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
         {engine.ranking.map((player, rank) => (
           <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.totalFor(player)} highlight={rank === 0} />
         ))}
       </ScrollView>
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="თავიდან"
           icon="arrow.clockwise"
           tint={Colors.phosphor}
           onPress={() => {
-            setApplied(false);
             engine.restart();
           }}
         />
@@ -601,16 +600,10 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24, paddingTop: Space.m },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   stepBadge: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.phosphor,
@@ -651,7 +644,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: Colors.phosphor,
   },
-  nameGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 24, paddingVertical: 8 },
   nameCell: {
     width: '47%',
     flexGrow: 1,

@@ -17,9 +17,11 @@ import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
 import { DiscussionPanel } from '../../ui/DiscussionPanel';
+import { Layout } from '../../ui/layout';
 import { PairBank } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { SpyEngine, type SpyRole } from './engine';
 
@@ -65,11 +67,11 @@ export function SpyFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="სხვა სიტყვა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ flex: 1, gap: 3 }}>
@@ -108,7 +110,7 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="შემთხვევითი"
                 selected={engine.settings.categoryID === null}
@@ -129,13 +131,14 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>განხილვის დრო</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {TIMER_OPTIONS.map((secs) => (
                 <CategoryChip
+                  compact
                   key={secs}
                   label={secs === 0 ? '∞' : `${secs / 60}:00`}
                   selected={engine.settings.discussionSeconds === secs}
-                  onPress={() => engine.setDiscussionSeconds(secs === 0 ? 30 : secs)}
+                  onPress={() => engine.setDiscussionSeconds(secs)}
                 />
               ))}
             </View>
@@ -143,7 +146,7 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="თამაშის დაწყება"
           icon="play.fill"
@@ -213,7 +216,7 @@ function Voting({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
 
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -226,7 +229,7 @@ function Voting({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
         </Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.nameGrid}>
+      <ScrollView contentContainerStyle={Layout.nameGrid}>
         {engine.alive.map((player) => {
           const on = selected === player.id;
           return (
@@ -245,7 +248,7 @@ function Voting({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
               ]}
             >
               <Text
-                style={[body(17, '700'), styles.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
+                style={[body(17, '700'), Layout.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
                 numberOfLines={2}
                 adjustsFontSizeToFit
               >
@@ -258,7 +261,7 @@ function Voting({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="გაძევება"
           icon="person.fill.xmark"
@@ -279,7 +282,7 @@ function Voting({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
 function MrWhiteGuess({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -290,13 +293,13 @@ function MrWhiteGuess({ engine, onExit }: { engine: SpyEngine; onExit: () => voi
       </View>
 
       <View style={{ alignItems: 'center', gap: 6 }}>
-        <Text style={[titleFont(26), styles.centered, { color: Colors.phosphor }]}>მისტერ უაითი გააძევეს!</Text>
-        <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+        <Text style={[titleFont(26), Layout.centered, { color: Colors.phosphor }]}>მისტერ უაითი გააძევეს!</Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
           {engine.lastEliminated?.name ?? '—'}, დაასახელე მოქალაქეების სიტყვა — და თამაშს მარტო წაიღებ.
         </Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 8, gap: 10 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { paddingVertical: 8, gap: 10 }]}>
         {engine.mrWhiteOptions.map((word) => (
           <Pressable
             key={word}
@@ -335,7 +338,7 @@ function RoundResult({ engine, onExit }: { engine: SpyEngine; onExit: () => void
 
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -346,22 +349,22 @@ function RoundResult({ engine, onExit }: { engine: SpyEngine; onExit: () => void
       </View>
 
       <Text
-        style={[titleFont(32), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
+        style={[titleFont(32), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
         adjustsFontSizeToFit
         numberOfLines={2}
       >
         {engine.lastEliminated?.name ?? '—'}
       </Text>
 
-      <Text style={[body(18, '700'), styles.centered, { color: badge.color }]}>{badge.title}</Text>
+      <Text style={[body(18, '700'), Layout.centered, { color: badge.color }]}>{badge.title}</Text>
 
       {engine.mrWhiteGuess ? (
-        <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           ვარაუდი: „{engine.mrWhiteGuess}“ — არასწორია
         </Text>
       ) : null}
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Stat label="დარჩა" value={String(engine.alive.length)} />
@@ -373,13 +376,13 @@ function RoundResult({ engine, onExit }: { engine: SpyEngine; onExit: () => void
         </GlassCard>
       </View>
 
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary }]}>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>
         თამაში გრძელდება — ტელეფონი ისევ მაგიდაზე.
       </Text>
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="შემდეგი რაუნდი"
           icon="chevron.right"
@@ -411,14 +414,11 @@ function GameOver({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     for (const [id, points] of Object.entries(engine.finalPoints)) roster.addScore(points, id);
     Haptics.success();
-  }, [applied, engine, roster]);
+  });
 
   const head =
     engine.winner === 'civilians'
@@ -452,15 +452,15 @@ function GameOver({
         <GlyphIcon name={head.icon} size={32} tint={head.color} />
       </View>
 
-      <Text style={[titleFont(28), styles.centered, { color: head.color, paddingHorizontal: 24 }]}>{head.title}</Text>
+      <Text style={[titleFont(28), Layout.centered, { color: head.color, paddingHorizontal: 24 }]}>{head.title}</Text>
 
       {head.subtitle ? (
-        <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
           {head.subtitle}
         </Text>
       ) : null}
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 12 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { gap: 12 }]}>
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Row label="მოქალაქეების სიტყვა" value={engine.civilianWord} tint={Colors.neonCyan} />
@@ -488,7 +488,7 @@ function GameOver({
                     style={[
                       body(15, '600'),
                       { color: Colors.textPrimary, flex: 1 },
-                      out ? styles.struck : null,
+                      out ? Layout.struck : null,
                     ]}
                     numberOfLines={1}
                   >
@@ -506,13 +506,12 @@ function GameOver({
         </GlassCard>
       </ScrollView>
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="თავიდან"
           icon="arrow.clockwise"
           tint={Colors.neonCyan}
           onPress={() => {
-            setApplied(false);
             engine.restart();
           }}
         />
@@ -533,13 +532,6 @@ function Row({ label, value, tint = Colors.textPrimary }: { label: string; value
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  struck: { textDecorationLine: 'line-through' },
-  nameGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 24, paddingVertical: 8 },
   nameCell: {
     width: '47%',
     flexGrow: 1,

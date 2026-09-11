@@ -167,6 +167,7 @@ export class TwoTruthsEngine extends Observable {
   submit(written: string[], lie: number): void {
     const cleaned = written.map((s) => s.trim());
     if (cleaned.length !== 3 || cleaned.some((s) => !s) || lie < 0 || lie > 2) return;
+    if (new Set(cleaned).size !== 3) return;   // ერთნაირ ამბებში ტყუილი ვერ იმალება
 
     this.statements = cleaned;
     this.lieIndex = lie;

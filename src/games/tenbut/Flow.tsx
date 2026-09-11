@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { TenButBank } from '../../content/banks';
 import { TurnRotation } from '../../core/turnRotation';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { TenButEngine } from './engine';
@@ -49,11 +51,11 @@ export function TenButFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="10-ია, მაგრამ..." subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 10 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>როგორ ითვლება ქულა</Text>
@@ -66,9 +68,10 @@ function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void 
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {TurnRotation.lapOptions.map((laps) => (
                 <CategoryChip
+                  compact
                   key={laps}
                   label={TurnRotation.label(laps)}
                   selected={engine.settings.laps === laps}
@@ -85,7 +88,7 @@ function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void 
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="ყველა"
                 selected={engine.settings.categoryID === null}
@@ -104,7 +107,7 @@ function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void 
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.startGame()} />
       </View>
     </View>
@@ -125,9 +128,9 @@ function Rule({ text }: { text: string }) {
 function Intro({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.totalRounds}
         </Text>
         <View style={{ flex: 1 }} />
@@ -139,7 +142,7 @@ function Intro({ engine, onExit }: { engine: TenButEngine; onExit: () => void })
         <GlassCard padding={24}>
           <View style={{ gap: 14, alignItems: 'center' }}>
             <Text style={[body(16, '700'), { color: Colors.phosphor }]}>10-ია, მაგრამ...</Text>
-            <Text style={[titleFont(28), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
+            <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={5}>
               {engine.currentFlaw}
             </Text>
           </View>
@@ -147,17 +150,17 @@ function Intro({ engine, onExit }: { engine: TenButEngine; onExit: () => void })
       </View>
 
       <View style={{ gap: 6, paddingHorizontal: 32 }}>
-        <Text style={[body(17, '900'), styles.centered, { color: Colors.phosphor }]} numberOfLines={2} adjustsFontSizeToFit>
+        <Text style={[body(17, '900'), Layout.centered, { color: Colors.phosphor }]} numberOfLines={2} adjustsFontSizeToFit>
           ამ რაუნდის სამიზნე — {engine.target?.name ?? '—'}
         </Text>
-        <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           ჯერ ის აფასებს ფარულად, მერე დანარჩენები გამოიცნობენ, რა დაწერა.
         </Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დავიწყოთ" icon="chevron.right" tint={Colors.phosphor} onPress={() => engine.beginRating()} />
         <GhostButton title="სხვა ჩვევა" icon="shuffle" onPress={() => engine.swapFlaw()} />
       </View>
@@ -175,13 +178,13 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
   const targetName = engine.target?.name ?? '—';
 
   const header = (
-    <View style={styles.topBar}>
+    <View style={Layout.topBar}>
       <GameExitButton onExit={onExit} />
-      <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+      <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
         რაუნდი {engine.round} / {engine.totalRounds}
       </Text>
       <View style={{ flex: 1 }} />
-      <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+      <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
         {engine.holderNumber} / {engine.holderTotal}
       </Text>
     </View>
@@ -192,22 +195,22 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
       <View style={{ flex: 1, gap: 20 }}>
         {header}
         <View style={{ flex: 1 }} />
-        <Text style={[body(16, '500'), styles.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
         <Text
-          style={[titleFont(36), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
+          style={[titleFont(36), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
           adjustsFontSizeToFit
           numberOfLines={2}
         >
           {engine.currentHolder?.name ?? '—'}
         </Text>
         <Text
-          style={[body(14, '600'), styles.centered, { color: isTarget ? Colors.phosphor : Colors.neonCyan, paddingHorizontal: 28 }]}
+          style={[body(14, '600'), Layout.centered, { color: isTarget ? Colors.phosphor : Colors.neonCyan, paddingHorizontal: 28 }]}
         >
           {isTarget ? 'შენ ხარ ამ რაუნდის სამიზნე' : `გამოიცანი, რა დაწერა ${targetName}-მა`}
         </Text>
-        <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>დანარჩენები არ იყურებიან</Text>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>დანარჩენები არ იყურებიან</Text>
         <View style={{ flex: 1 }} />
-        <View style={styles.footer}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="ჩემი ჯერია"
             icon="hand.raised.fill"
@@ -227,17 +230,17 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
       {header}
       <View style={{ flex: 1 }} />
 
-      <Text style={[body(17, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
+      <Text style={[body(17, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
         {engine.currentFlaw}
       </Text>
 
       <Text
-        style={[body(13, '700'), styles.centered, { color: isTarget ? Colors.phosphor : Colors.neonCyan, paddingHorizontal: 28 }]}
+        style={[body(13, '700'), Layout.centered, { color: isTarget ? Colors.phosphor : Colors.neonCyan, paddingHorizontal: 28 }]}
       >
         {isTarget ? 'შენი შეფასება' : `${targetName}-ის შეფასება შენი აზრით`}
       </Text>
 
-      <Text style={[display(88), styles.centered, styles.digits, { color: tintFor(value) }]}>{Math.round(value)}</Text>
+      <Text style={[display(88), Layout.centered, Layout.digits, { color: tintFor(value) }]}>{Math.round(value)}</Text>
 
       <View style={{ gap: 6, paddingHorizontal: 28 }}>
         <Slider
@@ -256,7 +259,7 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
         </View>
       </View>
 
-      <Text style={[caption(11), styles.centered, { color: Colors.textSecondary, opacity: 0.85, paddingHorizontal: 28 }]}>
+      <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.85, paddingHorizontal: 28 }]}>
         {isTarget
           ? 'რაც უფრო გააკვირვებ მაგიდას, მით მეტ ქულას აიღებ.'
           : `ზუსტად +${TenButEngine.exactReward} · ერთით აცდენა +${TenButEngine.closeReward} · ორით +${TenButEngine.nearReward}`}
@@ -264,7 +267,7 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დაფიქსირება"
           icon="checkmark"
@@ -295,27 +298,27 @@ function Result({ engine, onExit }: { engine: TenButEngine; onExit: () => void }
 
   return (
     <View style={{ flex: 1, gap: 12 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <Text style={[body(14, '600'), styles.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]} numberOfLines={1}>
+      <Text style={[body(14, '600'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]} numberOfLines={1}>
         {engine.target?.name ?? '—'}-ის შეფასება
       </Text>
 
-      <Text style={[display(76), styles.centered, styles.digits, { color: tintFor(score) }]}>{score}</Text>
+      <Text style={[display(76), Layout.centered, Layout.digits, { color: tintFor(score) }]}>{score}</Text>
 
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {engine.currentFlaw}
       </Text>
 
-      <Text style={[titleFont(20), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 28 }]} numberOfLines={2}>
+      <Text style={[titleFont(20), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 28 }]} numberOfLines={2}>
         {headline}
       </Text>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 4, gap: 7 }}>
+      <ScrollView contentContainerStyle={[Layout.content, { paddingTop: 4, gap: 7 }]}>
         {engine.guessers.map((player) => (
           <GuessRow key={player.id} engine={engine} player={player} />
         ))}
@@ -326,7 +329,7 @@ function Result({ engine, onExit }: { engine: TenButEngine; onExit: () => void }
             </Text>
             <Text style={[caption(10), { color: Colors.textSecondary }]}>სამიზნე</Text>
             {engine.roundPoint(engine.target) > 0 ? (
-              <Text style={[body(14, '900'), styles.digits, { color: Colors.phosphor }]}>
+              <Text style={[body(14, '900'), Layout.digits, { color: Colors.phosphor }]}>
                 +{engine.roundPoint(engine.target)}
               </Text>
             ) : null}
@@ -334,14 +337,14 @@ function Result({ engine, onExit }: { engine: TenButEngine; onExit: () => void }
         ) : null}
       </ScrollView>
 
-      <Text style={[caption(11), styles.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
+      <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
         ზუსტად +{TenButEngine.exactReward} · ერთით აცდენა +{TenButEngine.closeReward} · ორით +{TenButEngine.nearReward} ·
         სამიზნეს +1 ყოველ აცდენილზე
       </Text>
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.isLastRound ? 'შედეგები' : 'შემდეგი რაუნდი'}
           icon={engine.isLastRound ? 'flag.checkered' : 'chevron.right'}
@@ -363,13 +366,13 @@ function GuessRow({ engine, player }: { engine: TenButEngine; player: Player }) 
       <Text style={[body(15, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
         {player.name}
       </Text>
-      <Text style={[body(15, '900'), styles.digits, { color: guess === undefined ? Colors.textSecondary : tintFor(guess) }]}>
+      <Text style={[body(15, '900'), Layout.digits, { color: guess === undefined ? Colors.textSecondary : tintFor(guess) }]}>
         {guess ?? '—'}
       </Text>
       {gap !== null ? (
         <Text style={[caption(10), { color: Colors.textSecondary }]}>{gap === 0 ? 'ზუსტად' : `${gap}-ით`}</Text>
       ) : null}
-      {points > 0 ? <Text style={[body(14, '900'), styles.digits, { color: Colors.phosphor }]}>+{points}</Text> : null}
+      {points > 0 ? <Text style={[body(14, '900'), Layout.digits, { color: Colors.phosphor }]}>+{points}</Text> : null}
     </View>
   );
 }
@@ -385,14 +388,11 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     PodiumAward.apply(engine.results, roster);
     Haptics.win();
-  }, [applied, engine, roster]);
+  });
 
   const champion = engine.champion;
 
@@ -405,33 +405,32 @@ function Summary({
           <GlyphIcon name="crown.fill" size={31} tint={Colors.phosphor} />
         </View>
 
-        <Text style={[titleFont(28), styles.centered, { color: Colors.phosphor }]}>
+        <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>
           {champion === null ? 'ქულა ვერავინ აიღო' : 'ვინც ყველაზე კარგად კითხულობს'}
         </Text>
 
         {champion ? (
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {champion.name} — {engine.totalFor(champion)} ქულა
           </Text>
         ) : null}
 
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
           საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
         </Text>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
+        <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
           {engine.ranking.map((player, rank) => (
             <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.totalFor(player)} highlight={rank === 0} />
           ))}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Colors.phosphor}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -445,13 +444,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: 12 },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',

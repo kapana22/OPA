@@ -154,14 +154,11 @@ export class RuleCardEngine extends Observable {
     this.advance();
   }
 
-  /** ჯარიმა ცალკე ეტაპია — მაგიდა ჯერ წყვეტს, ვინ ვერ გაართვა თავი. */
-  chargeForfeit(player: Player): void {
-    this.forfeits[player.id] = (this.forfeits[player.id] ?? 0) + 1;
+  /** ჯარიმა ცალკე ეტაპია — მაგიდა ჯერ წყვეტს, ვინ ვერ გაართვა თავი, და
+   *  მხოლოდ დადასტურებისას ირიცხება: ეკრანზე ჩართვა-გამორთვა ძრავს არ ეხება. */
+  finishForfeits(offenders: Player[]): void {
+    for (const p of offenders) this.forfeits[p.id] = (this.forfeits[p.id] ?? 0) + 1;
     Haptics.warning();
-    this.notify();
-  }
-
-  finishForfeits(): void {
     Sound.play('wrong');
     this.advance();
   }

@@ -7,10 +7,12 @@ import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHead
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { DilemmaBank } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { HerdEngine, type HerdSide } from './engine';
 
@@ -57,11 +59,11 @@ export function HerdFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: HerdEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="როგორც ყველა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 10 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>როგორ ითვლება ქულა</Text>
@@ -75,9 +77,10 @@ function Setup({ engine, onClose }: { engine: HerdEngine; onClose: () => void })
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {ROUND_OPTIONS.map((count) => (
                 <CategoryChip
+                  compact
                   key={count}
                   label={String(count)}
                   selected={engine.settings.rounds === count}
@@ -100,7 +103,7 @@ function Setup({ engine, onClose }: { engine: HerdEngine; onClose: () => void })
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="ყველა"
                 selected={engine.settings.categoryID === null}
@@ -119,7 +122,7 @@ function Setup({ engine, onClose }: { engine: HerdEngine; onClose: () => void })
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Palette.base} onPress={() => engine.startGame()} />
       </View>
     </View>
@@ -147,9 +150,9 @@ function Intro({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) {
 
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.settings.rounds}
         </Text>
         <View style={{ flex: 1 }} />
@@ -176,19 +179,19 @@ function Intro({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) {
       ) : null}
 
       <Text
-        style={[titleFont(27), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 28 }]}
+        style={[titleFont(27), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 28 }]}
         adjustsFontSizeToFit
         numberOfLines={4}
       >
         {engine.currentDilemma.question}
       </Text>
 
-      <View style={{ flexDirection: 'row', gap: 12, paddingHorizontal: 24 }}>
+      <View style={[Layout.content, { flexDirection: 'row', gap: 12 }]}>
         <OptionCard side="a" text={engine.currentDilemma.a} />
         <OptionCard side="b" text={engine.currentDilemma.b} />
       </View>
 
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {reversed
           ? 'ამ რაუნდში წესი შებრუნებულია — ქულას უმცირესობა იღებს.'
           : 'ქულა იმას ერგება, ვინც უმრავლესობას დაემთხვევა — არა იმას, ვისაც მართლა ეს უყვარს.'}
@@ -196,7 +199,7 @@ function Intro({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) {
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="კენჭისყრის დაწყება"
           icon="hand.point.up.left.fill"
@@ -215,7 +218,7 @@ function OptionCard({ side, text }: { side: HerdSide; text: string }) {
       <View style={[styles.letterBadge, { backgroundColor: color }]}>
         <Text style={[body(13, '900'), { color: Colors.ink }]}>{Palette.letter(side)}</Text>
       </View>
-      <Text style={[body(15, '700'), styles.centered, { color: Colors.textPrimary }]} numberOfLines={3} adjustsFontSizeToFit>
+      <Text style={[body(15, '700'), Layout.centered, { color: Colors.textPrimary }]} numberOfLines={3} adjustsFontSizeToFit>
         {text}
       </Text>
     </View>
@@ -230,7 +233,7 @@ function Vote({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) {
 
   return (
     <View style={{ flex: 1, gap: Space.m }} key={engine.voterIndex}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         {reversed ? (
           <View style={styles.twistPill}>
@@ -238,7 +241,7 @@ function Vote({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) {
           </View>
         ) : null}
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.voterIndex + 1} / {engine.players.length}
         </Text>
       </View>
@@ -247,21 +250,21 @@ function Vote({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) {
 
       <View style={{ alignItems: 'center', gap: 4, paddingHorizontal: 24 }}>
         <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-        <Text style={[titleFont(32), styles.centered, { color: accent }]} adjustsFontSizeToFit numberOfLines={2}>
+        <Text style={[titleFont(32), Layout.centered, { color: accent }]} adjustsFontSizeToFit numberOfLines={2}>
           {engine.currentVoter?.name ?? '—'}
         </Text>
       </View>
 
-      <Text style={[body(16, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(16, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {engine.currentDilemma.question}
       </Text>
 
-      <View style={{ gap: 12, paddingHorizontal: 24 }}>
+      <View style={[Layout.content, { gap: 12 }]}>
         <VoteButton side="a" text={engine.currentDilemma.a} onPress={() => engine.castVote('a')} />
         <VoteButton side="b" text={engine.currentDilemma.b} onPress={() => engine.castVote('b')} />
       </View>
 
-      <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {reversed
           ? 'შებრუნებულია: აირჩიე ის, რასაც უმცირესობა აირჩევს'
           : 'შენი გემოვნება არ ითვლება — აირჩიე ის, რასაც უმრავლესობა აირჩევს'}
@@ -307,12 +310,12 @@ function Result({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) 
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingTop: 14 }}>
-        <Text style={[body(13, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.settings.rounds}
         </Text>
         {engine.isReversed ? (
@@ -322,16 +325,16 @@ function Result({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) 
         ) : null}
       </View>
 
-      <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}>
+      <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}>
         {engine.currentDilemma.question}
       </Text>
 
       {/* ორმხრივი ზოლი */}
       <View style={{ gap: 10, paddingHorizontal: 28 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-          <Text style={[display(46), styles.digits, { color: Palette.sideA }]}>{engine.countA}</Text>
+          <Text style={[display(46), Layout.digits, { color: Palette.sideA }]}>{engine.countA}</Text>
           <Text style={[titleFont(28), { color: Colors.textSecondary }]}>:</Text>
-          <Text style={[display(46), styles.digits, { color: Palette.sideB }]}>{engine.countB}</Text>
+          <Text style={[display(46), Layout.digits, { color: Palette.sideB }]}>{engine.countB}</Text>
         </View>
         <View style={{ flexDirection: 'row', gap: 4, height: 22 }}>
           <View
@@ -357,7 +360,7 @@ function Result({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) 
       {engine.isTie ? (
         <View style={{ alignItems: 'center', gap: 6 }}>
           <Text style={[titleFont(26), { color: Colors.textPrimary }]}>ფრე</Text>
-          <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 34 }]}>
+          <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 34 }]}>
             მაგიდა ზუსტად შუაზე გაიყო — ქულა ვერავინ აიღო. სამაგიეროდ ორივე ბანაკი დარწმუნებულია, რომ მართალი ისაა.
           </Text>
         </View>
@@ -366,7 +369,7 @@ function Result({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) 
           <Text style={[titleFont(26), { color: accent }]}>
             {engine.isReversed ? 'ქულა უმცირესობას' : 'ქულა უმრავლესობას'}
           </Text>
-          <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 34 }]}>
+          <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 34 }]}>
             {engine.roundWinners.length} მოთამაშემ აიღო ქულა
           </Text>
         </View>
@@ -379,7 +382,7 @@ function Result({ engine, onExit }: { engine: HerdEngine; onExit: () => void }) 
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.round >= engine.settings.rounds ? 'შედეგები' : 'შემდეგი დილემა'}
           icon="chevron.right"
@@ -401,14 +404,14 @@ function Column({ engine, side, text }: { engine: HerdEngine; side: HerdSide; te
       <View style={[styles.letterBadge, { backgroundColor: color }]}>
         <Text style={[body(13, '900'), { color: Colors.ink }]}>{Palette.letter(side)}</Text>
       </View>
-      <Text style={[body(14, '700'), styles.centered, { color: Colors.textPrimary }]} numberOfLines={3}>
+      <Text style={[body(14, '700'), Layout.centered, { color: Colors.textPrimary }]} numberOfLines={3}>
         {text}
       </Text>
       {voters.length === 0 ? (
         <Text style={[caption(11), { color: Colors.textSecondary, opacity: 0.7 }]}>არავინ</Text>
       ) : (
         voters.map((p) => (
-          <Text key={p.id} style={[caption(11), styles.centered, { color: Colors.textSecondary }]} numberOfLines={1}>
+          <Text key={p.id} style={[caption(11), Layout.centered, { color: Colors.textSecondary }]} numberOfLines={1}>
             {p.name}
           </Text>
         ))
@@ -428,14 +431,11 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     PodiumAward.apply(engine.results, roster);
     Haptics.win();
-  }, [applied, engine, roster]);
+  });
 
   const top = engine.ranking[0];
   const champion = top && engine.totalFor(top) > 0 ? top : null;
@@ -450,23 +450,23 @@ function Summary({
           <GlyphIcon name="person.3.fill" size={31} tint={Palette.base} />
         </View>
 
-        <Text style={[titleFont(28), styles.centered, { color: Palette.base }]}>
+        <Text style={[titleFont(28), Layout.centered, { color: Palette.base }]}>
           {champion ? 'მაგიდის სარკე' : 'ქულა ვერავინ აიღო'}
         </Text>
 
         {champion ? (
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {champion.name} — {engine.totalFor(champion)} ქულა
           </Text>
         ) : null}
 
         {odd.length > 0 ? (
-          <Text style={[body(13, '600'), styles.centered, { color: Colors.neonMagenta, paddingHorizontal: 32 }]}>
+          <Text style={[body(13, '600'), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 32 }]}>
             შავი ცხვარი — {odd.map((p) => p.name).join(', ')} ({engine.oddCount(odd[0])})
           </Text>
         ) : null}
 
-        <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
           საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
         </Text>
 
@@ -476,13 +476,12 @@ function Summary({
           ))}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Palette.base}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -496,13 +495,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24, paddingTop: Space.m },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -28,7 +28,20 @@ npx tsc --noEmit
 ## ბილდი
 
 `android/` და `ios/` **რეპოშია** (bare workflow). `prebuild` რუტინულად
-საჭირო არაა — მხოლოდ მაშინ, თუ `app.json`-ის ნატიური ნაწილი შეიცვალა.
+საჭირო არაა — მხოლოდ მაშინ, თუ `app.json`-ის ნატიური ნაწილი შეიცვალა
+(ვერსია, ხატულა, splash, ნებართვები, პლაგინები).
+
+> `prebuild` `ios/`-ში `Podfile.lock`-ს, `PrivacyInfo.xcprivacy`-ს და
+> `project.pbxproj`-ს თავიდან წერს. გაშვების შემდეგ ისინი git-იდან დააბრუნე
+> (`git checkout -- ios/Podfile.lock ios/megobrebi/PrivacyInfo.xcprivacy`)
+> და `pod install` გაუშვი.
+
+### მაღაზიისთვის ვერსიის აწევა
+
+`app.json` → `version` (ორივე), `ios.buildNumber` და `android.versionCode`
+(ყოველ ატვირთვაზე +1), მერე `npx expo prebuild --no-install`. EAS-ის
+`production` პროფილი `autoIncrement`-ით თვითონ ზრდის build-ნომერს, ლოკალურ
+ბილდზე კი ეს ხელით უნდა გააკეთო.
 
 ### Android
 
@@ -93,7 +106,7 @@ debug-ხელმოწერაზე ბრუნდება: არ წყ�
 ```
 app/            expo-router-ის მარშრუტები (6 ეკრანი)
 src/core/       საერთო ლოგიკა — საცავი, ხმა, ჰაპტიკა, სენსორი, როსტერი
-src/content/    5,600 ერთეული — Swift-იდან სკრიპტით ამოღებული
+src/content/    6,764 ერთეული — Swift-იდან სკრიპტით ამოღებული
 src/games/      19 საქაღალდე: engine.ts + Flow.tsx
 src/ui/         საერთო კომპონენტები
 tools/          extract-banks.mjs · gen-sounds.mjs

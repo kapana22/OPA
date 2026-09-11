@@ -7,12 +7,14 @@ import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHea
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { ruleKindIcon, ruleKindLabel, type RuleCard } from '../../content/banks';
 import { PARTY_FORFEITS, forfeitNote, forfeitShort, forfeitTitle } from '../../core/partyForfeit';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { RuleCardEngine, type ActiveRule } from './engine';
 
@@ -48,11 +50,11 @@ export function RuleCardFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: RuleCardEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="House Rules" subtitle="წესები გროვდება" onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 10 }}>
             <Step n="1" text="ბარათი ან ერთხელ მოქმედებს, ან ბოლომდე რჩება ძალაში." />
@@ -79,7 +81,7 @@ function Setup({ engine, onClose }: { engine: RuleCardEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ბარათი</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               {CARD_OPTIONS.map((count) => (
                 <CategoryChip
                   key={count}
@@ -95,9 +97,10 @@ function Setup({ engine, onClose }: { engine: RuleCardEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>წესების ჭერი</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {LIMIT_OPTIONS.map((n) => (
                 <CategoryChip
+                  compact
                   key={n}
                   label={String(n)}
                   selected={engine.settings.ruleLimit === n}
@@ -112,7 +115,7 @@ function Setup({ engine, onClose }: { engine: RuleCardEngine; onClose: () => voi
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დაწყება"
           icon="play.fill"
@@ -153,9 +156,9 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
 
   return (
     <View style={{ flex: 1, gap: 12 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(13, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           {engine.settings.cards > 0 ? `ბარათი ${engine.drawn} / ${engine.settings.cards}` : `ბარათი ${engine.drawn}`}
         </Text>
         <View style={{ flex: 1 }} />
@@ -172,7 +175,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
 
       {/* მოქმედი წესები — თამაშის მეხსიერება, ყოველთვის თვალწინ */}
       {engine.activeRules.length === 0 ? (
-        <Text style={[caption(11), styles.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
+        <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
           მოქმედი წესი ჯერ არ არის
         </Text>
       ) : (
@@ -198,7 +201,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
           </View>
 
           <Text
-            style={[titleFont(22), styles.centered, { color: tint, paddingHorizontal: 20 }]}
+            style={[titleFont(22), Layout.centered, { color: tint, paddingHorizontal: 20 }]}
             numberOfLines={1}
             adjustsFontSizeToFit
           >
@@ -206,7 +209,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
           </Text>
 
           <Text
-            style={[titleFont(card.text.length > 75 ? 21 : 26), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
+            style={[titleFont(card.text.length > 75 ? 21 : 26), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
             adjustsFontSizeToFit
             numberOfLines={7}
           >
@@ -225,7 +228,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
 
       <View style={{ flex: 1 }} />
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         {isRule ? (
           <PrimaryButton
             title="წესი მიღებულია"
@@ -243,7 +246,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
             />
           ) : (
             <>
-              <Text style={[body(13, '700'), styles.centered, { color: Colors.textSecondary }]}>
+              <Text style={[body(13, '700'), Layout.centered, { color: Colors.textSecondary }]}>
                 რომელი წესი მოიხსნას?
               </Text>
               <ScrollView style={{ maxHeight: 170 }} contentContainerStyle={{ gap: 8 }}>
@@ -267,7 +270,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
         ) : (
           <>
             <View style={{ gap: 6 }}>
-              <Text style={[caption(11), styles.centered, { color: Colors.textSecondary }]}>
+              <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary }]}>
                 ვინ იხდის? შეეხე სახელს
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
@@ -280,15 +283,11 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
                       accessibilityLabel={player.name}
                       accessibilityState={{ selected: on }}
                       onPress={() => {
+                        Haptics.tap();
                         setCharged((prev) => {
                           const next = new Set(prev);
-                          if (on) {
-                            next.delete(player.id);
-                            Haptics.tap();
-                          } else {
-                            next.add(player.id);
-                            engine.chargeForfeit(player);
-                          }
+                          if (on) next.delete(player.id);
+                          else next.add(player.id);
                           return next;
                         });
                       }}
@@ -307,7 +306,11 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
               title={charged.size === 0 ? 'არავინ დაირღვია' : 'დაფიქსირდა — შემდეგი'}
               icon={charged.size === 0 ? 'checkmark' : 'chevron.right'}
               tint={Colors.phosphor}
-              onPress={() => (charged.size === 0 ? engine.markDone() : engine.finishForfeits())}
+              onPress={() =>
+                charged.size === 0
+                  ? engine.markDone()
+                  : engine.finishForfeits(engine.players.filter((p) => charged.has(p.id)))
+              }
             />
           </>
         )}
@@ -340,15 +343,12 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     Sound.play('win');
     Haptics.win();
     PodiumAward.apply(engine.results, roster);
-  }, [applied, engine, roster]);
+  });
 
   const lawmaker = engine.lawmaker;
   const worst = engine.mostForfeits;
@@ -366,19 +366,19 @@ function Summary({
           <GlyphIcon name="checklist" size={31} tint={Colors.neonMagenta} />
         </View>
 
-        <Text style={[titleFont(27), styles.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}>
+        <Text style={[titleFont(27), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}>
           {lawmaker === null ? 'წესი არავის შემოუტანია' : 'მაგიდის კანონმდებელი'}
         </Text>
 
         {lawmaker ? (
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {lawmaker.name} — {engine.broughtCount(lawmaker)} შემოტანილი წესი
           </Text>
         ) : null}
 
         {forfeitLine ? (
           <Text
-            style={[body(13, '600'), styles.centered, { color: Colors.textSecondary, opacity: 0.9, paddingHorizontal: 32 }]}
+            style={[body(13, '600'), Layout.centered, { color: Colors.textSecondary, opacity: 0.9, paddingHorizontal: 32 }]}
           >
             {forfeitLine}
           </Text>
@@ -386,13 +386,13 @@ function Summary({
 
         {engine.activeRules.length > 0 ? (
           <View style={{ gap: 5, paddingHorizontal: 28 }}>
-            <Text style={[caption(11), styles.centered, { color: Colors.textSecondary }]}>
+            <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary }]}>
               ბოლოს ეს წესები მოქმედებდა
             </Text>
             {engine.activeRules.map((rule) => (
               <Text
                 key={rule.id}
-                style={[body(13, '500'), styles.centered, { color: Colors.textPrimary }]}
+                style={[body(13, '500'), Layout.centered, { color: Colors.textPrimary }]}
                 numberOfLines={1}
               >
                 • {listLabel(rule.card)}
@@ -401,7 +401,7 @@ function Summary({
           </View>
         ) : null}
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
+        <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
           {engine.ranking.map((player, rank) => {
             const forfeits = engine.forfeitCount(player);
             return (
@@ -417,7 +417,7 @@ function Summary({
                   <Text style={[caption(10), { color: Colors.textSecondary }]}>{forfeits} ჯარიმა</Text>
                 ) : null}
                 <Text
-                  style={[titleFont(20), styles.digits, { color: rank === 0 ? Colors.neonMagenta : Colors.textPrimary }]}
+                  style={[titleFont(20), Layout.digits, { color: rank === 0 ? Colors.neonMagenta : Colors.textPrimary }]}
                 >
                   {engine.broughtCount(player)}
                 </Text>
@@ -426,13 +426,12 @@ function Summary({
           })}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Colors.neonMagenta}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -440,7 +439,6 @@ function Summary({
             title="პარამეტრები"
             icon="slider.horizontal.3"
             onPress={() => {
-              setApplied(false);
               engine.backToSetup();
             }}
           />
@@ -454,12 +452,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: Space.m },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
   stepBadge: {
     width: 22,
     height: 22,

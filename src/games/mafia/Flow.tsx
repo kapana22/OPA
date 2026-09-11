@@ -8,8 +8,10 @@ import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { MafiaEngine, roleIcon, roleTitle, type MafiaRole } from './engine';
@@ -39,7 +41,7 @@ export function MafiaFlow({ roster, onExit }: GameFlowProps) {
     case 'reveal':
       return <Reveal engine={engine} onExit={onExit} />;
     case 'night':
-      return <Night engine={engine} onExit={onExit} />;
+      return <Night key={engine.nightIndex} engine={engine} onExit={onExit} />;
     case 'morning':
       return <Morning engine={engine} onExit={onExit} />;
     case 'dayVote':
@@ -56,11 +58,11 @@ export function MafiaFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="Mafia" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>
             წამყვანი არ სჭირდება — ღამით ტელეფონი ყველას გადაეცემა რიგრიგობით და თითოეული თავის ეკრანს ხედავს.
@@ -73,9 +75,10 @@ function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }
               <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>მაფია</Text>
               <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>მაქსიმუმ {engine.maxMafia}</Text>
             </View>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {Array.from({ length: engine.maxMafia }, (_, i) => i + 1).map((n) => (
                 <CategoryChip
+                  compact
                   key={n}
                   label={String(n)}
                   selected={engine.settings.mafiaCount === n}
@@ -105,7 +108,7 @@ function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="როლების დარიგება"
           icon="play.fill"
@@ -149,21 +152,18 @@ function Reveal({ engine, onExit }: { engine: MafiaEngine; onExit: () => void })
 // ── ღამე
 
 function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) {
+  // ახალი მოთამაშე = ახალი კომპონენტი (`key={nightIndex}`) — ტელეფონი ისევ
+  // უნდა გადაეცეს, წინა როლი კი ერთი კადრითაც არ უნდა გამოჩნდეს.
   const [ready, setReady] = useState(false);
   const player = engine.currentNightPlayer;
   const role = player ? engine.roleOf(player) : 'civilian';
 
-  // ახალი მოთამაშე — ტელეფონი ისევ უნდა გადაეცეს.
-  useEffect(() => {
-    setReady(false);
-  }, [engine.nightIndex]);
-
   const header = (
-    <View style={styles.topBar}>
+    <View style={Layout.topBar}>
       <GameExitButton onExit={onExit} />
       <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>ღამე {engine.night}</Text>
       <View style={{ flex: 1 }} />
-      <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+      <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
         {engine.nightIndex + 1} / {engine.alive.length}
       </Text>
     </View>
@@ -177,19 +177,19 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
         <View style={{ alignItems: 'center' }}>
           <GlyphIcon name="moon.stars.fill" size={32} tint={Colors.neonCyan} />
         </View>
-        <Text style={[body(16, '500'), styles.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
         <Text
-          style={[titleFont(34), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
+          style={[titleFont(34), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
           adjustsFontSizeToFit
           numberOfLines={2}
         >
           {player?.name ?? '—'}
         </Text>
-        <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           დანარჩენებო, თვალები დახუჭეთ
         </Text>
         <View style={{ flex: 1 }} />
-        <View style={styles.footer}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="მე ვარ — გავაგრძელოთ"
             icon="chevron.right"
@@ -210,12 +210,12 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
         <View style={{ alignItems: 'center' }}>
           <GlyphIcon name="zzz" size={37} tint={Colors.textSecondary} />
         </View>
-        <Text style={[titleFont(30), styles.centered, { color: Colors.textPrimary }]}>შენ გძინავს</Text>
-        <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}>
+        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]}>შენ გძინავს</Text>
+        <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}>
           არაფერი გჭირდება — უბრალოდ გადაეცი შემდეგს.
         </Text>
         <View style={{ flex: 1 }} />
-        <View style={styles.footer}>
+        <View style={Layout.footer}>
           <PrimaryButton title="გადავეცი" icon="chevron.right" tint={Colors.neonCyan} onPress={() => engine.skipNightTurn()} />
         </View>
       </View>
@@ -236,15 +236,15 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
             tint={isMafia ? Colors.neonMagenta : Colors.phosphor}
           />
         </View>
-        <Text style={[titleFont(30), styles.centered, { color: Colors.textPrimary }]}>{engine.checked?.name ?? '—'}</Text>
-        <Text style={[titleFont(24), styles.centered, { color: isMafia ? Colors.neonMagenta : Colors.phosphor }]}>
+        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]}>{engine.checked?.name ?? '—'}</Text>
+        <Text style={[titleFont(24), Layout.centered, { color: isMafia ? Colors.neonMagenta : Colors.phosphor }]}>
           {isMafia ? 'მაფიაა!' : 'მაფია არ არის'}
         </Text>
-        <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           დაიმახსოვრე — ჩაწერა არსად ხდება.
         </Text>
         <View style={{ flex: 1 }} />
-        <View style={styles.footer}>
+        <View style={Layout.footer}>
           <PrimaryButton title="დავიმახსოვრე" icon="checkmark" tint={Colors.neonCyan} onPress={() => engine.detectiveDone()} />
         </View>
       </View>
@@ -256,7 +256,8 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
       ? {
           title: 'აირჩიე მსხვერპლი',
           subtitle: 'ღამით ის დაიღუპება, თუ ექიმი არ გადაარჩენს',
-          exclude: player ? [player.id] : [],
+          // მაფია ერთმანეთს არ ხოცავს — ორი მაფიის შემთხვევაში ბრმად რომ არ ხმობდნენ.
+          exclude: engine.alive.filter((p) => engine.roleOf(p) === 'mafia').map((p) => p.id),
           onPick: (t: Player) => engine.mafiaChoose(t),
         }
       : role === 'doctor'
@@ -277,12 +278,12 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
     <View style={{ flex: 1, gap: 14 }}>
       {header}
       <View style={{ flex: 1 }} />
-      <Text style={[titleFont(26), styles.centered, { color: Colors.textPrimary }]}>{config.title}</Text>
-      <Text style={[body(14, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[titleFont(26), Layout.centered, { color: Colors.textPrimary }]}>{config.title}</Text>
+      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {config.subtitle}
       </Text>
 
-      <ScrollView contentContainerStyle={styles.nameGrid}>
+      <ScrollView contentContainerStyle={Layout.nameGrid}>
         {engine.alive
           .filter((p) => !config.exclude.includes(p.id))
           .map((target) => (
@@ -296,7 +297,7 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
               }}
               style={[styles.nameCell, { borderColor: Colors.neonCyan + '80' }]}
             >
-              <Text style={[body(17, '700'), styles.centered, { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
+              <Text style={[body(17, '700'), Layout.centered, { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
                 {target.name}
               </Text>
             </Pressable>
@@ -315,7 +316,7 @@ function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
 
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -331,26 +332,26 @@ function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
 
       {victim ? (
         <>
-          <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>ღამით დაიღუპა</Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ღამით დაიღუპა</Text>
           <Text
-            style={[titleFont(34), styles.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}
+            style={[titleFont(34), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}
             adjustsFontSizeToFit
             numberOfLines={2}
           >
             {victim.name}
           </Text>
-          <Text style={[body(15, '600'), styles.centered, { color: Colors.textSecondary }]}>
+          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary }]}>
             მისი როლი: {roleTitle[engine.roleOf(victim)]}
           </Text>
         </>
       ) : (
         <>
-          <Text style={[titleFont(28), styles.centered, { color: Colors.phosphor }]}>ღამე მშვიდად ჩაიარა</Text>
-          <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>ამ ღამეს ყველა გადარჩა.</Text>
+          <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>ღამე მშვიდად ჩაიარა</Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ამ ღამეს ყველა გადარჩა.</Text>
         </>
       )}
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard>
           <View style={{ gap: 6 }}>
             <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>ცოცხლები — {engine.alive.length}</Text>
@@ -363,7 +364,7 @@ function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="განხილვა და კენჭისყრა"
           icon="person.3.fill"
@@ -382,7 +383,7 @@ function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
 
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -393,7 +394,7 @@ function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
         <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>განიხილეთ და ერთად აირჩიეთ</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.nameGrid}>
+      <ScrollView contentContainerStyle={Layout.nameGrid}>
         {engine.alive.map((player) => {
           const on = selected === player.id;
           return (
@@ -412,7 +413,7 @@ function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
               ]}
             >
               <Text
-                style={[body(17, '700'), styles.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
+                style={[body(17, '700'), Layout.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
                 numberOfLines={2}
                 adjustsFontSizeToFit
               >
@@ -425,7 +426,7 @@ function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="ქალაქიდან გაძევება"
           icon="person.fill.xmark"
@@ -454,7 +455,7 @@ function DayResult({ engine, onExit }: { engine: MafiaEngine; onExit: () => void
 
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -469,24 +470,24 @@ function DayResult({ engine, onExit }: { engine: MafiaEngine; onExit: () => void
       </View>
 
       <Text
-        style={[titleFont(32), styles.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
+        style={[titleFont(32), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
         adjustsFontSizeToFit
         numberOfLines={2}
       >
         {votedOut?.name ?? '—'}
       </Text>
 
-      <Text style={[titleFont(22), styles.centered, { color: wasMafia ? Colors.phosphor : Colors.neonMagenta }]}>
+      <Text style={[titleFont(22), Layout.centered, { color: wasMafia ? Colors.phosphor : Colors.neonMagenta }]}>
         {roleTitle[role]} იყო
       </Text>
 
-      <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {wasMafia ? 'ქალაქმა ზუსტად მიაგნო.' : 'უდანაშაულო გააძევეს — მაფია ხარობს.'}
       </Text>
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="ღამე დგება" icon="moon.stars.fill" tint={Colors.neonCyan} onPress={() => engine.continueGame()} />
       </View>
     </View>
@@ -504,15 +505,12 @@ function GameOver({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
   const cityWon = engine.winner === 'city';
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     for (const [id, points] of Object.entries(engine.finalPoints)) roster.addScore(points, id);
     Haptics.win();
-  }, [applied, engine, roster]);
+  });
 
   return (
     <View style={{ flex: 1 }}>
@@ -528,18 +526,18 @@ function GameOver({
         </View>
 
         <Text
-          style={[titleFont(28), styles.centered, { color: cityWon ? Colors.phosphor : Colors.neonMagenta, paddingHorizontal: 24 }]}
+          style={[titleFont(28), Layout.centered, { color: cityWon ? Colors.phosphor : Colors.neonMagenta, paddingHorizontal: 24 }]}
         >
           {cityWon ? 'ქალაქმა გაიმარჯვა!' : 'მაფიამ გაიმარჯვა!'}
         </Text>
 
-        <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
           {cityWon
             ? 'ყველა მაფია გაძევდა — ქალაქს ახლა მშვიდად სძინავს.'
             : 'მაფია რაოდენობით გაუტოლდა ქალაქს.'}
         </Text>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24 }}>
+        <ScrollView contentContainerStyle={Layout.content}>
           <GlassCard>
             <View style={{ gap: 10 }}>
               <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>ვინ ვინ იყო</Text>
@@ -551,7 +549,7 @@ function GameOver({
                   <View key={p.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                     <MaterialCommunityIcons name={sf(roleIcon[role])} size={16} color={Colors.textSecondary} />
                     <Text
-                      style={[body(15, '600'), { color: Colors.textPrimary }, out ? styles.struck : null]}
+                      style={[body(15, '600'), { color: Colors.textPrimary }, out ? Layout.struck : null]}
                       numberOfLines={1}
                     >
                       {p.name}
@@ -559,7 +557,7 @@ function GameOver({
                     <View style={{ flex: 1 }} />
                     <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>{roleTitle[role]}</Text>
                     {points > 0 ? (
-                      <Text style={[body(14, '900'), styles.digits, { color: Colors.phosphor }]}>+{points}</Text>
+                      <Text style={[body(14, '900'), Layout.digits, { color: Colors.phosphor }]}>+{points}</Text>
                     ) : null}
                   </View>
                 );
@@ -568,13 +566,12 @@ function GameOver({
           </GlassCard>
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="ახალი პარტია"
             icon="arrow.clockwise"
             tint={Colors.neonCyan}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -588,19 +585,10 @@ function GameOver({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24, paddingTop: Space.m },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
-  struck: { textDecorationLine: 'line-through' },
-  nameGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 24, paddingVertical: 8 },
   nameCell: {
     width: '47%',
     flexGrow: 1,
-    minHeight: 68,
+    minHeight: 70,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 8,

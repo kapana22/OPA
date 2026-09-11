@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
 import {
@@ -15,9 +15,11 @@ import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
 import { DiscussionPanel } from '../../ui/DiscussionPanel';
+import { Layout } from '../../ui/layout';
 import { WordBank } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { ImpostorEngine, type ImpostorOutcome } from './engine';
@@ -55,11 +57,11 @@ export function ImpostorFlow({ roster, onExit }: GameFlowProps) {
 function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="ერთმა არ იცის" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ flex: 1, gap: 3 }}>
@@ -81,7 +83,7 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="შემთხვევითი"
                 selected={engine.settings.categoryID === null}
@@ -102,9 +104,10 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>განხილვის დრო</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {TIMER_OPTIONS.map((secs) => (
                 <CategoryChip
+                  compact
                   key={secs}
                   label={secs === 0 ? '∞' : `${secs / 60}:00`}
                   selected={engine.settings.discussionSeconds === secs}
@@ -134,7 +137,7 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="რაუნდის დაწყება"
           icon="play.fill"
@@ -203,7 +206,7 @@ function Voting({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
 
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -214,7 +217,7 @@ function Voting({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
         <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>დათვალეთ სამამდე და ერთად აირჩიეთ</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.nameGrid}>
+      <ScrollView contentContainerStyle={Layout.nameGrid}>
         {engine.players.map((player) => {
           const on = selected === player.id;
           return (
@@ -233,7 +236,7 @@ function Voting({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
               ]}
             >
               <Text
-                style={[body(17, '700'), styles.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
+                style={[body(17, '700'), Layout.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
                 numberOfLines={2}
                 adjustsFontSizeToFit
               >
@@ -246,7 +249,7 @@ function Voting({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
 
       <View style={{ flex: 1 }} />
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="დადასტურება"
           icon="checkmark"
@@ -267,7 +270,7 @@ function Voting({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
 function Guess({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={styles.exitSlot}>
+      <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
 
@@ -279,7 +282,7 @@ function Guess({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void 
 
       <View style={{ alignItems: 'center', gap: 6 }}>
         <Text style={[titleFont(30), { color: Colors.neonMagenta }]}>დაგიჭირეს!</Text>
-        <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           ბოლო შანსი — რომელი სიტყვა იყო?
         </Text>
       </View>
@@ -358,15 +361,12 @@ function Result({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
   const head = headlineFor(engine);
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     for (const [id, points] of Object.entries(engine.roundPoints)) roster.addScore(points, id);
     Haptics.success();
-  }, [applied, engine, roster]);
+  });
 
   const scored = engine.players.filter((p) => (engine.roundPoints[p.id] ?? 0) > 0);
 
@@ -378,15 +378,15 @@ function Result({
         <GlyphIcon name={head.icon} size={32} tint={head.color} />
       </View>
 
-      <Text style={[titleFont(28), styles.centered, { color: head.color, paddingHorizontal: 24 }]}>{head.title}</Text>
+      <Text style={[titleFont(28), Layout.centered, { color: head.color, paddingHorizontal: 24 }]}>{head.title}</Text>
 
       {head.subtitle ? (
-        <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
           {head.subtitle}
         </Text>
       ) : null}
 
-      <View style={{ paddingHorizontal: 24 }}>
+      <View style={Layout.content}>
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Row label="საიდუმლო სიტყვა" value={engine.secretWord} tint={Colors.phosphor} />
@@ -413,7 +413,7 @@ function Result({
       </View>
 
       {scored.length > 0 ? (
-        <View style={{ paddingHorizontal: 24 }}>
+        <View style={Layout.content}>
           <GlassCard>
             <View style={{ gap: 8 }}>
               <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>რაუნდის ქულები</Text>
@@ -432,13 +432,12 @@ function Result({
 
       <View style={{ flex: 1 }} />
 
-      <View style={[styles.footer, { gap: 10 }]}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title="შემდეგი რაუნდი"
           icon="arrow.clockwise"
           tint={Colors.phosphor}
           onPress={() => {
-            setApplied(false);
             engine.nextRound();
           }}
         />
@@ -459,12 +458,6 @@ function Row({ label, value, tint = Colors.textPrimary }: { label: string; value
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
-  exitSlot: { position: 'absolute', top: 10, left: 20, zIndex: 10 },
-  centered: { textAlign: 'center' },
-  nameGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 24, paddingVertical: 8 },
   nameCell: {
     width: '47%',
     flexGrow: 1,

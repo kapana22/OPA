@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
@@ -7,11 +7,13 @@ import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader } from
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
+import { Layout } from '../../ui/layout';
 import { NeverBank } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
+import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { NeverEngine } from './engine';
@@ -51,11 +53,11 @@ function livesHint(lives: number): string {
 function Setup({ engine, onClose }: { engine: NeverEngine; onClose: () => void }) {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
+      <View style={Layout.header}>
         <ScreenHeader title="მე არასდროს" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 8 }}>
             <Text style={[body(14, '600'), { color: Colors.textPrimary }]}>ეკრანს ყველა ერთად უყურებს.</Text>
@@ -69,9 +71,10 @@ function Setup({ engine, onClose }: { engine: NeverEngine; onClose: () => void }
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>სიცოცხლე</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.segmentRow}>
               {LIFE_OPTIONS.map((count) => (
                 <CategoryChip
+                  compact
                   key={count}
                   label={String(count)}
                   selected={engine.settings.startingLives === count}
@@ -88,7 +91,7 @@ function Setup({ engine, onClose }: { engine: NeverEngine; onClose: () => void }
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={styles.chipRow}>
+            <View style={Layout.chipRow}>
               <CategoryChip
                 label="ყველა"
                 selected={engine.settings.categoryID === null}
@@ -107,7 +110,7 @@ function Setup({ engine, onClose }: { engine: NeverEngine; onClose: () => void }
         </GlassCard>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.neonCyan} onPress={() => engine.startGame()} />
       </View>
     </View>
@@ -130,13 +133,13 @@ function Round({ engine, onExit }: { engine: NeverEngine; onExit: () => void }) 
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
-      <View style={styles.topBar}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.totalRounds}
         </Text>
         <View style={{ flex: 1 }} />
-        <Text style={[body(14, '700'), styles.digits, { color: Colors.textSecondary }]}>
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           თამაშში {engine.alive.length}
         </Text>
         <Pressable
@@ -158,7 +161,7 @@ function Round({ engine, onExit }: { engine: NeverEngine; onExit: () => void }) 
           <View style={{ gap: 8, alignItems: 'center' }}>
             <Text style={[body(15, '700'), { color: Colors.phosphor }]}>{LEAD}</Text>
             <Text
-              style={[titleFont(tail.length > 70 ? 20 : 25), styles.centered, { color: Colors.textPrimary }]}
+              style={[titleFont(tail.length > 70 ? 20 : 25), Layout.centered, { color: Colors.textPrimary }]}
               adjustsFontSizeToFit
               numberOfLines={5}
             >
@@ -167,7 +170,7 @@ function Round({ engine, onExit }: { engine: NeverEngine; onExit: () => void }) 
           </View>
         </GlassCard>
 
-        <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           ვისაც გაუკეთებია — მის სახელს დააჭირე.
         </Text>
 
@@ -178,13 +181,13 @@ function Round({ engine, onExit }: { engine: NeverEngine; onExit: () => void }) 
         </View>
 
         {dropoutLine ? (
-          <Text style={[body(13, '600'), styles.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}>
+          <Text style={[body(13, '600'), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}>
             {dropoutLine}
           </Text>
         ) : null}
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={Layout.footer}>
         <PrimaryButton
           title={engine.isFinalRound ? 'შედეგები' : 'შემდეგი'}
           icon="chevron.right"
@@ -222,9 +225,9 @@ function PlayerChip({ engine, player }: { engine: NeverEngine; player: Player })
       <Text
         style={[
           body(15, '700'),
-          styles.centered,
+          Layout.centered,
           { color: out ? Colors.textSecondary : Colors.textPrimary },
-          out ? styles.struck : null,
+          out ? Layout.struck : null,
         ]}
         numberOfLines={1}
         adjustsFontSizeToFit
@@ -248,7 +251,7 @@ function PlayerChip({ engine, player }: { engine: NeverEngine; player: Player })
       ) : (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           <MaterialCommunityIcons name="heart" size={12} color={Colors.neonMagenta} />
-          <Text style={[body(13, '900'), styles.digits, { color: Colors.textPrimary }]}>{left}</Text>
+          <Text style={[body(13, '900'), Layout.digits, { color: Colors.textPrimary }]}>{left}</Text>
         </View>
       )}
     </Pressable>
@@ -266,18 +269,15 @@ function Summary({
   roster: GameFlowProps['roster'];
   onExit: () => void;
 }) {
-  const [applied, setApplied] = useState(false);
   const winners = engine.winners;
 
-  useEffect(() => {
-    if (applied) return;
-    setApplied(true);
+  useAwardOnce(() => {
     Sound.play('win');
     Haptics.win();
     // შიდა სიცოცხლეები ტაბლოზე არ გადადის — მხოლოდ ადგილი ითვლება, რაც
     // დანარჩენ თამაშებთან თანაზომადს ხდის (2-4 ქულა პარტიაზე).
     PodiumAward.apply(engine.results, roster);
-  }, [applied, engine, roster]);
+  });
 
   const title = winners.length === 0 ? 'ყველა გავიდა თამაშიდან' : winners.map((p) => p.name).join(' და ');
 
@@ -304,24 +304,24 @@ function Summary({
         </View>
 
         <Text
-          style={[titleFont(30), styles.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
+          style={[titleFont(30), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
           adjustsFontSizeToFit
           numberOfLines={3}
         >
           {title}
         </Text>
 
-        <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
           {subtitle}
         </Text>
 
         <Text
-          style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.7, paddingHorizontal: 32 }]}
+          style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7, paddingHorizontal: 32 }]}
         >
           საერთო ტაბლოზე პირველ სამ ადგილს +3 / +2 / +1 ერიცხება
         </Text>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 4, gap: 8 }}>
+        <ScrollView contentContainerStyle={[Layout.content, { paddingTop: 4, gap: 8 }]}>
           {engine.ranking.map((player, rank) => {
             const left = engine.livesLeft(player);
             const isWinner = winners.some((w) => w.id === player.id);
@@ -332,7 +332,7 @@ function Summary({
                   style={[
                     body(16, '600'),
                     { color: left > 0 ? Colors.textPrimary : Colors.textSecondary, flex: 1 },
-                    left === 0 ? styles.struck : null,
+                    left === 0 ? Layout.struck : null,
                   ]}
                   numberOfLines={1}
                 >
@@ -341,7 +341,7 @@ function Summary({
                 {left > 0 ? (
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                     <MaterialCommunityIcons name="heart" size={14} color={Colors.neonMagenta} />
-                    <Text style={[titleFont(20), styles.digits, { color: isWinner ? Colors.phosphor : Colors.textPrimary }]}>
+                    <Text style={[titleFont(20), Layout.digits, { color: isWinner ? Colors.phosphor : Colors.textPrimary }]}>
                       {left}
                     </Text>
                   </View>
@@ -353,13 +353,12 @@ function Summary({
           })}
         </ScrollView>
 
-        <View style={[styles.footer, { gap: 10 }]}>
+        <View style={Layout.footer}>
           <PrimaryButton
             title="თავიდან"
             icon="arrow.clockwise"
             tint={Colors.neonCyan}
             onPress={() => {
-              setApplied(false);
               engine.restart();
             }}
           />
@@ -373,13 +372,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingHorizontal: 20, paddingTop: Space.m, paddingBottom: 24, gap: 14 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  footer: { paddingHorizontal: 20, paddingBottom: Space.m },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: Space.m },
-  centered: { textAlign: 'center' },
-  digits: { fontVariant: ['tabular-nums'] },
-  struck: { textDecorationLine: 'line-through' },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',

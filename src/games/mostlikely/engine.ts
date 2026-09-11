@@ -1,6 +1,6 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
-import { getJSON, setJSON } from '../../core/storage';
+import { loadSettings, saveSettings, num, oneOf, categoryID } from '../../core/settings';
 import { PromptBank } from '../../content/banks';
 import type { Player } from '../../core/roster';
 
@@ -198,16 +198,16 @@ export class MostLikelyEngine extends Observable {
   }
 
   private saveSettings(): void {
-    setJSON(SETTINGS_KEY, this.settings);
+    saveSettings(SETTINGS_KEY, this.settings);
     this.notify();
   }
 
+  /** იგივე ზღვრები, რაც `setRounds`-ს — შენახული `0` ან წაშლილი კატეგორია ვერ გავა. */
   private loadSettings(): void {
-    const stored = getJSON<Partial<MostLikelySettings>>(SETTINGS_KEY, {});
-    this.settings = {
-      mode: stored.mode === 'secret' || stored.mode === 'quick' ? stored.mode : DEFAULTS.mode,
-      rounds: typeof stored.rounds === 'number' ? stored.rounds : DEFAULTS.rounds,
-      categoryID: typeof stored.categoryID === 'string' ? stored.categoryID : null,
-    };
+    this.settings = loadSettings<MostLikelySettings>(SETTINGS_KEY, DEFAULTS, (s) => ({
+      mode: oneOf(s.mode, ['quick', 'secret'] as const, DEFAULTS.mode),
+      rounds: num(s.rounds, DEFAULTS.rounds, 3, 30),
+      categoryID: categoryID(s.categoryID, (id) => PromptBank.category(id) !== undefined),
+    }));
   }
 }

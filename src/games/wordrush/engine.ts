@@ -161,7 +161,13 @@ export class WordRushEngine extends Observable {
     this.notify();
   }
 
+  /** მხოლოდ შემთხვევით რეჟიმში აქვს აზრი — ფიქსირებული კატეგორია იგივე დარჩებოდა,
+   *  სიტყვა კი საერთო დასტიდან (`word.<id>`) ტყუილად დაიხარჯებოდა. */
+  get canSwapCategory(): boolean {
+    return this.settings.categoryID === null;
+  }
   swapCategory(): void {
+    if (!this.canSwapCategory) return;
     this.loadCategory();
     this.notify();
   }
@@ -198,7 +204,7 @@ export class WordRushEngine extends Observable {
     // საწყისი სიტყვა მხოლოდ ბიძგისთვისაა, მაგრამ გამეორება მაინც ეტყობა.
     // გასაღები საერთოა — შარადებში ნანახი სიტყვა აქაც არ დაბრუნდება.
     if (category) {
-      const shoe = new ContentShoe(`word.${category.id}`, category.words.map((w) => w.text));
+      const shoe = new ContentShoe(`word.${category.id}`, category.words);
       this.starter = shoe.draw() ?? '';
     } else {
       this.starter = '';

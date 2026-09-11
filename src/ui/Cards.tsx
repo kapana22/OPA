@@ -6,6 +6,7 @@ import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { Sound } from '../core/sound';
 import { Pressable } from './Pressable';
+import { GhostButton } from './Buttons';
 import { SplashBackground } from './SplashBackground';
 import { useDialog } from './Dialog';
 
@@ -125,6 +126,8 @@ export function GameExitButton({ onExit }: { onExit: () => void }) {
           ],
         });
       }}
+      // წრე 30px-ია, სამიზნე კი 44pt — თითი ბნელ ოთახში ზუსტად ვერ ხვდება.
+      hitSlop={8}
       style={styles.exitButton}
     >
       <MaterialCommunityIcons name={sf('xmark')} size={14} color={Colors.textSecondary} />
@@ -132,15 +135,37 @@ export function GameExitButton({ onExit }: { onExit: () => void }) {
   );
 }
 
-export function ComingSoon() {
+export function ComingSoon({ onBack }: { onBack?: () => void }) {
+  return (
+    <Notice icon="wrench.and.screwdriver.fill" title="მალე" text="ეს თამაში ჯერ მზადდება. მალე დაბრუნდი." onBack={onBack} />
+  );
+}
+
+/** სრულეკრანიანი შეტყობინება გამოსასვლელით — ჩიხი ეკრანზე არასდროს უნდა იყოს. */
+export function Notice({
+  icon,
+  title,
+  text,
+  onBack,
+}: {
+  icon: string;
+  title: string;
+  text: string;
+  onBack?: () => void;
+}) {
   return (
     <View style={styles.comingSoon}>
       <SplashBackground />
-      <GlyphIcon name="wrench.and.screwdriver.fill" size={34} tint={Colors.textSecondary} />
-      <Text style={[titleFont(28), { color: Colors.textPrimary, marginTop: Space.m }]}>მალე</Text>
+      <GlyphIcon name={icon} size={34} tint={Colors.textSecondary} />
+      <Text style={[titleFont(28), { color: Colors.textPrimary, marginTop: Space.m }]}>{title}</Text>
       <Text style={[body(16, '500'), { color: Colors.textSecondary, textAlign: 'center', marginTop: Space.xs }]}>
-        ეს თამაში ჯერ მზადდება. მალე დაბრუნდი.
+        {text}
       </Text>
+      {onBack ? (
+        <View style={{ marginTop: Space.l, width: '100%' }}>
+          <GhostButton title="უკან" icon="chevron.left" onPress={onBack} />
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -169,15 +194,24 @@ const styles = StyleSheet.create({
   comingSoon: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: Space.l },
 });
 
-/** ფილტრის/კატეგორიის ჩიპი. პორტი: `CategoryChip` (`ImpostorSetupView.swift`). */
+/**
+ * ფილტრის/კატეგორიის ჩიპი. პორტი: `CategoryChip` (`ImpostorSetupView.swift`).
+ *
+ * `compact` — ერთრიგიანი სეგმენტისთვის (`Layout.segmentRow`): ყველა ჩიპი
+ * თანაბარი სიგანისაა და რიგი არ იშლება. მოკლე ვარიანტებს (რიცხვები, წამები,
+ * წრეები) სჭირდება — თორემ ხუთიდან მეხუთე მარტო მეორე რიგზე მთელ სიგანეზე
+ * იჭიმებოდა.
+ */
 export function CategoryChip({
   label,
   selected,
   onPress,
+  compact = false,
 }: {
   label: string;
   selected: boolean;
   onPress: () => void;
+  compact?: boolean;
 }) {
   return (
     <Pressable
@@ -187,15 +221,15 @@ export function CategoryChip({
         Haptics.tap();
         onPress();
       }}
-      style={{
-        flexGrow: 1,
-        minWidth: 68,
-        paddingVertical: 11,
-        paddingHorizontal: 10,
-        borderRadius: 14,
-        alignItems: 'center',
-        backgroundColor: selected ? Colors.phosphor : Colors.surfaceHigh,
-      }}
+      style={[
+        {
+          paddingVertical: 11,
+          borderRadius: 14,
+          alignItems: 'center',
+          backgroundColor: selected ? Colors.phosphor : Colors.surfaceHigh,
+        },
+        compact ? { flex: 1, minWidth: 0, paddingHorizontal: 6 } : { flexGrow: 1, minWidth: 68, paddingHorizontal: 10 },
+      ]}
     >
       <Text
         style={[body(14, selected ? '900' : '600'), { color: selected ? Colors.onAccent : Colors.textPrimary }]}
