@@ -146,3 +146,84 @@ const styles = StyleSheet.create({
   },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 5 },
 });
+
+/**
+ * კომპაქტური ფილა ჰორიზონტალური რიგისთვის — „პოპულარული“ და კატეგორიების
+ * რიგები მთავარ ეკრანზე.
+ *
+ * **რატომ ცალკეა.** ორსვეტიანი ბადის ფილა ცხრამეტჯერ ერთ გრძელ სიად იშლებოდა;
+ * რიგში კი ერთ ეკრანზე 2.5 ფილა ჩანს და თითი გვერდზე გადაფურცლავს. წესების „?“
+ * აქ არ არის — ხანგრძლივი დაჭერა ხსნის; სრულ ბადეში ღილაკი ისევ დგას.
+ */
+export function MiniGameTile({
+  game,
+  playerCount = 0,
+  size = 'row',
+  onPlay,
+  onInfo,
+}: {
+  game: PartyGame;
+  playerCount?: number;
+  size?: 'popular' | 'row';
+  onPlay: () => void;
+  onInfo: () => void;
+}) {
+  const accent = Colors[game.accent];
+  const big = size === 'popular';
+  const needsMorePlayers = !game.comingSoon && playerCount > 0 && playerCount < game.minPlayers;
+
+  const a11y = [game.title, `${game.minPlayers}-დან ${game.maxPlayers} მოთამაშემდე`, `დაახლოებით ${game.minutes} წუთი`].join(
+    '. ',
+  );
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={a11y}
+      accessibilityHint={needsMorePlayers ? `საჭიროა მინიმუმ ${game.minPlayers} მოთამაშე` : 'დასაწყებად დააჭირე, წესებისთვის — დიდხანს'}
+      onPress={() => {
+        Haptics.medium();
+        onPlay();
+      }}
+      onLongPress={() => {
+        Haptics.tap();
+        onInfo();
+      }}
+      style={[
+        big ? miniStyles.popular : miniStyles.row,
+        { borderColor: game.comingSoon ? Colors.stroke : accent + '38' },
+      ]}
+    >
+      <View style={[miniStyles.iconBox, big ? { width: 44, height: 44 } : { width: 36, height: 36, borderRadius: 12 }, { backgroundColor: accent + '1F' }]}>
+        <MaterialCommunityIcons name={sf(game.icon)} size={big ? 22 : 18} color={accent} />
+      </View>
+      <View style={{ flex: 1, minHeight: 6 }} />
+      <Text style={[body(big ? 17 : 15, '900'), { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
+        {game.title}
+      </Text>
+      <Text style={[caption(11), { color: needsMorePlayers ? accent : Colors.textSecondary, marginTop: 3 }]} numberOfLines={1}>
+        {needsMorePlayers ? `საჭიროა ${game.minPlayers}+` : `${game.minPlayers}–${game.maxPlayers} · ${game.minutes} წთ`}
+      </Text>
+    </Pressable>
+  );
+}
+
+const miniStyles = StyleSheet.create({
+  popular: {
+    width: 150,
+    height: 164,
+    padding: 14,
+    borderRadius: Radius.tile,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+  },
+  row: {
+    width: 126,
+    height: 128,
+    padding: 12,
+    borderRadius: 20,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+  },
+  iconBox: { borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+});
