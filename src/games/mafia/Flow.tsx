@@ -131,6 +131,7 @@ function Reveal({ engine, onExit }: { engine: MafiaEngine; onExit: () => void })
 
   return (
     <PassPhoneReveal
+      confirmFirst
       key={engine.revealIndex}
       playerName={player.name}
       index={engine.revealIndex}

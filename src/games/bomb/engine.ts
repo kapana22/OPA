@@ -38,6 +38,8 @@ export class BombEngine extends Observable {
   winner: Player | null = null;
   /** 0 → 1: რამდენად ახლოსაა აფეთქება. ეკრანი და ტკაცუნი ამაზე დგას. */
   tension = 0;
+  /** ფიტილის ბოლო მეოთხედი — ეკრანი წითლად ფეთქავს. ერთხელ ირთვება. */
+  isHot = false;
 
   private categoryShoe = new ContentShoe('bomb.category', WordBank.categories.map((c) => c.id));
   private fuse = 0;
@@ -126,6 +128,7 @@ export class BombEngine extends Observable {
     this.fuse = lo + Math.random() * (hi - lo);
     this.elapsed = 0;
     this.tension = 0;
+    this.isHot = false;
     this.nextTickAt = 0;
     this.victimID = null;
     this.category = (this.settings.categoryID ? WordBank.category(this.settings.categoryID) : undefined) ?? this.nextCategory();
@@ -143,6 +146,13 @@ export class BombEngine extends Observable {
     this.ticker.start(0.05, () => {
       this.elapsed += 0.05;
       this.tension = Math.min(1, this.elapsed / this.fuse);
+
+      // ერთადერთი გადახატვა ტკაცუნის ფაზაში: „გახურდა“ ზღვარზე გადასვლისას.
+      // 20 ჰც-იანი `notify()` ეკრანს ტყუილად ხატავდა — ანიმაცია თვითონ დაასრულებს.
+      if (!this.isHot && this.tension > 0.75) {
+        this.isHot = true;
+        this.notify();
+      }
 
       if (this.elapsed >= this.nextTickAt) {
         if (this.tension > 0.75) {

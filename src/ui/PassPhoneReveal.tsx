@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
@@ -24,6 +24,11 @@ export interface RevealCard {
  *
  * ხელს აიღებ — მაშინვე ქრება. ეს განზრახაა: ერთტელეფონიან თამაშში საიდუმლო
  * მხოლოდ იმდენ ხანს უნდა ჩანდეს, რამდენ ხანსაც თითი ეკრანზეა.
+ *
+ * **`confirmFirst`** — ორსაფეხურიანი გადაცემა საიდუმლო როლებისთვის. ჯერ მხოლოდ
+ * სახელი ჩანს („გადაეცი ნინოს“), ბარათი კი მხოლოდ მას შემდეგ გამოჩნდება, რაც
+ * მიმღები თვითონ დაადასტურებს — ასე ეკრანი გადაცემის დროს ცარიელია და
+ * გვერდიდან შემთხვევით ვერავინ ნახავს, ვის რა ერგო.
  */
 export function PassPhoneReveal({
   playerName,
@@ -32,6 +37,7 @@ export function PassPhoneReveal({
   headerLeft,
   card,
   nextTitle,
+  confirmFirst = false,
   onNext,
   onExit,
 }: {
@@ -41,11 +47,20 @@ export function PassPhoneReveal({
   headerLeft?: string;
   card: RevealCard;
   nextTitle: string;
+  /** საიდუმლო როლებში — ბარათამდე მიმღებმა „მე ვარ“ უნდა დაადასტუროს. */
+  confirmFirst?: boolean;
   onNext: () => void;
   onExit?: () => void;
 }) {
   const [isHolding, setHolding] = useState(false);
+  const [confirmed, setConfirmed] = useState(!confirmFirst);
   const tint = card.tint ?? Colors.textPrimary;
+
+  // ახალი მოთამაშე — ტელეფონი ისევ გადასაცემია, დადასტურება თავიდან.
+  useEffect(() => {
+    setConfirmed(!confirmFirst);
+    setHolding(false);
+  }, [index, confirmFirst]);
 
   const revealedLabel = [card.hint, card.word, card.note].filter(Boolean).join(', ');
 
@@ -62,6 +77,30 @@ export function PassPhoneReveal({
 
       <View style={{ flex: 1 }} />
 
+      {!confirmed ? (
+        <>
+          <View style={styles.nameBlock} accessible accessibilityLabel={`გადაეცი ტელეფონი ${playerName}-ს`}>
+            <Text style={[body(16, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+            <Text style={[titleFont(36), styles.centered, { color: Colors.textPrimary }]}>{playerName}</Text>
+            <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>
+              დანარჩენებო, ეკრანს ნუ უყურებთ
+            </Text>
+          </View>
+          <View style={{ flex: 1 }} />
+          <View style={styles.footer}>
+            <PrimaryButton
+              title="მე ვარ"
+              icon="checkmark"
+              tint={tint}
+              onPress={() => {
+                Haptics.tap();
+                setConfirmed(true);
+              }}
+            />
+          </View>
+        </>
+      ) : (
+        <>
       <View
         style={styles.nameBlock}
         accessible
@@ -123,6 +162,8 @@ export function PassPhoneReveal({
       <View style={styles.footer}>
         <PrimaryButton title={nextTitle} icon="checkmark" tint={Colors.neonCyan} enabled={!isHolding} onPress={onNext} />
       </View>
+        </>
+      )}
     </View>
   );
 }

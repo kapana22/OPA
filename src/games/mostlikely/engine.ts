@@ -87,6 +87,12 @@ export class MostLikelyEngine extends Observable {
     });
   }
 
+  /** ვისზეც მთელი თამაშის განმავლობაში არავის მიუთითებია. */
+  get neverNamed(): Player[] {
+    if (!Object.values(this.totals).some((v) => v > 0)) return [];
+    return this.players.filter((p) => (this.totals[p.id] ?? 0) === 0);
+  }
+
   /** შეჯამების ეკრანისთვის — პოდიუმზე გადასაცემი შედეგები. */
   get results(): { player: Player; score: number }[] {
     return this.players.map((p) => ({ player: p, score: this.totals[p.id] ?? 0 }));

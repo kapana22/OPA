@@ -10,6 +10,7 @@ import { TwoTruthsEngine } from '../src/games/twotruths/engine';
 import { WavelengthEngine } from '../src/games/wavelength/engine';
 import { WordRushEngine } from '../src/games/wordrush/engine';
 import { RuleCardEngine } from '../src/games/rulecard/engine';
+import { BombEngine } from '../src/games/bomb/engine';
 
 /**
  * QA-მიმოხილვის ხარვეზები — თითოეული ტესტი ერთ გასწორებულ შემთხვევას იცავს,
@@ -125,5 +126,25 @@ describe('House Rules — ჯარიმა დადასტურები�
     e.finishForfeits([a]);
     expect(e.forfeitCount(a)).toBe(2);
     expect(e.mostForfeits.map((p) => p.id)).toEqual([a.id]);
+  });
+});
+
+describe('Most Likely To — „რადარის ქვემოთ“', () => {
+  it('ვისაც არავინ დაასახელა, ჯილდოში ხვდება; სულ ნულებზე — არავინ', () => {
+    const [a, b, c] = names(3);
+    const e = new MostLikelyEngine([a, b, c]);
+    expect(e.neverNamed).toEqual([]);            // ჯერ არავის უთამაშია
+    e.totals = { [a.id]: 3, [b.id]: 1 };
+    expect(e.neverNamed.map((p) => p.id)).toEqual([c.id]);
+  });
+});
+
+describe('ბომბი — ფიტილის გახურება ერთხელ ირთვება', () => {
+  it('isHot ახალ რაუნდზე ნულდება', () => {
+    const e = new BombEngine(names(3));
+    expect(e.isHot).toBe(false);
+    e.isHot = true;
+    e.startGame();
+    expect(e.isHot).toBe(false);
   });
 });

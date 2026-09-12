@@ -8,6 +8,7 @@ import { keyedEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
+import { SummaryAwards } from '../../ui/SummaryAwards';
 import { PromptBank } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
@@ -322,6 +323,13 @@ function Summary({ engine, roster, onExit }: { engine: MostLikelyEngine; roster:
           </Text>
         </>
       ) : null}
+
+      <SummaryAwards
+        awards={[
+          { title: 'ტელეფონის მაგნიტი', players: top ? [top] : [], note: 'ყველაზე ხშირად დასახელებული', tint: Colors.phosphor },
+          { title: 'რადარის ქვემოთ', players: engine.neverNamed, note: 'ვერავინ დაასახელა ვერც ერთხელ', tint: Colors.neonCyan },
+        ]}
+      />
 
       <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
         {engine.ranking.map((player, rank) => (

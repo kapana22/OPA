@@ -159,6 +159,7 @@ function Reveal({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
 
   return (
     <PassPhoneReveal
+      confirmFirst
       key={engine.revealIndex}
       playerName={player.name}
       index={engine.revealIndex}

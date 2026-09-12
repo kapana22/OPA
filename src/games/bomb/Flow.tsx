@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { Colors, Space, body, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
@@ -138,8 +139,28 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
   // ტაიმერიან თამაშში ეკრანი არ უნდა ჩაქრეს.
   useKeepScreenAwake();
 
+  // ფიტილის ბოლო მეოთხედში ეკრანი წითლად ფეთქავს და ოდნავ ირყევა — ეს ის
+  // მომენტია, როცა ტკაცუნიც ჩქარდება. ანიმაცია ნატიურ ძაფზე მიდის, ამიტომ
+  // ძრავს წამში ოცჯერ გადახატვა აღარ სჭირდება: `isHot` ერთხელ ირთვება.
+  const pulse = useSharedValue(0);
+  const shake = useSharedValue(0);
+  useEffect(() => {
+    if (!engine.isHot) return;
+    pulse.value = withRepeat(withTiming(1, { duration: 420 }), -1, true);
+    shake.value = withRepeat(withSequence(withTiming(-3, { duration: 70 }), withTiming(3, { duration: 70 })), -1, true);
+  }, [engine.isHot, pulse, shake]);
+
+  const glow = useAnimatedStyle(() => ({ opacity: pulse.value * 0.22 }));
+  const jitter = useAnimatedStyle(() => ({ transform: [{ translateX: shake.value }] }));
+
   return (
-    <View style={{ flex: 1, gap: 18 }}>
+    <Animated.View style={[{ flex: 1, gap: 18 }, jitter]}>
+      {engine.isHot ? (
+        <Animated.View
+          pointerEvents="none"
+          style={[StyleSheet.absoluteFill, { backgroundColor: Colors.neonMagenta }, glow]}
+        />
+      ) : null}
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>რაუნდი {engine.round}</Text>
@@ -185,7 +206,7 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
           onPress={() => engine.pass()}
         />
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
