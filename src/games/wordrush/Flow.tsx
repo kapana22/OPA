@@ -3,7 +3,8 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
@@ -96,21 +97,11 @@ function Setup({ engine, onClose }: { engine: WordRushEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={Layout.chipRow}>
-              <CategoryChip
-                label="შემთხვევითი"
-                selected={engine.settings.categoryID === null}
-                onPress={() => engine.setCategory(null)}
-              />
-              {CharadesBank.categories.map((cat) => (
-                <CategoryChip
-                  key={cat.id}
-                  label={`${cat.emoji} ${cat.name}`}
-                  selected={engine.settings.categoryID === cat.id}
-                  onPress={() => engine.setCategory(cat.id)}
-                />
-              ))}
-            </View>
+            <CategoryPicker
+              build={() => wordEntries(CharadesBank, 'შემთხვევითი', null)}
+              selectedID={engine.settings.categoryID}
+              onSelect={(id) => engine.setCategory(id)}
+            />
           </View>
         </GlassCard>
       </ScrollView>

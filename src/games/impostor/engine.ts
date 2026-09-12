@@ -1,5 +1,5 @@
 import { Observable } from '../../core/observable';
-import { ContentShoe } from '../../core/contentShoe';
+import { WideningShoe } from '../../core/wideningShoe';
 import { shuffled } from '../../core/shuffle';
 import { loadSettings, saveSettings, num, bool, categoryID } from '../../core/settings';
 import { WordBank, type WordCategory } from '../../content/banks';
@@ -69,7 +69,7 @@ export class ImpostorEngine extends Observable {
   roundPoints: Record<string, number> = {};
 
   /** დასტები კატეგორიების მიხედვით — გასაღები კონტენტისაა, არა თამაშისა. */
-  private shoes: Record<string, ContentShoe> = {};
+  private shoes: Record<string, WideningShoe> = {};
 
   constructor(players: Player[]) {
     super();
@@ -216,7 +216,8 @@ export class ImpostorEngine extends Observable {
 
   private drawWord(category: WordCategory): string {
     const key = `word.${category.id}`;
-    const shoe = this.shoes[key] ?? new ContentShoe(key, category.words);
+    // კატეგორია ამოიწურა? სიტყვა მთელი ბანკიდან მოდის, არა თავიდან არეული იგივე ორმოციდან.
+    const shoe = this.shoes[key] ?? new WideningShoe(key, category.words, 'word.all', WordBank.all);
     this.shoes[key] = shoe;
     return shoe.draw() ?? '—';
   }

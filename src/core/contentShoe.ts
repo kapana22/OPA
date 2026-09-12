@@ -170,6 +170,25 @@ export class ContentShoe {
     setJSON(ContentShoe.storageKey(this.key), { order: this.order, index: this.index });
   }
 
+  /**
+   * კიდევ რამდენი **ახალი** ჩანაწერია ამ დასტაში — შენახულის მიხედვით, დასტის
+   * აშენების გარეშე. კატეგორიის ჩიპს „დარჩა 8“ სჭირდება ისე, რომ თხუთმეტი
+   * დასტა რენდერზე არ აიგოს და არაფერი არ შეიცვალოს.
+   *
+   * წაშლილი ჩანაწერები არ ითვლება; ბანკს დამატებული და ჯერ არნახული — ითვლება.
+   * შენახული არაფერია → მთელი ბანკი ახალია.
+   */
+  static remaining(key: string, pool: readonly string[]): number {
+    const known = new Set(pool);
+    const stored = ContentShoe.load(key);
+    if (stored.order.length === 0) return known.size;
+    const seen = new Set<string>();
+    stored.order.slice(0, stored.index).forEach((x) => {
+      if (known.has(x)) seen.add(x);
+    });
+    return Math.max(0, known.size - seen.size);
+  }
+
   /** კონკრეტული დასტის მეხსიერების გასუფთავება. */
   static forget(key: string): void {
     remove(ContentShoe.storageKey(key));

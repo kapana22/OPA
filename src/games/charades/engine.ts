@@ -1,5 +1,5 @@
 import { Observable } from '../../core/observable';
-import { ContentShoe } from '../../core/contentShoe';
+import { WideningShoe } from '../../core/wideningShoe';
 import { Ticker } from '../../core/ticker';
 import { TurnRotation } from '../../core/turnRotation';
 import { TiltSensor } from '../../core/tiltSensor';
@@ -57,7 +57,7 @@ export class CharadesEngine extends Observable {
   flash: CharadesFlash | null = null;
   scores: Record<string, number> = {};
 
-  private shoe = new ContentShoe('word.charades-all', []);
+  private shoe = new WideningShoe('word.charades-all', [], 'word.charades-all', []);
   private tilt = new TiltSensor();
   private timer = new Ticker();
   private countdownTimer = new Ticker();
@@ -136,9 +136,12 @@ export class CharadesEngine extends Observable {
 
   startGame(): void {
     if (!this.canPlay) return;
-    this.shoe = new ContentShoe(
+    // კატეგორია რომ ამოიწუროს, სიტყვები მთელი ბანკიდან მოდის — იგივე არ მეორდება.
+    this.shoe = new WideningShoe(
       `word.${this.settings.categoryID ?? 'charades-all'}`,
       CharadesBank.deck(this.settings.categoryID),
+      'word.charades-all',
+      CharadesBank.all,
     );
     this.scores = {};
     this.turnIndex = 0;

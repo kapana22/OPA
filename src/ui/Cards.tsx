@@ -207,15 +207,30 @@ export function CategoryChip({
   selected,
   onPress,
   compact = false,
+  count,
+  remaining,
 }: {
   label: string;
   selected: boolean;
   onPress: () => void;
   compact?: boolean;
+  /** რამდენი ჩანაწერია კატეგორიაში — „🍕 საკვები · 56“. */
+  count?: number;
+  /**
+   * კიდევ რამდენი უნახავია. `LOW_FRESH`-ზე ნაკლები → ჩიპი ბაცდება და
+   * „· დარჩა 8“ ეწერება: მოთამაშემ იცის, რომ ეს კატეგორია თითქმის ამოწურა.
+   */
+  remaining?: number | null;
 }) {
+  const low = typeof remaining === 'number' && remaining < LOW_FRESH;
+  const dim = selected ? Colors.onAccent + 'A6' : Colors.textSecondary;
+  const a11y = [label, count !== undefined ? `${count} ჩანაწერი` : null, low ? `დარჩა ${remaining}` : null]
+    .filter(Boolean)
+    .join(', ');
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={a11y}
       accessibilityState={{ selected }}
       onPress={() => {
         Haptics.tap();
@@ -227,6 +242,7 @@ export function CategoryChip({
           borderRadius: 14,
           alignItems: 'center',
           backgroundColor: selected ? Colors.phosphor : Colors.surfaceHigh,
+          opacity: low && !selected ? 0.6 : 1,
         },
         compact ? { flex: 1, minWidth: 0, paddingHorizontal: 6 } : { flexGrow: 1, minWidth: 68, paddingHorizontal: 10 },
       ]}
@@ -237,8 +253,53 @@ export function CategoryChip({
         adjustsFontSizeToFit
       >
         {label}
+        {count !== undefined ? <Text style={[body(13, '600'), { color: dim }]}>{` · ${count}`}</Text> : null}
+        {low ? <Text style={[body(13, '600'), { color: dim }]}>{` · დარჩა ${remaining}`}</Text> : null}
       </Text>
     </Pressable>
+  );
+}
+
+/** ამაზე ნაკლები უნახავი ჩანაწერი → ჩიპი „თითქმის ამოწურულია“. */
+export const LOW_FRESH = 12;
+
+export interface PickerEntry {
+  id: string | null;
+  label: string;
+  count: number;
+  /** `null` — ამ ჩანაწერს დასტა არ აქვს (მაგ. კატეგორია სიტყვების გარეშე, სადაც მხოლოდ სახელი ითამაშება). */
+  remaining: number | null;
+}
+
+/**
+ * კატეგორიის ჩიპების რიგი რაოდენობებით.
+ *
+ * `build` ერთხელ, ეკრანის გახსნისას გამოიძახება — ჩანაწერები საცავიდან
+ * იკითხება და ყოველ დაჭერაზე თხუთმეტი დასტის თავიდან დათვლა უაზროა.
+ */
+export function CategoryPicker({
+  build,
+  selectedID,
+  onSelect,
+}: {
+  build: () => PickerEntry[];
+  selectedID: string | null;
+  onSelect: (id: string | null) => void;
+}) {
+  const entries = React.useMemo(build, []); // eslint-disable-line react-hooks/exhaustive-deps
+  return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+      {entries.map((e) => (
+        <CategoryChip
+          key={e.id ?? '__all'}
+          label={e.label}
+          count={e.count}
+          remaining={e.remaining}
+          selected={selectedID === e.id}
+          onPress={() => onSelect(e.id)}
+        />
+      ))}
+    </View>
   );
 }
 

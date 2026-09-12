@@ -1,5 +1,6 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
+import { WideningShoe } from '../../core/wideningShoe';
 import { Ticker } from '../../core/ticker';
 import { loadSettings, saveSettings, num, categoryID } from '../../core/settings';
 import { CharadesBank, type WordCategory } from '../../content/banks';
@@ -204,7 +205,7 @@ export class WordRushEngine extends Observable {
     // საწყისი სიტყვა მხოლოდ ბიძგისთვისაა, მაგრამ გამეორება მაინც ეტყობა.
     // გასაღები საერთოა — შარადებში ნანახი სიტყვა აქაც არ დაბრუნდება.
     if (category) {
-      const shoe = new ContentShoe(`word.${category.id}`, category.words);
+      const shoe = new WideningShoe(`word.${category.id}`, category.words, 'word.charades-all', CharadesBank.all);
       this.starter = shoe.draw() ?? '';
     } else {
       this.starter = '';

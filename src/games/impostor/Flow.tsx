@@ -9,8 +9,8 @@ import {
   GlyphIcon,
   ScreenHeader,
   Stepper,
-  ToggleRow,
-} from '../../ui/Cards';
+  ToggleRow, CategoryPicker } from '../../ui/Cards';
+import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
@@ -83,21 +83,11 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={Layout.chipRow}>
-              <CategoryChip
-                label="შემთხვევითი"
-                selected={engine.settings.categoryID === null}
-                onPress={() => engine.setCategory(null)}
-              />
-              {WordBank.categories.map((cat) => (
-                <CategoryChip
-                  key={cat.id}
-                  label={`${cat.emoji} ${cat.name}`}
-                  selected={engine.settings.categoryID === cat.id}
-                  onPress={() => engine.setCategory(cat.id)}
-                />
-              ))}
-            </View>
+            <CategoryPicker
+              build={() => wordEntries(WordBank, 'შემთხვევითი', null)}
+              selectedID={engine.settings.categoryID}
+              onSelect={(id) => engine.setCategory(id)}
+            />
           </View>
         </GlassCard>
 

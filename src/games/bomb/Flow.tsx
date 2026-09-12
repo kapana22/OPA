@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { Colors, Space, body, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Layout } from '../../ui/layout';
 import { useKeepScreenAwake } from '../../core/orientationLock';
@@ -110,21 +111,11 @@ function Setup({ engine, onClose }: { engine: BombEngine; onClose: () => void })
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={Layout.chipRow}>
-              <CategoryChip
-                label="შემთხვევითი"
-                selected={engine.settings.categoryID === null}
-                onPress={() => engine.setCategory(null)}
-              />
-              {WordBank.categories.map((cat) => (
-                <CategoryChip
-                  key={cat.id}
-                  label={`${cat.emoji} ${cat.name}`}
-                  selected={engine.settings.categoryID === cat.id}
-                  onPress={() => engine.setCategory(cat.id)}
-                />
-              ))}
-            </View>
+            <CategoryPicker
+              build={() => wordEntries(WordBank, 'შემთხვევითი', null, false)}
+              selectedID={engine.settings.categoryID}
+              onSelect={(id) => engine.setCategory(id)}
+            />
           </View>
         </GlassCard>
       </ScrollView>

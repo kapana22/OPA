@@ -3,7 +3,8 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, ToggleRow } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, ToggleRow, CategoryPicker } from '../../ui/Cards';
+import { keyedEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
@@ -103,21 +104,11 @@ function Setup({ engine, onClose }: { engine: HerdEngine; onClose: () => void })
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={Layout.chipRow}>
-              <CategoryChip
-                label="ყველა"
-                selected={engine.settings.categoryID === null}
-                onPress={() => engine.setCategory(null)}
-              />
-              {DilemmaBank.categories.map((cat) => (
-                <CategoryChip
-                  key={cat.id}
-                  label={`${cat.emoji} ${cat.name}`}
-                  selected={engine.settings.categoryID === cat.id}
-                  onPress={() => engine.setCategory(cat.id)}
-                />
-              ))}
-            </View>
+            <CategoryPicker
+              build={() => keyedEntries(DilemmaBank, 'dilemma', (c) => c.dilemmas.map((d) => `${d.a}|${d.b}`), 'ყველა')}
+              selectedID={engine.settings.categoryID}
+              onSelect={(id) => engine.setCategory(id)}
+            />
           </View>
         </GlassCard>
       </ScrollView>

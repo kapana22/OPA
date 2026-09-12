@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { keyedEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
@@ -84,21 +85,11 @@ function Setup({ engine, onClose }: { engine: WavelengthEngine; onClose: () => v
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={Layout.chipRow}>
-              <CategoryChip
-                label="ყველა"
-                selected={engine.settings.categoryID === null}
-                onPress={() => engine.setCategory(null)}
-              />
-              {SpectrumBank.categories.map((cat) => (
-                <CategoryChip
-                  key={cat.id}
-                  label={`${cat.emoji} ${cat.name}`}
-                  selected={engine.settings.categoryID === cat.id}
-                  onPress={() => engine.setCategory(cat.id)}
-                />
-              ))}
-            </View>
+            <CategoryPicker
+              build={() => keyedEntries(SpectrumBank, 'spectrum', (c) => c.spectrums.map((s) => `${s.left}|${s.right}`), 'ყველა')}
+              selectedID={engine.settings.categoryID}
+              onSelect={(id) => engine.setCategory(id)}
+            />
           </View>
         </GlassCard>
 

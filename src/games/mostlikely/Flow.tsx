@@ -3,7 +3,8 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RankRow, ScreenHeader } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { keyedEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
@@ -93,17 +94,11 @@ function Setup({ engine, onClose }: { engine: MostLikelyEngine; onClose: () => v
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <View style={Layout.chipRow}>
-              <CategoryChip label="ყველა" selected={engine.settings.categoryID === null} onPress={() => engine.setCategory(null)} />
-              {PromptBank.categories.map((cat) => (
-                <CategoryChip
-                  key={cat.id}
-                  label={`${cat.emoji} ${cat.name}`}
-                  selected={engine.settings.categoryID === cat.id}
-                  onPress={() => engine.setCategory(cat.id)}
-                />
-              ))}
-            </View>
+            <CategoryPicker
+              build={() => keyedEntries(PromptBank, 'prompt', (c) => c.prompts.map((p) => p.text), 'ყველა')}
+              selectedID={engine.settings.categoryID}
+              onSelect={(id) => engine.setCategory(id)}
+            />
           </View>
         </GlassCard>
       </ScrollView>

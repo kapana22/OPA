@@ -1,5 +1,5 @@
 import { Observable } from '../../core/observable';
-import { ContentShoe } from '../../core/contentShoe';
+import { WideningShoe } from '../../core/wideningShoe';
 import { Ticker } from '../../core/ticker';
 import { Screen } from '../../core/screen';
 import { shuffled } from '../../core/shuffle';
@@ -82,7 +82,7 @@ export class AliasEngine extends Observable {
   /** ზღვარს ორმა ერთდროულად მიაღწია — ემატება დამატებითი წრე. */
   extraLap = false;
 
-  private shoe = new ContentShoe('word.charades-all', []);
+  private shoe = new WideningShoe('word.charades-all', [], 'word.charades-all', []);
   private timer = new Ticker();
   private countdownTimer = new Ticker();
 
@@ -272,9 +272,12 @@ export class AliasEngine extends Observable {
 
   startMatch(): void {
     if (!this.teamsAreValid) return;
-    this.shoe = new ContentShoe(
+    // კატეგორია რომ ამოიწუროს, სიტყვები მთელი ბანკიდან მოდის — იგივე არ მეორდება.
+    this.shoe = new WideningShoe(
       `word.${this.settings.categoryID ?? 'charades-all'}`,
       CharadesBank.deck(this.settings.categoryID),
+      'word.charades-all',
+      CharadesBank.all,
     );
     for (const t of this.teams) t.score = 0;
     this.activeTeamIndex = 0;
