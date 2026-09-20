@@ -1,3 +1,4 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -227,6 +228,7 @@ function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
           {engine.categoryLabel}
         </Text>
       </View>
+      <PlayerCharacter player={engine.currentPlayer} compact />
 
       <View style={{ paddingHorizontal: 20 }}>
         <ScoreStrip engine={engine} />

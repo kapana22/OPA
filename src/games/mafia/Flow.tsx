@@ -1,9 +1,10 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, Divider, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow } from '../../ui/Cards';
+import { CategoryChip, Divider, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
@@ -15,6 +16,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { MafiaEngine, roleIcon, roleTitle, type MafiaRole } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „მაფია“ — სრული ნაკადი.
@@ -56,18 +58,17 @@ export function MafiaFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('mafia');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Mafia" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="Mafia" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="Mafia" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>
-            წამყვანი არ სჭირდება — ღამით ტელეფონი ყველას გადაეცემა რიგრიგობით და თითოეული თავის ეკრანს ხედავს.
-          </Text>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -178,6 +179,7 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
         <View style={{ alignItems: 'center' }}>
           <GlyphIcon name="moon.stars.fill" size={32} tint={Colors.neonCyan} />
         </View>
+          <PlayerCharacter player={player} />
         <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
         <Text
           style={[titleFont(34), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}

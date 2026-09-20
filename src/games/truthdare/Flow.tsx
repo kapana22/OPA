@@ -1,9 +1,10 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { BottleSpinner } from '../../ui/BottleSpinner';
@@ -16,6 +17,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { TruthDareEngine, orderTitle, type TruthDareOrder } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „სიმართლე თუ მოქმედება“ — სრული ნაკადი.
@@ -53,27 +55,21 @@ export function TruthDareFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('truthdare');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Truth or Dare" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
         <ScreenHeader
           title="სიმართლე თუ მოქმედება"
           subtitle={`${engine.players.length} მოთამაშე`}
           onBack={onClose}
-        />
+         onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 8 }}>
-            <Text style={[body(14, '600'), { color: Colors.textPrimary }]}>
-              ჯერი გიდგება — ირჩევ სიმართლეს ან მოქმედებას.
-            </Text>
-            <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>
-              სიმართლე +1 ქულა, მოქმედება +2. პასის უფლება ყოველთვის გაქვს — ოღონდ ბოლოს ჩანს, ვინ რამდენჯერ გაიქცა.
-            </Text>
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -202,6 +198,7 @@ function Turn({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
         />
       </View>
 
+      <PlayerCharacter player={engine.currentPlayer} compact />
       <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ჯერი გიდგება</Text>
 
       <Text

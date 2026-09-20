@@ -1,9 +1,10 @@
-import React, {useEffect, useRef} from 'react';
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
+import React, {useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { keyedEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -17,6 +18,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { MostLikelyEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ვინ არის ყველაზე...“ — სრული ნაკადი.
@@ -50,10 +52,14 @@ export function MostLikelyFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: MostLikelyEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('mostlikely');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Most Likely" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="ვინ არის ყველაზე..." subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="ვინ არის ყველაზე..." subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -177,6 +183,7 @@ function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void
 
       {engine.isSecret ? (
         <View style={{ alignItems: 'center', gap: 4 }}>
+          <PlayerCharacter player={engine.currentVoter} compact />
           <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
           <Text style={[titleFont(30), { color: Colors.neonCyan }]}>{engine.currentVoter?.name ?? '—'}</Text>
           <Text style={[body(13, '700'), { color: Colors.textSecondary, fontVariant: ['tabular-nums'] }]}>

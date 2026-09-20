@@ -1,136 +1,130 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import { Colors, body, caption } from '../../theme/theme';
+import React, { useRef, useState } from 'react';
+import { PanResponder, StyleSheet, Text, View } from 'react-native';
+import Svg, { Circle, Defs, Line, LinearGradient, Path, Stop, Text as SvgText } from 'react-native-svg';
+import { Colors, Space, body, caption } from '../../theme/theme';
+import { Haptics } from '../../core/haptics';
 import { WavelengthEngine, type Spectrum } from './engine';
+import { DIAL, dialPoint, dialSector, dialValue } from './dialGeometry';
 
-/**
- * შკალა ორი პოლუსით, ქულის ზოლებითა და ნიშნულებით.
- *
- * პორტი: `Splash/Games/Wavelength/WavelengthSpectrumBar.swift`.
- * `target` მხოლოდ მაშინ გადმოეცემა, როცა სამიზნე უკვე ჩანს — თორემ ეკრანი
- * პასუხს გასცემდა.
- */
-
-const BAR_HEIGHT = 56;
-const OVERHANG = 12;
-const WIDTH = 300;
-
-function bandOpacity(points: number): number {
-  if (points === 4) return 0.42;
-  if (points === 3) return 0.24;
-  if (points === 2) return 0.16;
-  return 0.1;
-}
-
-export function SpectrumBar({
-  spectrum,
-  target,
-  guess,
-  showBands = false,
-}: {
+export interface SpectrumBarProps {
   spectrum: Spectrum;
   target?: number | null;
   guess?: number | null;
   showBands?: boolean;
-}) {
+  interactive?: boolean;
+  onValueChange?: (val: number) => void;
+  onSlidingComplete?: () => void;
+}
+const bandColors = [Colors.phosphorLime, Colors.violet, Colors.softLavender];
+
+/** A covered semicircular dial; no secret geometry is rendered while covered. */
+export function SpectrumBar({ spectrum, target, guess, showBands = false, interactive = false, onValueChange, onSlidingComplete }: SpectrumBarProps) {
+  const [width, setWidth] = useState(320);
+  const live = useRef({ width, interactive, onValueChange, onSlidingComplete, guess });
+  live.current = { width, interactive, onValueChange, onSlidingComplete, guess };
+  const start = useRef({ x: 0, y: 0 });
+  const lastValue = useRef(guess ?? 0.5);
+  const change = (value: number) => {
+    if (!live.current.interactive) return;
+    const clamped = Math.max(0, Math.min(1, value));
+    if (Math.abs(clamped - lastValue.current) >= 0.025) Haptics.tick();
+    lastValue.current = clamped;
+    live.current.onValueChange?.(clamped);
+  };
+  const move = (x: number, y: number) => change(dialValue(x, y, live.current.width, lastValue.current));
+  const responder = useRef(PanResponder.create({
+    onStartShouldSetPanResponder: () => live.current.interactive,
+    onMoveShouldSetPanResponder: () => live.current.interactive,
+    onPanResponderGrant: (event) => {
+      start.current = { x: event.nativeEvent.locationX, y: event.nativeEvent.locationY };
+      lastValue.current = live.current.guess ?? 0.5;
+      move(start.current.x, start.current.y);
+    },
+    onPanResponderMove: (_event, gesture) => move(start.current.x + gesture.dx, start.current.y + gesture.dy),
+    onPanResponderRelease: () => { Haptics.medium(); live.current.onSlidingComplete?.(); },
+    onPanResponderTerminationRequest: () => false,
+  })).current;
+  const visible = target != null;
+  const needle = dialPoint(guess ?? 0.5, 126);
+
   return (
-    <View style={{ gap: 12 }}>
-      <View style={{ height: BAR_HEIGHT + OVERHANG * 2 }}>
-        <Svg width="100%" height={BAR_HEIGHT + OVERHANG * 2} viewBox={`0 0 ${WIDTH} ${BAR_HEIGHT + OVERHANG * 2}`}>
+    <View style={styles.root}>
+      <Text style={[caption(12, '700'), styles.center, { color: Colors.textSecondary }]}>
+        {visible ? 'სამიზნე გახსნილია' : 'სამიზნე დამალულია'}
+      </Text>
+      <View
+        style={{ width: '100%', aspectRatio: DIAL.width / DIAL.height }}
+        onLayout={(event) => { if (event.nativeEvent.layout.width > 0) setWidth(event.nativeEvent.layout.width); }}
+        accessible={interactive}
+        accessibilityRole={interactive ? 'adjustable' : undefined}
+        accessibilityLabel="მბრუნავი ისარი — პასუხი"
+        accessibilityActions={interactive ? [{ name: 'increment', label: 'მარჯვნივ' }, { name: 'decrement', label: 'მარცხნივ' }] : undefined}
+        onAccessibilityAction={(event) => change((live.current.guess ?? 0.5) + (event.nativeEvent.actionName === 'increment' ? 0.01 : -0.01))}
+        {...(interactive ? responder.panHandlers : {})}
+      >
+        <Svg pointerEvents="none" width="100%" height="100%" viewBox={`0 0 ${DIAL.width} ${DIAL.height}`}>
           <Defs>
-            <LinearGradient id="spectrum" x1="0" y1="0" x2="1" y2="0">
-              <Stop offset="0%" stopColor={Colors.neonCyan} />
-              <Stop offset="50%" stopColor={Colors.phosphor} />
-              <Stop offset="100%" stopColor={Colors.neonMagenta} />
+            <LinearGradient id="dialCover" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={Colors.softLavender} />
+              <Stop offset="1" stopColor={Colors.violet} />
             </LinearGradient>
           </Defs>
-
-          <Rect x={0} y={OVERHANG} width={WIDTH} height={BAR_HEIGHT} rx={BAR_HEIGHT / 2} fill="url(#spectrum)" />
-
-          {/* ქულის ზოლები — ვიწროდან განიერისკენ, რომ ცენტრი ყველაზე ნათელი იყოს */}
-          {showBands && target != null
-            ? [...WavelengthEngine.bands]
-                .sort((a, b) => b.halfWidth - a.halfWidth)
-                .map((band) => {
-                  // კიდეზე ზოლი იჭრება და არა იწევს — თორემ დახატული ზონა
-                  // `pointsForDistance`-ის რეალურ ზონას აღარ დაემთხვეოდა.
-                  const left = Math.max(0, target - band.halfWidth);
-                  const right = Math.min(1, target + band.halfWidth);
-                  return (
-                  <Rect
-                    key={band.id}
-                    x={WIDTH * left}
-                    y={OVERHANG}
-                    width={WIDTH * (right - left)}
-                    height={BAR_HEIGHT}
-                    fill="#FFFFFF"
-                    opacity={bandOpacity(band.points)}
-                  />
-                  );
-                })
-            : null}
-
-          {target != null ? <Needle value={target} color={Colors.textPrimary} filled /> : null}
-          {guess != null ? <Needle value={guess} color={Colors.phosphor} filled={false} /> : null}
+          <Path d={dialSector(0, 1, 156)} fill={Colors.deepPurple} stroke={Colors.strokeActive} strokeWidth={2} />
+          <Path d={dialSector(0, 1)} fill={Colors.warmCream} />
+          {visible && showBands ? [...WavelengthEngine.bands].reverse().map((band) => (
+            <Path key={band.id} d={dialSector(Math.max(0, target - band.halfWidth), Math.min(1, target + band.halfWidth))}
+              fill={bandColors[WavelengthEngine.bands.indexOf(band)]} />
+          )) : null}
+          {visible && !showBands ? <Path d={dialSector(Math.max(0, target - 0.025), Math.min(1, target + 0.025))} fill={Colors.phosphorLime} /> : null}
+          {!visible ? <Path d={dialSector(0, 1)} fill="url(#dialCover)" /> : null}
+          {Array.from({ length: 21 }, (_, i) => {
+            const a = dialPoint(i / 20, 149), b = dialPoint(i / 20, 153);
+            return <Line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={Colors.softLavender} strokeWidth={1.5} />;
+          })}
+          {visible && showBands ? [-0.1, -0.05, 0, 0.05, 0.1].map((offset, i) => {
+            const value = target + offset;
+            if (value < 0.02 || value > 0.98) return null;
+            const point = dialPoint(value, 127);
+            return <SvgText key={i} x={point.x} y={point.y} textAnchor="middle" alignmentBaseline="central" fontSize={11} fontWeight="800"
+              fill={i === 1 || i === 3 ? Colors.warmCream : Colors.deepPurple}>{['2', '3', '4', '3', '2'][i]}</SvgText>;
+          }) : null}
+          {visible ? (() => {
+            const point = dialPoint(target, 144);
+            return <Circle cx={point.x} cy={point.y} r={4} fill={Colors.phosphorLime} stroke={Colors.deepPurple} strokeWidth={2} />;
+          })() : null}
+          {guess != null ? <>
+            <Line x1={DIAL.cx} y1={DIAL.cy} x2={needle.x} y2={needle.y} stroke={Colors.deepPurple} strokeWidth={10} strokeLinecap="round" />
+            <Line x1={DIAL.cx} y1={DIAL.cy} x2={needle.x} y2={needle.y} stroke={Colors.phosphorLime} strokeWidth={5} strokeLinecap="round" />
+            <Circle cx={needle.x} cy={needle.y} r={6} fill={Colors.phosphorLime} stroke={Colors.deepPurple} strokeWidth={2} />
+          </> : null}
+          <Circle cx={DIAL.cx} cy={DIAL.cy} r={24} fill={Colors.deepPurple} />
+          <Circle cx={DIAL.cx} cy={DIAL.cy} r={17} fill={Colors.phosphorLime} />
+          <Circle cx={DIAL.cx} cy={DIAL.cy} r={6} fill={Colors.deepPurple} />
         </Svg>
       </View>
-
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-        <Text style={[body(14, '700'), { color: Colors.neonCyan, flex: 1 }]} numberOfLines={3}>
-          {spectrum.left}
-        </Text>
-        <Text style={[body(14, '700'), { color: Colors.neonMagenta, flex: 1, textAlign: 'right' }]} numberOfLines={3}>
-          {spectrum.right}
-        </Text>
+      <View style={styles.labels}>
+        <Text style={[body(16, '700'), styles.label, { color: Colors.textPrimary }]}>◀ {spectrum.left}</Text>
+        <Text style={[body(16, '700'), styles.label, { color: Colors.textPrimary, textAlign: 'right' }]}>{spectrum.right} ▶</Text>
       </View>
+      {interactive ? <Text style={[caption(12), styles.center, { color: Colors.textSecondary }]}>ისარი თითით მოატრიალეთ</Text> : null}
     </View>
   );
 }
 
-function Needle({ value, color, filled }: { value: number; color: string; filled: boolean }) {
-  const x = WIDTH * value;
-  return (
-    <>
-      <Rect x={x - 2} y={OVERHANG + 2} width={4} height={BAR_HEIGHT - 4} rx={2} fill={color} />
-      <Rect
-        x={x - 8}
-        y={OVERHANG - 12}
-        width={16}
-        height={16}
-        rx={8}
-        fill={filled ? color : Colors.ink}
-        stroke={color}
-        strokeWidth={3}
-      />
-    </>
-  );
+export function BandScoreLegend() {
+  return <View style={styles.legend}>
+    {['4 ქულა', '3 ქულა', '2 ქულა'].map((label, index) => <View key={label} style={styles.legendItem}>
+      <View style={[styles.dot, { backgroundColor: bandColors[index] }]} />
+      <Text style={[caption(11, '700'), { color: Colors.textPrimary }]}>{label}</Text>
+    </View>)}
+  </View>;
 }
-
-/** ზოლების ლეგენდა — რომელი სიგანე რამდენ ქულას ნიშნავს. */
-export function BandLegend() {
-  return (
-    <View style={styles.legend}>
-      {WavelengthEngine.bands.map((band) => (
-        <View key={band.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          <View
-            style={{
-              width: (6 - band.points) * 5 + 8,
-              height: 8,
-              borderRadius: 4,
-              backgroundColor: '#FFFFFF',
-              opacity: band.points === 4 ? 0.75 : band.points * 0.14,
-            }}
-          />
-          <Text style={[caption(12), { color: Colors.textSecondary, fontVariant: ['tabular-nums'] }]}>
-            {band.points}
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  legend: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
+  root: { gap: Space.s, alignSelf: 'stretch' },
+  center: { textAlign: 'center' },
+  labels: { flexDirection: 'row', justifyContent: 'space-between', gap: 14 },
+  label: { flex: 1 },
+  legend: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: 16, paddingVertical: 8 },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dot: { width: 10, height: 10, borderRadius: 5 },
 });

@@ -38,7 +38,7 @@ export default function GameHost() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground tint={tint} />
+      <SplashBackground />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         {tooFew ? (
           <Notice

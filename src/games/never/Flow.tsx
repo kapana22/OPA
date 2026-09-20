@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -18,6 +18,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { NeverEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „მე არასდროს...“ — სრული ნაკადი.
@@ -52,22 +53,17 @@ function livesHint(lives: number): string {
 }
 
 function Setup({ engine, onClose }: { engine: NeverEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('never');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Never Have I Ever" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="მე არასდროს" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="მე არასდროს" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 8 }}>
-            <Text style={[body(14, '600'), { color: Colors.textPrimary }]}>ეკრანს ყველა ერთად უყურებს.</Text>
-            <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>
-              ვისაც დებულებაში ნათქვამი გაუკეთებია, პატიოსნად ამბობს — და მის სახელს დააჭერთ თითს. ერთი შეხება ერთ
-              სიცოცხლედ უჯდება.
-            </Text>
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>

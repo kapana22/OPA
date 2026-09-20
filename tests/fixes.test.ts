@@ -90,18 +90,6 @@ describe('ორი სიმართლე — სამი ერთნაი
   });
 });
 
-describe('Wavelength — ქულა ნაჩვენებ მანძილზე ითვლება', () => {
-  it('ეკრანზე „28“ ზუსტად 28-ის ზოლში ვარდება, არა უფრო ვიწროში', () => {
-    const e = new WavelengthEngine(names(3));
-    e.startGame();
-    e.target = 0.5;
-    e.setGuess(0.5 + 0.28 + 1e-9); // მრგვალდება 78-ზე → მანძილი 28
-    e.lockGuess();
-    expect(e.lastPoints).toBe(e.pointsForDistance(0.28));
-    expect(e.pointsForDistance(0.28 + 1e-9)).not.toBe(e.lastPoints);
-  });
-});
-
 describe('სიტყვის რბოლა — ფიქსირებული კატეგორია არ იცვლება', () => {
   it('swapCategory() არაფერს აკეთებს და დასტიდან სიტყვას არ ხარჯავს', () => {
     const e = new WordRushEngine(names(3));

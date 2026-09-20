@@ -1,9 +1,11 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
+import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader, RulesSheet } from '../../ui/Cards';
+import { game as findGame } from '../catalog';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
@@ -36,7 +38,7 @@ export function DareCardFlow({ roster, onExit }: GameFlowProps) {
     case 'setup':
       return <Setup engine={engine} onClose={onExit} />;
     case 'card':
-      return <Play engine={engine} onExit={onExit} />;
+      return <Play key={`${engine.drawn}:${engine.currentCard.text}`} engine={engine} onExit={onExit} />;
     case 'summary':
       return <Summary engine={engine} roster={roster} onExit={onExit} />;
   }
@@ -45,20 +47,22 @@ export function DareCardFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('darecard');
+
   return (
     <View style={{ flex: 1 }}>
       <View style={Layout.header}>
-        <ScreenHeader title="Do or Pay" subtitle="ბარათი კარნახობს" onBack={onClose} />
+        <ScreenHeader
+          title="Do or Pay"
+          subtitle="ბარათი კარნახობს"
+          onBack={onClose}
+          onInfo={() => setShowRules(true)}
+        />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Step n="1" text="ბარათი ეკრანზეა — ის წყვეტს, ვის ეხება: ერთს, ორს თუ მთელ მაგიდას." />
-            <Step n="2" text="არჩევანი არ გაქვს: ან ასრულებ, ან იხდი." />
-            <Step n="3" text="რას ნიშნავს „იხდი“ — ქვემოთ თქვენ წყვეტთ." />
-          </View>
-        </GlassCard>
+
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -137,6 +141,7 @@ function Step({ n, text }: { n: string; text: string }) {
 // ── ბარათი
 
 function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }) {
+  const [outcomes, setOutcomes] = useState<Record<string, 'done' | 'forfeit'>>({});
   const card = engine.currentCard;
   const holder = engine.holder?.name ?? '—';
 
@@ -155,7 +160,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
         : 'ვერ გავაკეთე — ვიხდი';
 
   return (
-    <View style={{ flex: 1, gap: Space.m }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, gap: Space.m }}>
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
@@ -175,15 +180,16 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
 
       <View style={{ flex: 1 }} />
 
+      <PlayerCharacter player={engine.holder} compact />
       <View style={{ paddingHorizontal: 20 }}>
-        <View style={styles.cardFace}>
+        <View style={[styles.cardFace, Elevation.card]}>
           <View style={styles.kindBadge}>
-            <MaterialCommunityIcons name={sf(dareKindIcon[card.kind])} size={13} color={Colors.ink} />
-            <Text style={[body(12, '900'), { color: Colors.ink }]}>{dareKindLabel[card.kind]}</Text>
+            <MaterialCommunityIcons name={sf(dareKindIcon[card.kind])} size={14} color={Colors.ink} />
+            <Text style={[body(13, '900'), { color: Colors.ink }]}>{dareKindLabel[card.kind]}</Text>
           </View>
 
           <Text
-            style={[titleFont(24), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 20 }]}
+            style={[titleFont(22), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 20 }]}
             numberOfLines={2}
             adjustsFontSizeToFit
           >
@@ -191,16 +197,19 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
           </Text>
 
           <Text
-            style={[titleFont(card.text.length > 70 ? 22 : 27), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
+            style={[titleFont(card.text.length > 70 ? 24 : 28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
             adjustsFontSizeToFit
-            numberOfLines={7}
+            numberOfLines={8}
           >
             {card.text}
           </Text>
 
-          <Text style={[caption(11), { color: Colors.textSecondary, opacity: 0.8 }]}>
-            {forfeitShort[engine.settings.forfeit]}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.surface, paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill }}>
+             <MaterialCommunityIcons name={sf('lightning.fill')} size={14} color={Colors.coral} />
+             <Text style={[body(13, '700'), { color: Colors.coral }]}>
+               {forfeitShort[engine.settings.forfeit]}
+             </Text>
+          </View>
         </View>
       </View>
 
@@ -228,6 +237,35 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
               />
             ) : null}
           </>
+        ) : card.kind === 'group' || card.kind === 'target' ? (
+          <>
+            <Text style={[body(13, '600'), { color: Colors.textSecondary }]}>
+              მონიშნე მხოლოდ ისინი, ვისაც ბარათი ეხება. თითოეულს თავისი შედეგი ეწერება.
+            </Text>
+            <View style={{ gap: 8 }}>
+              {engine.players.map(player => (
+                <View key={player.id} style={{ gap: 4 }}>
+                  <Text style={[body(14, '700'), { color: Colors.textPrimary }]}>{player.name}</Text>
+                  <View style={Layout.segmentRow}>
+                    {(['done', 'forfeit'] as const).map(outcome => (
+                      <CategoryChip key={outcome} compact
+                        label={outcome === 'done' ? 'შეასრულა' : 'იხდის'}
+                        selected={outcomes[player.id] === outcome}
+                        onPress={() => setOutcomes(previous => {
+                          const next = { ...previous };
+                          if (next[player.id] === outcome) delete next[player.id];
+                          else next[player.id] = outcome;
+                          return next;
+                        })} />
+                    ))}
+                  </View>
+                </View>
+              ))}
+            </View>
+            <PrimaryButton title="შედეგების დაფიქსირება" enabled={Object.keys(outcomes).length > 0}
+              onPress={() => engine.resolveParticipants(outcomes)} />
+            <GhostButton title="არავის ეხება — შემდეგი" onPress={() => engine.skipCard()} />
+          </>
         ) : (
           <>
             <PrimaryButton title="გავაკეთე" icon="checkmark" tint={Colors.phosphor} onPress={() => engine.markDone()} />
@@ -248,7 +286,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
           </Pressable>
         ) : null}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -326,7 +364,7 @@ function Summary({
                 <Text
                   style={[titleFont(20), Layout.digits, { color: rank === 0 ? Colors.phosphor : Colors.textPrimary }]}
                 >
-                  {engine.doneCount(player)}
+                  {engine.scoreFor(player)}
                 </Text>
               </View>
             );
@@ -381,7 +419,7 @@ const styles = StyleSheet.create({
     gap: 18,
     paddingVertical: 34,
     borderRadius: 30,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceHigh,
     borderWidth: 1.5,
     borderColor: Colors.phosphor + '4D',
   },

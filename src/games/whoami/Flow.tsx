@@ -1,8 +1,9 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -16,6 +17,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { WhoAmIEngine, type WhoAmIEntry } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ვინ ვარ მე?“ — სრული ნაკადი.
@@ -68,21 +70,17 @@ export function WhoAmIFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('whoami');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Who Am I?" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="Who Am I?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="Who Am I?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Step n="1" text="მოთამაშე ტელეფონს შუბლზე იდებს, ეკრანით მაგიდისკენ — სახელი მას არ უჩანს." />
-            <Step n="2" text="კითხვებს ის სვამს: ცოცხალი ვარ? ქართველი ვარ? მულტფილმის გმირი ვარ?" />
-            <Step n="3" text="მაგიდას მხოლოდ ორი პასუხის უფლება აქვს — კი და არა. აღწერა და მინიშნება აკრძალულია." />
-            <Step n="4" text="მიხვდი — ტელეფონი წინ დახარე; გაგიჭირდა — უკან დახარე და შემდეგზე გადადი." />
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -200,6 +198,7 @@ function TurnIntro({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => voi
           {engine.categoryLabel}
         </Text>
       </View>
+      <PlayerCharacter player={engine.currentPlayer} compact />
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}>
         {engine.players.map((player) => {

@@ -83,10 +83,14 @@ export class DareCardEngine extends Observable {
     return this.forfeits[player.id] ?? 0;
   }
 
+  scoreFor(player: Player): number {
+    return this.doneCount(player) - (this.settings.forfeit === 'point' ? this.forfeitCount(player) : 0);
+  }
+
   get ranking(): Player[] {
     return [...this.players].sort((x, y) => {
-      const a = this.doneCount(x);
-      const b = this.doneCount(y);
+      const a = this.scoreFor(x);
+      const b = this.scoreFor(y);
       return a !== b ? b - a : x.name.localeCompare(y.name, 'ka');
     });
   }
@@ -104,13 +108,18 @@ export class DareCardEngine extends Observable {
   }
 
   get results(): { player: Player; score: number }[] {
-    return this.players.map((p) => ({ player: p, score: this.doneCount(p) }));
+    return this.players.map((p) => ({ player: p, score: this.scoreFor(p) }));
   }
 
-  /** ვის ეხება მიმდინარე ბარათი — ჩვეულებრივ მხოლოდ ტელეფონის მფლობელს. */
-  private get affected(): Player[] {
-    const holder = this.holder;
-    return holder ? [holder] : [];
+  resolveParticipants(outcomes: Record<string, 'done' | 'forfeit'>): void {
+    if (this.phase !== 'card' || !['group', 'target'].includes(this.currentCard.kind)) return;
+    const participants = this.players.filter(p => outcomes[p.id] === 'done' || outcomes[p.id] === 'forfeit');
+    if (participants.length === 0) return;
+    for (const p of participants) {
+      const counts = outcomes[p.id] === 'done' ? this.done : this.forfeits;
+      counts[p.id] = (counts[p.id] ?? 0) + 1;
+    }
+    this.advance();
   }
 
   // MARK: - თამაშის მიმდინარეობა
@@ -128,14 +137,16 @@ export class DareCardEngine extends Observable {
   }
 
   markDone(): void {
-    for (const p of this.affected) this.done[p.id] = (this.done[p.id] ?? 0) + 1;
+    if (this.phase !== 'card' || this.currentCard.kind !== 'solo' || !this.holder) return;
+    this.done[this.holder.id] = this.doneCount(this.holder) + 1;
     Haptics.success();
     Sound.play('correct');
     this.advance();
   }
 
   markForfeit(): void {
-    for (const p of this.affected) this.forfeits[p.id] = (this.forfeits[p.id] ?? 0) + 1;
+    if (this.phase !== 'card' || this.currentCard.kind !== 'solo' || !this.holder) return;
+    this.forfeits[this.holder.id] = this.forfeitCount(this.holder) + 1;
     Haptics.warning();
     Sound.play('wrong');
     this.advance();
@@ -145,13 +156,17 @@ export class DareCardEngine extends Observable {
   resolveDuel(winner: Player): void {
     const holder = this.holder;
     const rival = this.rival;
-    if (!this.needsDuelWinner || !holder || !rival) return;
+    if (this.phase !== 'card' || !this.needsDuelWinner || !holder || !rival || ![holder.id, rival.id].includes(winner.id)) return;
     const loser = winner.id === holder.id ? rival : holder;
     this.done[winner.id] = (this.done[winner.id] ?? 0) + 1;
     this.forfeits[loser.id] = (this.forfeits[loser.id] ?? 0) + 1;
     Haptics.success();
     Sound.play('correct');
     this.advance();
+  }
+
+  skipCard(): void {
+    if (this.phase === 'card' && ['group', 'target'].includes(this.currentCard.kind)) this.advance();
   }
 
   swapCard(): void {

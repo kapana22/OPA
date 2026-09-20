@@ -45,7 +45,7 @@
     "web": "expo start --web",
     "test": "vitest run",
     "test:watch": "vitest",
-    "gen:content": "node tools/gen-content.mjs"
+    "gen:content": "node tools/extract-banks.mjs"
   },
   "private": true
 }

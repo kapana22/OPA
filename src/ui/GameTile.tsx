@@ -1,109 +1,86 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, useWindowDimensions, type ImageSourcePropType } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, body, caption } from '../theme/theme';
+import { Colors, Elevation, Radius, body, caption, toTT } from '../theme/theme';
 import { icon as sf } from '../theme/icons';
-import { energyIcon, energyTitle, type PartyGame } from '../games/types';
+import { type PartyGame } from '../games/types';
+import { gameArtwork, gameCaptions } from '../games/artwork';
+import { groupedGames } from '../games/groups';
 import { Haptics } from '../core/haptics';
 import { Pressable } from './Pressable';
 
-/**
- * მთავარი ეკრანის ფილა.
- *
- * პორტი: `GameTile` (`Splash/App/HomeView.swift`).
- *
- * მეტა-ზოლში „რამდენი წუთია“ და „ხმაურიანია თუ არა“ დგას — ღამის ერთზე
- * არჩევანს ხშირად სწორედ ეს ორი წყვეტს, არა ჟანრი. მოთამაშეთა დიაპაზონი
- * მხოლოდ მაშინ ჩანს, როცა რამეს ამბობს.
- */
-export function GameTile({
-  game,
-  playerCount = 0,
-  onPlay,
-  onInfo,
-}: {
+interface TileProps {
   game: PartyGame;
   playerCount?: number;
   onPlay: () => void;
   onInfo: () => void;
-}) {
-  const accent = Colors[game.accent];
-  const needsMorePlayers = !game.comingSoon && playerCount > 0 && playerCount < game.minPlayers;
-  const showRange = needsMorePlayers || playerCount === 0;
-  const titleColor = game.comingSoon ? Colors.textSecondary : Colors.textPrimary;
+  artwork?: ImageSourcePropType;
+}
 
-  const a11y = [
-    game.title,
-    game.tagline,
-    `${game.minPlayers}-დან ${game.maxPlayers} მოთამაშემდე`,
-    `დაახლოებით ${game.minutes} წუთი`,
-    energyTitle[game.energy],
-  ].join('. ');
+/**
+ * თამაშის ფილა მთავარ ეკრანზე.
+ * პორტი: `Splash/App/HomeView.swift` (`GameTile`).
+ *
+ * ვიზუალი:
+ * - 3:4 პოსტერის არტვორკი + რეჟიმების კაფსულა (Warm Cream + Deep Purple)
+ * - ქვედა დეტალები: Warm Cream (#FAF5E8) ფონი, Deep Purple (#380B70) ტექსტი
+ * - წესების მრგვალი "?" ღილაკი Soft Lavender ფონით და Deep Purple სიმბოლოთი
+ */
+export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: TileProps) {
+  const { fontScale } = useWindowDimensions();
+  const poster = artwork ?? gameArtwork[game.id];
+  const modeCount = groupedGames.find((group) => group.id === game.id)?.modes.length ?? (game.id === 'tableread' ? 3 : 0);
+  const accent = Colors[game.accent];
+  const needsMore = !game.comingSoon && playerCount > 0 && playerCount < game.minPlayers;
+  const largeText = fontScale > 1.3;
+  const captionText = gameCaptions[game.id] ?? game.tagline;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.tileWrapper}>
       <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={a11y}
-      accessibilityHint={needsMorePlayers ? `საჭიროა მინიმუმ ${game.minPlayers} მოთამაშე` : 'დასაწყებად დააჭირე'}
-      onPress={() => {
-        Haptics.medium();
-        onPlay();
-      }}
-      style={[
-        styles.tile,
-        { borderColor: game.comingSoon ? Colors.stroke : accent + '38' },
-      ]}
-    >
-      <View style={styles.topRow}>
-        <View
-          style={[
-            styles.iconBox,
-            { backgroundColor: game.comingSoon ? Colors.surfaceHigh : accent + '1F' },
-          ]}
-        >
-          <MaterialCommunityIcons
-            name={sf(game.icon)}
-            size={21}
-            color={game.comingSoon ? Colors.textSecondary : accent}
-          />
-        </View>
-        <View style={{ flex: 1 }} />
-      </View>
-
-      <View style={{ flex: 1, minHeight: 10 }} />
-
-      <Text style={[body(18, '900'), { color: titleColor }]} numberOfLines={2} adjustsFontSizeToFit>
-        {game.title}
-      </Text>
-
-      <View style={styles.metaRow}>
-        {showRange ? (
-          <>
-            <MaterialCommunityIcons
-              name={sf(needsMorePlayers ? 'person.badge.plus' : 'person.2.fill')}
-              size={10}
-              color={needsMorePlayers ? accent : Colors.textSecondary}
+        accessibilityRole="button"
+        accessibilityLabel={`${game.title}. ${captionText}${modeCount ? `. ${modeCount} რეჟიმი` : ''}`}
+        accessibilityHint={needsMore ? `საჭიროა მინიმუმ ${game.minPlayers} მოთამაშე` : 'დასაწყებად დააჭირე'}
+        onPress={() => {
+          Haptics.medium();
+          onPlay();
+        }}
+        style={styles.tile}
+      >
+        {/* ── 3:4 პოსტერი ── */}
+        <View style={[styles.artwork, { backgroundColor: accent + '14' }]}>
+          {poster ? (
+            <Image
+              source={poster}
+              resizeMode="cover"
+              style={styles.posterImage}
+              accessible={false}
             />
-            <Text style={[caption(11), { color: needsMorePlayers ? accent : Colors.textSecondary }]}>
-              {needsMorePlayers ? `საჭიროა ${game.minPlayers}+` : `${game.minPlayers}–${game.maxPlayers}`}
-            </Text>
-            <Text style={[caption(11), { color: Colors.textSecondary, opacity: 0.6 }]}>·</Text>
-          </>
-        ) : null}
+          ) : (
+            <View style={{ padding: 16, gap: 14, alignItems: 'center' }}>
+              <MaterialCommunityIcons name={sf(game.icon)} size={42} color={accent} />
+              <Text style={[body(18, '900'), { color: Colors.textPrimary, textAlign: 'center' }]}>
+                {game.title}
+              </Text>
+            </View>
+          )}
+        </View>
 
-        <MaterialCommunityIcons name={sf('clock')} size={10} color={Colors.textSecondary} />
-        <Text style={[caption(11), { color: Colors.textSecondary }]}>{game.minutes} წთ</Text>
-        <MaterialCommunityIcons
-          name={sf(energyIcon[game.energy])}
-          size={10}
-          color={game.energy === 'loud' ? accent : Colors.textSecondary}
-        />
-      </View>
+        {/* ── Dark Surface ქვედა დეტალები: სათაური + აღწერა ── */}
+        <View style={styles.details}>
+          <Text style={[body(12, '800'), styles.tileTitle, { color: Colors.warmCream }]} numberOfLines={1}>
+            {toTT(game.title)}
+          </Text>
+          <Text
+            style={[caption(11, '500'), styles.captionText]}
+            numberOfLines={largeText ? undefined : 2}
+          >
+            {captionText}
+          </Text>
+        </View>
       </Pressable>
 
-      {/* წესების ღილაკი ცალკე ფენაა, არა ფილის შიგნით — ჩალაგებული ღილაკი
-          ხელმისაწვდომობასაც ტეხს და web-ზე არასწორი HTML-იც არის. */}
+      {/* ── წესების "?" ღილაკი (Soft Lavender circle) ── */}
       {game.howTo.length > 0 ? (
         <Pressable
           accessibilityRole="button"
@@ -112,118 +89,94 @@ export function GameTile({
             Haptics.tap();
             onInfo();
           }}
+          hitSlop={8}
           style={styles.infoButton}
         >
-          <Text style={[caption(12), { color: Colors.textSecondary, fontWeight: '900' }]}>?</Text>
+          <View style={styles.infoCircle}>
+            <Text style={styles.infoText}>?</Text>
+          </View>
         </Pressable>
       ) : null}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  tile: {
-    flex: 1,
-    minHeight: 140,
-    padding: 14,
-    borderRadius: Radius.tile,
-    backgroundColor: Colors.surface,
-    borderWidth: 1,
-  },
-  topRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 6 },
-  iconBox: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
-  infoButton: {
-    position: 'absolute',
-    top: 14,
-    right: 14,
-    zIndex: 2,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: Colors.surfaceHigh,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 5 },
-});
-
-/**
- * კომპაქტური ფილა ჰორიზონტალური რიგისთვის — „პოპულარული“ და კატეგორიების
- * რიგები მთავარ ეკრანზე.
- *
- * **რატომ ცალკეა.** ორსვეტიანი ბადის ფილა ცხრამეტჯერ ერთ გრძელ სიად იშლებოდა;
- * რიგში კი ერთ ეკრანზე 2.5 ფილა ჩანს და თითი გვერდზე გადაფურცლავს. წესების „?“
- * აქ არ არის — ხანგრძლივი დაჭერა ხსნის; სრულ ბადეში ღილაკი ისევ დგას.
- */
-export function MiniGameTile({
-  game,
-  playerCount = 0,
-  size = 'row',
-  onPlay,
-  onInfo,
-}: {
-  game: PartyGame;
-  playerCount?: number;
-  size?: 'popular' | 'row';
-  onPlay: () => void;
-  onInfo: () => void;
-}) {
-  const accent = Colors[game.accent];
-  const big = size === 'popular';
-  const needsMorePlayers = !game.comingSoon && playerCount > 0 && playerCount < game.minPlayers;
-
-  const a11y = [game.title, `${game.minPlayers}-დან ${game.maxPlayers} მოთამაშემდე`, `დაახლოებით ${game.minutes} წუთი`].join(
-    '. ',
-  );
-
+export function MiniGameTile(props: TileProps & { size?: 'popular' | 'row' }) {
+  const { width } = useWindowDimensions();
+  const tileWidth = Math.min(170, Math.max(150, width * 0.42));
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={a11y}
-      accessibilityHint={needsMorePlayers ? `საჭიროა მინიმუმ ${game.minPlayers} მოთამაშე` : 'დასაწყებად დააჭირე, წესებისთვის — დიდხანს'}
-      onPress={() => {
-        Haptics.medium();
-        onPlay();
-      }}
-      onLongPress={() => {
-        Haptics.tap();
-        onInfo();
-      }}
-      style={[
-        big ? miniStyles.popular : miniStyles.row,
-        { borderColor: game.comingSoon ? Colors.stroke : accent + '38' },
-      ]}
-    >
-      <View style={[miniStyles.iconBox, big ? { width: 44, height: 44 } : { width: 36, height: 36, borderRadius: 12 }, { backgroundColor: accent + '1F' }]}>
-        <MaterialCommunityIcons name={sf(game.icon)} size={big ? 22 : 18} color={accent} />
-      </View>
-      <View style={{ flex: 1, minHeight: 6 }} />
-      <Text style={[body(big ? 17 : 15, '900'), { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
-        {game.title}
-      </Text>
-      <Text style={[caption(11), { color: needsMorePlayers ? accent : Colors.textSecondary, marginTop: 3 }]} numberOfLines={1}>
-        {needsMorePlayers ? `საჭიროა ${game.minPlayers}+` : `${game.minPlayers}–${game.maxPlayers} · ${game.minutes} წთ`}
-      </Text>
-    </Pressable>
+    <View style={{ width: tileWidth }}>
+      <GameTile {...props} />
+    </View>
   );
 }
 
-const miniStyles = StyleSheet.create({
-  popular: {
-    width: 150,
-    height: 164,
-    padding: 14,
+const styles = StyleSheet.create({
+  tileWrapper: {
+    width: '100%',
+    ...Elevation.card,
+  },
+  tile: {
+    width: '100%',
+    overflow: 'hidden',
     borderRadius: Radius.tile,
     backgroundColor: Colors.surface,
     borderWidth: 1,
+    borderColor: Colors.stroke,
   },
-  row: {
-    width: 126,
-    height: 128,
-    padding: 12,
-    borderRadius: 20,
+  artwork: {
+    width: '100%',
+    aspectRatio: 3 / 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    backgroundColor: '#302046',
+  },
+  posterImage: {
+    width: '100%',
+    height: '100%',
+  },
+
+  details: {
     backgroundColor: Colors.surface,
-    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 10,
+    paddingRight: 34, // leave room for "?" button
+    minHeight: 52,
+    justifyContent: 'center',
+    gap: 2,
   },
-  iconBox: { borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  tileTitle: {
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+  },
+  captionText: {
+    color: Colors.textSecondary,
+    lineHeight: 14,
+  },
+  infoButton: {
+    position: 'absolute',
+    bottom: 8,
+    right: 6,
+    width: 34,
+    height: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  infoCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(203, 184, 246, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(203, 184, 246, 0.25)',
+  },
+  infoText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: Colors.softLavender,
+  },
 });

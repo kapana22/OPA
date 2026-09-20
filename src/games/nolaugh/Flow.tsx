@@ -1,9 +1,10 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, body, display, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -19,6 +20,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { NoLaughEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „არ გაიცინო“ — სრული ნაკადი.
@@ -53,23 +55,17 @@ export function NoLaughFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: NoLaughEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('nolaugh');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="No Laugh" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="არ გაიცინო" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="არ გაიცინო" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 8 }}>
-            <Text style={[body(14, '600'), { color: Colors.textPrimary }]}>
-              ერთი უნდა გაუძლოს, დანარჩენები კი აცინებენ.
-            </Text>
-            <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>
-              ტელეფონი ჯგუფს რჩება, არა მას. ეკრანზე დავალებაა — შეასრულეთ ხმამაღლა და თვალწინ. ღიმილიც ითვლება.
-            </Text>
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -138,6 +134,7 @@ function Announce({ engine, onExit }: { engine: NoLaughEngine; onExit: () => voi
 
       <View style={{ flex: 1 }} />
 
+      <PlayerCharacter player={engine.holder} compact />
       <View style={{ alignItems: 'center' }}>
         <GlyphIcon name="face.dashed.fill" size={32} tint={Colors.phosphor} />
       </View>

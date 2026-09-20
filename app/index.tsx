@@ -1,17 +1,25 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 
-import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../src/theme/theme';
+import { Colors, Elevation, Radius, Space, body, caption, glow, title as titleFont, toTT, FontFamilies } from '../src/theme/theme';
 import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
-import { MiniGameTile } from '../src/ui/GameTile';
+import { GameTile, MiniGameTile } from '../src/ui/GameTile';
 import { SectionLabel } from '../src/ui/Cards';
 import { Pressable } from '../src/ui/Pressable';
-import { GameCatalog, game as findGame, gamesByIDs } from '../src/games/catalog';
+import { GameCatalog, gamesByIDs } from '../src/games/catalog';
+import { gameArtwork, gameCaptions } from '../src/games/artwork';
 import { familyTitle, type GameFamily, type PartyGame } from '../src/games/types';
 import { useNightLog, useRecentGames, useRoster } from '../src/state/state';
 import { useOpenGame } from '../src/state/useOpenGame';
@@ -22,30 +30,51 @@ import { useDialog } from '../src/ui/Dialog';
 
 const FAMILIES: GameFamily[] = ['loud', 'bluff', 'reading', 'candid'];
 
+const FAMILY_CONFIG: Record<GameFamily, { icon: string; color: string }> = {
+  loud: { icon: 'bolt.fill', color: Colors.phosphor },
+  bluff: { icon: 'theatermasks.fill', color: Colors.neonMagenta },
+  reading: { icon: 'book.closed.fill', color: Colors.softLavender },
+  candid: { icon: 'heart.fill', color: Colors.coral },
+};
+
 /**
- * მთავარი ეკრანი.
- *
- * პორტი: `Splash/App/HomeView.swift`, გადაწყობილი.
- *
- * **რას ასწორებს.** ცხრამეტი თანაბარი ფილა ორ სვეტად სამ ეკრანზე იშლებოდა და
- * ღამის ერთზე თამაშის არჩევა თვითონ თამაშზე დიდხანს გრძელდებოდა. ახლა პირველ
- * ეკრანზე მხოლოდ სამი გადაწყვეტილებაა: ვინ თამაშობს, რას ვაგრძელებთ და რა არის
- * პოპულარული. დანარჩენი — კატეგორიების რიგებში და „ყველა თამაში“-ში.
+ * მთავარი ეკრანი — OPA-ს ორიგინალი დიზაინი ჰორიზონტალური გადასაქროლი რიგებით.
  */
 export default function Home() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { width: windowWidth } = useWindowDimensions();
   const roster = useRoster();
   const night = useNightLog();
   const recent = useRecentGames();
   const dialog = useDialog();
   const open = useOpenGame();
 
+  const [query, setQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const columnWidth = Math.floor((windowWidth - 32 - 12) / 2);
+
   const catalogIDs = useMemo(() => GameCatalog.map((g) => g.id), []);
-  const popular = useMemo(() => gamesByIDs(popularIDs(night.plays, catalogIDs)), [night.plays, catalogIDs]);
-  const lastPlayed = gamesByIDs(recent.visibleIDs(catalogIDs))[0];
-  const leader = roster.leaderboard[0];
-  const hasScores = leader !== undefined && leader.score > 0;
+  const popular = useMemo(
+    () => gamesByIDs(popularIDs(night.plays, catalogIDs)),
+    [night.plays, catalogIDs],
+  );
+
+  const visibleRecentIDs = recent.visibleIDs(catalogIDs);
+  const recentGames = useMemo(() => gamesByIDs(visibleRecentIDs), [visibleRecentIDs, catalogIDs]);
+  const recentGame = recentGames[0];
+
+  const gamesByFamily = useMemo(() => {
+    const map = new Map<GameFamily, PartyGame[]>();
+    for (const f of FAMILIES) {
+      map.set(
+        f,
+        GameCatalog.filter((g) => g.family === f),
+      );
+    }
+    return map;
+  }, []);
 
   const openRandom = (): PartyGame | null => {
     const playable = GameCatalog.filter((g) => !g.comingSoon && roster.count >= g.minPlayers);
@@ -60,343 +89,563 @@ export default function Home() {
       });
       return null;
     }
-    return playable[Math.floor(Math.random() * playable.length)];
+    const chosen = playable[Math.floor(Math.random() * playable.length)];
+    recent.record(chosen.id);
+    night.record(chosen.id);
+    open(chosen);
+    return chosen;
   };
 
   const openInfo = (g: PartyGame) => router.push(`/rules/${g.id}`);
 
+  const handleGamePress = (g: PartyGame) => {
+    if (g.comingSoon) {
+      openInfo(g);
+      return;
+    }
+    if (roster.count < g.minPlayers) {
+      dialog({
+        title: 'მეტი მოთამაშე გვჭირდება',
+        message: `${g.title} მინიმუმ ${g.minPlayers} მოთამაშეს მოითხოვს. სიაში ${roster.count} მოთამაშეა.`,
+        actions: [
+          { label: 'მოთამაშეების დამატება', primary: true, onPress: () => router.push('/players') },
+          { label: 'წესების ნახვა', onPress: () => openInfo(g) },
+          { label: 'გაუქმება' },
+        ],
+      });
+      return;
+    }
+    recent.record(g.id);
+    night.record(g.id);
+    open(g);
+  };
+
+  const isFiltering = query.trim().length > 0;
+  const filteredGames = useMemo(() => {
+    if (!isFiltering) return [];
+    const q = query.trim().toLowerCase();
+    const list = GameCatalog.filter((g) => {
+      if (g.title.toLowerCase().includes(q)) return true;
+      if (g.tagline.toLowerCase().includes(q)) return true;
+      if (g.aliases?.some((a) => a.toLowerCase().includes(q))) return true;
+      return false;
+    });
+    return newestFirst(list);
+  }, [query, isFiltering]);
+
   return (
-    <View style={{ flex: 1 }}>
-      <SplashBackground tint={Colors.neonCyan} />
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top, paddingBottom: insets.bottom + 24, gap: 14 }}>
-        {/* ── ლოგო + პარამეტრები */}
-        <View style={[styles.logoRow, Layout.gutter]}>
-          <View style={{ width: 38 }} />
-          <View style={{ flex: 1, alignItems: 'center', gap: 3 }}>
-            <Text style={[display(36), { color: Colors.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit>
-              მეგობრები
-            </Text>
-            {/* პოზიციონირება მხოლოდ პირველ გახსნაზე — ცარიელ სიასთან ერთად ქრება. */}
-            {roster.count === 0 ? (
-              <Text style={[caption(12), { color: Colors.textSecondary }]}>უფასო · რეკლამის გარეშე · ოფლაინ</Text>
-            ) : null}
+    <View style={styles.root}>
+      <SplashBackground home />
+
+      <ScrollView
+        contentContainerStyle={{
+          paddingTop: insets.top + 8,
+          paddingBottom: insets.bottom + 90,
+          gap: 16,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── 1. HEADER ROW (OPA Logo + Shuffle + Search) ── */}
+        <View style={[styles.headerRow, styles.gutter]}>
+          <Image
+            source={require('../assets/Logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+            accessible
+            accessibilityLabel="OPA ლოგო"
+          />
+
+          <View style={styles.headerActions}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="შემთხვევითი თამაშის არჩევა. შემირჩიე"
+              onPress={() => {
+                Haptics.medium();
+                openRandom();
+              }}
+              style={styles.randomHeaderButton}
+            >
+              <MaterialCommunityIcons name={sf('shuffle')} size={14} color={Colors.phosphor} />
+              <Text style={styles.randomHeaderText}>{toTT('შემირჩიე')}</Text>
+            </Pressable>
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={searchOpen ? 'ძიების დახურვა' : 'თამაშის ძიება'}
+              onPress={() => {
+                Haptics.tap();
+                setSearchOpen((prev) => !prev);
+              }}
+              style={styles.iconButton}
+            >
+              <MaterialCommunityIcons
+                name={sf(searchOpen ? 'xmark' : 'magnifyingglass')}
+                size={18}
+                color={Colors.textPrimary}
+              />
+            </Pressable>
           </View>
-          <IconButton name="slider.horizontal.3" label="პარამეტრები" onPress={() => router.push('/settings')} />
         </View>
 
-        {/* ── მოთამაშეების ბარათი */}
-        <View style={[styles.playersBar, Layout.gutter]}>
+        {/* ── 2. WELCOME TITLE ── */}
+        <View style={[styles.welcomeRow, styles.gutter]}>
+          <View style={{ width: 3, height: 25, backgroundColor: Colors.phosphor, ...glow(Colors.phosphor, 'strong') }} />
+          <Text style={[titleFont(23), styles.welcomeTitle, { color: Colors.warmCream }]}>
+            {toTT('რას ვითამაშებთ?')}
+          </Text>
+        </View>
+
+        {/* ── SEARCH BAR (თუ გახსნილია) ── */}
+        {searchOpen && (
+          <View style={[styles.gutter]}>
+            <View style={styles.searchBar}>
+              <MaterialCommunityIcons name={sf('magnifyingglass')} size={18} color={Colors.textSecondary} />
+              <TextInput
+                value={query}
+                onChangeText={setQuery}
+                placeholder="მოძებნე თამაში..."
+                placeholderTextColor={Colors.textSecondary}
+                style={styles.searchInput}
+                autoFocus
+                returnKeyType="search"
+              />
+              {query.length > 0 && (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="გასუფთავება"
+                  onPress={() => setQuery('')}
+                  hitSlop={8}
+                >
+                  <MaterialCommunityIcons name={sf('xmark.circle.fill')} size={16} color={Colors.textSecondary} />
+                </Pressable>
+              )}
+            </View>
+          </View>
+        )}
+
+        {/* ── ძებნის შედეგები ── */}
+        {isFiltering ? (
+          <View style={[styles.gutter, { gap: 12 }]}>
+            <Text style={[caption(12), { color: Colors.textSecondary }]}>
+              ნაპოვნია {filteredGames.length} თამაში
+            </Text>
+            {filteredGames.length > 0 ? (
+              <View style={styles.grid}>
+                {filteredGames.map((game) => (
+                  <View key={game.id} style={{ width: columnWidth }}>
+                    <GameTile
+                      game={game}
+                      playerCount={roster.count}
+                      onPlay={() => handleGamePress(game)}
+                      onInfo={() => openInfo(game)}
+                    />
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <View style={styles.emptyState}>
+                <Text style={[body(15, '600'), { color: Colors.textPrimary }]}>თამაში ვერ მოიძებნა</Text>
+                <Text style={[caption(12), { color: Colors.textSecondary }]}>სცადე სხვა სიტყვა</Text>
+              </View>
+            )}
+          </View>
+        ) : (
+          <>
+            {/* ── 3. RECENT GAME / HERO ── */}
+            {recentGame && (
+              <View style={[styles.gutter]}>
+                <RecentGameCard
+                  game={recentGame}
+                  onPress={() => {
+                    Haptics.medium();
+                    open(recentGame);
+                  }}
+                />
+              </View>
+            )}
+
+            {/* ── 4. POPULAR ROW ── */}
+            {popular.length > 0 && (
+              <View style={{ gap: 10 }}>
+                <View style={styles.gutter}>
+                  <SectionLabel text="პოპულარული" icon="flame.fill" accentColor={Colors.phosphor} />
+                </View>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.horizontalRow}
+                >
+                  {popular.map((game) => (
+                    <MiniGameTile
+                      key={game.id}
+                      game={game}
+                      playerCount={roster.count}
+                      onPlay={() => handleGamePress(game)}
+                      onInfo={() => openInfo(game)}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+
+            {/* ── 5. FAMILIES ── */}
+            {FAMILIES.map((family) => {
+              const list = gamesByFamily.get(family) ?? [];
+              if (list.length === 0) return null;
+              const conf = FAMILY_CONFIG[family];
+              return (
+                <View key={family} style={{ gap: 10 }}>
+                  <View style={styles.gutter}>
+                    <SectionLabel
+                      text={familyTitle[family]}
+                      icon={conf.icon}
+                      accentColor={conf.color}
+                      trailing={String(list.length)}
+                    />
+                  </View>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.horizontalRow}
+                  >
+                    {list.map((game) => (
+                      <MiniGameTile
+                        key={game.id}
+                        game={game}
+                        playerCount={roster.count}
+                        onPlay={() => handleGamePress(game)}
+                        onInfo={() => openInfo(game)}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              );
+            })}
+          </>
+        )}
+      </ScrollView>
+
+      {/* ── FLOATING GLASS DOCK (Bottom Navigation) ── */}
+      <View style={[styles.dockContainer, { bottom: Math.max(insets.bottom, 16) }]}>
+        <View style={styles.floatingDock}>
+          <Pressable accessibilityRole="button" accessibilityLabel="თამაშები" style={[styles.dockItem, styles.dockItemActive]}>
+            <MaterialCommunityIcons name={sf('gamecontroller.fill')} size={20} color={Colors.phosphor} />
+            <Text style={styles.dockTextActive}>{toTT('თამაშები')}</Text>
+          </Pressable>
+
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={roster.count === 0 ? 'მოთამაშეები. სია ცარიელია' : `მოთამაშეები: ${roster.names.join(', ')}`}
-            accessibilityHint="სიის შესაცვლელად დააჭირე"
+            accessibilityLabel="მოთამაშეები"
             onPress={() => {
               Haptics.tap();
               router.push('/players');
             }}
-            style={styles.playersButton}
+            style={styles.dockItem}
           >
-            <View style={[styles.countBadge, { backgroundColor: roster.count === 0 ? Colors.textSecondary : Colors.neonCyan }]}>
-              <Text style={[body(16, '900'), { color: Colors.onAccent }]}>{roster.count}</Text>
+            <View>
+              <MaterialCommunityIcons name={sf('person.2.fill')} size={20} color={Colors.textSecondary} />
+              {roster.count > 0 ? (
+                <View style={styles.dockBadge}>
+                  <Text style={styles.dockBadgeText}>{roster.count}</Text>
+                </View>
+              ) : null}
             </View>
-            <View style={{ flex: 1, gap: 1 }}>
-              <Text style={[caption(11), { color: Colors.textSecondary }]} numberOfLines={1}>
-                {hasScores ? `მოთამაშეები · ლიდერი ${leader.name} ${leader.score}` : 'მოთამაშეები'}
-              </Text>
-              <Text style={[body(14, '700'), { color: Colors.textPrimary }]} numberOfLines={1}>
-                {roster.count === 0 ? 'შეავსე სია' : roster.names.join(', ')}
-              </Text>
-            </View>
-            <MaterialCommunityIcons name={sf(roster.count === 0 ? 'plus' : 'square.and.pencil')} size={16} color={Colors.textSecondary} />
+            <Text style={styles.dockText}>{toTT('მოთამაშეები')}</Text>
           </Pressable>
-          <IconButton name="trophy.fill" label="ტაბლო" onPress={() => router.push('/scoreboard')} />
-          <View style={{ width: 10 }} />
-        </View>
 
-        {/* ── გააგრძელე / შემთხვევითი */}
-        <View style={Layout.gutter}>
-          {lastPlayed ? (
-            <ContinueCard
-              game={lastPlayed}
-              playerCount={roster.count}
-              onPlay={() => open(lastPlayed)}
-              onRandom={() => {
-                const g = openRandom();
-                if (g) open(g);
-              }}
-            />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="ტაბლო"
+            onPress={() => {
+              Haptics.tap();
+              router.push('/scoreboard');
+            }}
+            style={styles.dockItem}
+          >
+            <MaterialCommunityIcons name={sf('trophy.fill')} size={20} color={Colors.textSecondary} />
+            <Text style={styles.dockText}>{toTT('ტაბლო')}</Text>
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="პარამეტრები"
+            onPress={() => {
+              Haptics.tap();
+              router.push('/settings');
+            }}
+            style={styles.dockItem}
+          >
+            <MaterialCommunityIcons name={sf('slider.horizontal.3')} size={20} color={Colors.textSecondary} />
+            <Text style={styles.dockText}>{toTT('პარამეტრები')}</Text>
+          </Pressable>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function RecentGameCard({ game, onPress }: { game: PartyGame; onPress: () => void }) {
+  const artwork = gameArtwork[game.id];
+  const captionText = gameCaptions[game.id] ?? game.tagline;
+
+  return (
+    <View style={styles.recentWrapper}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`ბოლოს ითამაშეთ ${game.title}`}
+        onPress={onPress}
+        style={styles.recentHeroCard}
+      >
+        <View style={styles.recentPosterWrap}>
+          {artwork ? (
+            <Image source={artwork} style={styles.recentPosterImage} resizeMode="cover" accessible={false} />
           ) : (
-            <RandomCard pick={openRandom} onLand={open} />
+            <View style={styles.recentFallbackArtwork}>
+              <MaterialCommunityIcons name={sf(game.icon)} size={28} color={Colors[game.accent]} />
+            </View>
           )}
         </View>
 
-        {/* ── პოპულარული */}
-        <View style={{ gap: 10 }}>
-          <View style={Layout.gutter}>
-            <SectionLabel text="პოპულარული" />
+        <View style={styles.recentInfo}>
+          <View style={styles.recentBadge}>
+            <MaterialCommunityIcons name={sf('clock.arrow.circlepath')} size={12} color={Colors.phosphor} />
+            <Text style={styles.recentBadgeText}>{toTT('ბოლოს ითამაშეთ')}</Text>
           </View>
-          <Row>
-            {popular.map((g) => (
-              <MiniGameTile key={g.id} game={g} size="popular" playerCount={roster.count} onPlay={() => open(g)} onInfo={() => openInfo(g)} />
-            ))}
-          </Row>
-        </View>
-
-        {/* ── კატეგორიები */}
-        {FAMILIES.map((family) => {
-          const games = newestFirst(GameCatalog.filter((g) => g.family === family));
-          if (games.length === 0) return null;
-          return (
-            <View key={family} style={{ gap: 10 }}>
-              <View style={Layout.gutter}>
-                <SectionLabel text={familyTitle[family]} trailing={String(games.length)} />
-              </View>
-              <Row>
-                {games.map((g) => (
-                  <MiniGameTile key={g.id} game={g} playerCount={roster.count} onPlay={() => open(g)} onInfo={() => openInfo(g)} />
-                ))}
-              </Row>
-            </View>
-          );
-        })}
-
-        {/* ── ყველა თამაში */}
-        <View style={Layout.gutter}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`ყველა თამაში, ${GameCatalog.length}. ძებნა და ფილტრები`}
-            onPress={() => {
-              Haptics.tap();
-              router.push('/games');
-            }}
-            style={styles.allGames}
-          >
-            <MaterialCommunityIcons name={sf('magnifyingglass')} size={17} color={Colors.textPrimary} />
-            <Text style={[body(16, '800'), { color: Colors.textPrimary, flex: 1 }]}>ყველა თამაში ({GameCatalog.length})</Text>
-            <MaterialCommunityIcons name={sf('chevron.right')} size={16} color={Colors.textSecondary} />
-          </Pressable>
-        </View>
-
-        <Text style={[body(12, '500'), { color: Colors.textSecondary, opacity: 0.8, textAlign: 'center' }]}>
-          ინტერნეტი არ სჭირდება — მხოლოდ კარგი კომპანია.
-        </Text>
-      </ScrollView>
-    </View>
-  );
-}
-
-/** ჰორიზონტალური რიგი, რომელიც ეკრანის კიდემდე მიდის — ფილები გვერდიდან „შემოდიან“. */
-function Row({ children }: { children: React.ReactNode }) {
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      decelerationRate="fast"
-      contentContainerStyle={{ paddingHorizontal: Space.m, gap: 10 }}
-    >
-      {children}
-    </ScrollView>
-  );
-}
-
-/** ბოლოს ნათამაშები — ერთი დაჭერით ისევ იქ, სადაც გაჩერდით. */
-function ContinueCard({
-  game,
-  playerCount,
-  onPlay,
-  onRandom,
-}: {
-  game: PartyGame;
-  playerCount: number;
-  onPlay: () => void;
-  onRandom: () => void;
-}) {
-  const accent = Colors[game.accent];
-  const meta = [playerCount > 0 ? `${playerCount} მოთამაშე` : `${game.minPlayers}–${game.maxPlayers} მოთამაშე`, `${game.minutes} წთ`].join(' · ');
-  return (
-    <View style={[styles.hero, { borderColor: accent + '55' }]}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`გააგრძელე: ${game.title}. ${meta}`}
-        onPress={() => {
-          Haptics.medium();
-          onPlay();
-        }}
-        style={styles.heroMain}
-      >
-        <View style={[styles.heroIcon, { backgroundColor: accent }]}>
-          <MaterialCommunityIcons name={sf('play.fill')} size={24} color={Colors.onAccent} />
-        </View>
-        <View style={{ flex: 1, gap: 2 }}>
-          <Text style={[caption(11), { color: accent }]}>გააგრძელე</Text>
-          <Text style={[titleFont(22), { color: Colors.textPrimary }]} numberOfLines={1}>
-            {game.title}
+          <Text style={[titleFont(18), { color: Colors.warmCream, letterSpacing: 0.5 }]} numberOfLines={1}>
+            {toTT(game.title)}
           </Text>
-          <Text style={[caption(12), { color: Colors.textSecondary }]} numberOfLines={1}>
-            {meta}
+          <Text style={[caption(11, '500'), { color: Colors.textSecondary, lineHeight: 15 }]} numberOfLines={2}>
+            {captionText}
           </Text>
         </View>
-      </Pressable>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="შემთხვევითი თამაში"
-        onPress={() => {
-          Haptics.tap();
-          onRandom();
-        }}
-        hitSlop={6}
-        style={styles.heroDice}
-      >
-        <MaterialCommunityIcons name={sf('die.face.5.fill')} size={22} color={Colors.textPrimary} />
+
+        <View style={styles.recentChevronCircle}>
+          <MaterialCommunityIcons name={sf('chevron.right')} size={16} color={Colors.textSecondary} />
+        </View>
       </Pressable>
     </View>
   );
 }
-
-/**
- * „შემთხვევითი თამაში“ — ჩნდება, სანამ ჟურნალი ცარიელია.
- *
- * კამათელი მუდმივად ოდნავ ირხევა; დაჭერაზე ბარათი რამდენიმე სახელს
- * გადაფურცლავს (ყოველზე პატარა ტკაცუნი) და ბოლოზე ჩერდება — ისე, როგორც
- * მაგიდაზე დაგორებული კამათელი. თვითონ არჩევანი მანამდეა გაკეთებული.
- */
-function RandomCard({ pick, onLand }: { pick: () => PartyGame | null; onLand: (g: PartyGame) => void }) {
-  const [preview, setPreview] = useState<PartyGame | null>(null);
-  const rolling = useRef(false);
-  const wobble = useSharedValue(0);
-  const spin = useSharedValue(0);
-
-  useEffect(() => {
-    wobble.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 900, easing: Easing.inOut(Easing.quad) }),
-        withTiming(-1, { duration: 900, easing: Easing.inOut(Easing.quad) }),
-      ),
-      -1,
-      true,
-    );
-  }, [wobble]);
-
-  const diceStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${wobble.value * 9 + spin.value * 360}deg` }, { translateY: wobble.value * -2 }],
-  }));
-
-  const roll = () => {
-    if (rolling.current) return;
-    const chosen = pick();
-    if (!chosen) return;
-    rolling.current = true;
-    spin.value = 0;
-    spin.value = withTiming(1, { duration: 720, easing: Easing.out(Easing.cubic) });
-
-    // გადაფურცვლა: 5 შემთხვევითი სახელი, ბოლოს — არჩეული.
-    const pool = GameCatalog.filter((g) => g.id !== chosen.id);
-    const frames = Array.from({ length: 5 }, () => pool[Math.floor(Math.random() * pool.length)]);
-    frames.forEach((g, i) => {
-      setTimeout(() => {
-        Haptics.tick();
-        setPreview(g);
-      }, 90 + i * 110);
-    });
-    setTimeout(() => {
-      Haptics.success();
-      setPreview(chosen);
-    }, 90 + frames.length * 110);
-    setTimeout(() => {
-      rolling.current = false;
-      setPreview(null);
-      onLand(chosen);
-    }, 90 + frames.length * 110 + 420);
-  };
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel="შემთხვევითი თამაში"
-      accessibilityHint="კამათელი აირჩევს თამაშს კომპანიის ზომაზე"
-      onPress={roll}
-      style={[styles.hero, styles.heroMain, { borderColor: Colors.phosphor + '55' }]}
-    >
-      <Animated.View style={[styles.heroIcon, { backgroundColor: Colors.phosphor }, diceStyle]}>
-        <MaterialCommunityIcons name={sf('die.face.5.fill')} size={26} color={Colors.onAccent} />
-      </Animated.View>
-      <View style={{ flex: 1, gap: 2 }}>
-        <Text style={[caption(11), { color: Colors.phosphor }]}>არ იცით, რა ითამაშოთ?</Text>
-        <Text style={[titleFont(22), { color: Colors.textPrimary }]} numberOfLines={1}>
-          {preview ? preview.title : 'შემთხვევითი თამაში'}
-        </Text>
-        <Text style={[caption(12), { color: Colors.textSecondary }]} numberOfLines={1}>
-          {preview ? `${preview.minPlayers}–${preview.maxPlayers} · ${preview.minutes} წთ` : 'კამათელი აირჩევს კომპანიის ზომაზე'}
-        </Text>
-      </View>
-    </Pressable>
-  );
-}
-
-function IconButton({ name, label, onPress }: { name: string; label: string; onPress: () => void }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={() => {
-        Haptics.tap();
-        onPress();
-      }}
-      style={styles.iconButton}
-    >
-      <MaterialCommunityIcons name={sf(name)} size={16} color={Colors.textPrimary} />
-    </Pressable>
-  );
-}
-
-const Layout = StyleSheet.create({
-  gutter: { paddingHorizontal: Space.m },
-});
 
 const styles = StyleSheet.create({
-  logoRow: { flexDirection: 'row', alignItems: 'center', paddingTop: 14, paddingBottom: 2 },
-
-  playersBar: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  playersButton: {
+  root: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingLeft: 12,
-    paddingRight: 14,
-    paddingVertical: 11,
-    borderRadius: Radius.default,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.ink,
   },
-  countBadge: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
-  iconButton: { width: 38, height: 38, borderRadius: 19, backgroundColor: Colors.surfaceHigh, alignItems: 'center', justifyContent: 'center' },
-
-  hero: {
+  gutter: {
+    paddingHorizontal: 16,
+  },
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: Radius.tile,
-    backgroundColor: Colors.surface,
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+  },
+  logo: {
+    width: 110,
+    height: 38,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  randomHeaderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: 'rgba(198, 255, 0, 0.12)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(198, 255, 0, 0.35)',
+  },
+  randomHeaderText: {
+    fontSize: 11,
+    fontFamily: FontFamilies.heavy,
+    color: Colors.phosphor,
+    letterSpacing: 0.4,
+  },
+  iconButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(203, 184, 246, 0.12)',
     borderWidth: 1,
-  },
-  heroMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 14, padding: 14 },
-  heroIcon: { width: 52, height: 52, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
-  heroDice: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    marginRight: 12,
-    backgroundColor: Colors.surfaceHigh,
+    borderColor: 'rgba(203, 184, 246, 0.20)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  allGames: {
+  welcomeRow: {
+    paddingTop: 4,
+    paddingBottom: 4,
+  },
+  welcomeTitle: {
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+  },
+  searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: Space.m,
-    paddingVertical: 16,
+    gap: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     borderRadius: Radius.default,
     backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.stroke,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: FontFamilies.medium,
+    color: Colors.textPrimary,
+    padding: 0,
+  },
+  horizontalRow: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    gap: 8,
+  },
+
+  // Recent Game Hero Card
+  recentWrapper: {
+    width: '100%',
+    ...Elevation.card,
+  },
+  recentHeroCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    padding: 12,
+    borderRadius: Radius.default,
+    backgroundColor: 'rgba(26, 14, 44, 0.90)',
+    borderWidth: 1,
+    borderColor: 'rgba(203, 184, 246, 0.20)',
+  },
+  recentPosterWrap: {
+    width: 80,
+    height: 106,
+    borderRadius: Radius.small,
+    overflow: 'hidden',
+    backgroundColor: Colors.surface,
+  },
+  recentPosterImage: {
+    width: '100%',
+    height: '100%',
+  },
+  recentFallbackArtwork: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+  },
+  recentInfo: {
+    flex: 1,
+    gap: 4,
+  },
+  recentBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  recentBadgeText: {
+    fontSize: 10.5,
+    fontFamily: FontFamilies.heavy,
+    color: Colors.phosphor,
+    letterSpacing: 0.3,
+  },
+  recentChevronCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(203, 184, 246, 0.10)',
+    borderWidth: 1,
+    borderColor: 'rgba(203, 184, 246, 0.20)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 4,
+  },
+
+  // Floating Glass Dock
+  dockContainer: {
+    position: 'absolute',
+    left: 20,
+    right: 20,
+    alignItems: 'center',
+    zIndex: 999,
+  },
+  floatingDock: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '100%',
+    maxWidth: 420,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 999,
+    backgroundColor: 'rgba(23, 13, 38, 0.94)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(203, 184, 246, 0.22)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  dockItem: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 3,
+    paddingVertical: 6,
+    paddingHorizontal: 2,
+    borderRadius: 20,
+  },
+  dockItemActive: {
+    backgroundColor: 'rgba(198, 255, 0, 0.12)',
+  },
+  dockText: {
+    fontSize: 10,
+    fontFamily: FontFamilies.bold,
+    color: Colors.textSecondary,
+    letterSpacing: 0.2,
+    textTransform: 'uppercase',
+  },
+  dockTextActive: {
+    fontSize: 10,
+    fontFamily: FontFamilies.heavy,
+    color: Colors.phosphor,
+    letterSpacing: 0.2,
+    textTransform: 'uppercase',
+  },
+  dockBadge: {
+    position: 'absolute',
+    top: -3,
+    right: -8,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: Colors.phosphor,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  dockBadgeText: {
+    fontSize: 9,
+    fontFamily: FontFamilies.heavy,
+    color: Colors.ink,
   },
 });

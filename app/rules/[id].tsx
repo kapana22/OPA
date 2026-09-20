@@ -29,7 +29,7 @@ export default function Rules() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground tint={accent} />
+      <SplashBackground />
       <View style={{ flex: 1, paddingTop: insets.top, gap: Space.m, alignItems: 'center' }}>
         <View style={[styles.iconBox, { backgroundColor: accent + '1F', marginTop: 32 }]}>
           <MaterialCommunityIcons name={sf(game.icon)} size={30} color={accent} />
@@ -51,13 +51,13 @@ export default function Rules() {
           <Text style={[body(14, '700'), { color: Colors.phosphor }]}>ეს თამაში ჯერ მზადდება — მალე გამოჩნდება.</Text>
         ) : null}
 
-        <ScrollView contentContainerStyle={{ padding: 20, gap: 14 }} style={{ alignSelf: 'stretch' }}>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 10, paddingBottom: 40, gap: 14 }} style={{ alignSelf: 'stretch' }}>
           {game.howTo.map((step, i) => (
-            <View key={i} style={styles.step}>
+            <View key={i} style={[styles.step, { backgroundColor: Colors.surface, padding: 16, borderRadius: 20 }]}>
               <View style={[styles.stepNumber, { backgroundColor: accent }]}>
-                <Text style={[body(13, '900'), { color: Colors.ink }]}>{i + 1}</Text>
+                <Text style={[body(14, '900'), { color: Colors.ink }]}>{i + 1}</Text>
               </View>
-              <Text style={[body(15, '500'), { color: Colors.textPrimary, flex: 1 }]}>{step}</Text>
+              <Text style={[body(15, '600'), { color: Colors.textPrimary, flex: 1, lineHeight: 22 }]}>{step}</Text>
             </View>
           ))}
         </ScrollView>

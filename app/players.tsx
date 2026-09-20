@@ -3,10 +3,12 @@ import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, Space, body, caption, title as titleFont } from '../src/theme/theme';
+import { Colors, Radius, Space, body, caption, title as titleFont, toTT } from '../src/theme/theme';
 import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GlyphIcon } from '../src/ui/Cards';
+import { CharacterPicker } from '../src/ui/CharacterPicker';
+import { PlayerAvatarView } from '../src/ui/PlayerAvatarView';
 import { PrimaryButton } from '../src/ui/Buttons';
 import { Pressable } from '../src/ui/Pressable';
 import { useRoster } from '../src/state/state';
@@ -27,6 +29,7 @@ export default function Players() {
   const insets = useSafeAreaInsets();
   const roster = useRoster();
 
+  const [characterPlayer, setCharacterPlayer] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
   const [reordering, setReordering] = useState(false);
   const dialog = useDialog();
@@ -54,10 +57,11 @@ export default function Players() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground tint={Colors.neonCyan} />
+      <SplashBackground />
+      <CharacterPicker playerID={characterPlayer} onClose={() => setCharacterPlayer(null)} />
       <View style={{ flex: 1, paddingTop: insets.top + Space.m, gap: 14 }}>
-        <Text style={[titleFont(22), { color: Colors.textPrimary, textAlign: 'center' }]}>
-          მოთამაშეები {roster.count}/{MAX_PLAYERS}
+        <Text style={[titleFont(21), { color: Colors.textPrimary, textAlign: 'center', letterSpacing: 0.6, textTransform: 'uppercase' }]}>
+          {toTT(`მოთამაშეები ${roster.count}/${MAX_PLAYERS}`)}
         </Text>
 
         <View style={styles.addRow}>
@@ -75,7 +79,7 @@ export default function Players() {
             accessibilityLabel="დამატება"
             disabled={!canAdd}
             onPress={add}
-            style={[styles.addButton, { backgroundColor: canAdd ? Colors.neonCyan : Colors.surfaceHigh }]}
+            style={[styles.addButton, { backgroundColor: canAdd ? Colors.phosphor : Colors.surfaceHigh }]}
           >
             <MaterialCommunityIcons name={sf('plus')} size={20} color={canAdd ? Colors.onAccent : Colors.textSecondary} />
           </Pressable>
@@ -93,7 +97,7 @@ export default function Players() {
           <>
             <View style={styles.hintRow}>
               <Text style={[caption(11), { color: Colors.textSecondary, flex: 1 }]} numberOfLines={2}>
-                {reordering ? 'ისრებით დაალაგე სუფრის რიგზე' : 'რიგი განსაზღვრავს, ვინ როდის თამაშობს'}
+                {reordering ? 'ისრებით დაალაგე სუფრის რიგზე' : 'პერსონაჟის შესაცვლელად შეეხე მის სურათს'}
               </Text>
               {roster.count > 1 ? (
                 <>
@@ -122,6 +126,10 @@ export default function Players() {
               {roster.players.map((player, index) => (
                 <View key={player.id} style={styles.row}>
                   <Text style={[body(13, '900'), { color: Colors.textSecondary, width: 22 }]}>{index + 1}</Text>
+                  <Pressable accessibilityRole="button" accessibilityLabel={`${player.name} — პერსონაჟის შეცვლა`}
+                    onPress={() => setCharacterPlayer(player.id)}>
+                    <PlayerAvatarView player={player} size={44} />
+                  </Pressable>
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={`${player.name}. სახელის შესაცვლელად დააჭირე`}
@@ -131,6 +139,22 @@ export default function Players() {
                     <Text style={[body(17, '600'), { color: Colors.textPrimary }]} numberOfLines={1}>
                       {player.name}
                     </Text>
+                  </Pressable>
+
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={`სქესის შეცვლა: ${player.gender === 'girl' ? 'გოგო' : 'ბიჭი'}`}
+                    onPress={() => {
+                      Haptics.tap();
+                      const nextGender = player.gender === 'girl' ? 'boy' : 'girl';
+                      roster.setGender(player.id, nextGender);
+                    }}
+                    style={[
+                      styles.genderBadge,
+                      player.gender === 'girl' ? styles.genderBadgeGirl : styles.genderBadgeBoy,
+                    ]}
+                  >
+                    <Text style={{ fontSize: 16 }}>{player.gender === 'girl' ? '👧' : '👦'}</Text>
                   </Pressable>
 
                   {reordering ? (
@@ -173,7 +197,7 @@ export default function Players() {
         )}
 
         <View style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 12 }}>
-          <PrimaryButton title="მზად ვართ" icon="checkmark" tint={Colors.neonCyan} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+          <PrimaryButton title="მზად ვართ" icon="checkmark" tint={Colors.phosphor} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
       </View>
     </View>
@@ -196,10 +220,10 @@ function SmallChip({
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      style={[styles.smallChip, { backgroundColor: active ? Colors.neonCyan : Colors.surface }]}
+      style={[styles.smallChip, { backgroundColor: active ? Colors.phosphor : Colors.surface }]}
     >
       <MaterialCommunityIcons name={sf(icon)} size={12} color={active ? Colors.onAccent : Colors.textPrimary} />
-      <Text style={[body(12, '700'), { color: active ? Colors.onAccent : Colors.textPrimary }]}>{label}</Text>
+      <Text style={[body(11, '800'), { color: active ? Colors.onAccent : Colors.textPrimary, letterSpacing: 0.5, textTransform: 'uppercase' }]}>{toTT(label)}</Text>
     </Pressable>
   );
 }
@@ -237,13 +261,39 @@ function RowIcon({
 }
 
 const styles = StyleSheet.create({
-  addRow: { flexDirection: 'row', gap: 10, paddingHorizontal: 20, paddingTop: 8 },
+  addRow: { flexDirection: 'row', gap: 10, paddingHorizontal: 20, paddingTop: 8, alignItems: 'center' },
   input: {
     flex: 1,
     paddingHorizontal: Space.m,
     paddingVertical: 14,
     borderRadius: Radius.small,
     backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.stroke,
+  },
+  genderSwitchWrap: {
+    flexDirection: 'row',
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.small,
+    borderWidth: 1,
+    borderColor: Colors.stroke,
+    padding: 3,
+    gap: 3,
+    alignItems: 'center',
+  },
+  genderSwitchBtn: {
+    width: 38,
+    height: 44,
+    borderRadius: Radius.small - 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 0.45,
+  },
+  genderSwitchBtnActive: {
+    backgroundColor: Colors.surfaceHigh,
+    opacity: 1,
+    borderWidth: 1,
+    borderColor: 'rgba(198, 255, 0, 0.4)',
   },
   addButton: { width: 50, height: 50, borderRadius: Radius.small, alignItems: 'center', justifyContent: 'center' },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
@@ -254,9 +304,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     paddingHorizontal: Space.m,
-    paddingVertical: 14,
+    paddingVertical: 15,
     borderRadius: Radius.small,
     backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.stroke,
   },
-  rowIcon: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.surfaceHigh },
+  genderBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.surfaceHigh,
+    borderWidth: 1,
+    borderColor: Colors.stroke,
+  },
+  genderBadgeGirl: {
+    borderColor: 'rgba(250, 95, 173, 0.45)',
+    backgroundColor: 'rgba(250, 95, 173, 0.15)',
+  },
+  genderBadgeBoy: {
+    borderColor: 'rgba(39, 201, 255, 0.45)',
+    backgroundColor: 'rgba(39, 201, 255, 0.15)',
+  },
+  rowIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.surfaceHigh },
 });

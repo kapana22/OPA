@@ -17,7 +17,7 @@ export default function NotFound() {
   const router = useRouter();
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground tint={Colors.neonCyan} />
+      <SplashBackground />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         <Notice
           icon="questionmark.circle"

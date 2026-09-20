@@ -1,9 +1,10 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, ToggleRow } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, ToggleRow , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
@@ -14,6 +15,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { TwoTruthsEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ორი სიმართლე, ერთი ტყუილი“ — სრული ნაკადი.
@@ -74,24 +76,21 @@ export function TwoTruthsFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('twotruths');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Two Truths" accent={Colors.neonMagenta} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
         <ScreenHeader
           title="ორი სიმართლე, ერთი ტყუილი"
           subtitle={`${engine.players.length} მოთამაშე`}
           onBack={onClose}
-        />
+         onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Step n="1" text="ერთი წერს სამ ამბავს თავის თავზე — ორი მართალია, ერთი მოგონილი." />
-            <Step n="2" text="ტელეფონი წრეზე გადადის და დანარჩენები ფარულად ირჩევენ ტყუილს." />
-            <Step n="3" text="ტყუილი ცხადდება: მპოვნელს +2, ავტორს კი +1 ყოველ მოტყუებულზე — არაუმეტეს +3." />
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -189,6 +188,7 @@ function Pass({
         <View style={{ flex: 1 }} />
         <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>{kicker}</Text>
       </View>
+      <PlayerCharacter name={playerName} compact />
 
       <View style={{ flex: 1 }} />
 

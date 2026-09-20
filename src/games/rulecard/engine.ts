@@ -97,17 +97,21 @@ export class RuleCardEngine extends Observable {
     return this.forfeits[player.id] ?? 0;
   }
 
+  scoreFor(player: Player): number {
+    return this.broughtCount(player) - (this.settings.forfeit === 'point' ? this.forfeitCount(player) : 0);
+  }
+
   get ranking(): Player[] {
     return [...this.players].sort((x, y) => {
-      const a = this.broughtCount(x);
-      const b = this.broughtCount(y);
+      const a = this.scoreFor(x);
+      const b = this.scoreFor(y);
       return a !== b ? b - a : x.name.localeCompare(y.name, 'ka');
     });
   }
 
   /** ვინ ყველაზე მეტი წესი შემოიტანა. */
   get lawmaker(): Player | null {
-    const top = this.ranking[0];
+    const top = [...this.players].sort((a, b) => this.broughtCount(b) - this.broughtCount(a))[0];
     return top && this.broughtCount(top) > 0 ? top : null;
   }
 
@@ -119,7 +123,7 @@ export class RuleCardEngine extends Observable {
   }
 
   get results(): { player: Player; score: number }[] {
-    return this.players.map((p) => ({ player: p, score: this.broughtCount(p) }));
+    return this.players.map((p) => ({ player: p, score: this.scoreFor(p) }));
   }
 
   // MARK: - თამაშის მიმდინარეობა
@@ -157,7 +161,8 @@ export class RuleCardEngine extends Observable {
   /** ჯარიმა ცალკე ეტაპია — მაგიდა ჯერ წყვეტს, ვინ ვერ გაართვა თავი, და
    *  მხოლოდ დადასტურებისას ირიცხება: ეკრანზე ჩართვა-გამორთვა ძრავს არ ეხება. */
   finishForfeits(offenders: Player[]): void {
-    for (const p of offenders) this.forfeits[p.id] = (this.forfeits[p.id] ?? 0) + 1;
+    if (this.phase !== 'card') return;
+    for (const p of this.players.filter(player => offenders.some(offender => offender.id === player.id))) this.forfeits[p.id] = (this.forfeits[p.id] ?? 0) + 1;
     Haptics.warning();
     Sound.play('wrong');
     this.advance();

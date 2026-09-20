@@ -1,3 +1,4 @@
+import { availableCharacter, isCharacterID, guessGender, characterGender, BOY_CHARACTERS, GIRL_CHARACTERS, type PlayerGender } from './characters';
 import { Observable } from './observable';
 import { uuid } from './id';
 import { getJSON, setJSON } from './storage';
@@ -6,6 +7,9 @@ export interface Player {
   id: string;
   name: string;
   score: number;
+  gender?: PlayerGender;
+  mascotID?: number;
+  characterID?: number;
 }
 
 /** მაქსიმალური შემადგენლობა — Swift-ის `players.count < 12`. */
@@ -36,12 +40,32 @@ export class Roster extends Observable {
     return this._players.map((p) => p.name);
   }
 
-  add(name: string): void {
+  add(name: string, gender?: PlayerGender): void {
     const trimmed = name.trim();
     if (!trimmed || this._players.length >= MAX_PLAYERS) return;
     // რეგისტრის მიუხედავად დუბლიკატი არ ჩაემატება (Swift: caseInsensitiveCompare).
     if (this._players.some((p) => p.name.toLowerCase() === trimmed.toLowerCase())) return;
-    this._players.push({ id: uuid(), name: trimmed, score: 0 });
+    const resolvedGender = gender ?? guessGender(trimmed);
+    const used = new Set(this._players.map(p => p.characterID!).filter(isCharacterID));
+    this._players.push({
+      id: uuid(),
+      name: trimmed,
+      score: 0,
+      gender: resolvedGender,
+      characterID: availableCharacter(used, resolvedGender),
+    });
+    this.save();
+  }
+
+  setGender(id: string, gender: PlayerGender): void {
+    const p = this._players.find((x) => x.id === id);
+    if (!p) return;
+    p.gender = gender;
+    const pool = gender === 'girl' ? GIRL_CHARACTERS : BOY_CHARACTERS;
+    if (p.characterID === undefined || !pool.includes(p.characterID)) {
+      const used = new Set(this._players.filter(x => x.id !== id).map(x => x.characterID!).filter(isCharacterID));
+      p.characterID = availableCharacter(used, gender);
+    }
     this.save();
   }
 
@@ -60,8 +84,24 @@ export class Roster extends Observable {
     const p = this._players.find((x) => x.id === id);
     if (!p) return;
     const trimmed = newName.trim();
-    if (!trimmed) return;
+    if (!trimmed || trimmed === p.name) return;
     p.name = trimmed;
+    this.save();
+  }
+
+  /** Choosing an occupied character swaps the two assignments, never duplicates. */
+  setCharacter(id: string, characterID: number): void {
+    const player = this._players.find(p => p.id === id);
+    if (!player || !isCharacterID(characterID) || player.characterID === characterID) return;
+    const other = this._players.find(p => p.characterID === characterID);
+    if (other) {
+      other.characterID = player.characterID;
+      if (typeof other.characterID === 'number') {
+        other.gender = characterGender(other.characterID);
+      }
+    }
+    player.characterID = characterID;
+    player.gender = characterGender(characterID);
     this.save();
   }
 
@@ -122,6 +162,26 @@ export class Roster extends Observable {
     if (!Array.isArray(stored)) return;
     this._players = stored.filter(
       (p): p is Player => !!p && typeof p.id === 'string' && typeof p.name === 'string' && typeof p.score === 'number',
-    );
+    ).slice(0, MAX_PLAYERS);
+    const used = new Set<number>();
+    let migrated = false;
+    for (const player of this._players) {
+      if (!isCharacterID(player.characterID) || used.has(player.characterID)) {
+        player.characterID = undefined;
+        migrated = true;
+      } else used.add(player.characterID);
+    }
+    for (const player of this._players) {
+      if (!player.gender) {
+        player.gender = guessGender(player.name);
+        migrated = true;
+      }
+      if (player.characterID === undefined) {
+        player.characterID = availableCharacter(used, player.gender);
+        used.add(player.characterID);
+        migrated = true;
+      }
+    }
+    if (migrated) this.save();
   }
 }

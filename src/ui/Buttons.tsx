@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, body } from '../theme/theme';
+import { Colors, Radius, body, glow } from '../theme/theme';
 import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { Pressable } from './Pressable';
@@ -16,7 +16,7 @@ import { Pressable } from './Pressable';
 export function PrimaryButton({
   title,
   icon,
-  tint = Colors.neonCyan,
+  tint = Colors.phosphor,
   enabled = true,
   onPress,
 }: {
@@ -39,6 +39,7 @@ export function PrimaryButton({
       }}
       style={[
         styles.primary,
+        enabled ? { ...glow(tint, 'medium'), borderWidth: 1, borderColor: tint } : null,
         { backgroundColor: enabled ? tint : Colors.surfaceHigh, opacity: enabled ? 1 : 0.6 },
       ]}
     >

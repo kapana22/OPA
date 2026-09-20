@@ -1,3 +1,5 @@
+import { PlayerCharacter } from './PlayerCharacter';
+import { PlayerAvatarView } from './PlayerAvatarView';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -79,6 +81,7 @@ export function PassPhoneReveal({
 
       {!confirmed ? (
         <>
+          <PlayerCharacter name={playerName} />
           <View style={styles.nameBlock} accessible accessibilityLabel={`გადაეცი ტელეფონი ${playerName}-ს`}>
             <Text style={[body(16, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
             <Text style={[titleFont(36), styles.centered, { color: Colors.textPrimary }]}>{playerName}</Text>
@@ -101,6 +104,7 @@ export function PassPhoneReveal({
         </>
       ) : (
         <>
+      <View style={{ alignItems: 'center' }}><PlayerAvatarView name={playerName} size={42} /></View>
       <View
         style={styles.nameBlock}
         accessible

@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { StyleSheet, Text, View, Modal, type StyleProp, type ViewStyle } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, Space, body, caption, title as titleFont } from '../theme/theme';
+import { Colors, Radius, Space, body, caption, title as titleFont, toTT, glow } from '../theme/theme';
 import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { Sound } from '../core/sound';
@@ -14,24 +14,30 @@ import { useDialog } from './Dialog';
 
 export function GlassCard({
   padding = 18,
+  glowColor,
+  glowIntensity = 'soft',
   style,
   children,
 }: {
   padding?: number;
+  glowColor?: string;
+  glowIntensity?: 'soft' | 'medium' | 'strong';
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 }) {
-  return <View style={[styles.card, { padding }, style]}>{children}</View>;
+  return <View style={[styles.card, { padding }, glowColor ? { borderColor: glowColor, ...glow(glowColor, glowIntensity) } : null, style]}>{children}</View>;
 }
 
 export function ScreenHeader({
   title,
   subtitle,
   onBack,
+  onInfo,
 }: {
   title: string;
   subtitle?: string;
   onBack?: () => void;
+  onInfo?: () => void;
 }) {
   return (
     <View style={styles.header}>
@@ -50,21 +56,51 @@ export function ScreenHeader({
       ) : null}
 
       <View style={styles.headerText}>
-        <Text style={[titleFont(25), { color: Colors.textPrimary }]} numberOfLines={2}>
+        <Text style={[titleFont(23), { color: Colors.textPrimary, textTransform: 'uppercase', letterSpacing: 0.6 }]} numberOfLines={2}>
           {title}
         </Text>
         {subtitle ? (
           <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>{subtitle}</Text>
         ) : null}
       </View>
+
+      {onInfo ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="თამაშის წესები"
+          onPress={() => {
+            Haptics.tap();
+            onInfo();
+          }}
+          hitSlop={8}
+          style={styles.infoButton}
+        >
+          <MaterialCommunityIcons name={sf('questionmark')} size={14} color={Colors.textSecondary} />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
 
-export function SectionLabel({ text, trailing }: { text: string; trailing?: string }) {
+export function SectionLabel({
+  text,
+  trailing,
+  icon,
+  accentColor = Colors.phosphor,
+}: {
+  text: string;
+  trailing?: string;
+  icon?: string;
+  accentColor?: string;
+}) {
   return (
     <View style={styles.sectionLabel}>
-      <Text style={[caption(12), { color: Colors.textSecondary }]}>{text}</Text>
+      {icon ? (
+        <MaterialCommunityIcons name={sf(icon)} size={14} color={accentColor} style={{ marginRight: 2 }} />
+      ) : null}
+      <Text style={[caption(12, '700'), { color: Colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 }]}>
+        {toTT(text)}
+      </Text>
       <View style={{ flex: 1 }} />
       {trailing ? (
         <Text style={[caption(12), { color: Colors.textSecondary, opacity: 0.7 }]}>{trailing}</Text>
@@ -182,6 +218,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  infoButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: 'rgba(203,184,246,0.22)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   sectionLabel: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingTop: 6 },
   exitButton: {
     width: 30,
@@ -193,6 +239,7 @@ const styles = StyleSheet.create({
   },
   comingSoon: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: Space.l },
 });
+
 
 /**
  * ფილტრის/კატეგორიის ჩიპი. პორტი: `CategoryChip` (`ImpostorSetupView.swift`).
@@ -474,4 +521,119 @@ const stepperStyles = StyleSheet.create({
 /** თხელი გამყოფი ხაზი ბარათის შიგნით. */
 export function Divider() {
   return <View style={{ height: 1, backgroundColor: Colors.stroke }} />;
+}
+
+
+
+export function RulesSheet({
+  visible,
+  title,
+  accent = Colors.phosphor,
+  steps,
+  onClose,
+}: {
+  visible: boolean;
+  title: string;
+  accent?: string;
+  steps: string[];
+  onClose: () => void;
+}) {
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.65)' }}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>{null}</Pressable>
+        <View
+          style={{
+            backgroundColor: '#1E1231',
+            borderTopLeftRadius: 28,
+            borderTopRightRadius: 28,
+            borderWidth: 1,
+            borderColor: 'rgba(203,184,246,0.25)',
+            paddingTop: 12,
+            paddingBottom: 36,
+            paddingHorizontal: 22,
+            gap: 18,
+          }}
+        >
+          {/* Handle */}
+          <View style={{ width: 40, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.2)', alignSelf: 'center', marginBottom: 4 }} />
+
+          {/* Header */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={[titleFont(21), { color: Colors.warmCream, textTransform: 'uppercase', letterSpacing: 0.6 }]}>
+              {toTT(title)} · წესები
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="დახურვა"
+              onPress={onClose}
+              hitSlop={10}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: 'rgba(255,255,255,0.08)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MaterialCommunityIcons name={sf('xmark')} size={16} color={Colors.textSecondary} />
+            </Pressable>
+          </View>
+
+          {/* Steps */}
+          <View style={{ gap: 12 }}>
+            {steps.map((s, i) => (
+              <View
+                key={i}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'flex-start',
+                  gap: 12,
+                  backgroundColor: 'rgba(255,255,255,0.04)',
+                  padding: 12,
+                  borderRadius: 16,
+                  borderWidth: 1,
+                  borderColor: 'rgba(255,255,255,0.06)',
+                }}
+              >
+                <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    backgroundColor: accent,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 1,
+                  }}
+                >
+                  <Text style={[body(12, '900'), { color: Colors.ink }]}>{i + 1}</Text>
+                </View>
+                <Text style={[body(14, '500'), { color: Colors.textPrimary, flex: 1, lineHeight: 20 }]}>{s}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Dismiss button */}
+          <Pressable
+            accessibilityRole="button"
+            onPress={onClose}
+            style={{
+              backgroundColor: Colors.phosphor,
+              paddingVertical: 14,
+              borderRadius: Radius.pill,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 6,
+            }}
+          >
+            <Text style={[body(15, '900'), { color: Colors.ink, textTransform: 'uppercase', letterSpacing: 0.5 }]}>
+              {toTT('გასაგებია')}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
 }

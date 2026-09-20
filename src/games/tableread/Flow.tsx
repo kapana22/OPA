@@ -17,9 +17,7 @@ import { TenButFlow } from '../tenbut/Flow';
  *
  * პორტი: `Splash/Games/TableRead/TableReadFlowView.swift`.
  *
- * სამივეგან ერთსა და იმავეს აკეთებ — ფარულად აჭერ ერთ ღილაკს.
- * განსხვავება ისაა, **ვის კითხულობ**. ადრე ეს სამი ცალკე ფილა იყო და
- * ღამის ერთზე ერთმანეთისგან არ გაირჩეოდა.
+ * კლასიკური Herd Mentality და ორი განსხვავებული პროგნოზის რეჟიმი.
  */
 
 type Mode = 'majority' | 'line' | 'person';
@@ -38,7 +36,7 @@ const MODES: ModeInfo[] = [
   {
     id: 'majority',
     title: 'Herd Mentality',
-    tagline: 'ორი ვარიანტი — გამოიცანი, რას აირჩევს უმრავლესობა.',
+    tagline: 'ფარული პასუხები, უმრავლესობა და ვარდისფერი ძროხა.',
     skill: 'უმრავლესობა',
     icon: 'person.3.fill',
     accent: Colors.phosphor,
@@ -82,7 +80,7 @@ export function TableReadFlow({ roster, onExit }: GameFlowProps) {
 
       <ScrollView contentContainerStyle={[Layout.scroll, { gap: 12 }]}>
         <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 12 }]}>
-          სამივეგან ერთსა და იმავეს აკეთებ — ფარულად აჭერ ერთ ღილაკს. განსხვავება ისაა, ვის კითხულობ.
+          აირჩიე რეჟიმი: დაწერე საერთო პასუხი, იწინასწარმეტყველე მაგიდის გაყოფა ან გამოიცანი ერთი ადამიანის შეფასება.
         </Text>
 
         {MODES.map((option) => (

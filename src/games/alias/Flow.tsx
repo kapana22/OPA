@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -17,6 +17,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { AliasEngine, type AliasEntry, type AliasTeam } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ალიასი“ — სრული ნაკადი.
@@ -60,11 +61,15 @@ export function AliasFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: AliasEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('alias');
   if (!engine.canPlay) {
     return (
       <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Alias" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
         <View style={Layout.header}>
-          <ScreenHeader title="Alias" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+          <ScreenHeader title="Alias" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
         </View>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: Space.m }}>
           <GlyphIcon name="person.2.fill" size={32} tint={Colors.phosphor} />
@@ -85,17 +90,10 @@ function Setup({ engine, onClose }: { engine: AliasEngine; onClose: () => void }
   return (
     <View style={{ flex: 1 }}>
       <View style={Layout.header}>
-        <ScreenHeader title="Alias" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="Alias" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Step n="1" text="გუნდიდან ერთი ხსნის სიტყვას, დანარჩენები გამოცნობას ცდილობენ." />
-            <Step n="2" text="სიტყვის, მისი ძირისა და თარგმანის თქმა აკრძალულია — მხოლოდ აღწერა." />
-            <Step n="3" text="ვინც პირველი მიაღწევს ქულების ლიმიტს, ის იგებს." />
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>

@@ -11,7 +11,7 @@ import {
   GlyphIcon,
   ScreenHeader,
   Stepper,
-  ToggleRow, CategoryPicker } from '../../ui/Cards';
+  ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { keyedEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -24,6 +24,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { SpyEngine, type SpyRole } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „სხვა სიტყვა“ (Undercover) — სრული ნაკადი.
@@ -65,10 +66,14 @@ export function SpyFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('spy');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Undercover" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="სხვა სიტყვა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="სხვა სიტყვა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>

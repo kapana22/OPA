@@ -1,9 +1,10 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -18,6 +19,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { WordRushEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „სიტყვის რბოლა“ — სრული ნაკადი.
@@ -52,10 +54,14 @@ export function WordRushFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: WordRushEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('wordrush');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Word Rush" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="სიტყვის რბოლა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="სიტყვის რბოლა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -128,6 +134,7 @@ function Intro({ engine, onExit }: { engine: WordRushEngine; onExit: () => void 
         <GlyphIcon name="bolt.fill" size={30} tint={Colors.phosphor} />
       </View>
 
+          <PlayerCharacter player={engine.currentPlayer} compact />
       <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი გადაეცი</Text>
 
       <Text

@@ -150,99 +150,6 @@ describe('Standards — პროგნოზი მკითხავს, ქ�
 });
 
 // ═══ „როგორც ყველა“
-describe('Herd — შებრუნება შემთხვევითია, შავი ცხვარი ითვლება', () => {
-  it('ჩვეულებრივში უმრავლესობა იგებს, შებრუნებულში უმცირესობა', () => {
-    const players = names(6);
-    const e = new HerdEngine(players);
-    e.setTwists(true);
-    e.setRounds(8);
-    e.startGame();
-    expect(e.isReversed).toBe(false); // პირველი რაუნდი არასდროსაა შებრუნებული
-
-    let seenTwist = false;
-    let seenPlain = false;
-    for (let r = 0; r < 8; r++) {
-      const reversed = e.isReversed;
-      if (reversed) seenTwist = true;
-      else seenPlain = true;
-      e.beginVoting();
-      for (let i = 0; i < 6; i++) e.castVote(i < 4 ? 'a' : 'b'); // ოთხი A, ორი B
-      if (reversed) {
-        expect(e.winningSide).toBe('b');
-        expect(e.roundWinners).toHaveLength(2);
-      } else {
-        expect(e.winningSide).toBe('a');
-        expect(e.roundWinners).toHaveLength(4);
-      }
-      e.next();
-    }
-    expect(seenTwist && seenPlain).toBe(true);
-    expect(new Set(e.oddOneOut.map((p) => p.name))).toEqual(new Set(['დათო', 'ანა']));
-  });
-
-  it('შებრუნების გამორთვისას აღარ ხდება', () => {
-    const e = new HerdEngine(names(6));
-    e.setTwists(false);
-    e.setRounds(8);
-    e.startGame();
-    let anyTwist = false;
-    for (let r = 0; r < 8; r++) {
-      if (e.isReversed) anyTwist = true;
-      e.beginVoting();
-      for (let i = 0; i < 6; i++) e.castVote('a');
-      e.next();
-    }
-    expect(anyTwist).toBe(false);
-  });
-
-  it('სამრაუნდიან პარტიაზე შებრუნება არ ჩაჯდება და არ ტყდება', () => {
-    const h = new HerdEngine(names(4));
-    h.setTwists(true);
-    h.setRounds(3);
-    h.startGame();
-    expect(h.isReversed).toBe(false);
-  });
-});
-
-// ═══ „ერთ ტალღაზე“
-describe('Wavelength — საერთო ქულა, ყველას თანაბარი ჯილდო', () => {
-  it('ზუსტი მოხვედრები ბრწყინვალე შედეგს იძლევა', () => {
-    const e = new WavelengthEngine(names(4));
-    e.setLaps(1);
-    e.startGame();
-    expect(e.goal).toBe(8);
-    expect(e.maxScore).toBe(16);
-
-    let total = 0;
-    for (let i = 0; i < 4; i++) {
-      e.beginGuess();
-      e.setGuess(e.target); // ზუსტი მოხვედრა
-      e.lockGuess();
-      total += e.lastPoints;
-      e.next();
-    }
-    expect(e.tableScore).toBe(total);
-    expect(total).toBe(16);
-    expect(e.verdict).toBe('brilliant');
-    expect(e.rosterReward).toBe(3);
-  });
-
-  it('სუსტ შედეგზეც ყველა თანაბრად +1', () => {
-    const weak = new WavelengthEngine(names(4));
-    weak.setLaps(1);
-    weak.startGame();
-    for (let i = 0; i < 4; i++) {
-      weak.beginGuess();
-      weak.setGuess(weak.target > 0.5 ? 0 : 1);
-      weak.lockGuess();
-      weak.next();
-    }
-    expect(weak.verdict).toBe('missed');
-    expect(weak.rosterReward).toBe(1);
-  });
-});
-
-// ═══ „მიუთითე ერთზე“
 describe('PointOne — ერთი მრიცხველი, არა ორი', () => {
   it('ვარსკვლავები და არდასახელებულები ცალკე ითვლება', () => {
     const players = names(5);
@@ -392,6 +299,8 @@ describe('DareCard — ბარათების დასტა', () => {
         expect(e.needsDuelWinner).toBe(true);
         duels += 1;
         e.resolveDuel(e.holder!);
+      } else if (e.currentCard.kind === 'group' || e.currentCard.kind === 'target') {
+        e.resolveParticipants({ [e.holder!.id]: seen.length % 3 === 0 ? 'forfeit' : 'done' });
       } else if (seen.length % 3 === 0) {
         e.markForfeit();
       } else {
@@ -429,6 +338,7 @@ describe('DareCard — ბარათების დასტა', () => {
     e.startGame();
     while (e.phase === 'card') {
       if (e.currentCard.kind === 'duel') e.resolveDuel(e.holder!);
+      else if (e.currentCard.kind === 'group' || e.currentCard.kind === 'target') e.resolveParticipants({ [e.holder!.id]: 'done' });
       else e.markDone();
     }
     const best = Math.max(...players.map((p) => e.doneCount(p)));

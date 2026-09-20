@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
+import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
@@ -17,6 +17,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { RuleCardEngine, type ActiveRule } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „მაგიდის წესები“ (House Rules) — სრული ნაკადი.
@@ -48,20 +49,17 @@ export function RuleCardFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: RuleCardEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('rulecard');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="House Rules" accent={Colors.neonMagenta} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="House Rules" subtitle="წესები გროვდება" onBack={onClose} />
+        <ScreenHeader title="House Rules" subtitle="წესები გროვდება" onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Step n="1" text="ბარათი ან ერთხელ მოქმედებს, ან ბოლომდე რჩება ძალაში." />
-            <Step n="2" text="მოქმედი წესები ეკრანზე სიად ჩანს — ვინც დაარღვევს, იხდის." />
-            <Step n="3" text="რაც უფრო შორს მიდის თამაში, მით უფრო აბსურდულად ლაპარაკობს მაგიდა." />
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -194,10 +192,10 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
       <View style={{ flex: 1 }} />
 
       <View style={{ paddingHorizontal: 20 }}>
-        <View style={[styles.cardFace, { borderColor: tint + '57' }]}>
+        <View style={[styles.cardFace, { borderColor: tint + '57' }, Elevation.card]}>
           <View style={[styles.kindBadge, { backgroundColor: tint }]}>
-            <MaterialCommunityIcons name={sf(ruleKindIcon[card.kind])} size={13} color={Colors.ink} />
-            <Text style={[body(12, '900'), { color: Colors.ink }]}>{ruleKindLabel[card.kind]}</Text>
+            <MaterialCommunityIcons name={sf(ruleKindIcon[card.kind])} size={14} color={Colors.ink} />
+            <Text style={[body(13, '900'), { color: Colors.ink }]}>{ruleKindLabel[card.kind]}</Text>
           </View>
 
           <Text
@@ -209,20 +207,19 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
           </Text>
 
           <Text
-            style={[titleFont(card.text.length > 75 ? 21 : 26), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
+            style={[titleFont(card.text.length > 75 ? 24 : 28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
             adjustsFontSizeToFit
-            numberOfLines={7}
+            numberOfLines={8}
           >
             {card.text}
           </Text>
 
-          {isRule ? (
-            <Text style={[caption(11), { color: Colors.neonMagenta }]}>ბოლომდე მოქმედებს</Text>
-          ) : (
-            <Text style={[caption(11), { color: Colors.textSecondary, opacity: 0.8 }]}>
-              {forfeitShort[engine.settings.forfeit]}
-            </Text>
-          )}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.surface, paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill }}>
+             <MaterialCommunityIcons name={sf(isRule ? 'infinity' : 'lightning.fill')} size={14} color={isRule ? Colors.neonMagenta : Colors.coral} />
+             <Text style={[body(13, '700'), { color: isRule ? Colors.neonMagenta : Colors.coral }]}>
+               {isRule ? 'ბოლომდე მოქმედებს' : forfeitShort[engine.settings.forfeit]}
+             </Text>
+          </View>
         </View>
       </View>
 
@@ -419,7 +416,7 @@ function Summary({
                 <Text
                   style={[titleFont(20), Layout.digits, { color: rank === 0 ? Colors.neonMagenta : Colors.textPrimary }]}
                 >
-                  {engine.broughtCount(player)}
+                  {engine.scoreFor(player)}
                 </Text>
               </View>
             );
@@ -482,9 +479,9 @@ const styles = StyleSheet.create({
   cardFace: {
     alignItems: 'center',
     gap: 16,
-    paddingVertical: 30,
+    paddingVertical: 34,
     borderRadius: 30,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceHigh,
     borderWidth: 1.5,
   },
   kindBadge: {

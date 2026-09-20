@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, display, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -18,6 +18,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { PointOneEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „მიუთითე ერთზე“ — სრული ნაკადი.
@@ -48,10 +49,14 @@ export function PointOneFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: PointOneEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('pointone');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Point One" accent={Colors.neonMagenta} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="მიუთითე ერთზე" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="მიუთითე ერთზე" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -163,7 +168,7 @@ function Round({ engine, onExit }: { engine: PointOneEngine; onExit: () => void 
           ) : (
             <>
               <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-                ვისზეც ყველაზე მეტმა მიუთითა — შეეხე
+                მონიშნე ყველაზე მეტი ხმის მქონე. ფრისას — ყველა თანაბარი ლიდერი.
               </Text>
 
               <View style={styles.playerGrid}>

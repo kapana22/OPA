@@ -60,7 +60,7 @@ export default function Settings() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground tint={Colors.phosphor} />
+      <SplashBackground />
       <View style={{ flex: 1, paddingTop: insets.top + Space.m, paddingHorizontal: 20, gap: 14 }}>
         <Text style={[titleFont(24), { color: Colors.textPrimary, textAlign: 'center' }]}>პარამეტრები</Text>
 

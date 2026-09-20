@@ -9,7 +9,7 @@ import {
   GlyphIcon,
   ScreenHeader,
   Stepper,
-  ToggleRow, CategoryPicker } from '../../ui/Cards';
+  ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -23,6 +23,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { ImpostorEngine, type ImpostorOutcome } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ერთმა არ იცის“ (Impostor) — სრული ნაკადი.
@@ -55,10 +56,14 @@ export function ImpostorFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('impostor');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Impostor" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="ერთმა არ იცის" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="ერთმა არ იცის" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>

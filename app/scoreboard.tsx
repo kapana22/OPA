@@ -1,3 +1,4 @@
+import { PlayerAvatarView } from '../src/ui/PlayerAvatarView';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -39,7 +40,7 @@ export default function Scoreboard() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground tint={Colors.phosphor} />
+      <SplashBackground />
       <View style={{ flex: 1, paddingTop: insets.top + Space.m, gap: 12 }}>
         <Text style={[titleFont(24), { color: Colors.textPrimary, textAlign: 'center' }]}>ტაბლო</Text>
 

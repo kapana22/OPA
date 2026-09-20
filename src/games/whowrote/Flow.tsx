@@ -1,9 +1,10 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, Divider, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, Divider, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -15,6 +16,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { WhoWroteEngine, type Reveal } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ვინ დაწერა?“ — სრული ნაკადი.
@@ -73,10 +75,14 @@ export function WhoWroteFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: WhoWroteEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('whowrote');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Who Wrote" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="ვინ დაწერა?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="ვინ დაწერა?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -94,17 +100,6 @@ function Setup({ engine, onClose }: { engine: WhoWroteEngine; onClose: () => voi
           </GlassCard>
         ) : null}
 
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>როგორ თამაშობთ</Text>
-            <View style={{ gap: 7 }}>
-              <Step n="1" text="ეკრანზე ერთი დავალებაა — ყველა კითხულობს ერთად." />
-              <Step n="2" text="ტელეფონი წრეზე გადადის და თითოეული ფარულად წერს თავის პასუხს." />
-              <Step n="3" text="მეორე წრეზე ყველას ერთი უცხო პასუხი ხვდება — უნდა გამოიცნოს ავტორი." />
-              <Step n="4" text="სწორი გამოცნობა +2 ქულაა; თუ შენი პასუხი ვერ იცნეს, +2 შენ გერგება." />
-            </View>
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -233,6 +228,7 @@ function Handoff({
         <View style={{ flex: 1 }} />
         <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>{counter}</Text>
       </View>
+      <PlayerCharacter name={playerName} compact />
 
       <View style={{ flex: 1 }} />
 

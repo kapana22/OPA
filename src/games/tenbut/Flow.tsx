@@ -1,8 +1,9 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Confetti } from '../../ui/Confetti';
@@ -16,6 +17,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { TenButEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „10-ია, მაგრამ...“ (Rate Them) — სრული ნაკადი.
@@ -50,21 +52,23 @@ export function TenButFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const rules = [
+    'სამიზნე მოთამაშე ჩვევას ფარულად აფასებს 0-დან 10-მდე. შემდეგ ტელეფონს დანარჩენებს გადასცემს.',
+    'დანარჩენები რიგრიგობით წერენ, რა შეფასება აირჩია სამიზნემ. სხვის პასუხს შედეგების ეკრანამდე ვერ ხედავენ.',
+    'ზუსტი გამოცნობა +3 ქულაა, ერთით აცდენა +2, ორით აცდენა +1.',
+    'სამიზნე იღებს თითო ქულას ყოველი გამომცნობისთვის, რომელიც მინიმუმ 3-ით აცდა მის შეფასებას.',
+    'შემდეგ სამიზნე იცვლება. ყველას თანაბარი რაოდენობის სვლა აქვს. ბოლოს ითვლება საერთო შედეგი.'
+  ];
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Ten But" accent={Colors.neonCyan} steps={rules} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="10-ია, მაგრამ..." subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="10-ია, მაგრამ..." subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>როგორ ითვლება ქულა</Text>
-            <Rule text="ეკრანზე ერთი ჩვევაა. სამიზნე ფარულად აფასებს 0-დან 10-მდე." />
-            <Rule text={`დანარჩენები გამოიცნობენ: ზუსტად +${TenButEngine.exactReward} · ერთით +${TenButEngine.closeReward} · ორით +${TenButEngine.nearReward}.`} />
-            <Rule text={`სამიზნეს +1 ერიცხება ყოველ იმ ადამიანზე, ვინც ${TenButEngine.surpriseGap}-ით ან მეტით აცდა.`} />
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -186,6 +190,7 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
       <View style={{ flex: 1, gap: 20 }}>
         {header}
         <View style={{ flex: 1 }} />
+          <PlayerCharacter player={engine.currentHolder} />
         <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
         <Text
           style={[titleFont(36), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}

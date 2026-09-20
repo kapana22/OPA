@@ -46,7 +46,7 @@ export default function AllGames() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground tint={Colors.phosphor} />
+      <SplashBackground />
       <View style={{ paddingTop: insets.top + 8, paddingHorizontal: Space.m }}>
         <ScreenHeader title="ყველა თამაში" subtitle={`${GameCatalog.length} თამაში`} onBack={back} />
       </View>

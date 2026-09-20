@@ -1,3 +1,4 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
@@ -187,6 +188,7 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
       <View style={{ flex: 1, gap: 20 }}>
         {header}
         <View style={{ flex: 1 }} />
+          <PlayerCharacter player={engine.currentVoter} />
         <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
         <Text
           style={[titleFont(36), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}

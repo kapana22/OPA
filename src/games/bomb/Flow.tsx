@@ -1,8 +1,9 @@
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { Colors, Space, body, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Layout } from '../../ui/layout';
@@ -13,6 +14,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { BombEngine } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ბომბი“ — სრული ნაკადი.
@@ -57,23 +59,17 @@ export function BombFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: BombEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('bomb');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Bomb Party" accent={Colors.neonMagenta} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+
       <View style={Layout.header}>
-        <ScreenHeader title="Bomb Party" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <ScreenHeader title="Bomb Party" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 8 }}>
-            <Text style={[body(14, '600'), { color: Colors.textPrimary }]}>
-              ტაიმერი დამალულია — არავინ იცის, როდის აფეთქდება.
-            </Text>
-            <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>
-              სიტყვა თქვი კატეგორიიდან და ტელეფონი შემდეგს გადაეცი. ვისთანაც აფეთქდება, ერთ სიცოცხლეს კარგავს.
-            </Text>
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -174,6 +170,7 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
         <GlyphIcon name="timer" size={34} tint={Colors.neonMagenta} />
       </View>
 
+      <PlayerCharacter player={engine.currentPlayer} compact />
       <View style={{ alignItems: 'center', gap: 6 }}>
         <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>ბომბი აქვს</Text>
         <Text

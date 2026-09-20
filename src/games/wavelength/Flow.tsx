@@ -1,489 +1,159 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import Slider from '@react-native-community/slider';
-import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker } from '../../ui/Cards';
-import { keyedEntries } from '../categoryEntries';
+import { AppState, ScrollView, Text, View } from 'react-native';
+import { Colors, body, title } from '../../theme/theme';
+import { GameExitButton, GlassCard, RulesSheet, ScreenHeader } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
+import { PlayerCharacter } from '../../ui/PlayerCharacter';
+import { PlayerAvatarView } from '../../ui/PlayerAvatarView';
 import { Confetti } from '../../ui/Confetti';
 import { Layout } from '../../ui/layout';
-import { SpectrumBar, BandLegend } from './SpectrumBar';
-import { SpectrumBank } from '../../content/banks';
-import { TurnRotation } from '../../core/turnRotation';
-import { Haptics } from '../../core/haptics';
-import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
+import { Haptics } from '../../core/haptics';
+import { Sound } from '../../core/sound';
+import { game } from '../catalog';
 import type { GameFlowProps } from '../registry';
 import { WavelengthEngine } from './engine';
+import { SpectrumBar, BandScoreLegend } from './SpectrumBar';
 
-/**
- * „ერთ ტალღაზე“ — სრული ნაკადი.
- *
- * პორტი: `Splash/Games/Wavelength/*.swift` (6 ხედი).
- * **კოოპერაციულია** — ქულა მაგიდისაა, ტაბლოზე ყველას თანაბრად ერგება.
- */
+type Props = { engine: WavelengthEngine; onExit: () => void };
+const heading = [title(25), { color: Colors.textPrimary, textAlign: 'center' as const }];
+const paragraph = [body(15, '500'), { color: Colors.textSecondary, textAlign: 'center' as const }];
 
 export function WavelengthFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new WavelengthEngine([...roster.players]));
   useObservable(engine);
-
-  switch (engine.phase) {
-    case 'setup':
-      return <Setup engine={engine} onClose={onExit} />;
-    case 'clue':
-      return <Clue engine={engine} onExit={onExit} />;
-    case 'guess':
-      return <Guess engine={engine} onExit={onExit} />;
-    case 'result':
-      return <Result engine={engine} onExit={onExit} />;
-    case 'summary':
-      return <Summary engine={engine} roster={roster} onExit={onExit} />;
-  }
+  if (engine.phase === 'setup') return <Setup engine={engine} onExit={onExit} />;
+  if (engine.phase === 'summary') return <Summary engine={engine} roster={roster} onExit={onExit} />;
+  if (engine.phase === 'clue') return <Clue key={engine.round} engine={engine} onExit={onExit} />;
+  return <Round engine={engine} onExit={onExit} />;
 }
 
-// ── პარამეტრები
+function TeamScores({ engine }: { engine: WavelengthEngine }) {
+  return <View style={{ flexDirection: 'row', gap: 10 }}>
+    {engine.scores.map((score, index) => <View key={index} style={{ flex: 1, padding: 14, gap: 4,
+      borderRadius: 16, backgroundColor: Colors.surfaceHigh, borderWidth: 1,
+      borderColor: index === engine.activeTeam ? Colors.phosphor : Colors.stroke }}>
+      <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>{engine.teamName(index)}</Text>
+      <Text style={[title(26), { color: Colors.phosphor }]}>{score} ქულა</Text>
+    </View>)}
+  </View>;
+}
 
-function Setup({ engine, onClose }: { engine: WavelengthEngine; onClose: () => void }) {
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={Layout.header}>
-        <ScreenHeader title="ერთ ტალღაზე" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
-      </View>
-
-      <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Step n="1" text="შკალაზე დამალულ სამიზნეს მხოლოდ ერთი მოთამაშე ხედავს." />
-            <Step n="2" text="ის ხმამაღლა ამბობს ერთ სიტყვას, რომელიც ზუსტად იმ ადგილს შეესაბამება." />
-            <Step n="3" text="დანარჩენები კამათობენ და ნიშნულს ერთად აყენებენ." />
-            <Step n="4" text="ქულას მიმანიშნებელი იღებს: რაც უფრო ახლოს მოხვდით, მით მეტი." />
-          </View>
-        </GlassCard>
-
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
-            <View style={Layout.segmentRow}>
-              {TurnRotation.lapOptions.map((laps) => (
-                <CategoryChip
-                  compact
-                  key={laps}
-                  label={TurnRotation.label(laps)}
-                  selected={engine.settings.laps === laps}
-                  onPress={() => engine.setLaps(laps)}
-                />
-              ))}
-            </View>
-            <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              სულ {engine.totalRounds} რაუნდი — ყველას ზუსტად თანაბრად ხვდება ჯერი.
-            </Text>
-          </View>
-        </GlassCard>
-
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
-              build={() => keyedEntries(SpectrumBank, 'spectrum', (c) => c.spectrums.map((s) => `${s.left}|${s.right}`), 'ყველა')}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
-            />
-          </View>
-        </GlassCard>
-
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>ქულის ზოლები</Text>
-            <BandLegend />
-            <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>
-              რაც უფრო ახლოს დგება ჯგუფის ნიშნული სამიზნესთან, მით მეტ ქულას იღებს მიმანიშნებელი.
-            </Text>
-          </View>
-        </GlassCard>
-      </ScrollView>
-
-      <View style={Layout.footer}>
-        <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.startGame()} />
-      </View>
+function Frame({ engine, onExit, children, footer }: Props & { children: React.ReactNode; footer: React.ReactNode }) {
+  return <View style={{ flex: 1 }}>
+    <View style={Layout.topBar}>
+      <GameExitButton onExit={onExit} />
+      <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>{engine.teamName(engine.activeTeam)} · სვლა {engine.round}</Text>
     </View>
-  );
+    <ScrollView contentContainerStyle={[Layout.scroll, { gap: 20, flexGrow: 1 }]}>{children}</ScrollView>
+    <View style={[Layout.footer, { gap: 10 }]}>{footer}</View>
+  </View>;
 }
 
-function Step({ n, text }: { n: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-      <View style={styles.stepBadge}>
-        <Text style={[body(12, '900'), { color: Colors.ink }]}>{n}</Text>
-      </View>
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
-    </View>
-  );
+function Setup({ engine, onExit }: Props) {
+  const [rules, setRules] = useState(false);
+  return <View style={{ flex: 1 }}>
+    <RulesSheet visible={rules} title="ერთ ტალღაზე" accent={Colors.phosphor}
+      steps={game('wavelength')?.howTo ?? []} onClose={() => setRules(false)} />
+    <View style={Layout.header}><ScreenHeader title="ერთ ტალღაზე" subtitle="კლასიკური · ორი გუნდი"
+      onBack={onExit} onInfo={() => setRules(true)} /></View>
+    <ScrollView contentContainerStyle={Layout.scroll}>
+      <Text style={paragraph}>გაიყავით ორ გუნდად. სახელზე შეხებით მოთამაშეს სხვა გუნდში გადაიყვან.</Text>
+      {engine.teams.map((team, index) => <GlassCard key={index}>
+        <View style={{ gap: 12 }}>
+          <Text style={[body(18, '700'), { color: Colors.phosphor }]}>{engine.teamName(index)}</Text>
+          {team.map(player => <Pressable key={player.id} accessibilityRole="button"
+            accessibilityLabel={`${player.name} — სხვა გუნდში გადაყვანა`} onPress={() => engine.movePlayer(player.id)}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 48 }}>
+            <PlayerAvatarView player={player} size={40} />
+            <Text style={[body(16, '600'), { flex: 1, color: Colors.textPrimary }]}>{player.name}</Text>
+            <Text style={{ color: Colors.phosphor }}>↔</Text>
+          </Pressable>)}
+        </View>
+      </GlassCard>)}
+      <Text style={paragraph}>{engine.canPlay ? 'მიზანი: 10 ქულა · მეორე გუნდი იწყებს 1 ქულით' : 'თითო გუნდში მინიმუმ 2 მოთამაშეა საჭირო.'}</Text>
+    </ScrollView>
+    <View style={Layout.footer}><PrimaryButton title="დაწყება" enabled={engine.canPlay} onPress={() => engine.startGame()} /></View>
+  </View>;
 }
 
-// ── მინიშნება (სამიზნე მხოლოდ დაჭერისას ჩანს)
-
-function Clue({ engine, onExit }: { engine: WavelengthEngine; onExit: () => void }) {
-  const [isHolding, setHolding] = useState(false);
-
-  return (
-    <View style={{ flex: 1, gap: 18 }}>
-      <View style={Layout.topBar}>
-        <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-          რაუნდი {engine.round} / {engine.totalRounds}
-        </Text>
-        <View style={{ flex: 1 }} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="სხვა შკალა"
-          onPress={() => {
-            Haptics.tap();
-            engine.skipSpectrum();
-          }}
-          style={styles.pill}
-        >
-          <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>სხვა შკალა</Text>
-        </Pressable>
-      </View>
-
-      <View style={{ flex: 1 }} />
-
-      <View style={{ alignItems: 'center', gap: 4, paddingHorizontal: 24 }}>
-        <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-        <Text style={[titleFont(32), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={2}>
-          {engine.clueGiver?.name ?? '—'}
-        </Text>
-        <Text style={[caption(12), { color: Colors.textSecondary }]}>დანარჩენებმა ეკრანს არ უნდა შეხედონ</Text>
-      </View>
-
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={isHolding ? 'სამიზნე ჩანს' : 'დააჭირე და გეჭიროს — სამიზნის სანახავად'}
-        onPressIn={() => {
-          setHolding(true);
-          Haptics.reveal();
-          Sound.play('reveal');
-        }}
-        onPressOut={() => {
-          setHolding(false);
-          Haptics.tap();
-        }}
-        style={[
-          styles.holdCard,
-          {
-            backgroundColor: isHolding ? Colors.neonCyan + '24' : Colors.surface,
-            borderColor: isHolding ? Colors.neonCyan : Colors.stroke,
-            borderWidth: isHolding ? 2 : 1,
-          },
-        ]}
-      >
-        {isHolding ? (
-          <View style={{ gap: 16, alignSelf: 'stretch', paddingHorizontal: 20 }}>
-            <SpectrumBar spectrum={engine.spectrum} target={engine.target} showBands />
-            <BandLegend />
-          </View>
-        ) : (
-          <View style={{ alignItems: 'center', gap: 10 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>დააჭირე და გეჭიროს</Text>
-            <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>ხელს აიღებ — სამიზნე გაქრება</Text>
-          </View>
-        )}
-      </Pressable>
-
-      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        მოიფიქრე ერთი სიტყვა ან მოკლე ფრაზა, რომელიც ზუსტად სამიზნეზე ჯდება, და ხმამაღლა თქვი.
-      </Text>
-
-      <View style={{ flex: 1 }} />
-
-      <View style={Layout.footer}>
-        <PrimaryButton
-          title="ვთქვი — გადაეცი"
-          icon="checkmark"
-          tint={Colors.phosphor}
-          enabled={!isHolding}
-          onPress={() => engine.beginGuess()}
-        />
-      </View>
-    </View>
-  );
-}
-
-// ── ჯგუფის ნიშნული
-
-function Guess({ engine, onExit }: { engine: WavelengthEngine; onExit: () => void }) {
-  return (
-    <View style={{ flex: 1, gap: 18 }}>
-      <View style={Layout.topBar}>
-        <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-          რაუნდი {engine.round} / {engine.totalRounds}
-        </Text>
-        <View style={{ flex: 1 }} />
-        <Text style={[body(13, '700'), { color: Colors.textSecondary }]} numberOfLines={1}>
-          მიმანიშნებელი: {engine.clueGiver?.name ?? '—'}
-        </Text>
-      </View>
-
-      <View style={{ flex: 1 }} />
-
-      <View style={{ alignItems: 'center', gap: 2 }}>
-        <Text style={[display(58), Layout.digits, { color: Colors.phosphor }]}>{engine.mark(engine.guess)}</Text>
-        <Text style={[caption(12), { color: Colors.textSecondary }]}>ნიშნული</Text>
-      </View>
-
-      <View style={Layout.content}>
-        <GlassCard padding={22}>
-          <View style={{ gap: 18 }}>
-            <SpectrumBar spectrum={engine.spectrum} guess={engine.guess} />
-            <Slider
-              value={engine.guess}
-              minimumValue={0}
-              maximumValue={1}
-              onValueChange={(v) => engine.setGuess(v)}
-              onSlidingComplete={() => Haptics.medium()}
-              minimumTrackTintColor={Colors.phosphor}
-              maximumTrackTintColor={Colors.surfaceHigh}
-              thumbTintColor={Colors.phosphor}
-            />
-          </View>
-        </GlassCard>
-      </View>
-
-      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        ერთად გადაწყვიტეთ, სად დგას სამიზნე — ქულა საერთოა, ამიტომ ერთმანეთს არ უშლით.
-      </Text>
-
-      <View style={{ flex: 1 }} />
-
-      <View style={Layout.footer}>
-        <PrimaryButton title="დაფიქსირება" icon="target" tint={Colors.phosphor} onPress={() => engine.lockGuess()} />
-      </View>
-    </View>
-  );
-}
-
-// ── რაუნდის შედეგი
-
-function Result({ engine, onExit }: { engine: WavelengthEngine; onExit: () => void }) {
-  const points = engine.lastPoints;
-
+function Clue({ engine, onExit }: Props) {
+  const [holding, setHolding] = useState(false);
+  const [seen, setSeen] = useState(false);
   useEffect(() => {
-    if (points >= 3) Haptics.success();
-    else if (points === 0) Haptics.warning();
-    else Haptics.medium();
-  }, [points]);
-
-  const color =
-    points === 4 ? Colors.phosphor : points === 3 ? Colors.neonCyan : points > 0 ? Colors.phosphor : Colors.neonMagenta;
-  const glyph =
-    points === 4 ? 'target' : points === 3 ? 'hands.clap.fill' : points === 2 ? 'crown.fill' : points === 1 ? 'face.dashed.fill' : 'wind';
-
-  return (
-    <View style={{ flex: 1, gap: Space.m }}>
-      <View style={Layout.exitSlot}>
-        <GameExitButton onExit={onExit} />
-      </View>
-
-      <View style={{ flex: 1 }} />
-
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name={glyph} size={32} tint={color} />
-      </View>
-
-      <Text style={[titleFont(32), Layout.centered, Layout.digits, { color }]}>
-        {points > 0 ? `+${points} ქულა` : 'ვერ მოხვდით'}
-      </Text>
-
-      <View style={{ alignItems: 'center', gap: 3, paddingHorizontal: 24 }}>
-        <Text style={[body(17, '700'), Layout.centered, { color: Colors.textPrimary }]} numberOfLines={2}>
-          მიმანიშნებელი — {engine.clueGiver?.name ?? '—'}
-        </Text>
-        <Text style={[body(13, '600'), Layout.digits, { color: Colors.neonCyan }]}>
-          მაგიდის ანგარიში — {engine.tableScore} / მიზანი {engine.goal}
-        </Text>
-      </View>
-
-      <View style={Layout.content}>
-        <GlassCard padding={22}>
-          <View style={{ gap: 16 }}>
-            <SpectrumBar spectrum={engine.spectrum} target={engine.target} guess={engine.guess} showBands />
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-              <MarkChip label="სამიზნე" value={engine.mark(engine.target)} color={Colors.textPrimary} />
-              <MarkChip label="ჯგუფი" value={engine.mark(engine.guess)} color={Colors.phosphor} />
-            </View>
-          </View>
-        </GlassCard>
-      </View>
-
-      <View style={{ flex: 1 }} />
-
-      <View style={Layout.footer}>
-        <PrimaryButton
-          title={engine.isLastRound ? 'შედეგები' : 'შემდეგი რაუნდი'}
-          icon="chevron.right"
-          tint={Colors.phosphor}
-          onPress={() => engine.next()}
-        />
-      </View>
-    </View>
-  );
+    const sub = AppState.addEventListener('change', () => setHolding(false));
+    return () => sub.remove();
+  }, []);
+  return <Frame engine={engine} onExit={onExit} footer={<PrimaryButton title="დამალე და გადაეცი" enabled={seen}
+    onPress={() => { setHolding(false); engine.beginGuess(); }} />}>
+    <Text style={heading}>{engine.clueGiver?.name}, მოიფიქრე მინიშნება</Text>
+    <GlassCard><SpectrumBar spectrum={engine.spectrum} target={holding ? engine.target : null} showBands={holding} /></GlassCard>
+    <Pressable accessibilityRole="button" accessibilityLabel="სამიზნის სანახავად აქ გეჭიროს"
+      onPressIn={() => { setHolding(true); setSeen(true); Haptics.reveal(); }} onPressOut={() => setHolding(false)}
+      style={{ padding: 20, borderRadius: 16, borderWidth: 1, borderColor: Colors.phosphor, backgroundColor: Colors.surfaceHigh }}>
+      <Text style={[body(16, '700'), { textAlign: 'center', color: Colors.phosphor }]}>{holding ? 'აშვებისას სამიზნე დაიმალება' : 'სამიზნის სანახავად აქ გეჭიროს'}</Text>
+    </Pressable>
+    <Text style={paragraph}>თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა, რომელიც ამ ორ ცნებას შორის სამიზნის ადგილს შეეფერება. არ გამოიყენო შკალის სიტყვები, მათი სინონიმები ან ადგილის მიმანიშნებელი რიცხვები.</Text>
+    <Text style={paragraph}>მინიშნების შემდეგ თანაგუნდელებს აღარ დაეხმარო არც სიტყვით, არც ჟესტით.</Text>
+  </Frame>;
 }
 
-function MarkChip({ label, value, color }: { label: string; value: number; color: string }) {
-  return (
-    <View style={styles.markChip}>
-      <Text style={[caption(11), { color: Colors.textSecondary }]}>{label}</Text>
-      <Text style={[titleFont(20), Layout.digits, { color }]}>{value}</Text>
-    </View>
-  );
+function Round({ engine, onExit }: Props) {
+  const phase = engine.phase;
+  useEffect(() => {
+    if (phase === 'result') {
+      Sound.play(engine.lastPoints ? 'correct' : 'wrong');
+      if (engine.lastPoints === 4) Haptics.success();
+    }
+  }, [phase, engine.lastPoints]);
+  let footer: React.ReactNode;
+  let content: React.ReactNode;
+  switch (phase) {
+    case 'pass':
+      content = <><PlayerCharacter player={engine.clueGiver} /><Text style={paragraph}>გადაეცი ტელეფონი</Text>
+        <Text style={heading}>{engine.clueGiver?.name}</Text><Text style={paragraph}>სამიზნეს მხოლოდ მიმანიშნებელი ხედავს. დანარჩენებმა ეკრანს არ შეხედოთ.</Text></>;
+      footer = <PrimaryButton title="ტელეფონი ჩემთანაა" onPress={() => engine.readyForClue()} />; break;
+    case 'handoff':
+      content = <><Text style={heading}>სამიზნე დამალულია</Text><Text style={paragraph}>გადაეცი ტელეფონი თანაგუნდელებს:</Text>
+        <Text style={heading}>{engine.guessers.map(p => p.name).join(' · ')}</Text>
+        <Text style={paragraph}>{engine.clueGiver?.name}, მინიშნების შემდეგ აღარ დაეხმარო.</Text></>;
+      footer = <PrimaryButton title="ტელეფონი ჩვენთანაა" onPress={() => engine.readyToGuess()} />; break;
+    case 'guess':
+      content = <><TeamScores engine={engine} /><Text style={heading}>სად ჯდება მინიშნება?</Text>
+        <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} interactive onValueChange={v => engine.setGuess(v)} /></GlassCard>
+        <Text style={paragraph}>იმსჯელეთ თანაგუნდელებმა და თითით მოატრიალეთ ისარი შეთანხმებულ ადგილზე.</Text></>;
+      footer = <PrimaryButton title="დაფიქსირება" onPress={() => engine.lockGuess()} />; break;
+    case 'side':
+      content = <><Text style={heading}>{engine.teamName(engine.otherTeam)} — თქვენი ვარაუდი</Text>
+        <Text style={paragraph}>ტელეფონი მეტოქე გუნდს გადაეცით. სამიზნის ცენტრი დაფიქსირებული ისრის მარცხნივაა თუ მარჯვნივ?</Text>
+        <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} /></GlassCard>
+        <Text style={paragraph}>სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.</Text></>;
+      footer = <><PrimaryButton title="ისრის მარცხნივ" onPress={() => engine.chooseSide('left')} />
+        <PrimaryButton title="ისრის მარჯვნივ" tint={Colors.softLavender} onPress={() => engine.chooseSide('right')} /></>; break;
+    case 'locked':
+      content = <><Text style={heading}>ორივე პასუხი დაფიქსირებულია</Text>
+        <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} /></GlassCard>
+        <Text style={paragraph}>ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.</Text></>;
+      footer = <PrimaryButton title="გამოაჩინე სამიზნე" onPress={() => engine.reveal()} />; break;
+    case 'result':
+      content = <><Text style={heading}>{engine.teamName(engine.activeTeam)} +{engine.lastPoints} · {engine.teamName(engine.otherTeam)} +{engine.otherPoints}</Text>
+        <TeamScores engine={engine} /><GlassCard><SpectrumBar spectrum={engine.spectrum} target={engine.target} guess={engine.guess} showBands /></GlassCard>
+        <BandScoreLegend /><Text style={paragraph}>მეტოქის ვარაუდი: {engine.sideGuess === 'left' ? 'მარცხნივ' : 'მარჯვნივ'} · {engine.lastPoints === 4 ? '4 ქულაზე მეტოქე ქულას ვერ იღებს' : engine.otherPoints ? 'სწორია!' : 'არ დაემთხვა'}</Text>
+        {engine.catchUp && <Text style={paragraph}>4 ქულა და ჯერ კიდევ ჩამორჩებით — კიდევ თქვენი სვლაა, ახალი მიმანიშნებლით!</Text>}
+        {engine.tiebreak && engine.winner === null && <Text style={paragraph}>დამატებითი სვლები — ორივე გუნდი კიდევ ერთხელ თამაშობს.</Text>}</>;
+      footer = <PrimaryButton title={engine.winner !== null ? 'შედეგები' : engine.catchUp ? 'კიდევ ჩვენი სვლა' : 'შემდეგი გუნდი'} onPress={() => engine.next()} />; break;
+    default: return null;
+  }
+  return <Frame engine={engine} onExit={onExit} footer={footer}>{content}</Frame>;
 }
 
-// ── შეჯამება
-
-function Summary({
-  engine,
-  roster,
-  onExit,
-}: {
-  engine: WavelengthEngine;
-  roster: GameFlowProps['roster'];
-  onExit: () => void;
-}) {
-  const passed = engine.verdict !== 'missed';
-
-  useAwardOnce(() => {
-    Sound.play('win');
-    Haptics.win();
-    // კოოპერაციულია — ყველას თანაბრად, პოდიუმის გარეშე.
-    const reward = engine.rosterReward;
-    for (const player of engine.players) roster.addScore(reward, player.id);
-  });
-
-  const headline =
-    engine.verdict === 'brilliant' ? 'ერთ ტალღაზე ხართ' : engine.verdict === 'passed' ? 'მიზანი აღებულია' : 'ამჯერად ვერ მიაღწიეთ';
-
-  const best = engine.bestClueGivers;
-  const bestLine =
-    best.length > 0 && engine.clueScore(best[0]) > 0
-      ? `საუკეთესო მინიშნება — ${best.map((p) => p.name).join(', ')} (${engine.clueScore(best[0])} ქულა)`
-      : null;
-
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, gap: 14 }}>
-        <View style={{ flex: 1 }} />
-
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon
-            name={passed ? 'trophy.fill' : 'arrow.triangle.2.circlepath'}
-            size={31}
-            tint={passed ? Colors.phosphor : Colors.textSecondary}
-          />
-        </View>
-
-        <Text
-          style={[titleFont(28), Layout.centered, { color: passed ? Colors.neonCyan : Colors.textSecondary, paddingHorizontal: 24 }]}
-          adjustsFontSizeToFit
-          numberOfLines={2}
-        >
-          {headline}
-        </Text>
-
-        <View style={{ alignItems: 'center', gap: 4 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
-            <Text style={[display(64), Layout.digits, { color: passed ? Colors.neonCyan : Colors.textPrimary }]}>
-              {engine.tableScore}
-            </Text>
-            <Text style={[titleFont(22), Layout.digits, { color: Colors.textSecondary }]}>/ {engine.maxScore}</Text>
-          </View>
-          <Text style={[body(13, '600'), Layout.digits, { color: Colors.textSecondary }]}>
-            მიზანი იყო {engine.goal}
-          </Text>
-        </View>
-
-        {bestLine ? (
-          <Text style={[body(14, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {bestLine}
-          </Text>
-        ) : null}
-
-        <Text
-          style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7, paddingHorizontal: 28 }]}
-        >
-          კოოპერაციული თამაშია — ტაბლოზე ყველას თანაბრად +{engine.rosterReward} ერიცხება
-        </Text>
-
-        <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-          {engine.ranking.map((player) => (
-            <View key={player.id} style={styles.row}>
-              <Text style={[body(16, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
-                {player.name}
-              </Text>
-              <Text style={[titleFont(20), Layout.digits, { color: Colors.textSecondary }]}>
-                {engine.clueScore(player)}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
-          რიცხვი მიმანიშნებლის გვერდით — რამდენი მოუტანა მაგიდას
-        </Text>
-
-        <View style={Layout.footer}>
-          <PrimaryButton
-            title="თავიდან"
-            icon="arrow.clockwise"
-            tint={Colors.phosphor}
-            onPress={() => {
-              engine.restart();
-            }}
-          />
-          <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
-        </View>
-      </View>
-
-      {passed ? <Confetti /> : null}
-    </View>
-  );
+function Summary({ engine, roster, onExit }: Props & Pick<GameFlowProps, 'roster'>) {
+  useAwardOnce(() => engine.players.forEach(player => roster.addScore(engine.rewardFor(player), player.id)));
+  return <Frame engine={engine} onExit={onExit} footer={<><PrimaryButton title="კიდევ ვითამაშოთ" onPress={() => engine.restart()} /><GhostButton title="დასრულება" onPress={onExit} /></>}>
+    <Confetti /><Text style={heading}>გაიმარჯვა: {engine.teamName(engine.winner ?? 0)}</Text>
+    <Text style={paragraph}>{engine.teams[engine.winner ?? 0].map(p => p.name).join(' · ')}</Text>
+    <TeamScores engine={engine} /><Text style={paragraph}>აპის საერთო ტაბლოზე: გამარჯვებულებს +3, მეორე გუნდს +1</Text>
+  </Frame>;
 }
-
-const styles = StyleSheet.create({
-  stepBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.neonCyan,
-  },
-  pill: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, backgroundColor: Colors.surface },
-  holdCard: {
-    marginHorizontal: 24,
-    minHeight: 190,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 20,
-  },
-  markChip: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 2,
-    paddingVertical: 10,
-    borderRadius: Radius.small,
-    backgroundColor: Colors.surfaceHigh,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: Space.m,
-    paddingVertical: 13,
-    borderRadius: Radius.small,
-    backgroundColor: Colors.surface,
-  },
-});

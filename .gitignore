@@ -26,3 +26,11 @@ android/local.properties
 
 # Play Console სერვის-ანგარიში — არასდროს რეპოში
 play-service-account.json
+
+# Local credentials and generated release artifacts
+.env
+.env.*
+!.env.example
+*.apk
+*.aab
+*.ipa
