@@ -14,9 +14,9 @@ import {
 
 const EXPECTED: [string, number, number][] = [
   // [ბანკი, კატეგორია, ერთეული]
-  ['WordBank', 33, 1694],
+  ['WordBank', 33, 1728],
   ['CharadesBank', 11, 553],
-  ['PairBank', 16, 593],
+  ['PairBank', 16, 624],
   ['PromptBank', 10, 659],
   ['SpectrumBank', 5, 291],
   ['DilemmaBank', 5, 316],
@@ -55,17 +55,17 @@ describe('კონტენტის მთლიანობა', () => {
 
   it('ბარათული ბანკები', () => {
     expect(DareCardBank.all).toHaveLength(105);
-    expect(RuleCardBank.all).toHaveLength(97);
+    expect(RuleCardBank.all).toHaveLength(100);
     expect(TruthDareBank.sets).toHaveLength(3);
     expect(TruthDareBank.sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0)).toBe(217);
   });
 
-  it('სულ 6764 ერთეული', () => {
+  it('სულ 6832 ერთეული', () => {
     const total =
       Object.values(SIZES).reduce((n, s) => n + s.items, 0) +
       DareCardBank.all.length + RuleCardBank.all.length +
       TruthDareBank.sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0);
-    expect(total).toBe(6764);
+    expect(total).toBe(6832);
   });
 
   it('ყველა კატეგორიას აქვს ემოჯი და სახელი — JSON-ის ექსპორტს ეს აკლდა', () => {

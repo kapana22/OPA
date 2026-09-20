@@ -115,6 +115,8 @@ PODS:
     - Yoga
   - ExpoSensors (57.0.2):
     - ExpoModulesCore
+  - ExpoSplashScreen (57.0.9):
+    - ExpoModulesCore
   - ExpoSymbols (57.0.2):
     - ExpoModulesCore
   - ExpoSystemUI (57.0.3):
@@ -2446,6 +2448,7 @@ DEPENDENCIES:
   - ExpoRouter (from `../node_modules/expo-router/ios`)
   - ExpoScreenOrientation (from `../node_modules/expo-screen-orientation/ios`)
   - ExpoSensors (from `../node_modules/expo-sensors/ios`)
+  - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - ExpoSymbols (from `../node_modules/expo-symbols/ios`)
   - ExpoSystemUI (from `../node_modules/expo-system-ui/ios`)
   - "ExpoUI (from `../node_modules/expo-router/node_modules/@expo/ui/ios`)"
@@ -2587,6 +2590,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-screen-orientation/ios"
   ExpoSensors:
     :path: "../node_modules/expo-sensors/ios"
+  ExpoSplashScreen:
+    :path: "../node_modules/expo-splash-screen/ios"
   ExpoSymbols:
     :path: "../node_modules/expo-symbols/ios"
   ExpoSystemUI:
@@ -2792,6 +2797,7 @@ SPEC CHECKSUMS:
   ExpoRouter: 9bf293bba85908c1834190e6913b22da1e573689
   ExpoScreenOrientation: 29f306f9e1a37b304862310ceb9664866f653ebd
   ExpoSensors: e71c7b6cb0c09d3427ef6ae29c69532a10c86b05
+  ExpoSplashScreen: e771da4f26d550ea4fd067d8fb942657e47bb846
   ExpoSymbols: 0efd93edf0f825bf3c762582b0769dd3b296235c
   ExpoSystemUI: e5f9a81b45481222f6b8b45b86fa37b18d0a86c9
   ExpoUI: 6867422a567a251dcc25444c706b53f479e457ae

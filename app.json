@@ -8,7 +8,7 @@
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ge.opa.app",
+      "bundleIdentifier": "ge.splash.megobrebi",
       "appleTeamId": "6F94DT68Q9",
       "infoPlist": {
         "UISupportedInterfaceOrientations": [
