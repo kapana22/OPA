@@ -18,18 +18,18 @@ export type TiltState = 'calibrating' | 'ready' | 'held';
 export class TiltGate {
   // MARK: - ზღვრები
 
-  /** რამდენად უნდა გადაიხაროს ტელეფონი პირადი ნულიდან (≈35°). */
-  triggerLevel = 0.58;
-  /** რომელ დერეფანს ვთვლით „ისევ შუბლზეა“-დ (≈14°). */
-  neutralLevel = 0.25;
+  /** რამდენად უნდა გადაიხაროს ტელეფონი პირადი ნულიდან (≈30°). */
+  triggerLevel = 0.50;
+  /** რომელ დერეფანს ვთვლით „ისევ შუბლზეა“-დ (≈13°). */
+  neutralLevel = 0.22;
   /** რამდენ ზედიზედ კადრს უნდა გაუძლოს დახრამ (60 Hz-ზე ≈ 80 მწმ). */
   triggerHold = 5;
-  /** რამდენ ზედიზედ კადრს უნდა დარჩეს ნეიტრალში, სანამ ისევ ჩაითვლება (≈ 200 მწმ). */
-  neutralHold = 12;
+  /** რამდენ ზედიზედ კადრს უნდა დარჩეს ნეიტრალში, სანამ ისევ ჩაითვლება (≈ 160 მწმ). */
+  neutralHold = 10;
   /** ჩათვლის შემდეგ სენსორი ამდენ ხანს ყრუა (წამი). */
   cooldown = 0.45;
-  /** რამდენ კადრს ვზომავთ პირად ნულს დაწყებისას (≈ 330 მწმ). */
-  calibrationSamples = 20;
+  /** რამდენ კადრს ვზომავთ პირად ნულს დაწყებისას (≈ 260 მწმ). */
+  calibrationSamples = 16;
   /** გლუვება — მაღალი მნიშვნელობა უფრო სწრაფია, დაბალი უფრო მშვიდი. */
   smoothing = 0.28;
 
@@ -151,7 +151,7 @@ export class TiltGate {
     const measured = this.calibrationSum / this.calibrationCount;
     // ტელეფონი უკვე ძლიერ დახრილი იყო გაზომვისას? მაშინ პირად ნულს არ ვენდობით,
     // თორემ თამაშის მთელი დერეფანი გვერდზე გადაიწევს.
-    this._baseline = Math.min(Math.max(measured, -0.35), 0.35);
+    this._baseline = Math.min(Math.max(measured, -0.25), 0.25);
     this.calibrationSum = 0;
     this.calibrationCount = 0;
     this.triggerFrames = 0;

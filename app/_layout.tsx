@@ -25,19 +25,51 @@ export default function RootLayout() {
         <AppStateProvider>
           <DialogProvider>
           <StatusBar style="light" />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: Colors.ink },
-              animation: 'slide_from_right',
-            }}
-          >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="players" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="scoreboard" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="rules/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-          </Stack>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: Colors.ink },
+                animation: 'slide_from_right',
+              }}
+            >
+              <Stack.Screen name="index" />
+              <Stack.Screen
+                name="players"
+                options={{
+                  presentation: 'formSheet',
+                  sheetAllowedDetents: [1.0],
+                  sheetGrabberVisible: true,
+                  gestureEnabled: true,
+                }}
+              />
+              <Stack.Screen
+                name="scoreboard"
+                options={{
+                  presentation: 'formSheet',
+                  sheetAllowedDetents: [1.0],
+                  sheetGrabberVisible: true,
+                  gestureEnabled: true,
+                }}
+              />
+              <Stack.Screen
+                name="settings"
+                options={{
+                  presentation: 'formSheet',
+                  sheetAllowedDetents: [1.0],
+                  sheetGrabberVisible: true,
+                  gestureEnabled: true,
+                }}
+              />
+              <Stack.Screen
+                name="rules/[id]"
+                options={{
+                  presentation: 'formSheet',
+                  sheetAllowedDetents: [1.0],
+                  sheetGrabberVisible: true,
+                  gestureEnabled: true,
+                }}
+              />
+            </Stack>
           </DialogProvider>
         </AppStateProvider>
       </SafeAreaProvider>

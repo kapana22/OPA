@@ -329,8 +329,8 @@ export default function Home() {
       <View style={[styles.dockContainer, { bottom: Math.max(insets.bottom, 16) }]}>
         <View style={styles.floatingDock}>
           <Pressable accessibilityRole="button" accessibilityLabel="თამაშები" style={[styles.dockItem, styles.dockItemActive]}>
-            <MaterialCommunityIcons name={sf('gamecontroller.fill')} size={20} color={Colors.phosphor} />
-            <Text style={styles.dockTextActive}>{toTT('თამაშები')}</Text>
+            <MaterialCommunityIcons name={sf('gamecontroller.fill')} size={22} color={Colors.phosphor} />
+            <Text numberOfLines={1} style={styles.dockTextActive}>თამაშები</Text>
           </Pressable>
 
           <Pressable
@@ -342,15 +342,15 @@ export default function Home() {
             }}
             style={styles.dockItem}
           >
-            <View>
-              <MaterialCommunityIcons name={sf('person.2.fill')} size={20} color={Colors.textSecondary} />
+            <View style={styles.dockIconWrap}>
+              <MaterialCommunityIcons name={sf('person.2.fill')} size={22} color={Colors.textSecondary} />
               {roster.count > 0 ? (
                 <View style={styles.dockBadge}>
                   <Text style={styles.dockBadgeText}>{roster.count}</Text>
                 </View>
               ) : null}
             </View>
-            <Text style={styles.dockText}>{toTT('მოთამაშეები')}</Text>
+            <Text numberOfLines={1} style={styles.dockText}>მოთამაშე</Text>
           </Pressable>
 
           <Pressable
@@ -362,8 +362,8 @@ export default function Home() {
             }}
             style={styles.dockItem}
           >
-            <MaterialCommunityIcons name={sf('trophy.fill')} size={20} color={Colors.textSecondary} />
-            <Text style={styles.dockText}>{toTT('ტაბლო')}</Text>
+            <MaterialCommunityIcons name={sf('trophy.fill')} size={22} color={Colors.textSecondary} />
+            <Text numberOfLines={1} style={styles.dockText}>ტაბლო</Text>
           </Pressable>
 
           <Pressable
@@ -375,8 +375,8 @@ export default function Home() {
             }}
             style={styles.dockItem}
           >
-            <MaterialCommunityIcons name={sf('slider.horizontal.3')} size={20} color={Colors.textSecondary} />
-            <Text style={styles.dockText}>{toTT('პარამეტრები')}</Text>
+            <MaterialCommunityIcons name={sf('slider.horizontal.3')} size={22} color={Colors.textSecondary} />
+            <Text numberOfLines={1} style={styles.dockText}>მართვა</Text>
           </Pressable>
         </View>
       </View>
@@ -589,11 +589,11 @@ const styles = StyleSheet.create({
   floatingDock: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
-    maxWidth: 420,
+    maxWidth: 380,
     paddingVertical: 6,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     borderRadius: 999,
     backgroundColor: 'rgba(23, 13, 38, 0.94)',
     borderWidth: 1.2,
@@ -606,35 +606,43 @@ const styles = StyleSheet.create({
   },
   dockItem: {
     flex: 1,
+    minWidth: 0,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 3,
+    gap: 2,
     paddingVertical: 6,
-    paddingHorizontal: 2,
+    paddingHorizontal: 4,
     borderRadius: 20,
   },
   dockItemActive: {
     backgroundColor: 'rgba(198, 255, 0, 0.12)',
   },
+  dockIconWrap: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   dockText: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontFamily: FontFamilies.bold,
     color: Colors.textSecondary,
-    letterSpacing: 0.2,
-    textTransform: 'uppercase',
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    width: '100%',
   },
   dockTextActive: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontFamily: FontFamilies.heavy,
     color: Colors.phosphor,
-    letterSpacing: 0.2,
-    textTransform: 'uppercase',
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    width: '100%',
   },
   dockBadge: {
     position: 'absolute',
-    top: -3,
-    right: -8,
+    top: -4,
+    right: -10,
     minWidth: 16,
     height: 16,
     borderRadius: 8,

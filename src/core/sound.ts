@@ -37,9 +37,9 @@ function prepareIfNeeded(): void {
   if (prepared) return;
   prepared = true;
 
-  // ფონური მუსიკა არ უნდა გაჩერდეს — თამაში მას ერევა, არ ცვლის.
+  // ხმა უნდა ისმოდეს Silent რეჟიმშიც (როცა iPhone დადუმებულია)
   void setAudioModeAsync({
-    playsInSilentMode: false,
+    playsInSilentMode: true,
     interruptionMode: 'mixWithOthers',
     interruptionModeAndroid: 'mixWithOthers',
     shouldPlayInBackground: false,
@@ -51,7 +51,17 @@ function prepareIfNeeded(): void {
 
   for (const key of Object.keys(SOURCES) as SoundEffect[]) {
     try {
-      players[key] = createAudioPlayer(SOURCES[key]);
+      const player = createAudioPlayer(SOURCES[key]);
+      players[key] = player;
+      try {
+        player.addListener('playbackStatusUpdate', (status) => {
+          if (status.didJustFinish) {
+            void player.seekTo(0).catch(() => {});
+          }
+        });
+      } catch {
+        /* ignore */
+      }
     } catch {
       // ერთი ეფექტის ჩავარდნამ დანარჩენი არ უნდა წაიღოს.
     }
@@ -75,12 +85,28 @@ export const Sound = {
     const player = players[effect];
     if (!player) return;
     try {
-      // Swift: `player.stop()` + `scheduleBuffer(options: .interrupts)` —
-      // ერთი და იგივე ეფექტი ზედიზედ თავიდან იწყება, არ ჯდება ერთმანეთზე.
-      player.seekTo(0);
-      player.play();
+      if (player.playing) {
+        player.pause();
+        void player
+          .seekTo(0)
+          .then(() => {
+            try {
+              player.play();
+            } catch {}
+          })
+          .catch(() => {
+            try {
+              player.play();
+            } catch {}
+          });
+      } else {
+        // უკვე ნულზეა — მომენტალურად ჩაირთვება ყოველგვარი დაყოვნების გარეშე
+        player.play();
+      }
     } catch {
-      // დაკვრის ჩავარდნა თამაშს არ აჩერებს.
+      try {
+        player.play();
+      } catch {}
     }
   },
 

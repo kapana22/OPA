@@ -15,8 +15,27 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 /** ეკრანი ლანდშაფტში ჩაიკეტება, გასვლისას პორტრეტი ბრუნდება. */
 export function useLandscapeOnly(): void {
   useEffect(() => {
-    void ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).catch(() => {});
+    let active = true;
+
+    const lockLandscape = async () => {
+      try {
+        const current = await ScreenOrientation.getOrientationAsync();
+        if (!active) return;
+        if (current === ScreenOrientation.Orientation.LANDSCAPE_LEFT) {
+          await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
+        } else {
+          await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
+        }
+      } catch {
+        if (!active) return;
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).catch(() => {});
+      }
+    };
+
+    void lockLandscape();
+
     return () => {
+      active = false;
       void ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP).catch(() => {});
     };
   }, []);
