@@ -39,7 +39,7 @@ export default function GameHost() {
   return (
     <View style={{ flex: 1 }}>
       <SplashBackground />
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom', 'left', 'right']}>
         {tooFew ? (
           <Notice
             icon="person.3.fill"

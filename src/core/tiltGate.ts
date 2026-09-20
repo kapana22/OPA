@@ -20,14 +20,16 @@ export class TiltGate {
 
   /** რამდენად უნდა გადაიხაროს ტელეფონი პირადი ნულიდან (≈30°). */
   triggerLevel = 0.50;
-  /** რომელ დერეფანს ვთვლით „ისევ შუბლზეა“-დ (≈13°). */
-  neutralLevel = 0.22;
+  /** რომელ დერეფანს ვთვლით „ისევ შუბლზეა“-დ (≈16°). */
+  neutralLevel = 0.28;
   /** რამდენ ზედიზედ კადრს უნდა გაუძლოს დახრამ (60 Hz-ზე ≈ 80 მწმ). */
   triggerHold = 5;
-  /** რამდენ ზედიზედ კადრს უნდა დარჩეს ნეიტრალში, სანამ ისევ ჩაითვლება (≈ 160 მწმ). */
-  neutralHold = 10;
+  /** რამდენ ზედიზედ კადრს უნდა დარჩეს ნეიტრალში, სანამ ისევ ჩაითვლება (≈ 80 მწმ). */
+  neutralHold = 5;
   /** ჩათვლის შემდეგ სენსორი ამდენ ხანს ყრუა (წამი). */
   cooldown = 0.45;
+  /** 'held'-ში გაჭედვის საწინააღმდეგო ტაიმაუტი (წამი) — თუ თავის კუთხე შეიცვალა, მაინც იხსნება. */
+  heldTimeout = 0.75;
   /** რამდენ კადრს ვზომავთ პირად ნულს დაწყებისას (≈ 260 მწმ). */
   calibrationSamples = 16;
   /** გლუვება — მაღალი მნიშვნელობა უფრო სწრაფია, დაბალი უფრო მშვიდი. */
@@ -45,6 +47,7 @@ export class TiltGate {
   private triggerFrames = 0;
   private neutralFrames = 0;
   private blockedUntil = -Number.MAX_VALUE;
+  private heldSince = -Number.MAX_VALUE;
 
   get state(): TiltState {
     return this._state;
@@ -67,6 +70,7 @@ export class TiltGate {
     this.triggerFrames = 0;
     this.neutralFrames = 0;
     this.blockedUntil = -Number.MAX_VALUE;
+    this.heldSince = -Number.MAX_VALUE;
   }
 
   /**
@@ -79,6 +83,7 @@ export class TiltGate {
     this.triggerFrames = 0;
     this.neutralFrames = 0;
     this.blockedUntil = now + this.cooldown;
+    this.heldSince = now;
     this._state = 'held';
   }
 
@@ -123,11 +128,22 @@ export class TiltGate {
       this.triggerFrames = 0;
       this.neutralFrames = 0;
       this.blockedUntil = now + this.cooldown;
+      this.heldSince = now;
       this._state = 'held';
       return delta > 0 ? 'forward' : 'back';
     }
 
     // 'held' — მთავარი შესწორება: ვერტიკალის ჩაქროლება არ კმარა, უნდა დაყოვნდეს.
+    // თუ 750 მწმ გავიდა და ტელეფონი ტრიგერის ზონიდან გამოსულია — ავტომატური განბლოკვა
+    // და ნულის ადაპტაცია, რომ რამდენიმე დახრის შემდეგ სენსორი არ გაიჭედოს.
+    if (now - this.heldSince > this.heldTimeout && Math.abs(delta) < this.triggerLevel * 0.75) {
+      this._baseline = Math.min(Math.max(this.smoothed, -0.28), 0.28);
+      this.neutralFrames = 0;
+      this.triggerFrames = 0;
+      this._state = 'ready';
+      return null;
+    }
+
     if (Math.abs(delta) < this.neutralLevel) {
       this.neutralFrames += 1;
       if (this.neutralFrames >= this.neutralHold) {
