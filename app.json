@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "მეგობრები",
-    "slug": "splash-rn",
+    "name": "OPA",
+    "slug": "opa",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ge.splash.megobrebi",
+      "bundleIdentifier": "ge.opa.app",
       "appleTeamId": "6F94DT68Q9",
       "infoPlist": {
         "UISupportedInterfaceOrientations": [
@@ -36,7 +36,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "ge.splash.megobrebi",
+      "package": "ge.opa.app",
       "versionCode": 1,
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
@@ -90,7 +90,7 @@
         }
       ]
     ],
-    "scheme": "megobrebi",
+    "scheme": "opa",
     "runtimeVersion": {
       "policy": "appVersion"
     }
