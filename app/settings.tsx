@@ -61,7 +61,7 @@ export default function Settings() {
   return (
     <View style={{ flex: 1 }}>
       <SplashBackground />
-      <View style={{ flex: 1, paddingTop: insets.top + Space.m, paddingHorizontal: 20, gap: 14 }}>
+      <View style={{ flex: 1, paddingTop: Math.max(insets.top, 28) + 12, paddingHorizontal: 20, gap: 14 }}>
         <Text style={[titleFont(24), { color: Colors.textPrimary, textAlign: 'center' }]}>პარამეტრები</Text>
 
         <GlassCard>

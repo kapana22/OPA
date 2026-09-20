@@ -51,7 +51,11 @@ export default function Rules() {
           <Text style={[body(14, '700'), { color: Colors.phosphor }]}>ეს თამაში ჯერ მზადდება — მალე გამოჩნდება.</Text>
         ) : null}
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 10, paddingBottom: 40, gap: 14 }} style={{ alignSelf: 'stretch' }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 10, paddingBottom: 40, gap: 14 }}
+          style={{ flex: 1, alignSelf: 'stretch' }}
+        >
           {game.howTo.map((step, i) => (
             <View key={i} style={[styles.step, { backgroundColor: Colors.surface, padding: 16, borderRadius: 20 }]}>
               <View style={[styles.stepNumber, { backgroundColor: accent }]}>

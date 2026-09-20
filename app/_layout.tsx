@@ -36,36 +36,28 @@ export default function RootLayout() {
               <Stack.Screen
                 name="players"
                 options={{
-                  presentation: 'formSheet',
-                  sheetAllowedDetents: [1.0],
-                  sheetGrabberVisible: true,
+                  presentation: 'pageSheet',
                   gestureEnabled: true,
                 }}
               />
               <Stack.Screen
                 name="scoreboard"
                 options={{
-                  presentation: 'formSheet',
-                  sheetAllowedDetents: [1.0],
-                  sheetGrabberVisible: true,
+                  presentation: 'pageSheet',
                   gestureEnabled: true,
                 }}
               />
               <Stack.Screen
                 name="settings"
                 options={{
-                  presentation: 'formSheet',
-                  sheetAllowedDetents: [1.0],
-                  sheetGrabberVisible: true,
+                  presentation: 'pageSheet',
                   gestureEnabled: true,
                 }}
               />
               <Stack.Screen
                 name="rules/[id]"
                 options={{
-                  presentation: 'formSheet',
-                  sheetAllowedDetents: [1.0],
-                  sheetGrabberVisible: true,
+                  presentation: 'pageSheet',
                   gestureEnabled: true,
                 }}
               />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -59,7 +59,10 @@ export default function Players() {
     <View style={{ flex: 1 }}>
       <SplashBackground />
       <CharacterPicker playerID={characterPlayer} onClose={() => setCharacterPlayer(null)} />
-      <View style={{ flex: 1, paddingTop: insets.top + Space.m, gap: 14 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1, paddingTop: Math.max(insets.top, 28) + 12, gap: 14 }}
+      >
         <Text style={[titleFont(21), { color: Colors.textPrimary, textAlign: 'center', letterSpacing: 0.6, textTransform: 'uppercase' }]}>
           {toTT(`მოთამაშეები ${roster.count}/${MAX_PLAYERS}`)}
         </Text>
@@ -96,11 +99,11 @@ export default function Players() {
         ) : (
           <>
             <View style={styles.hintRow}>
-              <Text style={[caption(11), { color: Colors.textSecondary, flex: 1 }]} numberOfLines={2}>
+              <Text style={[caption(11), { color: Colors.textSecondary, flex: 1 }]} numberOfLines={3}>
                 {reordering ? 'ისრებით დაალაგე სუფრის რიგზე' : 'პერსონაჟის შესაცვლელად შეეხე მის სურათს'}
               </Text>
               {roster.count > 1 ? (
-                <>
+                <View style={{ flexDirection: 'row', gap: 6 }}>
                   <SmallChip
                     icon="shuffle"
                     label="არევა"
@@ -118,11 +121,16 @@ export default function Players() {
                       setReordering((v) => !v);
                     }}
                   />
-                </>
+                </View>
               ) : null}
             </View>
 
-            <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}>
+            <ScrollView
+              style={{ flex: 1 }}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
+            >
               {roster.players.map((player, index) => (
                 <View key={player.id} style={styles.row}>
                   <Text style={[body(13, '900'), { color: Colors.textSecondary, width: 22 }]}>{index + 1}</Text>
@@ -199,7 +207,7 @@ export default function Players() {
         <View style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 12 }}>
           <PrimaryButton title="მზად ვართ" icon="checkmark" tint={Colors.phosphor} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }

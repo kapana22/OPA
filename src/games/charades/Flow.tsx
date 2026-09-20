@@ -4,7 +4,7 @@ import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker, RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -18,6 +18,7 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { CharadesEngine, type CharadesEntry } from './engine';
+import { game as findGame } from '../catalog';
 
 /**
  * „ტელეფონი შუბლზე“ (Heads Up) — სრული ნაკადი.
@@ -73,10 +74,13 @@ export function CharadesFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const gameData = findGame('charades');
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Heads Up" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
       <View style={Layout.header}>
-        <ScreenHeader title="Heads Up" subtitle="ტელეფონი შუბლზე" onBack={onClose} />
+        <ScreenHeader title="Heads Up" subtitle="ტელეფონი შუბლზე" onBack={onClose} onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -397,7 +401,11 @@ function TurnResult({ engine, onExit }: { engine: CharadesEngine; onExit: () => 
           <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ამ ჯერის სია ცარიელია.</Text>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 4, gap: 6 }}>
+        <ScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 4, gap: 6 }}
+        >
           {engine.results.map((entry) => (
             <WordRow key={entry.id} engine={engine} entry={entry} />
           ))}

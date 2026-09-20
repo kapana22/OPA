@@ -41,7 +41,7 @@ export default function Scoreboard() {
   return (
     <View style={{ flex: 1 }}>
       <SplashBackground />
-      <View style={{ flex: 1, paddingTop: insets.top + Space.m, gap: 12 }}>
+      <View style={{ flex: 1, paddingTop: Math.max(insets.top, 28) + 12, gap: 12 }}>
         <Text style={[titleFont(24), { color: Colors.textPrimary, textAlign: 'center' }]}>ტაბლო</Text>
 
         {board.length === 0 ? (
@@ -51,7 +51,11 @@ export default function Scoreboard() {
             </Text>
           </View>
         ) : (
-          <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 8, gap: 8 }}>
+          <ScrollView
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 8, gap: 8 }}
+          >
             {board.map((player, rank) => (
               <View key={player.id} style={styles.row}>
                 <Text style={[body(18, '900'), { color: Colors.textSecondary, width: 34 }]}>{rank + 1}</Text>

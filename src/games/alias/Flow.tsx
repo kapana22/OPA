@@ -89,6 +89,7 @@ function Setup({ engine, onClose }: { engine: AliasEngine; onClose: () => void }
 
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Alias" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
       <View style={Layout.header}>
         <ScreenHeader title="Alias" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
@@ -575,7 +576,11 @@ function TurnResult({ engine, onExit }: { engine: AliasEngine; onExit: () => voi
         </Text>
       ) : null}
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 4, gap: 6 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 4, gap: 6 }}
+      >
         {engine.results.map((entry) => (
           <WordRow key={entry.id} engine={engine} entry={entry} />
         ))}
@@ -687,7 +692,11 @@ function Winner({
           საერთო ტაბლოზე გამარჯვებული გუნდის თითოეულ მოთამაშეს +3 ერიცხება, დანარჩენებს — +1.
         </Text>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 4, gap: 8 }}>
+        <ScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 4, gap: 8 }}
+        >
           {engine.standings.map((team: AliasTeam) => {
             const isWinner = team.id === winner?.id;
             const tint = teamColor(team.id);

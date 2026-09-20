@@ -380,7 +380,11 @@ function TurnResult({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => vo
           <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ამ ჯერის სია ცარიელია.</Text>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={[Layout.content, { paddingVertical: 4, gap: 6 }]}>
+        <ScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[Layout.content, { paddingVertical: 4, gap: 6 }]}
+        >
           {engine.results.map((entry) => (
             <IdentityRow key={entry.id} engine={engine} entry={entry} />
           ))}
