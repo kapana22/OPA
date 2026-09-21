@@ -192,7 +192,7 @@ export class SpyEngine extends Observable {
     this.mrWhiteGuess = null;
     this.mrWhiteOptions = [];
     this.finalPoints = {};
-    this.startingPlayerID = this.players[Math.floor(Math.random() * this.players.length)]?.id ?? null;
+    this.startingPlayerID = this.pickStarter();
 
     this.phase = 'reveal';
     this.notify();
@@ -210,7 +210,10 @@ export class SpyEngine extends Observable {
   }
 
   eliminate(player: Player): void {
+    if (this.phase !== 'voting') return;
     this.eliminated.add(player.id);
+    // წინა რაუნდის მისტერ უაითის ვარაუდი ახალ შედეგზე აღარ უნდა ჩანდეს.
+    this.mrWhiteGuess = null;
     this.lastEliminatedID = player.id;
 
     if (this.roleOf(player) === 'mrWhite') {
@@ -225,6 +228,7 @@ export class SpyEngine extends Observable {
   }
 
   submitMrWhiteGuess(word: string): void {
+    if (this.phase !== 'mrWhiteGuess') return;
     this.mrWhiteGuess = word;
     if (word === this.civilianWord) {
       this.finish('mrWhite');
@@ -236,10 +240,9 @@ export class SpyEngine extends Observable {
   }
 
   continueGame(): void {
-    if (this.winner !== null) return;
+    if (this.winner !== null || this.phase !== 'roundResult') return;
     this.turn += 1;
-    const alive = this.alive;
-    this.startingPlayerID = alive[Math.floor(Math.random() * alive.length)]?.id ?? null;
+    this.startingPlayerID = this.pickStarter();
     this.phase = 'discussion';
     this.notify();
   }
@@ -299,6 +302,14 @@ export class SpyEngine extends Observable {
     if (found) return found;
     // დასტა ვერაფერს დააბრუნებს მხოლოდ მაშინ, თუ კატეგორია ცარიელია.
     return PairBank.randomPair(this.settings.categoryID);
+  }
+
+  /** მისტერ უაითი არასდროს იწყებს — სიტყვის გარეშე პირველი აღწერა მაშინვე გასცემს. */
+  private pickStarter(): string | null {
+    const alive = this.alive;
+    const pool = alive.filter((p) => this.roles[p.id] !== 'mrWhite');
+    const from = pool.length > 0 ? pool : alive;
+    return from[Math.floor(Math.random() * from.length)]?.id ?? null;
   }
 
   private makeMrWhiteOptions(): string[] {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,7 +12,7 @@ import { PlayerAvatarView } from '../src/ui/PlayerAvatarView';
 import { PrimaryButton } from '../src/ui/Buttons';
 import { Pressable } from '../src/ui/Pressable';
 import { useRoster } from '../src/state/state';
-import { MAX_PLAYERS } from '../src/core/roster';
+import { MAX_PLAYERS, type Player } from '../src/core/roster';
 import { Haptics } from '../src/core/haptics';
 import { useDialog } from '../src/ui/Dialog';
 
@@ -32,15 +32,47 @@ export default function Players() {
   const [characterPlayer, setCharacterPlayer] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
   const [reordering, setReordering] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  // ბოლო წაშლილი — ერთი შემთხვევითი შეხება მოთამაშეს ქულიანად არ უნდა კარგავდეს.
+  const [removed, setRemoved] = useState<{ player: Player; index: number } | null>(null);
+  const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dialog = useDialog();
 
-  const canAdd = newName.trim().length > 0 && roster.count < MAX_PLAYERS;
+  useEffect(() => () => {
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+  }, []);
+
+  const full = roster.count >= MAX_PLAYERS;
+  const canAdd = newName.trim().length > 0 && !full;
 
   const add = () => {
     if (!canAdd) return;
-    roster.add(newName);
-    setNewName('');
-    Haptics.medium();
+    const result = roster.add(newName);
+    if (result === 'added') {
+      setNewName('');
+      setAddError(null);
+      Haptics.medium();
+    } else {
+      // ადრე ველი მაინც სუფთავდებოდა და „წარმატების“ ვიბრაცია მოდიოდა.
+      setAddError(result === 'duplicate' ? 'ეს სახელი უკვე სიაშია' : null);
+      Haptics.warning();
+    }
+  };
+
+  const removePlayer = (player: Player, index: number) => {
+    Haptics.warning();
+    roster.remove(player.id);
+    setRemoved({ player, index });
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+    undoTimer.current = setTimeout(() => setRemoved(null), 5000);
+  };
+
+  const undoRemove = () => {
+    if (!removed) return;
+    roster.restore(removed.player, removed.index);
+    setRemoved(null);
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+    Haptics.tap();
   };
 
   // `Alert.prompt` მხოლოდ iOS-ზეა — Android-ზე სახელის შეცვლა საერთოდ არ იმუშავებდა.
@@ -49,7 +81,15 @@ export default function Players() {
       title: 'სახელის შეცვლა',
       input: { placeholder: 'სახელი', initial: current },
       actions: [
-        { label: 'შენახვა', primary: true, onPress: (value) => roster.rename(id, value) },
+        {
+          label: 'შენახვა',
+          primary: true,
+          onPress: (value) => {
+            if (roster.rename(id, value)) return;
+            Haptics.warning();
+            if (value.trim()) setAddError('ეს სახელი უკვე სიაშია');
+          },
+        },
         { label: 'გაუქმება' },
       ],
     });
@@ -70,11 +110,18 @@ export default function Players() {
         <View style={styles.addRow}>
           <TextInput
             value={newName}
-            onChangeText={setNewName}
+            onChangeText={(text) => {
+              setNewName(text);
+              if (addError) setAddError(null);
+            }}
             onSubmitEditing={add}
-            placeholder="სახელი"
+            // ზედიზედ რამდენიმე სახელის შეყვანისას კლავიატურა არ უნდა დაიხუროს.
+            submitBehavior="submit"
+            editable={!full}
+            maxLength={24}
+            placeholder={full ? `მაქსიმუმ ${MAX_PLAYERS} მოთამაშე` : 'სახელი'}
             placeholderTextColor={Colors.textSecondary}
-            returnKeyType="done"
+            returnKeyType="next"
             style={[body(17, '600'), styles.input, { color: Colors.textPrimary }]}
           />
           <Pressable
@@ -87,6 +134,9 @@ export default function Players() {
             <MaterialCommunityIcons name={sf('plus')} size={20} color={canAdd ? Colors.onAccent : Colors.textSecondary} />
           </Pressable>
         </View>
+        {addError ? (
+          <Text style={[body(13, '700'), { color: Colors.warning, paddingHorizontal: 20, marginTop: -6 }]}>{addError}</Text>
+        ) : null}
 
         {roster.count === 0 ? (
           <View style={styles.empty}>
@@ -192,10 +242,7 @@ export default function Players() {
                     <RowIcon
                       name="trash"
                       label={`${player.name} — წაშლა`}
-                      onPress={() => {
-                        Haptics.warning();
-                        roster.remove(player.id);
-                      }}
+                      onPress={() => removePlayer(player, index)}
                     />
                   )}
                 </View>
@@ -204,7 +251,17 @@ export default function Players() {
           </>
         )}
 
-        <View style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 12 }}>
+        <View style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 12, gap: 10 }}>
+          {removed ? (
+            <View style={styles.undoBar}>
+              <Text style={[body(14, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
+                {removed.player.name} წაიშალა
+              </Text>
+              <Pressable accessibilityRole="button" onPress={undoRemove} hitSlop={8}>
+                <Text style={[body(14, '900'), { color: Colors.phosphor }]}>დაბრუნება</Text>
+              </Pressable>
+            </View>
+          ) : null}
           <PrimaryButton title="მზად ვართ" icon="checkmark" tint={Colors.phosphor} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
       </KeyboardAvoidingView>
@@ -311,6 +368,17 @@ const styles = StyleSheet.create({
   genderBadgeBoy: {
     borderColor: 'rgba(39, 201, 255, 0.45)',
     backgroundColor: 'rgba(39, 201, 255, 0.15)',
+  },
+  undoBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: Space.m,
+    paddingVertical: 12,
+    borderRadius: Radius.small,
+    backgroundColor: Colors.surfaceHigh,
+    borderWidth: 1,
+    borderColor: Colors.stroke,
   },
   rowIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.surfaceHigh },
 });

@@ -108,6 +108,7 @@ export class WordRushEngine extends Observable {
   }
 
   beginTurn(): void {
+    if (this.phase !== 'intro') return;
     this.turnCount = 0;
     this.remaining = this.settings.seconds;
     this.phase = 'playing';
@@ -134,9 +135,15 @@ export class WordRushEngine extends Observable {
   }
 
   endTurn(): void {
+    // ორმაგი შეხება „დასრულებაზე“ ქულას მეორედ არ უნდა დაუმატებდეს.
+    if (this.phase !== 'playing') return;
     this.ticker.stop();
     const player = this.currentPlayer;
-    if (!player) return;
+    if (!player) {
+      this.phase = 'summary';
+      this.notify();
+      return;
+    }
     this.totals[player.id] = (this.totals[player.id] ?? 0) + this.turnCount;
     this.lastTurn = { player, count: this.turnCount };
     this.phase = 'turnResult';
@@ -146,6 +153,8 @@ export class WordRushEngine extends Observable {
   }
 
   next(): void {
+    // ორმაგი შეხება მოთამაშეს არ უნდა გამოტოვებდეს.
+    if (this.phase !== 'turnResult') return;
     if (this.isLastTurnOfRound) {
       if (this.isLastRound) {
         this.phase = 'summary';

@@ -173,6 +173,30 @@ function Prompt({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => vo
 // ── კენჭისყრა
 
 function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void }) {
+  // ფარულ რეჟიმში ყოველ ამომრჩეველს ჯერ „მზად ვარ“ აქვს: სახელების ბადე ადრე
+  // იმავე ადგილას რჩებოდა და წინა მოთამაშის მეორე შეხება შემდეგის ხმად ითვლებოდა.
+  const [readyFor, setReadyFor] = useState<number | null>(null);
+  if (engine.isSecret && readyFor !== engine.voterIndex) {
+    return (
+      <View style={{ flex: 1, gap: Space.m }}>
+        <View style={Layout.exitSlot}>
+          <GameExitButton onExit={onExit} />
+        </View>
+        <View style={{ flex: 1 }} />
+        <View style={{ alignItems: 'center', gap: 4 }}>
+          <PlayerCharacter player={engine.currentVoter} compact />
+          <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+          <Text style={[titleFont(30), { color: Colors.neonCyan }]}>{engine.currentVoter?.name ?? '—'}</Text>
+          <Text style={[body(13, '700'), { color: Colors.textSecondary, fontVariant: ['tabular-nums'] }]}>
+            {engine.voterIndex + 1} / {engine.players.length}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }} />
+        <PrimaryButton title="მზად ვარ" icon="checkmark" onPress={() => setReadyFor(engine.voterIndex)} />
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, gap: Space.m }}>
       <View style={Layout.exitSlot}>
@@ -184,7 +208,6 @@ function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void
       {engine.isSecret ? (
         <View style={{ alignItems: 'center', gap: 4 }}>
           <PlayerCharacter player={engine.currentVoter} compact />
-          <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
           <Text style={[titleFont(30), { color: Colors.neonCyan }]}>{engine.currentVoter?.name ?? '—'}</Text>
           <Text style={[body(13, '700'), { color: Colors.textSecondary, fontVariant: ['tabular-nums'] }]}>
             {engine.voterIndex + 1} / {engine.players.length}

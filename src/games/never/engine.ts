@@ -146,15 +146,20 @@ export class NeverEngine extends Observable {
 
   skipStatement(): void {
     if (this.phase !== 'round') return;
+    // მონიშვნები ძველ დებულებას ეკუთვნის — წართმეული სიცოცხლე ბრუნდება.
+    for (const id of this.marked) this.lives[id] = (this.lives[id] ?? 0) + 1;
+    this.outOrder = this.outOrder.filter((id) => !this.marked.has(id));
+    this.marked = new Set();
     this.drawStatement();
     this.notify();
   }
 
   next(): void {
+    if (this.phase !== 'round') return;
     this.marked = new Set();
     if (this.isFinalRound) {
+      // ზეიმის ჰაპტიკა შეჯამების ეკრანზეა — აქ მეორედ აღარ.
       this.phase = 'summary';
-      Haptics.success();
       this.notify();
       return;
     }

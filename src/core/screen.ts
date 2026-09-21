@@ -7,13 +7,20 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
  * ძრავიდან იწერებოდა. `useKeepScreenAwake()` hook-ია და ხედს ეკუთვნის —
  * ძრავს ბრძანებითი ვარიანტი სჭირდება.
  */
+/**
+ * ცალკე ტეგი: უტეგო `deactivateKeepAwake()` ყველა უტეგო მოთხოვნას ერთად
+ * ხსნიდა — ძრავის `release()` რაუნდის ბოლოს ეკრანის hook-საც აუქმებდა და
+ * ტელეფონი თამაშის შუაში ჩაქრებოდა.
+ */
+const TAG = 'opa.engine';
+
 export const Screen = {
   keepAwake(): void {
-    void activateKeepAwakeAsync().catch(() => {});
+    void activateKeepAwakeAsync(TAG).catch(() => {});
   },
   release(): void {
     try {
-      deactivateKeepAwake();
+      deactivateKeepAwake(TAG);
     } catch {
       /* ignore */
     }

@@ -130,6 +130,12 @@ export class ImpostorEngine extends Observable {
     this.category =
       (this.settings.categoryID ? WordBank.category(this.settings.categoryID) : undefined) ?? WordBank.randomCategory();
     this.secretWord = this.drawWord(this.category);
+    // კატეგორია ამოიწურა და სიტყვა ბანკიდან მოვიდა — მინიშნებაც და ვარაუდის
+    // ვარიანტებიც სიტყვის ნამდვილი კატეგორიიდან, თორემ სწორი პასუხი ერთადერთი
+    // „უცხო“ ვარიანტი იქნებოდა.
+    if (!this.category.words.includes(this.secretWord)) {
+      this.category = WordBank.categories.find((c) => c.words.includes(this.secretWord)) ?? this.category;
+    }
 
     this.impostorIDs = new Set(shuffled(this.players).slice(0, this.settings.impostorCount).map((p) => p.id));
     this.startingPlayerID = this.players[Math.floor(Math.random() * this.players.length)]?.id ?? null;
@@ -157,6 +163,7 @@ export class ImpostorEngine extends Observable {
   }
 
   accuse(player: Player): void {
+    if (this.phase !== 'voting') return;
     this.accusedID = player.id;
 
     if (!this.isImpostor(player)) {
@@ -174,11 +181,13 @@ export class ImpostorEngine extends Observable {
   }
 
   submitGuess(word: string): void {
+    if (this.phase !== 'impostorGuess') return;
     this.impostorGuess = word;
     this.finish(word === this.secretWord ? 'impostorGuessedWord' : 'impostorCaught');
   }
 
   nextRound(): void {
+    if (this.phase !== 'result') return;
     this.round += 1;
     this.startRound();
   }

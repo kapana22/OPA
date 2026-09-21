@@ -575,7 +575,11 @@ function TurnResult({ engine, onExit }: { engine: AliasEngine; onExit: () => voi
         ))}
       </ScrollView>
 
-      {reachedTarget && !engine.turnEndsMatch ? (
+      {engine.turnEndsInTie ? (
+        <Text style={[body(12, '600'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 28 }]}>
+          ფრეა — ყველაზე მეტი ქულა რამდენიმე გუნდს აქვს, ამიტომ კიდევ ერთი წრე ითამაშება.
+        </Text>
+      ) : reachedTarget && !engine.turnEndsMatch ? (
         <Text style={[body(12, '600'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 28 }]}>
           ლიმიტი გადალახეთ — წრე ბოლომდე მიდის, რომ ყველა გუნდს თანაბარი ცდა ჰქონდეს.
         </Text>

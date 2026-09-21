@@ -144,7 +144,7 @@ export class RuleCardEngine extends Observable {
 
   acceptRule(): void {
     const holder = this.holder;
-    if (this.currentCard.kind !== 'rule' || !holder) return;
+    if (this.phase !== 'card' || this.currentCard.kind !== 'rule' || !holder) return;
     this.activeRules.push({ id: uuid(), card: this.currentCard, broughtBy: holder.name, atCard: this.drawn });
     this.brought[holder.id] = (this.brought[holder.id] ?? 0) + 1;
     Haptics.success();
@@ -153,6 +153,7 @@ export class RuleCardEngine extends Observable {
   }
 
   markDone(): void {
+    if (this.phase !== 'card') return;
     Haptics.success();
     Sound.play('correct');
     this.advance();
@@ -169,6 +170,7 @@ export class RuleCardEngine extends Observable {
   }
 
   removeRule(rule: ActiveRule): void {
+    if (this.phase !== 'card' || !this.activeRules.some((r) => r.id === rule.id)) return;
     this.activeRules = this.activeRules.filter((r) => r.id !== rule.id);
     Haptics.medium();
     Sound.play('correct');
@@ -197,8 +199,8 @@ export class RuleCardEngine extends Observable {
 
   private advance(): void {
     if (this.isLastCard) {
+      // ზეიმის ჰაპტიკა შეჯამების ეკრანზეა — აქ მეორედ აღარ.
       this.phase = 'summary';
-      Haptics.win();
     } else {
       this.holderIndex += 1;
       this.nextCard();

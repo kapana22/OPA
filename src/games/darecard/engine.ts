@@ -191,8 +191,8 @@ export class DareCardEngine extends Observable {
 
   private advance(): void {
     if (this.isLastCard) {
+      // ზეიმის ჰაპტიკა შეჯამების ეკრანზეა — აქ მეორედ აღარ.
       this.phase = 'summary';
-      Haptics.win();
     } else {
       this.holderIndex += 1;
       this.nextCard();

@@ -22,8 +22,16 @@ export type HapticPattern =
 
 const ENABLED_KEY = 'splash.haptics.enabled.v1';
 
-/** ვიბრაცია ჩართულია თუ არა. ნაგულისხმევად — ჩართული. */
-let enabled = getJSON<boolean>(ENABLED_KEY, true);
+/**
+ * ვიბრაცია ჩართულია თუ არა. ნაგულისხმევად — ჩართული.
+ *
+ * ყოველ ჯერზე საცავიდან იკითხება: მოდული `hydrate()`-მდე იტვირთება, ამიტომ
+ * იმპორტისას წაკითხვა ყოველთვის `true`-ს აბრუნებდა და გამორთული ვიბრაცია
+ * აპის ხელახლა გახსნისას თავისით ირთვებოდა.
+ */
+function isOn(): boolean {
+  return getJSON<boolean>(ENABLED_KEY, true) !== false;
+}
 
 const Impact = ExpoHaptics.ImpactFeedbackStyle;
 const Notify = ExpoHaptics.NotificationFeedbackType;
@@ -39,22 +47,22 @@ function notify(type: ExpoHaptics.NotificationFeedbackType): void {
 function sequence(steps: [number, ExpoHaptics.ImpactFeedbackStyle][]): void {
   for (const [delay, style] of steps) {
     if (delay === 0) impact(style);
-    else setTimeout(() => impact(style), delay);
+    // გამორთვის შემდეგ დაგვიანებული დარტყმებიც აღარ უნდა მოვიდეს.
+    else setTimeout(() => isOn() && impact(style), delay);
   }
 }
 
 export const Haptics = {
   get isEnabled(): boolean {
-    return enabled;
+    return isOn();
   },
 
   setEnabled(value: boolean): void {
-    enabled = value;
     setJSON(ENABLED_KEY, value);
   },
 
   play(pattern: HapticPattern): void {
-    if (!enabled) return;
+    if (!isOn()) return;
     switch (pattern) {
       // ── Swift-ის `fallback` რუკა, უცვლელად
       case 'tap':

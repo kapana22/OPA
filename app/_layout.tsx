@@ -32,6 +32,8 @@ export default function RootLayout() {
               }}
             >
               <Stack.Screen name="index" />
+              {/* კიდიდან შემთხვევითი გასრიალება რაუნდს უსიტყვოდ წყვეტდა — გასვლა მხოლოდ ✕-ით, დადასტურებით. */}
+              <Stack.Screen name="game/[id]" options={{ gestureEnabled: false }} />
               <Stack.Screen
                 name="players"
                 options={{

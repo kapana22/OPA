@@ -1,6 +1,6 @@
 import { Observable } from '../../core/observable';
 import { WideningShoe } from '../../core/wideningShoe';
-import { Ticker } from '../../core/ticker';
+import { GamePause, Ticker } from '../../core/ticker';
 import { TurnRotation } from '../../core/turnRotation';
 import { TiltSensor } from '../../core/tiltSensor';
 import { Screen } from '../../core/screen';
@@ -123,6 +123,20 @@ export class CharadesEngine extends Observable {
     return best && this.scoreFor(best) > 0 ? best : null;
   }
 
+  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  get champions(): Player[] {
+    const best = this.champion;
+    if (!best) return [];
+    const top = this.scoreFor(best);
+    return this.ranking.filter((p) => this.scoreFor(p) === top);
+  }
+
+  /** სპორტული ადგილი: ერთნაირ ქულას ერთი ადგილი აქვს. */
+  rankOf(player: Player): number {
+    const score = this.scoreFor(player);
+    return 1 + this.players.filter((p) => this.scoreFor(p) > score).length;
+  }
+
   get categoryLabel(): string {
     const cat = this.settings.categoryID ? CharadesBank.category(this.settings.categoryID) : undefined;
     return cat?.name ?? 'ყველა კატეგორია';
@@ -153,6 +167,8 @@ export class CharadesEngine extends Observable {
   }
 
   beginTurn(): void {
+    // ორმაგი დაჭერა ათვლას თავიდან არ იწყებს.
+    if (this.phase !== 'turnIntro') return;
     this.results = [];
     this.flash = null;
     this.remaining = this.settings.seconds;
@@ -192,8 +208,8 @@ export class CharadesEngine extends Observable {
     this.currentWord = '';
 
     if (this.isLastTurn) {
+      // ვიბრაცია შეჯამების ეკრანზეა (`win`) — აქ მეორედ აღარ ზუზუნებს.
       this.phase = 'summary';
-      Haptics.success();
       Sound.play('correct');
     } else {
       this.turnIndex += 1;
@@ -229,13 +245,19 @@ export class CharadesEngine extends Observable {
   handleScenePhase(active: boolean): void {
     // ათვლაც ჩერდება — თორემ თამაში ფონში დაიწყებოდა და პირველი სიტყვა ჯიბეში გავიდოდა.
     if (this.phase === 'countdown') {
-      if (active) this.startCountdown();
-      else this.countdownTimer.stop();
+      if (!active) this.countdownTimer.stop();
+      else if (!this.countdownTimer.isRunning) this.startCountdown();
       return;
     }
     if (this.phase !== 'playing') return;
-    if (active) this.tilt.resume();
-    else this.tilt.pause();
+    // დროც ჩერდება — ზარის ან ფონის დროს ჯერი არ უნდა იწვებოდეს.
+    if (active) {
+      this.tilt.resume();
+      if (!this.timer.isRunning) this.startTimer();
+    } else {
+      this.tilt.pause();
+      this.timer.stop();
+    }
   }
 
   // MARK: - შიდა
@@ -243,6 +265,9 @@ export class CharadesEngine extends Observable {
   private record(verdict: CharadesVerdict): void {
     this.results.push({ id: uuid(), word: this.currentWord, verdict, isOvertime: false });
     this.flash = { id: uuid(), verdict };
+    // ტელეფონი შუბლზეა — ეკრანს ვერ ხედავს, ვიბრაცია დადასტურებაა.
+    if (verdict === 'correct') Haptics.success();
+    else Haptics.medium();
     Sound.play(verdict === 'correct' ? 'correct' : 'wrong');
     this.nextWord();
     this.notify();
@@ -290,7 +315,8 @@ export class CharadesEngine extends Observable {
 
   private startMotion(): void {
     this.tilt.start((direction) => {
-      if (this.phase !== 'playing') return;
+      // გასვლის დიალოგი ღიაა — ტელეფონი ხელშია და მისი დახრა პასუხად არ ჩაითვლება.
+      if (this.phase !== 'playing' || GamePause.isPaused) return;
       const forward: CharadesVerdict = this.settings.invertTilt ? 'skipped' : 'correct';
       const back: CharadesVerdict = this.settings.invertTilt ? 'correct' : 'skipped';
       this.record(direction === 'forward' ? forward : back);

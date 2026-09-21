@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AppState, ScrollView, Text, View } from 'react-native';
 import { Colors, body, title } from '../../theme/theme';
 import { GameExitButton, GlassCard, RulesSheet, ScreenHeader } from '../../ui/Cards';
@@ -102,6 +102,11 @@ function Clue({ engine, onExit }: Props) {
 
 function Round({ engine, onExit }: Props) {
   const phase = engine.phase;
+  // ფაზის ღილაკები ერთსა და იმავე ადგილასაა — ორმაგი შეხება შემდეგ ნაბიჯსაც
+  // დააჭერდა (მაგ. „დაფიქსირება“ → მეტოქის „მარჯვნივ“). ახალ ფაზაზე პირველ წამს ვერ დააჭერ.
+  const phaseAt = useRef({ phase, at: Date.now() });
+  if (phaseAt.current.phase !== phase) phaseAt.current = { phase, at: Date.now() };
+  const guard = (action: () => void) => () => { if (Date.now() - phaseAt.current.at >= 600) action(); };
   useEffect(() => {
     if (phase === 'result') {
       Sound.play(engine.lastPoints ? 'correct' : 'wrong');
@@ -114,36 +119,36 @@ function Round({ engine, onExit }: Props) {
     case 'pass':
       content = <><PlayerCharacter player={engine.clueGiver} /><Text style={paragraph}>გადაეცი ტელეფონი</Text>
         <Text style={heading}>{engine.clueGiver?.name}</Text><Text style={paragraph}>სამიზნეს მხოლოდ მიმანიშნებელი ხედავს. დანარჩენებმა ეკრანს არ შეხედოთ.</Text></>;
-      footer = <PrimaryButton title="ტელეფონი ჩემთანაა" onPress={() => engine.readyForClue()} />; break;
+      footer = <PrimaryButton title="ტელეფონი ჩემთანაა" onPress={guard(() => engine.readyForClue())} />; break;
     case 'handoff':
       content = <><Text style={heading}>სამიზნე დამალულია</Text><Text style={paragraph}>გადაეცი ტელეფონი თანაგუნდელებს:</Text>
         <Text style={heading}>{engine.guessers.map(p => p.name).join(' · ')}</Text>
         <Text style={paragraph}>{engine.clueGiver?.name}, მინიშნების შემდეგ აღარ დაეხმარო.</Text></>;
-      footer = <PrimaryButton title="ტელეფონი ჩვენთანაა" onPress={() => engine.readyToGuess()} />; break;
+      footer = <PrimaryButton title="ტელეფონი ჩვენთანაა" onPress={guard(() => engine.readyToGuess())} />; break;
     case 'guess':
       content = <><TeamScores engine={engine} /><Text style={heading}>სად ჯდება მინიშნება?</Text>
         <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} interactive onValueChange={v => engine.setGuess(v)} /></GlassCard>
         <Text style={paragraph}>იმსჯელეთ თანაგუნდელებმა და თითით მოატრიალეთ ისარი შეთანხმებულ ადგილზე.</Text></>;
-      footer = <PrimaryButton title="დაფიქსირება" onPress={() => engine.lockGuess()} />; break;
+      footer = <PrimaryButton title="დაფიქსირება" onPress={guard(() => engine.lockGuess())} />; break;
     case 'side':
       content = <><Text style={heading}>{engine.teamName(engine.otherTeam)} — თქვენი ვარაუდი</Text>
         <Text style={paragraph}>ტელეფონი მეტოქე გუნდს გადაეცით. სამიზნის ცენტრი დაფიქსირებული ისრის მარცხნივაა თუ მარჯვნივ?</Text>
         <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} /></GlassCard>
         <Text style={paragraph}>სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.</Text></>;
-      footer = <><PrimaryButton title="ისრის მარცხნივ" onPress={() => engine.chooseSide('left')} />
-        <PrimaryButton title="ისრის მარჯვნივ" tint={Colors.softLavender} onPress={() => engine.chooseSide('right')} /></>; break;
+      footer = <><PrimaryButton title="ისრის მარცხნივ" onPress={guard(() => engine.chooseSide('left'))} />
+        <PrimaryButton title="ისრის მარჯვნივ" tint={Colors.softLavender} onPress={guard(() => engine.chooseSide('right'))} /></>; break;
     case 'locked':
       content = <><Text style={heading}>ორივე პასუხი დაფიქსირებულია</Text>
         <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} /></GlassCard>
         <Text style={paragraph}>ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.</Text></>;
-      footer = <PrimaryButton title="გამოაჩინე სამიზნე" onPress={() => engine.reveal()} />; break;
+      footer = <PrimaryButton title="გამოაჩინე სამიზნე" onPress={guard(() => engine.reveal())} />; break;
     case 'result':
       content = <><Text style={heading}>{engine.teamName(engine.activeTeam)} +{engine.lastPoints} · {engine.teamName(engine.otherTeam)} +{engine.otherPoints}</Text>
         <TeamScores engine={engine} /><GlassCard><SpectrumBar spectrum={engine.spectrum} target={engine.target} guess={engine.guess} showBands /></GlassCard>
         <BandScoreLegend /><Text style={paragraph}>მეტოქის ვარაუდი: {engine.sideGuess === 'left' ? 'მარცხნივ' : 'მარჯვნივ'} · {engine.lastPoints === 4 ? '4 ქულაზე მეტოქე ქულას ვერ იღებს' : engine.otherPoints ? 'სწორია!' : 'არ დაემთხვა'}</Text>
         {engine.catchUp && <Text style={paragraph}>4 ქულა და ჯერ კიდევ ჩამორჩებით — კიდევ თქვენი სვლაა, ახალი მიმანიშნებლით!</Text>}
         {engine.tiebreak && engine.winner === null && <Text style={paragraph}>დამატებითი სვლები — ორივე გუნდი კიდევ ერთხელ თამაშობს.</Text>}</>;
-      footer = <PrimaryButton title={engine.winner !== null ? 'შედეგები' : engine.catchUp ? 'კიდევ ჩვენი სვლა' : 'შემდეგი გუნდი'} onPress={() => engine.next()} />; break;
+      footer = <PrimaryButton title={engine.winner !== null ? 'შედეგები' : engine.catchUp ? 'კიდევ ჩვენი სვლა' : 'შემდეგი გუნდი'} onPress={guard(() => engine.next())} />; break;
     default: return null;
   }
   return <Frame engine={engine} onExit={onExit} footer={footer}>{content}</Frame>;

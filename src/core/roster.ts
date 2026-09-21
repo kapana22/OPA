@@ -40,11 +40,13 @@ export class Roster extends Observable {
     return this._players.map((p) => p.name);
   }
 
-  add(name: string, gender?: PlayerGender): void {
+  /** ემატება თუ არა — ეკრანი უარს ჩუმად არ უნდა ყლაპავდეს. */
+  add(name: string, gender?: PlayerGender): 'added' | 'empty' | 'full' | 'duplicate' {
     const trimmed = name.trim();
-    if (!trimmed || this._players.length >= MAX_PLAYERS) return;
+    if (!trimmed) return 'empty';
+    if (this._players.length >= MAX_PLAYERS) return 'full';
     // რეგისტრის მიუხედავად დუბლიკატი არ ჩაემატება (Swift: caseInsensitiveCompare).
-    if (this._players.some((p) => p.name.toLowerCase() === trimmed.toLowerCase())) return;
+    if (this.hasName(trimmed)) return 'duplicate';
     const resolvedGender = gender ?? guessGender(trimmed);
     const used = new Set(this._players.map(p => p.characterID!).filter(isCharacterID));
     this._players.push({
@@ -54,6 +56,29 @@ export class Roster extends Observable {
       gender: resolvedGender,
       characterID: availableCharacter(used, resolvedGender),
     });
+    this.save();
+    return 'added';
+  }
+
+  /** სახელი უკვე სიაშია? რეგისტრის მიუხედავად; `exceptID` — გადარქმევისას თავად ის. */
+  hasName(name: string, exceptID?: string): boolean {
+    const key = name.trim().toLowerCase();
+    return this._players.some((p) => p.id !== exceptID && p.name.toLowerCase() === key);
+  }
+
+  /**
+   * წაშლილის დაბრუნება („დაბრუნება“ ღილაკი). ქულა და პერსონაჟი ნარჩუნდება;
+   * თუ პერსონაჟი ამასობაში სხვამ დაიკავა, თავისუფალს მიიღებს.
+   */
+  restore(player: Player, index: number): void {
+    if (this._players.length >= MAX_PLAYERS) return;
+    if (this._players.some((p) => p.id === player.id) || this.hasName(player.name)) return;
+    const used = new Set(this._players.map((p) => p.characterID!).filter(isCharacterID));
+    const restored = { ...player };
+    if (!isCharacterID(restored.characterID) || used.has(restored.characterID)) {
+      restored.characterID = availableCharacter(used, restored.gender ?? guessGender(restored.name));
+    }
+    this._players.splice(Math.max(0, Math.min(index, this._players.length)), 0, restored);
     this.save();
   }
 
@@ -80,14 +105,17 @@ export class Roster extends Observable {
     this.save();
   }
 
-  rename(id: string, newName: string): void {
+  /** `false` — სახელი ცარიელია ან სხვას უკავია. */
+  rename(id: string, newName: string): boolean {
     const p = this._players.find((x) => x.id === id);
-    if (!p) return;
+    if (!p) return false;
     const trimmed = newName.trim();
-    if (!trimmed || trimmed === p.name) return;
-    if (this._players.some((other) => other.id !== id && other.name.toLowerCase() === trimmed.toLowerCase())) return;
+    if (!trimmed) return false;
+    if (trimmed === p.name) return true;
+    if (this.hasName(trimmed, id)) return false;
     p.name = trimmed;
     this.save();
+    return true;
   }
 
   /** Choosing an occupied character swaps the two assignments, never duplicates. */

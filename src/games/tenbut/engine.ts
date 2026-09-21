@@ -158,6 +158,8 @@ export class TenButEngine extends Observable {
   }
 
   submit(value: number): void {
+    // ფაზის გარეთ არაფერი — თორემ ბოლო პასუხის ორმაგი დაჭერა რაუნდს ორჯერ ითვლიდა.
+    if (this.phase !== 'rating') return;
     const clamped = Math.min(Math.max(0, Math.round(value)), 10);
 
     if (this.targetScore === null) {

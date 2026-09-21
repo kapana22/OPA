@@ -4,6 +4,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont, toTT, glow } from '../theme/theme';
 import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
+import { GamePause } from '../core/ticker';
 import { Sound } from '../core/sound';
 import { Pressable } from './Pressable';
 import { GhostButton } from './Buttons';
@@ -145,9 +146,12 @@ export function GameExitButton({ onExit }: { onExit: () => void }) {
       accessibilityLabel="თამაშიდან გასვლა"
       onPress={() => {
         Haptics.tap();
+        // სანამ წყვეტენ, რაუნდი არ უნდა ჩაიწვას დიალოგის უკან.
+        GamePause.hold('exit-dialog');
         dialog({
           title: 'თამაშიდან გასვლა?',
           message: 'მიმდინარე რაუნდი დაიკარგება.',
+          onClose: () => GamePause.release('exit-dialog'),
           actions: [
             { label: 'გაგრძელება' },
             {

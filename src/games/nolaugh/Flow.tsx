@@ -272,6 +272,13 @@ function Round({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void }
 function Result({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void }) {
   const survived = engine.verdict === 'survived';
 
+  // Swift-ის `onAppear`: დრო რომ ამოიწურება, მაგიდამ უნდა იგრძნოს — ადრე ჩუმად გადადიოდა.
+  useEffect(() => {
+    if (survived) Haptics.success();
+    else Haptics.warning();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <View style={{ flex: 1, gap: 14 }}>
       <View style={Layout.exitSlot}>

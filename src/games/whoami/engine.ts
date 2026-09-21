@@ -1,6 +1,6 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
-import { Ticker } from '../../core/ticker';
+import { GamePause, Ticker } from '../../core/ticker';
 import { TurnRotation } from '../../core/turnRotation';
 import { TiltSensor } from '../../core/tiltSensor';
 import { Screen } from '../../core/screen';
@@ -122,6 +122,20 @@ export class WhoAmIEngine extends Observable {
     return best && this.scoreFor(best) > 0 ? best : null;
   }
 
+  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  get champions(): Player[] {
+    const best = this.champion;
+    if (!best) return [];
+    const top = this.scoreFor(best);
+    return this.ranking.filter((p) => this.scoreFor(p) === top);
+  }
+
+  /** სპორტული ადგილი: ერთნაირ ქულას ერთი ადგილი აქვს. */
+  rankOf(player: Player): number {
+    const score = this.scoreFor(player);
+    return 1 + this.players.filter((p) => this.scoreFor(p) > score).length;
+  }
+
   get categoryLabel(): string {
     const cat = this.settings.categoryID ? IdentityBank.category(this.settings.categoryID) : undefined;
     return cat?.name ?? 'ყველა კატეგორია';
@@ -149,6 +163,8 @@ export class WhoAmIEngine extends Observable {
   }
 
   beginTurn(): void {
+    // ორმაგი დაჭერა ათვლას თავიდან არ იწყებს.
+    if (this.phase !== 'turnIntro') return;
     this.results = [];
     this.flash = null;
     this.remaining = this.settings.seconds;
@@ -186,8 +202,8 @@ export class WhoAmIEngine extends Observable {
     this.currentIdentity = '';
 
     if (this.isLastTurn) {
+      // ვიბრაცია შეჯამების ეკრანზეა (`win`) — აქ მეორედ აღარ ზუზუნებს.
       this.phase = 'summary';
-      Haptics.success();
       Sound.play('correct');
     } else {
       this.turnIndex += 1;
@@ -220,13 +236,19 @@ export class WhoAmIEngine extends Observable {
   handleScenePhase(active: boolean): void {
     // ათვლაც ჩერდება — თორემ თამაში ფონში დაიწყებოდა და პირველი სიტყვა ჯიბეში გავიდოდა.
     if (this.phase === 'countdown') {
-      if (active) this.startCountdown();
-      else this.countdownTimer.stop();
+      if (!active) this.countdownTimer.stop();
+      else if (!this.countdownTimer.isRunning) this.startCountdown();
       return;
     }
     if (this.phase !== 'playing') return;
-    if (active) this.tilt.resume();
-    else this.tilt.pause();
+    // დროც ჩერდება — ზარის ან ფონის დროს ჯერი არ უნდა იწვებოდეს.
+    if (active) {
+      this.tilt.resume();
+      if (!this.timer.isRunning) this.startTimer();
+    } else {
+      this.tilt.pause();
+      this.timer.stop();
+    }
   }
 
   // MARK: - შიდა
@@ -236,6 +258,8 @@ export class WhoAmIEngine extends Observable {
     this.flash = { id: uuid(), verdict };
     // ტელეფონი შუბლზეა — მფლობელი ეკრანს ვერ ხედავს, ხმა და ვიბრაცია
     // მისთვის ერთადერთი დადასტურებაა, რომ პასუხი ჩაეთვალა.
+    if (verdict === 'guessed') Haptics.success();
+    else Haptics.medium();
     Sound.play(verdict === 'guessed' ? 'correct' : 'wrong');
     this.nextIdentity();
     this.notify();
@@ -246,6 +270,7 @@ export class WhoAmIEngine extends Observable {
       if (this.countdown > 1) {
         this.countdown -= 1;
         Haptics.tap();
+        Sound.play('tick');
         this.notify();
       } else {
         this.countdownTimer.stop();
@@ -282,7 +307,8 @@ export class WhoAmIEngine extends Observable {
 
   private startMotion(): void {
     this.tilt.start((direction) => {
-      if (this.phase !== 'playing') return;
+      // გასვლის დიალოგი ღიაა — ტელეფონი ხელშია და მისი დახრა პასუხად არ ჩაითვლება.
+      if (this.phase !== 'playing' || GamePause.isPaused) return;
       const forward: WhoAmIVerdict = this.settings.invertTilt ? 'passed' : 'guessed';
       const back: WhoAmIVerdict = this.settings.invertTilt ? 'guessed' : 'passed';
       this.record(direction === 'forward' ? forward : back);

@@ -189,6 +189,15 @@ export class AliasEngine extends Observable {
     return scores.filter((s) => s === best).length === 1;
   }
 
+  /** წრის ბოლო ჯერია, ზღვარი გადალახულია, მაგრამ ლიდერები თანაბრად არიან — დამატებითი წრე. */
+  get turnEndsInTie(): boolean {
+    if (!this.isLastTurnOfLap || !this.teams[this.activeTeamIndex]) return false;
+    const scores = this.teams.map((t) => t.score);
+    scores[this.activeTeamIndex] += this.turnScore;
+    const best = Math.max(...scores);
+    return best >= this.settings.target && scores.filter((s) => s === best).length > 1;
+  }
+
   get categoryLabel(): string {
     const cat = this.settings.categoryID ? CharadesBank.category(this.settings.categoryID) : undefined;
     return cat?.name ?? 'ყველა კატეგორია';
@@ -232,8 +241,12 @@ export class AliasEngine extends Observable {
     const from = this.teams.findIndex((t) => t.memberIDs.includes(id));
     if (from === -1) return;
 
-    this.teams[from].memberIDs = this.teams[from].memberIDs.filter((x) => x !== id);
-    if (this.teams[from].explainerIndex >= this.teams[from].memberIDs.length) this.teams[from].explainerIndex = 0;
+    const source = this.teams[from];
+    const removedAt = source.memberIDs.indexOf(id);
+    source.memberIDs = source.memberIDs.filter((x) => x !== id);
+    // წინა ადგილიდან წასვლისას რიგი ერთით იწევს — თორემ ვიღაცის ჯერი გამოტოვდება.
+    if (removedAt < source.explainerIndex) source.explainerIndex -= 1;
+    if (source.explainerIndex >= source.memberIDs.length) source.explainerIndex = 0;
 
     const to = (from + 1) % this.teams.length;
     this.teams[to].memberIDs.push(id);
@@ -296,6 +309,8 @@ export class AliasEngine extends Observable {
   }
 
   beginTurn(): void {
+    // ორმაგი დაჭერა ათვლას თავიდან არ იწყებს.
+    if (this.phase !== 'turnIntro') return;
     this.results = [];
     this.flash = null;
     this.remaining = this.settings.seconds;
@@ -347,8 +362,8 @@ export class AliasEngine extends Observable {
         const leaders = this.teams.filter((t) => t.score === best);
         if (leaders.length === 1) {
           this.winnerTeamID = leaders[0].id;
+          // ვიბრაცია გამარჯვების ეკრანზეა (`win`) — აქ მეორედ აღარ ზუზუნებს.
           this.phase = 'winner';
-          Haptics.success();
           Sound.play('correct');
           this.notify();
           return;

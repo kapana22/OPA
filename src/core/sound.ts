@@ -30,8 +30,10 @@ const ENABLED_KEY = 'splash.sound.enabled.v1';
 
 let players: Partial<Record<SoundEffect, AudioPlayer>> = {};
 let prepared = false;
-/** ხმა ჩართულია თუ არა. ნაგულისხმევად — ჩართული. */
-let enabled = getJSON<boolean>(ENABLED_KEY, true);
+/** ხმა ჩართულია თუ არა. ნაგულისხმევად — ჩართული. ყოველ ჯერზე იკითხება — იხ. `haptics.ts`. */
+function isOn(): boolean {
+  return getJSON<boolean>(ENABLED_KEY, true) !== false;
+}
 
 function prepareIfNeeded(): void {
   if (prepared) return;
@@ -70,17 +72,16 @@ function prepareIfNeeded(): void {
 
 export const Sound = {
   get isEnabled(): boolean {
-    return enabled;
+    return isOn();
   },
 
   setEnabled(value: boolean): void {
-    enabled = value;
     setJSON(ENABLED_KEY, value);
     if (!value) Sound.stop();
   },
 
   play(effect: SoundEffect): void {
-    if (!enabled) return;
+    if (!isOn()) return;
     prepareIfNeeded();
     const player = players[effect];
     if (!player) return;
@@ -115,6 +116,8 @@ export const Sound = {
     for (const player of Object.values(players)) {
       try {
         player?.pause();
+        // თორემ შემდეგი `play()` შეჩერებული ადგილიდან, ბგერის შუიდან გაგრძელდებოდა.
+        void player?.seekTo(0).catch(() => {});
       } catch {
         /* ignore */
       }

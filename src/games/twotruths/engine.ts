@@ -155,6 +155,7 @@ export class TwoTruthsEngine extends Observable {
   }
 
   beginWriting(): void {
+    if (this.phase !== 'writeHandoff') return;
     this.phase = 'write';
     this.notify();
   }
@@ -164,10 +165,11 @@ export class TwoTruthsEngine extends Observable {
     this.notify();
   }
 
-  submit(written: string[], lie: number): void {
+  /** მიღებულია თუ არა — უარისას ეკრანმა დაწერილი არ უნდა წაშალოს. */
+  submit(written: string[], lie: number): boolean {
+    if (this.phase !== 'write') return false;
+    if (!TwoTruthsEngine.isValid(written, lie)) return false;
     const cleaned = written.map((s) => s.trim());
-    if (cleaned.length !== 3 || cleaned.some((s) => !s) || lie < 0 || lie > 2) return;
-    if (new Set(cleaned).size !== 3) return;   // ერთნაირ ამბებში ტყუილი ვერ იმალება
 
     this.statements = cleaned;
     this.lieIndex = lie;
@@ -183,14 +185,25 @@ export class TwoTruthsEngine extends Observable {
       this.phase = 'guessHandoff';
     }
     this.notify();
+    return true;
+  }
+
+  /** სამი შევსებული, ერთმანეთისგან განსხვავებული ამბავი და მონიშნული ტყუილი. */
+  static isValid(written: string[], lie: number | null): boolean {
+    const cleaned = written.map((s) => s.trim());
+    if (lie === null || cleaned.length !== 3 || cleaned.some((s) => !s) || lie < 0 || lie > 2) return false;
+    return new Set(cleaned).size === 3;   // ერთნაირ ამბებში ტყუილი ვერ იმალება
   }
 
   beginGuessing(): void {
+    if (this.phase !== 'guessHandoff') return;
     this.phase = 'guess';
     this.notify();
   }
 
   castGuess(position: number): void {
+    // ორმაგი შეხება ბოლო გამომცნობზე ქულას ორჯერ დაარიცხავდა.
+    if (this.phase !== 'guess' || position < 0 || position > 2) return;
     const guesser = this.currentGuesser;
     if (!guesser) return;
     this.guesses[guesser.id] = this.writtenIndexAt(position);
@@ -206,6 +219,7 @@ export class TwoTruthsEngine extends Observable {
   }
 
   next(): void {
+    if (this.phase !== 'result') return;
     if (this.isLastTurn) {
       this.phase = 'summary';
       this.notify();

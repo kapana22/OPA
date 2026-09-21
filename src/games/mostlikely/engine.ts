@@ -111,6 +111,7 @@ export class MostLikelyEngine extends Observable {
   }
 
   beginVoting(): void {
+    if (this.phase !== 'prompt') return;
     this.votes = {};
     this.voterIndex = 0;
     this.tally = {};
@@ -121,6 +122,8 @@ export class MostLikelyEngine extends Observable {
 
   /** სწრაფი რეჟიმი — ჯგუფმა ერთად აირჩია. */
   pick(player: Player): void {
+    // ორმაგი შეხება ქულას ორჯერ დაარიცხავდა.
+    if (this.phase !== 'voting' || !this.player(player.id)) return;
     this.tally = { [player.id]: 1 };
     this.roundWinners = [player.id];
     this.award();
@@ -130,6 +133,7 @@ export class MostLikelyEngine extends Observable {
 
   /** ფარული რეჟიმი — მიმდინარე მოთამაშემ ხმა მისცა. */
   castVote(target: Player): void {
+    if (this.phase !== 'voting' || !this.player(target.id)) return;
     const voter = this.currentVoter;
     if (!voter) return;
     this.votes[voter.id] = target.id;
@@ -149,6 +153,7 @@ export class MostLikelyEngine extends Observable {
 
   /** შემდეგი კითხვა; თუ რაუნდები ამოიწურა — შედეგი. */
   next(): void {
+    if (this.phase !== 'result') return;
     if (this.round >= this.settings.rounds) {
       this.phase = 'summary';
       this.notify();
@@ -160,6 +165,7 @@ export class MostLikelyEngine extends Observable {
 
   /** კითხვა არ მოგვწონს — ვცვლით რაუნდის დახარჯვის გარეშე. */
   skipPrompt(): void {
+    if (this.phase !== 'prompt') return;
     this.loadPrompt();
   }
 

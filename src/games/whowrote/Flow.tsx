@@ -1,6 +1,6 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
@@ -262,8 +262,9 @@ function Composer({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => vo
     setText(value.replace(/\n/g, ' ').slice(0, limit));
   };
 
+  // კლავიატურა „მზადაა“-ს არ უნდა ფარავდეს.
   return (
-    <View style={{ flex: 1 }}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(15, '700'), { color: Colors.phosphor }]} numberOfLines={1}>
@@ -325,7 +326,7 @@ function Composer({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => vo
           }}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

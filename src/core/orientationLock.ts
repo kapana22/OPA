@@ -41,13 +41,21 @@ export function useLandscapeOnly(): void {
   }, []);
 }
 
-/** ეკრანი არ ჩაქრება — ტაიმერიან თამაშებში აუცილებელია. */
+let nextTag = 0;
+
+/**
+ * ეკრანი არ ჩაქრება — ტაიმერიან თამაშებში აუცილებელია.
+ *
+ * ყოველ გამოძახებას თავისი ტეგი აქვს, რომ ერთის მოხსნამ (მაგ. შიდა ეკრანის
+ * დახურვამ) თამაშის მასპინძლის მოთხოვნა არ გააუქმოს.
+ */
 export function useKeepScreenAwake(): void {
   useEffect(() => {
-    void activateKeepAwakeAsync().catch(() => {});
+    const tag = `opa.screen.${nextTag++}`;
+    void activateKeepAwakeAsync(tag).catch(() => {});
     return () => {
       try {
-        deactivateKeepAwake();
+        deactivateKeepAwake(tag);
       } catch {
         /* ignore */
       }

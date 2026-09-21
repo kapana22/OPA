@@ -1,6 +1,6 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
@@ -213,7 +213,8 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
   const [lie, setLie] = useState<number | null>(null);
 
   const trimmed = texts.map((t) => t.trim());
-  const canSubmit = lie !== null && trimmed.every((t) => t.length > 0);
+  // ძრავი ერთნაირ ამბებს არ იღებს — ღილაკიც იმავე წესით უნდა ირთვებოდეს.
+  const canSubmit = TwoTruthsEngine.isValid(trimmed, lie);
 
   const change = (index: number, value: string) => {
     setTexts((prev) => {
@@ -224,7 +225,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <View style={{ gap: 1 }}>
@@ -242,6 +243,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14, paddingBottom: 20, gap: 12 }}
         keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
       >
         {engine.settings.showHints ? (
           <GlassCard padding={16}>
@@ -348,15 +350,14 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
           tint={Colors.neonMagenta}
           enabled={canSubmit}
           onPress={() => {
-            if (lie === null) return;
-            engine.submit(trimmed, lie);
+            if (lie === null || !engine.submit(trimmed, lie)) return;
             setTexts(['', '', '']);
             setLie(null);
             Haptics.success();
           }}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, cancelAnimation, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Ellipse, Path, Rect } from 'react-native-svg';
 import { Colors, body } from '../theme/theme';
 import { Haptics } from '../core/haptics';
@@ -47,6 +47,8 @@ export function BottleSpinner({
         runOnJS(onFinish)();
       }
     });
+    // ტრიალის შუაში გასვლისას ვიბრაცია და `onFinish` უკვე დახურულ ეკრანს აღარ უნდა მისწვდეს.
+    return () => cancelAnimation(angle);
     // ერთხელ, ამ ჯერზე — თავიდან ტრიალი ახალ `key`-ზე ხდება.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -12,6 +12,23 @@ import { Pressable } from './Pressable';
  * თორემ სიმბოლოს სახელსაც დაამატებდა.
  */
 
+/**
+ * ორმაგი დაჭერის დაცვა — **ყველა** ღილაკზე საერთო.
+ *
+ * შემდეგი ეკრანის ღილაკი ხშირად იმავე ადგილას ჩნდება, ამიტომ სწრაფი მეორე
+ * შეხება უკვე **ახალ** ღილაკზე ეცემოდა: შემდეგი მოთამაშის ფარული ეკრანი
+ * იხსნებოდა, ბარათი წაუკითხავად მიიღებოდა, რაუნდი გამოტოვდებოდა. ძრავის ფაზის
+ * შემოწმება ამას ვერ იჭერს — მეორე დაჭერა უკვე სწორ ფაზაშია.
+ */
+const PRESS_GUARD_MS = 400;
+let lastPressAt = 0;
+function acceptPress(): boolean {
+  const now = Date.now();
+  if (now - lastPressAt < PRESS_GUARD_MS) return false;
+  lastPressAt = now;
+  return true;
+}
+
 export function PrimaryButton({
   title,
   icon,
@@ -32,7 +49,7 @@ export function PrimaryButton({
       accessibilityState={{ disabled: !enabled }}
       disabled={!enabled}
       onPress={() => {
-        if (!enabled) return;
+        if (!enabled || !acceptPress()) return;
         Haptics.medium();
         onPress();
       }}
@@ -63,6 +80,7 @@ export function GhostButton({ title, icon, onPress }: { title: string; icon?: st
       accessibilityRole="button"
       accessibilityLabel={title}
       onPress={() => {
+        if (!acceptPress()) return;
         Haptics.tap();
         onPress();
       }}

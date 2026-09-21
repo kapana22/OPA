@@ -110,6 +110,7 @@ export class PointOneEngine extends Observable {
   }
 
   begin(): void {
+    if (this.phase !== 'round' || this.stage !== 'ready') return;
     if (!this.settings.useCountdown) {
       this.stage = 'tally';
       Haptics.heavy();
@@ -136,6 +137,7 @@ export class PointOneEngine extends Observable {
   }
 
   toggle(player: Player): void {
+    if (this.phase !== 'round' || this.stage === 'ready') return;
     if (this.picked.has(player.id)) {
       this.picked.delete(player.id);
       Haptics.tap();
@@ -147,6 +149,9 @@ export class PointOneEngine extends Observable {
   }
 
   next(): void {
+    // ორმაგი შეხება: ბოლო რაუნდის ქულები ორჯერ ირიცხებოდა, შუაში კი რაუნდი ხტებოდა.
+    if (this.phase !== 'round' || this.stage === 'ready') return;
+    this.ticker.stop();
     for (const id of this.picked) this.totals[id] = (this.totals[id] ?? 0) + 1;
     if (this.isLastRound) {
       this.phase = 'summary';
@@ -158,6 +163,8 @@ export class PointOneEngine extends Observable {
   }
 
   skipRound(): void {
+    if (this.phase !== 'round' || this.stage === 'ready') return;
+    this.ticker.stop();
     this.picked = new Set();
     if (this.isLastRound) {
       this.phase = 'summary';
@@ -169,6 +176,7 @@ export class PointOneEngine extends Observable {
   }
 
   swapQuestion(): void {
+    if (this.phase !== 'round' || this.stage !== 'ready') return;
     this.loadQuestion();
     Haptics.tap();
     this.notify();

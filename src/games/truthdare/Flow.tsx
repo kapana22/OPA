@@ -13,6 +13,7 @@ import { useKeepScreenAwake } from '../../core/orientationLock';
 import { heatName, heatNote, type TruthDareHeat } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
+import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
@@ -253,10 +254,8 @@ function ChoiceButton({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${title}. ${subtitle}`}
-      onPress={() => {
-        Haptics.medium();
-        onPress();
-      }}
+      // ვიბრაციას `engine.pick()` თვითონ იძლევა — აქ მეორე ზედმეტი იყო.
+      onPress={onPress}
       style={[styles.choice, { borderColor: tint + '59' }]}
     >
       <MaterialCommunityIcons name={sf(icon)} size={22} color={tint} style={{ width: 30 }} />
@@ -359,6 +358,7 @@ function Summary({
 
   useAwardOnce(() => {
     PodiumAward.apply(engine.results, roster);
+    Sound.play('win');
     Haptics.success();
   });
 

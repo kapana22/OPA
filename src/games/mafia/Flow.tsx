@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
@@ -157,6 +157,9 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
   // ახალი მოთამაშე = ახალი კომპონენტი (`key={nightIndex}`) — ტელეფონი ისევ
   // უნდა გადაეცეს, წინა როლი კი ერთი კადრითაც არ უნდა გამოჩნდეს.
   const [ready, setReady] = useState(false);
+  // „გადავეცი“/„დავიმახსოვრე“ იმავე ადგილასაა, სადაც „მე ვარ“ — ორმაგი შეხება
+  // წინა მოთამაშეს შემდეგის როლს აჩვენებდა. ახალ ეკრანზე პირველ წამს ვერ დააჭერ.
+  const mountedAt = useRef(Date.now());
   const player = engine.currentNightPlayer;
   const role = player ? engine.roleOf(player) : 'civilian';
 
@@ -197,7 +200,10 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
             title="მე ვარ — გავაგრძელოთ"
             icon="chevron.right"
             tint={Colors.neonCyan}
-            onPress={() => setReady(true)}
+            onPress={() => {
+              if (Date.now() - mountedAt.current < 700) return;
+              setReady(true);
+            }}
           />
         </View>
       </View>

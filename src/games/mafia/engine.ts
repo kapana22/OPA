@@ -246,6 +246,7 @@ export class MafiaEngine extends Observable {
   }
 
   continueGame(): void {
+    if (this.phase !== 'dayResult') return;
     this.settleOrContinue(() => {
       this.night += 1;
       this.beginNight();

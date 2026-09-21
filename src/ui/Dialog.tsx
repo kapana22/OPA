@@ -29,6 +29,8 @@ interface DialogRequest {
   actions: DialogAction[];
   /** ტექსტის ველი — თუ მოცემულია, დიალოგი შეკითხვაა. */
   input?: { placeholder?: string; initial?: string };
+  /** ნებისმიერი გზით დახურვისას — ღილაკით, ფონზე შეხებით თუ „უკან“-ით. */
+  onClose?: () => void;
 }
 
 type Show = (request: DialogRequest) => void;
@@ -44,7 +46,12 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
     setRequest(next);
   }, []);
 
-  const close = useCallback(() => setRequest(null), []);
+  const close = useCallback(() => {
+    setRequest((current) => {
+      current?.onClose?.();
+      return null;
+    });
+  }, []);
 
   const api = useMemo(() => show, [show]);
 

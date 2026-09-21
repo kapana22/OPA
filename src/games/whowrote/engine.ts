@@ -134,11 +134,13 @@ export class WhoWroteEngine extends Observable {
   }
 
   skipPrompt(): void {
+    if (this.phase !== 'intro') return;
     this.loadPrompt();
     this.notify();
   }
 
   beginWriting(): void {
+    if (this.phase !== 'intro') return;
     this.writerIndex = 0;
     this.stage = 'handoff';
     this.phase = 'write';
@@ -147,11 +149,14 @@ export class WhoWroteEngine extends Observable {
 
   /** ტელეფონი გადავიდა — ეკრანი იხსნება. */
   revealScreen(): void {
+    if (this.phase !== 'write' && this.phase !== 'guess') return;
     this.stage = 'active';
     this.notify();
   }
 
   submitAnswer(text: string): boolean {
+    // ორმაგი შეხება: მეორე დაჭერა შემდეგი მწერლის სახელით აღარ უნდა ჩაიწეროს.
+    if (this.phase !== 'write' || this.stage !== 'active') return false;
     const trimmed = text.trim();
     const writer = this.currentWriter;
     if (!writer || !trimmed) return false;
@@ -172,6 +177,7 @@ export class WhoWroteEngine extends Observable {
   }
 
   beginGuessing(): void {
+    if (this.phase !== 'reading') return;
     this.guesserIndex = 0;
     this.stage = 'handoff';
     this.phase = 'guess';
@@ -179,8 +185,10 @@ export class WhoWroteEngine extends Observable {
   }
 
   submitGuess(target: Player): void {
+    // ორმაგი შეხება ბოლო გამომცნობზე რაუნდს ორჯერ დაითვლიდა.
+    if (this.phase !== 'guess' || this.stage !== 'active') return;
     const guesser = this.currentGuesser;
-    if (!guesser) return;
+    if (!guesser || target.id === guesser.id || !this.player(target.id)) return;
     this.guesses[guesser.id] = target.id;
 
     if (this.guesserIndex + 1 < this.players.length) {
@@ -193,6 +201,7 @@ export class WhoWroteEngine extends Observable {
   }
 
   next(): void {
+    if (this.phase !== 'result') return;
     if (this.isLastRound) {
       this.phase = 'summary';
       this.notify();

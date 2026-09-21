@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
+import { GamePause } from '../core/ticker';
 import { Haptics } from '../core/haptics';
 import { PrimaryButton, GhostButton } from './Buttons';
 import { GlassCard, GameExitButton } from './Cards';
@@ -46,11 +47,14 @@ export function DiscussionPanel({
   useEffect(() => {
     if (!hasTimer || !running) return;
     const handle = setInterval(() => {
-      if (remainingRef.current <= 0) return;
+      if (remainingRef.current <= 0 || GamePause.isPaused) return;
       remainingRef.current -= 1;
       setRemaining(remainingRef.current);
-      if (remainingRef.current === 0) Haptics.error();
-      else if (remainingRef.current <= 5) Haptics.tap();
+      if (remainingRef.current === 0) {
+        Haptics.error();
+        // ნულზე ათვლა დასრულდა — ინტერვალი ტყუილად აღარ უნდა ტრიალებდეს.
+        clearInterval(handle);
+      } else if (remainingRef.current <= 5) Haptics.tap();
     }, 1000);
     return () => clearInterval(handle);
   }, [hasTimer, running]);

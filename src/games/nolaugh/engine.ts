@@ -113,6 +113,7 @@ export class NoLaughEngine extends Observable {
   }
 
   beginRound(): void {
+    if (this.phase !== 'announce') return;
     this.tasksThisRound = 1;
     this.remaining = this.settings.seconds;
     this.isPaused = false;
@@ -148,6 +149,8 @@ export class NoLaughEngine extends Observable {
   }
 
   next(): void {
+    // ორმაგი შეხება რაუნდს არ უნდა გამოტოვებდეს — თორემ ვიღაცას ჯერი არ ხვდება.
+    if (this.phase !== 'result') return;
     if (this.isLastRound) {
       this.phase = 'summary';
     } else {

@@ -174,6 +174,8 @@ export class StandardsEngine extends Observable {
   }
 
   cast(verdict: StandardsVerdict, predicted: number | null = null): void {
+    // ფაზის გარეთ ხმა არ მიიღება — თორემ ბოლო ხმის ორმაგი დაჭერა რაუნდს ორჯერ ითვლიდა.
+    if (this.phase !== 'voting') return;
     const voter = this.currentVoter;
     if (!voter) return;
     this.verdicts[voter.id] = verdict;

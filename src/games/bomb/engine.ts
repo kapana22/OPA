@@ -93,6 +93,8 @@ export class BombEngine extends Observable {
   }
 
   continueGame(): void {
+    // ორმაგი შეხება რაუნდს ორჯერ არ უნდა გადაახტეს.
+    if (this.phase !== 'exploded') return;
     const survivors = this.alive;
     if (survivors.length <= 1) {
       this.winner = survivors[0] ?? null;
@@ -101,7 +103,9 @@ export class BombEngine extends Observable {
       return;
     }
     this.round += 1;
-    this.currentIndex = 0;
+    // ახალ რაუნდს აფეთქებულის ადგილიდან ვიწყებთ: გადარჩა — თვითონ იწყებს,
+    // გავარდა — მისი მომდევნო. ადრე ყოველთვის სიის პირველი იწყებდა.
+    this.currentIndex = this.currentIndex % survivors.length;
     this.armFuse();
   }
 
@@ -143,8 +147,14 @@ export class BombEngine extends Observable {
   }
 
   private startTicker(): void {
+    let last = Date.now();
     this.ticker.start(0.05, () => {
-      this.elapsed += 0.05;
+      // ნამდვილი გასული დრო: `setInterval` ხშირად აგვიანებს და 0.05-ის მიმატებით
+      // ფითილი დაყენებულზე გრძელი გამოდიოდა. ზედა ზღვარი — პაუზის ან ფონის
+      // შემდეგ პირველი ტიკი მთელ შესვენებას ერთბაშად არ უნდა ჩათვლიდეს.
+      const now = Date.now();
+      this.elapsed += Math.min((now - last) / 1000, 0.25);
+      last = now;
       this.tension = Math.min(1, this.elapsed / this.fuse);
 
       // ერთადერთი გადახატვა ტკაცუნის ფაზაში: „გახურდა“ ზღვარზე გადასვლისას.
@@ -174,7 +184,13 @@ export class BombEngine extends Observable {
   private explode(): void {
     this.ticker.stop();
     const victim = this.currentPlayer;
-    if (!victim) return;
+    if (!victim) {
+      // ცოცხალი აღარავინაა — `playing`-ში გაჩერებული ტაიმერით არ უნდა გავიჭედოთ.
+      this.winner = null;
+      this.phase = 'gameOver';
+      this.notify();
+      return;
+    }
     this.victimID = victim.id;
     this.lives[victim.id] = Math.max(0, (this.lives[victim.id] ?? 0) - 1);
     this.phase = 'exploded';

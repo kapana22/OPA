@@ -262,7 +262,7 @@ function Countdown({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => voi
 
 // ── თამაში
 
-function Play({ engine }: { engine: WhoAmIEngine; onExit: () => void }) {
+function Play({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => void }) {
   const flash = engine.flash;
   const flashColor = flash?.verdict === 'guessed' ? Colors.phosphor : Colors.neonCyan;
 
@@ -317,6 +317,10 @@ function Play({ engine }: { engine: WhoAmIEngine; onExit: () => void }) {
         <Pressable accessibilityLabel="მივხვდი" onPress={() => engine.register('guessed')} style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />
         </Pressable>
+      </View>
+      {/* სარეზერვო ზონების ზემოთ — უკან გასრიალება თამაშში გამორთულია და სხვა გასასვლელი აქ არ იყო. */}
+      <View style={{ position: 'absolute', top: 4, left: 4 }}>
+        <GameExitButton onExit={onExit} />
       </View>
     </View>
   );
@@ -443,7 +447,7 @@ function Summary({
     Haptics.win();
   });
 
-  const champion = engine.champion;
+  const champions = engine.champions;
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
@@ -458,7 +462,7 @@ function Summary({
       </Text>
 
       <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        {champion ? `${champion.name} — ${engine.scoreFor(champion)} გამოცნობილი` : 'ამ პარტიაში ვერავინ გამოიცნო'}
+        {champions.length > 0 ? `${champions.map((p) => p.name).join(', ')} — ${engine.scoreFor(champions[0])} გამოცნობილი` : 'ამ პარტიაში ვერავინ გამოიცნო'}
       </Text>
 
       <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
@@ -466,8 +470,14 @@ function Summary({
       </Text>
 
       <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-        {engine.ranking.map((player, rank) => (
-          <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.scoreFor(player)} highlight={rank === 0} />
+        {engine.ranking.map((player) => (
+          <RankRow
+            key={player.id}
+            rank={engine.rankOf(player)}
+            name={player.name}
+            score={engine.scoreFor(player)}
+            highlight={champions.some((c) => c.id === player.id)}
+          />
         ))}
       </ScrollView>
 
