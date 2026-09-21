@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppState, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { Colors, body, title as titleFont } from '../../theme/theme';
 import { GlassCard, ScreenHeader } from '../../ui/Cards';

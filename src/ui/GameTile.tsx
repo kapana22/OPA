@@ -1,4 +1,3 @@
-import React from 'react';
 import { Image, StyleSheet, Text, View, useWindowDimensions, type ImageSourcePropType } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Elevation, Radius, body, caption, toTT } from '../theme/theme';

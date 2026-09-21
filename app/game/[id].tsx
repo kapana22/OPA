@@ -1,10 +1,8 @@
-import React from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SplashBackground } from '../../src/ui/SplashBackground';
 import { ComingSoon, Notice } from '../../src/ui/Cards';
-import { Colors } from '../../src/theme/theme';
 import { game as findGame } from '../../src/games/catalog';
 import { gameFlow } from '../../src/games/registry';
 import { useRoster } from '../../src/state/state';
@@ -30,7 +28,6 @@ export default function GameHost() {
 
   const game = findGame(String(id));
   const Flow = game ? gameFlow(game.id) : undefined;
-  const tint = game ? Colors[game.accent] : Colors.neonCyan;
 
   // მთავარი ეკრანი ამას ადრევე ამოწმებს, ღრმა ბმული კი — არა. ცარიელი როსტერით
   // ძრავი ცარიელ ეკრანზე ჩერდება, ამიტომ კარი აქვე იკეტება, გამოსასვლელით.

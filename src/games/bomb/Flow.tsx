@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { Colors, Space, body, title as titleFont } from '../../theme/theme';

@@ -63,3 +63,17 @@ describe('player characters', () => {
 
 });
 
+
+describe('player names', () => {
+  it('rejects duplicate renames after trimming and case folding, including after reload', () => {
+    const roster = new Roster();
+    roster.add('Ana');
+    roster.add('Gio');
+    const id = roster.players[1].id;
+    roster.rename(id, '  aNA  ');
+    expect(roster.names).toEqual(['Ana', 'Gio']);
+    expect(new Roster().names).toEqual(['Ana', 'Gio']);
+    roster.rename(id, '  Nino  ');
+    expect(new Roster().names).toEqual(['Ana', 'Nino']);
+  });
+});

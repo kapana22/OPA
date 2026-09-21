@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
 import {
@@ -20,7 +20,6 @@ import { WordBank } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
-import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { ImpostorEngine, type ImpostorOutcome } from './engine';
 import { game as findGame } from '../catalog';

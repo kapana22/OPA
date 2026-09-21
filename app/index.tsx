@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -12,7 +12,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-import { Colors, Elevation, Radius, Space, body, caption, glow, title as titleFont, toTT, FontFamilies } from '../src/theme/theme';
+import { Colors, Elevation, Radius, body, caption, glow, title as titleFont, toTT, FontFamilies } from '../src/theme/theme';
 import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GameTile, MiniGameTile } from '../src/ui/GameTile';

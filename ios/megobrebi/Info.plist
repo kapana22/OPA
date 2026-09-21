@@ -27,8 +27,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>megobrebi</string>
-				<string>ge.splash.megobrebi</string>
+				<string>opa</string>
 			</array>
 		</dict>
 	</array>

@@ -172,17 +172,6 @@ function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void 
   );
 }
 
-function Step({ n, text }: { n: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-      <View style={styles.stepBadge}>
-        <Text style={[body(12, '900'), { color: Colors.ink }]}>{n}</Text>
-      </View>
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
-    </View>
-  );
-}
-
 // ── ჯერის შესავალი
 
 function TurnIntro({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => void }) {
@@ -273,7 +262,7 @@ function Countdown({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => voi
 
 // ── თამაში
 
-function Play({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => void }) {
+function Play({ engine }: { engine: WhoAmIEngine; onExit: () => void }) {
   const flash = engine.flash;
   const flashColor = flash?.verdict === 'guessed' ? Colors.phosphor : Colors.neonCyan;
 
@@ -498,14 +487,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  stepBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.phosphor,
-  },
   scoreCell: {
     minWidth: 72,
     alignItems: 'center',

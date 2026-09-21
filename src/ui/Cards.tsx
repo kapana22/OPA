@@ -240,7 +240,6 @@ const styles = StyleSheet.create({
   comingSoon: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: Space.l },
 });
 
-
 /**
  * ფილტრის/კატეგორიის ჩიპი. პორტი: `CategoryChip` (`ImpostorSetupView.swift`).
  *
@@ -522,8 +521,6 @@ const stepperStyles = StyleSheet.create({
 export function Divider() {
   return <View style={{ height: 1, backgroundColor: Colors.stroke }} />;
 }
-
-
 
 export function RulesSheet({
   visible,

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker, RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton } from '../../ui/Buttons';
@@ -292,7 +291,7 @@ function Countdown({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
 
 // ── თამაში (ლანდშაფტი)
 
-function Play({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }) {
+function Play({ engine }: { engine: CharadesEngine; onExit: () => void }) {
   const flash = engine.flash;
   const flashColor = flash?.verdict === 'correct' ? Colors.phosphor : Colors.neonMagenta;
 

@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
@@ -17,7 +17,6 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { TenButEngine } from './engine';
-import { game as findGame } from '../catalog';
 
 /**
  * „10-ია, მაგრამ...“ (Rate Them) — სრული ნაკადი.
@@ -105,15 +104,6 @@ function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void 
       <View style={Layout.footer}>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.startGame()} />
       </View>
-    </View>
-  );
-}
-
-function Rule({ text }: { text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>•</Text>
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
     </View>
   );
 }

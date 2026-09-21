@@ -85,6 +85,7 @@ export class Roster extends Observable {
     if (!p) return;
     const trimmed = newName.trim();
     if (!trimmed || trimmed === p.name) return;
+    if (this._players.some((other) => other.id !== id && other.name.toLowerCase() === trimmed.toLowerCase())) return;
     p.name = trimmed;
     this.save();
   }

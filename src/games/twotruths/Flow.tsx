@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
@@ -145,17 +145,6 @@ function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => vo
           onPress={() => engine.startGame()}
         />
       </View>
-    </View>
-  );
-}
-
-function Step({ n, text }: { n: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-      <View style={styles.stepBadge}>
-        <Text style={[body(12, '900'), { color: Colors.ink }]}>{n}</Text>
-      </View>
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
     </View>
   );
 }
@@ -613,14 +602,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  stepBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.phosphor,
-  },
   numBadge: { width: 26, height: 26, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
   pill: {
     flexDirection: 'row',

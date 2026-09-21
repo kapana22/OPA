@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -278,30 +278,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderWidth: 1,
     borderColor: Colors.stroke,
-  },
-  genderSwitchWrap: {
-    flexDirection: 'row',
-    backgroundColor: Colors.surface,
-    borderRadius: Radius.small,
-    borderWidth: 1,
-    borderColor: Colors.stroke,
-    padding: 3,
-    gap: 3,
-    alignItems: 'center',
-  },
-  genderSwitchBtn: {
-    width: 38,
-    height: 44,
-    borderRadius: Radius.small - 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.45,
-  },
-  genderSwitchBtnActive: {
-    backgroundColor: Colors.surfaceHigh,
-    opacity: 1,
-    borderWidth: 1,
-    borderColor: 'rgba(198, 255, 0, 0.4)',
   },
   addButton: { width: 50, height: 50, borderRadius: Radius.small, alignItems: 'center', justifyContent: 'center' },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },

@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body } from '../theme/theme';
 import type { Player } from '../core/roster';

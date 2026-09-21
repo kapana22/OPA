@@ -1,10 +1,10 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
 import { icon as sf } from '../../theme/icons';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader, RulesSheet } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RulesSheet, ScreenHeader } from '../../ui/Cards';
 import { game as findGame } from '../catalog';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -52,6 +52,7 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
 
   return (
     <View style={{ flex: 1 }}>
+      <RulesSheet visible={showRules} title="Do or Pay" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
       <View style={Layout.header}>
         <ScreenHeader
           title="Do or Pay"
@@ -62,7 +63,6 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -123,17 +123,6 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
           onPress={() => engine.startGame()}
         />
       </View>
-    </View>
-  );
-}
-
-function Step({ n, text }: { n: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-      <View style={styles.stepBadge}>
-        <Text style={[body(12, '900'), { color: Colors.ink }]}>{n}</Text>
-      </View>
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
     </View>
   );
 }
@@ -397,14 +386,6 @@ function Summary({
 }
 
 const styles = StyleSheet.create({
-  stepBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.phosphor,
-  },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',

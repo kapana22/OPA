@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
-import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { PrimaryButton, GhostButton } from './Buttons';
 import { GlassCard, GameExitButton } from './Cards';

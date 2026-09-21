@@ -1,4 +1,3 @@
-import React from 'react';
 import { Image, View, useWindowDimensions } from 'react-native';
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 import type { Player } from '../core/roster';

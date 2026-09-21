@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';

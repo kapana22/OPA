@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { Colors } from '../theme/theme';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Image, View } from 'react-native';
 import { Colors, glow } from '../theme/theme';
 import { stainSeed } from '../theme/playerPalette';

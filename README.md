@@ -59,6 +59,13 @@ cd android && ./gradlew assembleRelease
 
 ### iOS
 
+ფიზიკური iPhone-ის ბილდში JavaScript და სურათები ყოველთვის ჩაშენებულია,
+Debug რეჟიმშიც — დაყენებული აპი Metro-სა და ჩართულ კომპიუტერს არ საჭიროებს.
+სიმულატორის Debug რეჟიმი Metro-ს იყენებს; `STANDALONE=1`-ით იქაც შეიძლება
+დამოუკიდებელი ბილდის აწყობა. `prebuild`-ის შემდეგ გადაამოწმე, რომ
+„Bundle React Native code and images“ ეტაპი ფიზიკურ მოწყობილობაზე
+`SKIP_BUNDLING`-ს არ რთავს.
+
 ```bash
 cd ios && pod install
 xcodebuild -workspace megobrebi.xcworkspace -scheme megobrebi \

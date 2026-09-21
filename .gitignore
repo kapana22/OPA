@@ -34,3 +34,7 @@ play-service-account.json
 *.apk
 *.aab
 *.ipa
+
+# Local Xcode derived data
+/build/
+/build-device/

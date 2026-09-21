@@ -1,10 +1,8 @@
-import React from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { Notice } from '../src/ui/Cards';
-import { Colors } from '../src/theme/theme';
 
 /**
  * უცნობი მარშრუტი — ძველი ან შეცდომით აკრეფილი ღრმა ბმული.

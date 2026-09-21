@@ -1,9 +1,9 @@
 import { PlayerCharacter } from './PlayerCharacter';
 import { PlayerAvatarView } from './PlayerAvatarView';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
 import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
@@ -137,7 +137,7 @@ export function PassPhoneReveal({
         ]}
       >
         {isHolding ? (
-          <Animated.View entering={FadeIn.duration(140)} exiting={FadeOut.duration(120)} style={styles.cardInner}>
+          <Animated.View entering={FadeIn.duration(140)} style={styles.cardInner}>
             {card.hint ? (
               <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>{card.hint}</Text>
             ) : null}

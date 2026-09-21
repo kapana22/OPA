@@ -7,7 +7,6 @@ import { SpyEngine } from '../src/games/spy/engine';
 import { MafiaEngine } from '../src/games/mafia/engine';
 import { MostLikelyEngine } from '../src/games/mostlikely/engine';
 import { TwoTruthsEngine } from '../src/games/twotruths/engine';
-import { WavelengthEngine } from '../src/games/wavelength/engine';
 import { WordRushEngine } from '../src/games/wordrush/engine';
 import { RuleCardEngine } from '../src/games/rulecard/engine';
 import { BombEngine } from '../src/games/bomb/engine';
