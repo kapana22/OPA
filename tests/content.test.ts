@@ -5,30 +5,42 @@ import {
   StandardsBank, TenButBank, TwoTruthsBank, TruthDareBank, DareCardBank, RuleCardBank,
 } from '../src/content/banks';
 
+import raw from '../src/content/banks.generated.json';
+
 /**
  * კონტენტის მთლიანობა.
  *
- * რიცხვები Swift-ის წყაროდანაა და Word-ის ექსპორტთანაც ემთხვევა.
- * თუ რომელიმე დაეცემა — კონტენტი დაიკარგა და გამოშვება არ უნდა გავიდეს.
+ * რიცხვები ხელით აღარ იწერება — ფაილიდან იკითხება ისე, როგორც მართლა წერია
+ * (`banks.generated.json`, სიტყვების რედაქტორი მას ცვლის). ტესტი ამოწმებს,
+ * რომ აპი ფაილში არსებულ **ყველაფერს** ტვირთავს: თუ ჩატვირთვისას რამე
+ * დაიკარგა ან კატეგორია დაცარიელდა — გამოშვება არ უნდა გავიდეს.
  */
 
-const EXPECTED: [string, number, number][] = [
-  // [ბანკი, კატეგორია, ერთეული]
-  ['WordBank', 33, 1732],
-  ['CharadesBank', 11, 553],
-  ['PairBank', 16, 624],
-  ['PromptBank', 10, 659],
-  ['SpectrumBank', 5, 291],
-  ['DilemmaBank', 5, 316],
-  ['AnswerPromptBank', 5, 355],
-  ['IdentityBank', 5, 437],
-  ['LaughBank', 5, 247],
-  ['NeverBank', 5, 230],
-  ['PointOneBank', 5, 290],
-  ['StandardsBank', 5, 238],
-  ['TenButBank', 5, 215],
-  ['TwoTruthsBank', 6, 227],
+type RawCategory = Record<string, unknown> & { id: string };
+const file = raw as unknown as Record<string, RawCategory[]>;
+
+/** ფაილში: [ბანკი, ერთეულების ველი]. */
+const FIELDS: [string, string][] = [
+  ['WordBank', 'words'],
+  ['CharadesBank', 'words'],
+  ['PairBank', 'pairs'],
+  ['PromptBank', 'prompts'],
+  ['SpectrumBank', 'spectrums'],
+  ['DilemmaBank', 'dilemmas'],
+  ['AnswerPromptBank', 'items'],
+  ['IdentityBank', 'items'],
+  ['LaughBank', 'items'],
+  ['NeverBank', 'items'],
+  ['PointOneBank', 'items'],
+  ['StandardsBank', 'items'],
+  ['TenButBank', 'items'],
+  ['TwoTruthsBank', 'items'],
 ];
+
+const inFile = (bank: string, field: string) => ({
+  cats: file[bank].length,
+  items: file[bank].reduce((n, c) => n + ((c[field] as unknown[] | undefined)?.length ?? 0), 0),
+});
 
 const SIZES: Record<string, { cats: number; items: number }> = {
   WordBank: { cats: WordBank.categories.length, items: WordBank.categories.reduce((n, c) => n + c.words.length, 0) },
@@ -47,25 +59,49 @@ const SIZES: Record<string, { cats: number; items: number }> = {
   TwoTruthsBank: { cats: TwoTruthsBank.categories.length, items: TwoTruthsBank.categories.reduce((n, c) => n + c.items.length, 0) },
 };
 
+const truthDareCount = (sets: readonly { truths: readonly unknown[]; dares: readonly unknown[] }[]) =>
+  sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0);
+
+const fileTotal =
+  FIELDS.reduce((n, [bank, field]) => n + inFile(bank, field).items, 0) +
+  file.DareCardBank.length + file.RuleCardBank.length +
+  truthDareCount(file.TruthDareBank as unknown as { truths: unknown[]; dares: unknown[] }[]);
+
 describe('კონტენტის მთლიანობა', () => {
-  it.each(EXPECTED)('%s — %i კატეგორია, %i ერთეული', (bank, cats, items) => {
-    expect(SIZES[bank].cats).toBe(cats);
-    expect(SIZES[bank].items).toBe(items);
+  it.each(FIELDS.map(([bank, field]) => [bank, inFile(bank, field).cats, inFile(bank, field).items, field] as const))(
+    '%s — %i კატეგორია, %i ერთეული (ფაილიდან)',
+    (bank, cats, items) => {
+      expect(cats).toBeGreaterThan(0);
+      expect(items).toBeGreaterThan(0);
+      expect(SIZES[bank].cats).toBe(cats);
+      expect(SIZES[bank].items).toBe(items);
+    },
+  );
+
+  it('ცარიელი კატეგორია არ არსებობს', () => {
+    for (const [bank, field] of FIELDS) {
+      for (const cat of file[bank]) {
+        expect((cat[field] as unknown[] | undefined)?.length ?? 0, `${bank}/${cat.id}`).toBeGreaterThan(0);
+      }
+    }
   });
 
-  it('ბარათული ბანკები', () => {
-    expect(DareCardBank.all).toHaveLength(105);
-    expect(RuleCardBank.all).toHaveLength(100);
-    expect(TruthDareBank.sets).toHaveLength(3);
-    expect(TruthDareBank.sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0)).toBe(217);
+  it('ბარათული ბანკები — ფაილში რამდენიცაა, იმდენი იტვირთება', () => {
+    expect(DareCardBank.all).toHaveLength(file.DareCardBank.length);
+    expect(RuleCardBank.all).toHaveLength(file.RuleCardBank.length);
+    expect(TruthDareBank.sets).toHaveLength(file.TruthDareBank.length);
+    expect(truthDareCount(TruthDareBank.sets)).toBe(
+      truthDareCount(file.TruthDareBank as unknown as { truths: unknown[]; dares: unknown[] }[]),
+    );
+    expect(DareCardBank.all.length).toBeGreaterThan(0);
+    expect(RuleCardBank.all.length).toBeGreaterThan(0);
   });
 
-  it('სულ 6836 ერთეული', () => {
+  it(`სულ ${fileTotal} ერთეული — აპი ყველას ტვირთავს`, () => {
     const total =
       Object.values(SIZES).reduce((n, s) => n + s.items, 0) +
-      DareCardBank.all.length + RuleCardBank.all.length +
-      TruthDareBank.sets.reduce((n, s) => n + s.truths.length + s.dares.length, 0);
-    expect(total).toBe(6836);
+      DareCardBank.all.length + RuleCardBank.all.length + truthDareCount(TruthDareBank.sets);
+    expect(total).toBe(fileTotal);
   });
 
   it('ყველა კატეგორიას აქვს ემოჯი და სახელი — JSON-ის ექსპორტს ეს აკლდა', () => {
