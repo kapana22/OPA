@@ -1,14 +1,13 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Space, body, caption, title as titleFont } from '../../src/theme/theme';
-import { icon as sf } from '../../src/theme/icons';
 import { SplashBackground } from '../../src/ui/SplashBackground';
 import { PrimaryButton } from '../../src/ui/Buttons';
 import { PageHeader } from '../../src/ui/PageHeader';
 import { game as findGame } from '../../src/games/catalog';
 import { energyIcon, energyTitle } from '../../src/games/types';
+import { Icon } from '../../src/ui/Icon';
 
 /** პორტი: `Splash/App/RulesView.swift`. */
 export default function Rules() {
@@ -39,7 +38,7 @@ export default function Rules() {
       <PageHeader title="წესები" />
       <View style={{ flex: 1, gap: Space.m, alignItems: 'center' }}>
         <View style={[styles.iconBox, { backgroundColor: accent + '1F' }]}>
-          <MaterialCommunityIcons name={sf(game.icon)} size={30} color={accent} />
+          <Icon name={game.icon} size={30} color={accent} />
         </View>
 
         <Text style={[titleFont(28), { color: Colors.textPrimary }]}>{game.title}</Text>
@@ -84,7 +83,7 @@ export default function Rules() {
 function Fact({ icon, text }: { icon: string; text: string }) {
   return (
     <View style={styles.factChip}>
-      <MaterialCommunityIcons name={sf(icon)} size={11} color={Colors.textSecondary} />
+      <Icon name={icon} size={11} color={Colors.textSecondary} />
       <Text style={[caption(11), { color: Colors.textSecondary }]}>{text}</Text>
     </View>
   );

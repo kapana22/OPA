@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
 import { GamePause } from '../core/ticker';
 import { Haptics } from '../core/haptics';
 import { Sound } from '../core/sound';
 import { PrimaryButton, GhostButton } from './Buttons';
 import { GlassCard, GameExitButton } from './Cards';
+import { Icon } from './Icon';
 
 /**
  * განხილვის ეტაპი — ტაიმერი, ვინ იწყებს და მოკლე მინიშნებები.
@@ -113,7 +113,7 @@ export function DiscussionPanel({
           <View style={{ gap: 8 }}>
             {tips.map((tip, i) => (
               <View key={i} style={styles.tipRow}>
-                <MaterialCommunityIcons
+                <Icon
                   name={`numeric-${Math.min(i + 1, 9)}-circle` as never}
                   size={17}
                   color={Colors.textSecondary}

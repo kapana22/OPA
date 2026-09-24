@@ -1,9 +1,7 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, body, display, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
@@ -21,6 +19,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { NoLaughEngine } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „არ გაიცინო“ — სრული ნაკადი.
@@ -177,7 +176,7 @@ function Announce({ engine, onExit }: { engine: NoLaughEngine; onExit: () => voi
 function Tip({ icon, text }: { icon: string; text: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <MaterialCommunityIcons name={sf(icon)} size={16} color={Colors.textSecondary} />
+      <Icon name={icon} size={16} color={Colors.textSecondary} />
       <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
     </View>
   );
@@ -206,8 +205,8 @@ function Round({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void }
           onPress={() => engine.togglePause()}
           style={styles.roundButton}
         >
-          <MaterialCommunityIcons
-            name={sf(engine.isPaused ? 'play.fill' : 'pause.fill')}
+          <Icon
+            name={engine.isPaused ? 'play.fill' : 'pause.fill'}
             size={14}
             color={Colors.textSecondary}
           />

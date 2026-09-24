@@ -1,9 +1,7 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
@@ -17,6 +15,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { WhoWroteEngine, type Reveal } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „ვინ დაწერა?“ — სრული ნაკადი.
@@ -89,7 +88,7 @@ function Setup({ engine, onClose }: { engine: WhoWroteEngine; onClose: () => voi
         {!engine.canPlay ? (
           <GlassCard>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-              <MaterialCommunityIcons name="account-off" size={21} color={Colors.neonMagenta} />
+              <Icon name="account-off" size={21} color={Colors.neonMagenta} />
               <View style={{ flex: 1, gap: 3 }}>
                 <Text style={[body(15, '700'), { color: Colors.textPrimary }]}>საჭიროა მინიმუმ 3 მოთამაშე</Text>
                 <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>
@@ -162,7 +161,7 @@ function Intro({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void 
           }}
           style={styles.pill}
         >
-          <MaterialCommunityIcons name={sf('shuffle')} size={13} color={Colors.textSecondary} />
+          <Icon name={'shuffle'} size={13} color={Colors.textSecondary} />
           <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
         </Pressable>
       </View>

@@ -1,8 +1,6 @@
 import {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
@@ -19,6 +17,7 @@ import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { NeverEngine } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „მე არასდროს...“ — სრული ნაკადი.
@@ -138,7 +137,7 @@ function Round({ engine, onExit }: { engine: NeverEngine; onExit: () => void }) 
           }}
           style={styles.pill}
         >
-          <MaterialCommunityIcons name={sf('shuffle')} size={13} color={Colors.textSecondary} />
+          <Icon name={'shuffle'} size={13} color={Colors.textSecondary} />
           <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
         </Pressable>
       </View>
@@ -227,7 +226,7 @@ function PlayerChip({ engine, player }: { engine: NeverEngine; player: Player })
       ) : total <= 5 ? (
         <View style={{ flexDirection: 'row', gap: 3 }}>
           {Array.from({ length: total }, (_, i) => (
-            <MaterialCommunityIcons
+            <Icon
               key={i}
               name={i < left ? 'heart' : 'heart-outline'}
               size={12}
@@ -237,7 +236,7 @@ function PlayerChip({ engine, player }: { engine: NeverEngine; player: Player })
         </View>
       ) : (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <MaterialCommunityIcons name="heart" size={12} color={Colors.neonMagenta} />
+          <Icon name="heart" size={12} color={Colors.neonMagenta} />
           <Text style={[body(13, '900'), Layout.digits, { color: Colors.textPrimary }]}>{left}</Text>
         </View>
       )}
@@ -327,7 +326,7 @@ function Summary({
                 </Text>
                 {left > 0 ? (
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                    <MaterialCommunityIcons name="heart" size={14} color={Colors.neonMagenta} />
+                    <Icon name="heart" size={14} color={Colors.neonMagenta} />
                     <Text style={[titleFont(20), Layout.digits, { color: isWinner ? Colors.phosphor : Colors.textPrimary }]}>
                       {left}
                     </Text>

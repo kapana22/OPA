@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, body, caption } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { ScreenHeader } from '../../ui/Cards';
 import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
@@ -11,6 +9,7 @@ import type { GameFlowProps } from '../registry';
 import { HerdFlow } from '../herd/Flow';
 import { StandardsFlow } from '../standards/Flow';
 import { TenButFlow } from '../tenbut/Flow';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „რას იტყვიან?“ (Read the Room) — სამი რეჟიმის შესასვლელი.
@@ -104,7 +103,7 @@ export function TableReadFlow({ roster, onExit }: GameFlowProps) {
             style={[styles.card, { borderColor: option.accent + '38' }, needsMore ? { opacity: 0.5 } : null]}
           >
             <View style={[styles.iconBox, { backgroundColor: option.accent + '1F' }]}>
-              <MaterialCommunityIcons name={sf(option.icon)} size={23} color={option.accent} />
+              <Icon name={option.icon} size={23} color={option.accent} />
             </View>
 
             <View style={{ flex: 1, gap: 6 }}>

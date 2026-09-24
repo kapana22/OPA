@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -20,6 +18,7 @@ import { RuleCardEngine, RULECARD_LAP_OPTIONS, type ActiveRule } from './engine'
 import { TurnRotation } from '../../core/turnRotation';
 import type { Player } from '../../core/roster';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „მაგიდის წესები“ (House Rules) — სრული ნაკადი.
@@ -171,7 +170,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
             }}
             style={[styles.pill, breaking ? { backgroundColor: Colors.neonMagenta + '3D' } : null]}
           >
-            <MaterialCommunityIcons name={sf('exclamationmark.circle.fill')} size={12} color={Colors.neonMagenta} />
+            <Icon name={'exclamationmark.circle.fill'} size={12} color={Colors.neonMagenta} />
             <Text style={[body(12, '700'), { color: Colors.neonMagenta }]}>წესი დაირღვა</Text>
           </Pressable>
         ) : null}
@@ -182,7 +181,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
             onPress={() => engine.swapCard()}
             style={styles.pill}
           >
-            <MaterialCommunityIcons name={sf('shuffle')} size={12} color={Colors.textSecondary} />
+            <Icon name={'shuffle'} size={12} color={Colors.textSecondary} />
             <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
           </Pressable>
         ) : null}
@@ -197,7 +196,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.rulesStrip}>
           {engine.activeRules.map((rule) => (
             <View key={rule.id} style={styles.ruleChip}>
-              <MaterialCommunityIcons name="check-decagram" size={11} color={Colors.neonMagenta} />
+              <Icon name="check-decagram" size={11} color={Colors.neonMagenta} />
               <Text style={[body(12, '700'), { color: Colors.neonMagenta }]} numberOfLines={1}>
                 {listLabel(rule.card)}
               </Text>
@@ -211,7 +210,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
       <View style={{ paddingHorizontal: 20 }}>
         <View style={[styles.cardFace, { borderColor: tint + '57' }, Elevation.card]}>
           <View style={[styles.kindBadge, { backgroundColor: tint }]}>
-            <MaterialCommunityIcons name={sf(ruleKindIcon[card.kind])} size={14} color={Colors.ink} />
+            <Icon name={ruleKindIcon[card.kind]} size={14} color={Colors.ink} />
             <Text style={[body(13, '900'), { color: Colors.ink }]}>{ruleKindLabel[card.kind]}</Text>
           </View>
 
@@ -232,7 +231,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
           </Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.surface, paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill }}>
-             <MaterialCommunityIcons name={sf(isRule ? 'infinity' : 'lightning.fill')} size={14} color={isRule ? Colors.neonMagenta : Colors.coral} />
+             <Icon name={isRule ? 'infinity' : 'lightning.fill'} size={14} color={isRule ? Colors.neonMagenta : Colors.coral} />
              <Text style={[body(13, '700'), { color: isRule ? Colors.neonMagenta : Colors.coral }]}>
                {isRule ? 'ბოლომდე მოქმედებს' : forfeitShort[engine.settings.forfeit]}
              </Text>
@@ -288,7 +287,7 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
                     onPress={() => engine.removeRule(rule)}
                     style={styles.ruleRow}
                   >
-                    <MaterialCommunityIcons name="close-circle" size={17} color={Colors.neonCyan} />
+                    <Icon name="close-circle" size={17} color={Colors.neonCyan} />
                     <Text style={[body(14, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={2}>
                       {listLabel(rule.card)}
                     </Text>

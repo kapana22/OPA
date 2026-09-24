@@ -1,12 +1,11 @@
 import { Image, StyleSheet, Text, View, useWindowDimensions, type ImageSourcePropType } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Elevation, Radius, body, caption, toTT } from '../theme/theme';
-import { icon as sf } from '../theme/icons';
 import { type PartyGame } from '../games/types';
 import { gameArtwork, gameCaptions } from '../games/artwork';
 import { groupedGames } from '../games/groups';
 import { Haptics } from '../core/haptics';
 import { Pressable } from './Pressable';
+import { Icon } from './Icon';
 
 interface TileProps {
   game: PartyGame;
@@ -57,7 +56,7 @@ export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: Til
             />
           ) : (
             <View style={{ padding: 16, gap: 14, alignItems: 'center' }}>
-              <MaterialCommunityIcons name={sf(game.icon)} size={42} color={accent} />
+              <Icon name={game.icon} size={42} color={accent} />
               <Text style={[body(18, '900'), { color: Colors.textPrimary, textAlign: 'center' }]}>
                 {game.title}
               </Text>

@@ -2,10 +2,8 @@ import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { Colors, Radius, Space, body } from '../src/theme/theme';
-import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GameTile } from '../src/ui/GameTile';
 import { ScreenHeader, SectionLabel } from '../src/ui/Cards';
@@ -16,6 +14,7 @@ import { useRoster } from '../src/state/state';
 import { useOpenGame } from '../src/state/useOpenGame';
 import { ALL_FILTER, accepts, filterKey, filterTitle, newestFirst, visibleFilters, type HomeFilter } from '../src/state/homeFilter';
 import { Haptics } from '../src/core/haptics';
+import { Icon } from '../src/ui/Icon';
 
 /**
  * „ყველა თამაში“ — სრული ბადე ძებნითა და ფილტრებით.
@@ -56,7 +55,7 @@ export default function AllGames() {
       >
         {/* ── ძებნა */}
         <View style={styles.searchField}>
-          <MaterialCommunityIcons name={sf('magnifyingglass')} size={16} color={Colors.textSecondary} />
+          <Icon name={'magnifyingglass'} size={16} color={Colors.textSecondary} />
           <TextInput
             value={query}
             onChangeText={setQuery}
@@ -70,7 +69,7 @@ export default function AllGames() {
           />
           {query ? (
             <Pressable accessibilityLabel="გასუფთავება" onPress={() => setQuery('')}>
-              <MaterialCommunityIcons name={sf('xmark.circle.fill')} size={17} color={Colors.textSecondary} />
+              <Icon name={'xmark.circle.fill'} size={17} color={Colors.textSecondary} />
             </Pressable>
           ) : null}
         </View>

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
@@ -18,6 +16,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { AliasEngine, type AliasEntry, type AliasTeam } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „ალიასი“ — სრული ნაკადი.
@@ -238,7 +237,7 @@ function Teams({ engine }: { engine: AliasEngine }) {
                   <Text style={[titleFont(20), { color, flex: 1 }]} numberOfLines={1}>
                     {team.name}
                   </Text>
-                  <MaterialCommunityIcons name={sf('square.and.pencil')} size={16} color={Colors.textSecondary} />
+                  <Icon name={'square.and.pencil'} size={16} color={Colors.textSecondary} />
                 </Pressable>
 
                 <View style={Layout.chipRow}>
@@ -289,7 +288,7 @@ function Teams({ engine }: { engine: AliasEngine }) {
 function Tip({ icon, text }: { icon: string; text: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <MaterialCommunityIcons name={sf(icon)} size={15} color={Colors.textSecondary} />
+      <Icon name={icon} size={15} color={Colors.textSecondary} />
       <Text style={[body(13, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
     </View>
   );
@@ -494,7 +493,7 @@ function Play({ engine, onExit }: { engine: AliasEngine; onExit: () => void }) {
 function Counter({ icon, value, color }: { icon: string; value: number; color: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-      <MaterialCommunityIcons name={icon as never} size={18} color={color} />
+      <Icon name={icon} size={18} color={color} />
       <Text style={[body(18, '900'), Layout.digits, { color }]}>{value}</Text>
     </View>
   );
@@ -521,8 +520,8 @@ function BigControl({
         { backgroundColor: filled ? Colors.neonCyan : Colors.surface },
       ]}
     >
-      <MaterialCommunityIcons
-        name={sf(icon)}
+      <Icon
+        name={icon}
         size={20}
         color={filled ? Colors.ink : Colors.textPrimary}
       />
@@ -610,7 +609,7 @@ function WordRow({ engine, entry }: { engine: AliasEngine; entry: AliasEntry }) 
       }}
       style={[styles.wordRow, { backgroundColor: correct ? Colors.phosphor + '1F' : Colors.surface }]}
     >
-      <MaterialCommunityIcons
+      <Icon
         name={correct ? 'check-circle' : 'close-circle'}
         size={21}
         color={correct ? Colors.phosphor : Colors.neonMagenta}

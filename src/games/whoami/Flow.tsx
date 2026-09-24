@@ -1,7 +1,6 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
@@ -18,6 +17,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { WhoAmIEngine, type WhoAmIEntry } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „ვინ ვარ მე?“ — სრული ნაკადი.
@@ -150,7 +150,7 @@ function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void 
                 თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება
               </Text>
             </View>
-            <MaterialCommunityIcons
+            <Icon
               name={engine.settings.invertTilt ? 'toggle-switch' : 'toggle-switch-off-outline'}
               size={34}
               color={engine.settings.invertTilt ? Colors.phosphor : Colors.textSecondary}
@@ -408,7 +408,7 @@ function IdentityRow({ engine, entry }: { engine: WhoAmIEngine; entry: WhoAmIEnt
       }}
       style={[styles.wordRow, { backgroundColor: guessed ? Colors.phosphor + '1F' : Colors.surface }]}
     >
-      <MaterialCommunityIcons
+      <Icon
         name={guessed ? 'check-circle' : 'close-circle'}
         size={21}
         color={guessed ? Colors.phosphor : Colors.neonMagenta}

@@ -1,13 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated from 'react-native-reanimated';
 import { Colors, title as titleFont } from '../theme/theme';
-import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { Pressable } from './Pressable';
 import { enterUp } from './motion';
+import { Icon } from './Icon';
 
 /** უკან — თუ ისტორია არ არის (ღრმა ბმული), მთავარზე. */
 export function useGoBack(): () => void {
@@ -39,7 +38,7 @@ export function PageHeader({ title, trailing }: { title: string; trailing?: Reac
         }}
         style={styles.back}
       >
-        <MaterialCommunityIcons name={sf('chevron.left')} size={22} color={Colors.textPrimary} />
+        <Icon name={'chevron.left'} size={22} color={Colors.textPrimary} />
       </Pressable>
 
       <Text

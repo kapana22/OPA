@@ -1,8 +1,6 @@
 import { Image, Share, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, body, caption, display, title as titleFont } from '../src/theme/theme';
-import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { PrimaryButton } from '../src/ui/Buttons';
 import { PageHeader } from '../src/ui/PageHeader';
@@ -11,6 +9,7 @@ import { game as findGame } from '../src/games/catalog';
 import Animated from 'react-native-reanimated';
 import { Confetti } from '../src/ui/Confetti';
 import { enterUp, popIn } from '../src/ui/motion';
+import { Icon } from '../src/ui/Icon';
 
 /**
  * „ღამის შედეგები“ — საღამოს ბოლოს გასაზიარებელი ბარათი.
@@ -56,7 +55,7 @@ export default function NightSummary() {
         <SplashBackground />
         <PageHeader title="ღამის შედეგები" />
         <View style={styles.empty}>
-          <MaterialCommunityIcons name={sf('moon.stars.fill')} size={28} color={Colors.textSecondary} />
+          <Icon name={'moon.stars.fill'} size={28} color={Colors.textSecondary} />
           <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>საღამო ჯერ არ დაწყებულა</Text>
           <Text style={[body(14, '500'), { color: Colors.textSecondary, textAlign: 'center' }]}>
             ითამაშეთ ერთი პარტია მაინც — შედეგები აქ გამოჩნდება.
@@ -92,7 +91,7 @@ export default function NightSummary() {
               {topWinners.length ? (
                 <View style={{ alignItems: 'center', gap: 6 }}>
                   <Animated.View entering={popIn(450)}>
-                    <MaterialCommunityIcons name={sf('crown.fill')} size={26} color={Colors.amber} />
+                    <Icon name={'crown.fill'} size={26} color={Colors.amber} />
                   </Animated.View>
                   <Text
                     style={[titleFont(topWinners.length > 1 ? 26 : 34), { color: Colors.textPrimary, textAlign: 'center' }]}
@@ -127,7 +126,7 @@ export default function NightSummary() {
 
             {favourite && favouriteCount > 1 ? (
               <View style={styles.highlight}>
-                <MaterialCommunityIcons name={sf(favourite.icon)} size={12} color={Colors.phosphor} />
+                <Icon name={favourite.icon} size={12} color={Colors.phosphor} />
                 <Text style={[body(12, '700'), { color: Colors.textPrimary, flexShrink: 1 }]} numberOfLines={1}>
                   საღამოს თამაში — {favourite.title}
                 </Text>

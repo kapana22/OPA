@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, display, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
@@ -18,6 +17,7 @@ import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { PointOneEngine } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „მიუთითე ერთზე“ — სრული ნაკადი.
@@ -93,7 +93,7 @@ function Setup({ engine, onClose }: { engine: PointOneEngine; onClose: () => voi
                 სამი ვიბრაცია და ყველა ერთდროულად უთითებს
               </Text>
             </View>
-            <MaterialCommunityIcons
+            <Icon
               name={engine.settings.useCountdown ? 'check-circle' : 'circle-outline'}
               size={23}
               color={engine.settings.useCountdown ? Colors.neonMagenta : Colors.textSecondary}

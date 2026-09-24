@@ -1,9 +1,7 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, ToggleRow , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -17,6 +15,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { TwoTruthsEngine } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „ორი სიმართლე, ერთი ტყუილი“ — სრული ნაკადი.
@@ -254,7 +253,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
                   }}
                   style={styles.pill}
                 >
-                  <MaterialCommunityIcons name={sf('shuffle')} size={12} color={Colors.textSecondary} />
+                  <Icon name={'shuffle'} size={12} color={Colors.textSecondary} />
                   <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
                 </Pressable>
               </View>
@@ -311,7 +310,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
                   }}
                   style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
                 >
-                  <MaterialCommunityIcons
+                  <Icon
                     name={isLie ? 'check-circle' : 'circle-outline'}
                     size={16}
                     color={isLie ? Colors.phosphor : Colors.textSecondary}
@@ -478,7 +477,7 @@ function Result({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => voi
               return (
                 <View key={position} style={{ gap: 6 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-                    <MaterialCommunityIcons
+                    <Icon
                       name={isLie ? 'close-circle' : 'check-circle'}
                       size={19}
                       color={isLie ? Colors.neonMagenta : Colors.phosphor}

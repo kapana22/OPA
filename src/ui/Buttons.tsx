@@ -1,9 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, body, glow } from '../theme/theme';
-import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { Pressable } from './Pressable';
+import { Icon } from './Icon';
 
 /**
  * პორტი: `Splash/Components/Buttons.swift`.
@@ -61,8 +60,8 @@ export function PrimaryButton({
     >
       <View style={styles.row}>
         {icon ? (
-          <MaterialCommunityIcons
-            name={sf(icon)}
+          <Icon
+            name={icon}
             size={19}
             color={enabled ? Colors.onAccent : Colors.textSecondary}
             accessible={false}
@@ -87,7 +86,7 @@ export function GhostButton({ title, icon, onPress }: { title: string; icon?: st
       style={styles.ghost}
     >
       <View style={styles.rowTight}>
-        {icon ? <MaterialCommunityIcons name={sf(icon)} size={17} color={Colors.textPrimary} accessible={false} /> : null}
+        {icon ? <Icon name={icon} size={17} color={Colors.textPrimary} accessible={false} /> : null}
         <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>{title}</Text>
       </View>
     </Pressable>

@@ -4,9 +4,7 @@ import { enterUp, listLayout } from '../src/ui/motion';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, toTT } from '../src/theme/theme';
-import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GlyphIcon } from '../src/ui/Cards';
 import { CharacterPicker } from '../src/ui/CharacterPicker';
@@ -18,6 +16,7 @@ import { useRoster } from '../src/state/state';
 import { MAX_PLAYERS, type Player } from '../src/core/roster';
 import { Haptics } from '../src/core/haptics';
 import { useDialog } from '../src/ui/Dialog';
+import { Icon } from '../src/ui/Icon';
 
 /**
  * პორტი: `Splash/App/PlayersView.swift`.
@@ -135,7 +134,7 @@ export default function Players() {
             onPress={add}
             style={[styles.addButton, { backgroundColor: canAdd ? Colors.phosphor : Colors.surfaceHigh }]}
           >
-            <MaterialCommunityIcons name={sf('plus')} size={20} color={canAdd ? Colors.onAccent : Colors.textSecondary} />
+            <Icon name={'plus'} size={20} color={canAdd ? Colors.onAccent : Colors.textSecondary} />
           </Pressable>
         </View>
         {addError ? (
@@ -297,7 +296,7 @@ function SmallChip({
       onPress={onPress}
       style={[styles.smallChip, { backgroundColor: active ? Colors.phosphor : Colors.surface }]}
     >
-      <MaterialCommunityIcons name={sf(icon)} size={12} color={active ? Colors.onAccent : Colors.textPrimary} />
+      <Icon name={icon} size={12} color={active ? Colors.onAccent : Colors.textPrimary} />
       <Text style={[body(11, '800'), { color: active ? Colors.onAccent : Colors.textPrimary, letterSpacing: 0.5, textTransform: 'uppercase' }]}>{toTT(label)}</Text>
     </Pressable>
   );
@@ -325,8 +324,8 @@ function RowIcon({
       onPress={onPress}
       style={[styles.rowIcon, { opacity: disabled ? 0.3 : 1 }]}
     >
-      <MaterialCommunityIcons
-        name={sf(name)}
+      <Icon
+        name={name}
         size={16}
         color={Colors.textSecondary}
         style={rotate ? { transform: [{ rotate: name === 'chevron.left' ? '90deg' : '-90deg' }] } : undefined}

@@ -1,9 +1,7 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -20,6 +18,7 @@ import type { GameFlowProps } from '../registry';
 import { TruthDareEngine, TRUTHDARE_LAP_OPTIONS, orderTitle, type TruthDareOrder } from './engine';
 import { TurnRotation } from '../../core/turnRotation';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „სიმართლე თუ მოქმედება“ — სრული ნაკადი.
@@ -131,7 +130,7 @@ function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => vo
 
         <GlassCard>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-            <MaterialCommunityIcons name={sf('hand.raised.fill')} size={15} color={Colors.neonCyan} />
+            <Icon name={'hand.raised.fill'} size={15} color={Colors.neonCyan} />
             <Text style={[body(12, '500'), { color: Colors.textSecondary, flex: 1 }]}>
               დავალება, რომელიც ვინმეს რეალურად აზარალებს, არ სრულდება — პასი ყოველთვის ნებადართულია.
             </Text>
@@ -189,14 +188,7 @@ function Turn({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
       {header}
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon
-          name={engine.settings.order === 'bottle' ? 'arrow.clockwise.circle.fill' : 'person.fill'}
-          size={30}
-          tint={Colors.neonCyan}
-        />
-      </View>
-
+      {/* პორტრეტის ბარათი თვითონ ამბობს, ვისი ჯერია — ზემოთ ცალკე ხატულა ზედმეტი იყო. */}
       <PlayerCharacter player={engine.currentPlayer} compact />
       <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ჯერი გიდგება</Text>
 
@@ -256,12 +248,12 @@ function ChoiceButton({
       onPress={onPress}
       style={[styles.choice, { borderColor: tint + '59' }]}
     >
-      <MaterialCommunityIcons name={sf(icon)} size={22} color={tint} style={{ width: 30 }} />
+      <Icon name={icon} size={22} color={tint} style={{ width: 30 }} />
       <View style={{ flex: 1, gap: 2 }}>
         <Text style={[titleFont(21), { color: Colors.textPrimary }]}>{title}</Text>
         <Text style={[body(12, '600'), { color: Colors.textSecondary }]}>{subtitle}</Text>
       </View>
-      <MaterialCommunityIcons name={sf('chevron.right')} size={16} color={Colors.textSecondary} />
+      <Icon name={'chevron.right'} size={16} color={Colors.textSecondary} />
     </Pressable>
   );
 }
@@ -323,7 +315,7 @@ function Task({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
             onPress={() => engine.pass()}
             style={styles.passButton}
           >
-            <MaterialCommunityIcons name={sf('hand.raised.fill')} size={16} color={Colors.textSecondary} />
+            <Icon name={'hand.raised.fill'} size={16} color={Colors.textSecondary} />
             <Text style={[body(16, '700'), { color: Colors.textSecondary }]}>პასი</Text>
           </Pressable>
 
@@ -333,7 +325,7 @@ function Task({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
             onPress={() => engine.complete()}
             style={[styles.doneButton, { backgroundColor: tint }]}
           >
-            <MaterialCommunityIcons name={sf('checkmark')} size={16} color={Colors.onAccent} />
+            <Icon name={'checkmark'} size={16} color={Colors.onAccent} />
             <Text style={[body(16, '700'), { color: Colors.onAccent }]}>შესრულდა</Text>
           </Pressable>
         </View>

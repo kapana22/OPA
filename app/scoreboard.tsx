@@ -8,9 +8,8 @@ import { PageHeader } from '../src/ui/PageHeader';
 import { useNightLog, useRoster } from '../src/state/state';
 import { useDialog } from '../src/ui/Dialog';
 import Animated from 'react-native-reanimated';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { icon as sf } from '../src/theme/icons';
 import { enterUp, listLayout, popIn } from '../src/ui/motion';
+import { Icon } from '../src/ui/Icon';
 
 /** პორტი: `Splash/App/ScoreboardView.swift`. */
 export default function Scoreboard() {
@@ -67,7 +66,7 @@ export default function Scoreboard() {
                 </Text>
                 {rank === 0 && player.score > 0 ? (
                   <Animated.View entering={popIn(420)} style={{ marginRight: 8 }}>
-                    <MaterialCommunityIcons name={sf('crown.fill')} size={20} color={Colors.phosphor} />
+                    <Icon name={'crown.fill'} size={20} color={Colors.phosphor} />
                   </Animated.View>
                 ) : null}
                 <Text

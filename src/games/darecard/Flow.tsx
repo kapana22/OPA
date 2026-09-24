@@ -1,9 +1,7 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RulesSheet, ScreenHeader } from '../../ui/Cards';
 import { game as findGame } from '../catalog';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
@@ -20,6 +18,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { DareCardEngine, DARECARD_LAP_OPTIONS } from './engine';
 import { TurnRotation } from '../../core/turnRotation';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „გააკეთე ან...“ (Do or Pay) — სრული ნაკადი.
@@ -166,7 +165,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
             onPress={() => engine.swapCard()}
             style={styles.pill}
           >
-            <MaterialCommunityIcons name={sf('shuffle')} size={12} color={Colors.textSecondary} />
+            <Icon name={'shuffle'} size={12} color={Colors.textSecondary} />
             <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
           </Pressable>
         ) : null}
@@ -178,7 +177,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
       <View style={{ paddingHorizontal: 20 }}>
         <View style={[styles.cardFace, Elevation.card]}>
           <View style={styles.kindBadge}>
-            <MaterialCommunityIcons name={sf(dareKindIcon[card.kind])} size={14} color={Colors.ink} />
+            <Icon name={dareKindIcon[card.kind]} size={14} color={Colors.ink} />
             <Text style={[body(13, '900'), { color: Colors.ink }]}>{dareKindLabel[card.kind]}</Text>
           </View>
 
@@ -199,7 +198,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
           </Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.surface, paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill }}>
-             <MaterialCommunityIcons name={sf('lightning.fill')} size={14} color={Colors.coral} />
+             <Icon name={'lightning.fill'} size={14} color={Colors.coral} />
              <Text style={[body(13, '700'), { color: Colors.coral }]}>
                {forfeitShort[engine.settings.forfeit]}
              </Text>

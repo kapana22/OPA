@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Modal, type StyleProp, type ViewStyle } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont, toTT, glow } from '../theme/theme';
-import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { GamePause } from '../core/ticker';
 import { Sound } from '../core/sound';
@@ -10,6 +8,7 @@ import { Pressable } from './Pressable';
 import { GhostButton } from './Buttons';
 import { SplashBackground } from './SplashBackground';
 import { useDialog } from './Dialog';
+import { Icon } from './Icon';
 
 /** პორტი: `Splash/Components/Cards.swift` + `GameExitButton.swift`. */
 
@@ -52,7 +51,7 @@ export function ScreenHeader({
           }}
           style={styles.backButton}
         >
-          <MaterialCommunityIcons name={sf('chevron.left')} size={19} color={Colors.textPrimary} />
+          <Icon name={'chevron.left'} size={19} color={Colors.textPrimary} />
         </Pressable>
       ) : null}
 
@@ -76,7 +75,7 @@ export function ScreenHeader({
           hitSlop={8}
           style={styles.infoButton}
         >
-          <MaterialCommunityIcons name={sf('questionmark')} size={14} color={Colors.textSecondary} />
+          <Icon name={'questionmark'} size={14} color={Colors.textSecondary} />
         </Pressable>
       ) : null}
     </View>
@@ -97,7 +96,7 @@ export function SectionLabel({
   return (
     <View style={styles.sectionLabel}>
       {icon ? (
-        <MaterialCommunityIcons name={sf(icon)} size={14} color={accentColor} style={{ marginRight: 2 }} />
+        <Icon name={icon} size={14} color={accentColor} style={{ marginRight: 2 }} />
       ) : null}
       <Text style={[caption(12, '700'), { color: Colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 }]}>
         {toTT(text)}
@@ -132,7 +131,7 @@ export function GlyphIcon({
         justifyContent: 'center',
       }}
     >
-      <MaterialCommunityIcons name={sf(name)} size={size} color={tint} />
+      <Icon name={name} size={size} color={tint} weight="duotone" />
     </View>
   );
 }
@@ -170,7 +169,7 @@ export function GameExitButton({ onExit }: { onExit: () => void }) {
       hitSlop={8}
       style={styles.exitButton}
     >
-      <MaterialCommunityIcons name={sf('xmark')} size={14} color={Colors.textSecondary} />
+      <Icon name={'xmark'} size={14} color={Colors.textSecondary} />
     </Pressable>
   );
 }
@@ -375,7 +374,7 @@ export function RadioRow({
       }}
       style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
     >
-      <MaterialCommunityIcons
+      <Icon
         name={selected ? 'radiobox-marked' : 'radiobox-blank'}
         size={21}
         color={selected ? Colors.neonCyan : Colors.textSecondary}
@@ -450,7 +449,7 @@ export function ToggleRow({
         <Text style={[body(15, '700'), { color: Colors.textPrimary }]}>{title}</Text>
         <Text style={[caption(12), { color: Colors.textSecondary }]}>{subtitle}</Text>
       </View>
-      <MaterialCommunityIcons
+      <Icon
         name={value ? 'toggle-switch' : 'toggle-switch-off-outline'}
         size={34}
         color={value ? Colors.phosphor : Colors.textSecondary}
@@ -489,7 +488,7 @@ export function Stepper({
         onPress={() => step(-1)}
         style={[stepperStyles.button, { opacity: value <= min ? 0.35 : 1 }]}
       >
-        <MaterialCommunityIcons name="minus" size={18} color={Colors.textPrimary} />
+        <Icon name="minus" size={18} color={Colors.textPrimary} />
       </Pressable>
 
       <Text style={[titleFont(22), { color: tint, minWidth: 28, textAlign: 'center', fontVariant: ['tabular-nums'] }]}>
@@ -504,7 +503,7 @@ export function Stepper({
         onPress={() => step(1)}
         style={[stepperStyles.button, { opacity: value >= max ? 0.35 : 1 }]}
       >
-        <MaterialCommunityIcons name="plus" size={18} color={Colors.textPrimary} />
+        <Icon name="plus" size={18} color={Colors.textPrimary} />
       </Pressable>
     </View>
   );
@@ -578,7 +577,7 @@ export function RulesSheet({
                 justifyContent: 'center',
               }}
             >
-              <MaterialCommunityIcons name={sf('xmark')} size={16} color={Colors.textSecondary} />
+              <Icon name={'xmark'} size={16} color={Colors.textSecondary} />
             </Pressable>
           </View>
 

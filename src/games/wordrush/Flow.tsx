@@ -1,9 +1,7 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
@@ -22,6 +20,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { WordRushEngine } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „სიტყვის რბოლა“ — სრული ნაკადი.
@@ -193,7 +192,7 @@ function Intro({ engine, onExit }: { engine: WordRushEngine; onExit: () => void 
 function Tip({ icon, text }: { icon: string; text: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <MaterialCommunityIcons name={sf(icon)} size={16} color={Colors.textSecondary} />
+      <Icon name={icon} size={16} color={Colors.textSecondary} />
       <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
     </View>
   );
@@ -272,7 +271,7 @@ function Play({ engine, onExit }: { engine: WordRushEngine; onExit: () => void }
           onPress={() => engine.uncount()}
           style={[styles.secondaryButton, { opacity: engine.turnCount === 0 ? 0.45 : 1 }]}
         >
-          <MaterialCommunityIcons name="minus" size={16} color={Colors.textPrimary} />
+          <Icon name="minus" size={16} color={Colors.textPrimary} />
           <Text style={[body(16, '700'), { color: Colors.textPrimary }]}>−1</Text>
         </Pressable>
 

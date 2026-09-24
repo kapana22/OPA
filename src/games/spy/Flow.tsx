@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import {
   CategoryChip,
   Divider,
@@ -25,6 +23,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { SpyEngine, type SpyRole } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „სხვა სიტყვა“ (Undercover) — სრული ნაკადი.
@@ -475,8 +474,8 @@ function GameOver({
               const out = engine.eliminated.has(p.id);
               return (
                 <View key={p.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                  <MaterialCommunityIcons
-                    name={sf(ROLE_ICON[engine.roleOf(p)])}
+                  <Icon
+                    name={ROLE_ICON[engine.roleOf(p)]}
                     size={16}
                     color={Colors.textSecondary}
                   />

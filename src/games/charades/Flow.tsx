@@ -1,7 +1,6 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker, RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
@@ -18,6 +17,7 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { CharadesEngine, type CharadesEntry } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „ტელეფონი შუბლზე“ (Heads Up) — სრული ნაკადი.
@@ -157,7 +157,7 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
                 თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება
               </Text>
             </View>
-            <MaterialCommunityIcons
+            <Icon
               name={engine.settings.invertTilt ? 'toggle-switch' : 'toggle-switch-off-outline'}
               size={34}
               color={engine.settings.invertTilt ? Colors.phosphor : Colors.textSecondary}
@@ -439,7 +439,7 @@ function WordRow({ engine, entry }: { engine: CharadesEngine; entry: CharadesEnt
       }}
       style={[styles.wordRow, { backgroundColor: correct ? Colors.phosphor + '1F' : Colors.surface }]}
     >
-      <MaterialCommunityIcons
+      <Icon
         name={correct ? 'check-circle' : 'close-circle'}
         size={21}
         color={correct ? Colors.phosphor : Colors.neonMagenta}

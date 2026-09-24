@@ -2,15 +2,14 @@ import { PlayerCharacter } from './PlayerCharacter';
 import { PlayerAvatarView } from './PlayerAvatarView';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
-import { icon as sf } from '../theme/icons';
 import { Haptics } from '../core/haptics';
 import { Sound } from '../core/sound';
 import { PrimaryButton } from './Buttons';
 import { GameExitButton } from './Cards';
 import { Pressable } from './Pressable';
+import { Icon } from './Icon';
 
 export interface RevealCard {
   word: string;
@@ -154,7 +153,7 @@ export function PassPhoneReveal({
           </Animated.View>
         ) : (
           <View style={styles.cardInner}>
-            <MaterialCommunityIcons name={sf('hand.tap.fill')} size={34} color={Colors.textSecondary} />
+            <Icon name={'hand.tap.fill'} size={34} color={Colors.textSecondary} />
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>დააჭირე და გეჭიროს</Text>
             <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>ხელს აიღებ — მაშინვე გაქრება</Text>
           </View>

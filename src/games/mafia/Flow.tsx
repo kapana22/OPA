@@ -1,9 +1,7 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
-import { icon as sf } from '../../theme/icons';
 import { CategoryChip, Divider, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow , RulesSheet } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -17,6 +15,7 @@ import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
 import { MafiaEngine, roleIcon, roleTitle, type MafiaRole } from './engine';
 import { game as findGame } from '../catalog';
+import { Icon } from '../../ui/Icon';
 
 /**
  * „მაფია“ — სრული ნაკადი.
@@ -556,7 +555,7 @@ function GameOver({
                 const out = engine.eliminated.has(p.id);
                 return (
                   <View key={p.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <MaterialCommunityIcons name={sf(roleIcon[role])} size={16} color={Colors.textSecondary} />
+                    <Icon name={roleIcon[role]} size={16} color={Colors.textSecondary} />
                     <Text
                       style={[body(15, '600'), { color: Colors.textPrimary }, out ? Layout.struck : null]}
                       numberOfLines={1}

@@ -10,10 +10,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { Colors, Elevation, Radius, body, caption, glow, title as titleFont, toTT, FontFamilies } from '../src/theme/theme';
-import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GameTile, MiniGameTile } from '../src/ui/GameTile';
 import { SectionLabel } from '../src/ui/Cards';
@@ -29,6 +27,7 @@ import { Haptics } from '../src/core/haptics';
 import { useDialog } from '../src/ui/Dialog';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 import { enterRight, enterUp } from '../src/ui/motion';
+import { Icon } from '../src/ui/Icon';
 
 const FAMILIES: GameFamily[] = ['loud', 'bluff', 'reading', 'candid'];
 
@@ -173,7 +172,7 @@ export default function Home() {
               style={styles.randomHeaderButton}
             >
               <Animated.View style={shuffleStyle}>
-                <MaterialCommunityIcons name={sf('shuffle')} size={14} color={Colors.phosphor} />
+                <Icon name={'shuffle'} size={14} color={Colors.phosphor} />
               </Animated.View>
               <Text style={styles.randomHeaderText}>{toTT('შემირჩიე')}</Text>
             </Pressable>
@@ -187,8 +186,8 @@ export default function Home() {
               }}
               style={styles.iconButton}
             >
-              <MaterialCommunityIcons
-                name={sf(searchOpen ? 'xmark' : 'magnifyingglass')}
+              <Icon
+                name={searchOpen ? 'xmark' : 'magnifyingglass'}
                 size={18}
                 color={Colors.textPrimary}
               />
@@ -208,7 +207,7 @@ export default function Home() {
         {searchOpen && (
           <Animated.View entering={enterUp(0)} style={[styles.gutter]}>
             <View style={styles.searchBar}>
-              <MaterialCommunityIcons name={sf('magnifyingglass')} size={18} color={Colors.textSecondary} />
+              <Icon name={'magnifyingglass'} size={18} color={Colors.textSecondary} />
               <TextInput
                 value={query}
                 onChangeText={setQuery}
@@ -225,7 +224,7 @@ export default function Home() {
                   onPress={() => setQuery('')}
                   hitSlop={8}
                 >
-                  <MaterialCommunityIcons name={sf('xmark.circle.fill')} size={16} color={Colors.textSecondary} />
+                  <Icon name={'xmark.circle.fill'} size={16} color={Colors.textSecondary} />
                 </Pressable>
               )}
             </View>
@@ -340,7 +339,7 @@ export default function Home() {
       <View style={[styles.dockContainer, { bottom: Math.max(insets.bottom, 16) }]}>
         <View style={styles.floatingDock}>
           <Pressable accessibilityRole="button" accessibilityLabel="თამაშები" accessibilityState={{ selected: true }} style={[styles.dockItem, styles.dockItemActive]}>
-            <MaterialCommunityIcons name={sf('gamecontroller.fill')} size={22} color={Colors.phosphor} />
+            <Icon name={'gamecontroller.fill'} size={22} color={Colors.phosphor} />
             <Text numberOfLines={1} style={styles.dockTextActive}>თამაშები</Text>
           </Pressable>
 
@@ -354,7 +353,7 @@ export default function Home() {
             style={styles.dockItem}
           >
             <View style={styles.dockIconWrap}>
-              <MaterialCommunityIcons name={sf('person.2.fill')} size={22} color={Colors.textSecondary} />
+              <Icon name={'person.2.fill'} size={22} color={Colors.textSecondary} />
               {roster.count > 0 ? (
                 <View style={styles.dockBadge}>
                   <Text style={styles.dockBadgeText}>{roster.count}</Text>
@@ -373,7 +372,7 @@ export default function Home() {
             }}
             style={styles.dockItem}
           >
-            <MaterialCommunityIcons name={sf('trophy.fill')} size={22} color={Colors.textSecondary} />
+            <Icon name={'trophy.fill'} size={22} color={Colors.textSecondary} />
             <Text numberOfLines={1} style={styles.dockText}>ტაბლო</Text>
           </Pressable>
 
@@ -386,7 +385,7 @@ export default function Home() {
             }}
             style={styles.dockItem}
           >
-            <MaterialCommunityIcons name={sf('slider.horizontal.3')} size={22} color={Colors.textSecondary} />
+            <Icon name={'slider.horizontal.3'} size={22} color={Colors.textSecondary} />
             <Text numberOfLines={1} style={styles.dockText}>მართვა</Text>
           </Pressable>
         </View>
@@ -412,14 +411,14 @@ function RecentGameCard({ game, onPress }: { game: PartyGame; onPress: () => voi
             <Image source={artwork} style={styles.recentPosterImage} resizeMode="cover" accessible={false} />
           ) : (
             <View style={styles.recentFallbackArtwork}>
-              <MaterialCommunityIcons name={sf(game.icon)} size={28} color={Colors[game.accent]} />
+              <Icon name={game.icon} size={28} color={Colors[game.accent]} />
             </View>
           )}
         </View>
 
         <View style={styles.recentInfo}>
           <View style={styles.recentBadge}>
-            <MaterialCommunityIcons name={sf('clock.arrow.circlepath')} size={12} color={Colors.phosphor} />
+            <Icon name={'clock.arrow.circlepath'} size={12} color={Colors.phosphor} />
             <Text style={styles.recentBadgeText}>{toTT('ბოლოს ითამაშეთ')}</Text>
           </View>
           <Text style={[titleFont(18), { color: Colors.warmCream, letterSpacing: 0.5 }]} numberOfLines={1}>
@@ -431,7 +430,7 @@ function RecentGameCard({ game, onPress }: { game: PartyGame; onPress: () => voi
         </View>
 
         <View style={styles.recentChevronCircle}>
-          <MaterialCommunityIcons name={sf('chevron.right')} size={16} color={Colors.textSecondary} />
+          <Icon name={'chevron.right'} size={16} color={Colors.textSecondary} />
         </View>
       </Pressable>
     </View>

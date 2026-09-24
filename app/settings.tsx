@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, Switch, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Radius, Space, body, caption } from '../src/theme/theme';
-import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GlassCard } from '../src/ui/Cards';
 import { PrimaryButton } from '../src/ui/Buttons';
@@ -14,6 +12,7 @@ import { Sound } from '../src/core/sound';
 import { Haptics } from '../src/core/haptics';
 import { ContentShoe } from '../src/core/contentShoe';
 import { useDialog } from '../src/ui/Dialog';
+import { Icon } from '../src/ui/Icon';
 
 /** პორტი: `Splash/App/SettingsView.swift`. */
 export default function Settings() {
@@ -92,8 +91,8 @@ export default function Settings() {
           }}
           style={styles.testButton}
         >
-          <MaterialCommunityIcons
-            name={sf('speaker.wave.2.fill')}
+          <Icon
+            name={'speaker.wave.2.fill'}
             size={16}
             color={soundOn || hapticsOn ? Colors.phosphor : Colors.textSecondary}
           />
@@ -114,8 +113,8 @@ export default function Settings() {
           onPress={askReset}
           style={styles.resetButton}
         >
-          <MaterialCommunityIcons
-            name={sf(didReset ? 'checkmark' : 'arrow.clockwise')}
+          <Icon
+            name={didReset ? 'checkmark' : 'arrow.clockwise'}
             size={16}
             color={didReset ? Colors.phosphor : Colors.textSecondary}
           />
