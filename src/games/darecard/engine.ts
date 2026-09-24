@@ -1,6 +1,7 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
 import { loadSettings, saveSettings, num, oneOf } from '../../core/settings';
+import { TurnRotation } from '../../core/turnRotation';
 import { DareCardBank, type DareCard, type TruthDareHeat } from '../../content/banks';
 import { PARTY_FORFEITS, type PartyForfeit } from '../../core/partyForfeit';
 import { Haptics } from '../../core/haptics';
@@ -19,12 +20,21 @@ export type DareCardPhase = 'setup' | 'card' | 'summary';
 export interface DareCardSettings {
   heat: TruthDareHeat;
   forfeit: PartyForfeit;
-  /** 0 = ულიმიტოდ. */
-  cards: number;
+  /**
+   * წრეები: 1–3 · 0 = ულიმიტოდ. ცალობითი რაოდენობა (15 / 25 / 40) მოთამაშეებზე
+   * არ იყოფოდა და ზოგს მეტი ბარათი ხვდებოდა, ქულა კი პოდიუმზე მიდის.
+   */
+  laps: number;
 }
 
 const KEY = 'splash.darecard.settings.v1';
-const DEFAULTS: DareCardSettings = { heat: 'party', forfeit: 'tableChoice', cards: 0 };
+const DEFAULTS: DareCardSettings = { heat: 'party', forfeit: 'tableChoice', laps: 0 };
+/** 0 = ულიმიტოდ. */
+// ბარათი სწრაფია (≈ ნახევარი წუთი), ამიტომ 1–3 წრე მცირე კომპანიაში ძალიან მოკლე
+// გამოდიოდა (2 კაცზე 3 წრე = 6 ბარათი). აქ წრეები უფრო დიდი ნაბიჯით მიდის.
+const CARD_LAPS = [2, 4, 6] as const;
+const MAX_LAPS = CARD_LAPS[CARD_LAPS.length - 1];
+export const DARECARD_LAP_OPTIONS = [0, ...CARD_LAPS];
 const HEATS: TruthDareHeat[] = ['family', 'party', 'spicy'];
 
 export class DareCardEngine extends Observable {
@@ -36,6 +46,8 @@ export class DareCardEngine extends Observable {
   currentCard: DareCard = { text: '—', kind: 'solo', heat: 'family' };
   holderIndex = 0;
   rivalIndex = 0;
+  /** ბარათის შეცვლა ჯერზე ერთხელ — თორემ რთულ ბარათს უსასრულოდ აარიდებდი. */
+  swapped = false;
 
   done: Record<string, number> = {};
   forfeits: Record<string, number> = {};
@@ -48,7 +60,7 @@ export class DareCardEngine extends Observable {
     this.settings = loadSettings<DareCardSettings>(KEY, DEFAULTS, (s) => ({
       heat: oneOf(s.heat, HEATS, DEFAULTS.heat),
       forfeit: oneOf(s.forfeit, PARTY_FORFEITS, DEFAULTS.forfeit),
-      cards: num(s.cards, DEFAULTS.cards, 0, 60),
+      laps: DareCardEngine.sanitizeLaps(s, players.length),
     }));
   }
 
@@ -69,8 +81,18 @@ export class DareCardEngine extends Observable {
     return this.players[this.rivalIndex] ?? null;
   }
 
+  get isEndless(): boolean {
+    return this.settings.laps <= 0;
+  }
+  /** ბარათების რაოდენობა — მთელი წრეები, ყველას თანაბრად. ულიმიტოზე 0. */
+  get totalCards(): number {
+    return this.isEndless ? 0 : TurnRotation.rounds(this.settings.laps, this.players.length);
+  }
   get isLastCard(): boolean {
-    return this.settings.cards > 0 && this.drawn >= this.settings.cards;
+    return !this.isEndless && this.drawn >= this.totalCards;
+  }
+  get canSwap(): boolean {
+    return this.phase === 'card' && !this.swapped;
   }
   get needsDuelWinner(): boolean {
     return this.currentCard.kind === 'duel' && this.rival !== null;
@@ -96,8 +118,15 @@ export class DareCardEngine extends Observable {
   }
 
   get champion(): Player | null {
+    return this.champions[0] ?? null;
+  }
+
+  /** ყველა, ვინც პირველ ადგილს იყოფს — ფრე ანბანით აღარ წყდება. */
+  get champions(): Player[] {
     const top = this.ranking[0];
-    return top && this.doneCount(top) > 0 ? top : null;
+    if (!top) return [];
+    const best = this.scoreFor(top);
+    return this.ranking.filter((p) => this.scoreFor(p) === best && this.doneCount(p) > 0);
   }
 
   get mostForfeits(): Player[] {
@@ -170,6 +199,8 @@ export class DareCardEngine extends Observable {
   }
 
   swapCard(): void {
+    if (!this.canSwap) return;
+    this.swapped = true;
     this.drawCard();
     Haptics.tap();
     this.notify();
@@ -202,6 +233,7 @@ export class DareCardEngine extends Observable {
 
   private nextCard(): void {
     this.drawn += 1;
+    this.swapped = false;
     this.drawCard();
   }
 
@@ -213,8 +245,15 @@ export class DareCardEngine extends Observable {
     this.pickRival();
   }
 
+  /** მეტოქე — შემთხვევითი სხვა მოთამაშე (ადრე ყოველთვის მომდევნო იყო). */
   private pickRival(): void {
-    this.rivalIndex = this.players.length > 1 ? (this.holderIndex + 1) % this.players.length : 0;
+    const n = this.players.length;
+    if (n <= 1) {
+      this.rivalIndex = 0;
+      return;
+    }
+    const holder = this.holderIndex % n;
+    this.rivalIndex = (holder + 1 + Math.floor(Math.random() * (n - 1))) % n;
   }
 
   // MARK: - პარამეტრები
@@ -227,9 +266,18 @@ export class DareCardEngine extends Observable {
     this.settings = { ...this.settings, forfeit: value };
     this.persist();
   }
-  setCards(value: number): void {
-    this.settings = { ...this.settings, cards: Math.min(Math.max(0, value), 60) };
+  setLaps(value: number): void {
+    this.settings = { ...this.settings, laps: Math.min(Math.max(0, Math.round(value)), MAX_LAPS) };
     this.persist();
+  }
+
+  /** შენახული მნიშვნელობა — ახალი `laps` ან ძველი `cards` (0 = ულიმიტო, N = ცალობით). */
+  private static sanitizeLaps(s: Partial<DareCardSettings> & { cards?: unknown }, players: number): number {
+    if (typeof s.laps === 'number' && Number.isFinite(s.laps)) return num(Math.round(s.laps), DEFAULTS.laps, 0, MAX_LAPS);
+    if (typeof s.cards === 'number' && Number.isFinite(s.cards)) {
+      return s.cards <= 0 ? 0 : Math.min(Math.max(1, Math.round(s.cards / Math.max(1, players))), MAX_LAPS);
+    }
+    return DEFAULTS.laps;
   }
 
   private persist(): void {

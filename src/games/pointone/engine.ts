@@ -130,6 +130,7 @@ export class PointOneEngine extends Observable {
       } else {
         this.ticker.stop();
         Haptics.heavy();
+        Sound.play('start');
         this.stage = 'tally';
       }
       this.notify();

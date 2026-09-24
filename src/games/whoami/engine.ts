@@ -44,6 +44,9 @@ export interface WhoAmISettings {
 const KEY = 'splash.whoami.settings.v2'; // v1 ცალობით ჯერს ინახავდა
 const DEFAULTS: WhoAmISettings = { seconds: 90, laps: 1, categoryID: null, invertTilt: false };
 
+/** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება ან დახრა მეორე, უნახავ სიტყვას არ ჩაითვლის. */
+export const REGISTER_GAP_MS = 600;
+
 export class WhoAmIEngine extends Observable {
   readonly players: Player[];
   settings: WhoAmISettings;
@@ -61,6 +64,7 @@ export class WhoAmIEngine extends Observable {
   private tilt = new TiltSensor();
   private timer = new Ticker();
   private countdownTimer = new Ticker();
+  private lastRecordAt = -Infinity;
 
   constructor(players: Player[]) {
     super();
@@ -169,6 +173,7 @@ export class WhoAmIEngine extends Observable {
     this.flash = null;
     this.remaining = this.settings.seconds;
     this.countdown = 3;
+    this.lastRecordAt = -Infinity;
     this.phase = 'countdown';
     Screen.keepAwake();
     this.startCountdown();
@@ -204,7 +209,7 @@ export class WhoAmIEngine extends Observable {
     if (this.isLastTurn) {
       // ვიბრაცია შეჯამების ეკრანზეა (`win`) — აქ მეორედ აღარ ზუზუნებს.
       this.phase = 'summary';
-      Sound.play('correct');
+      Sound.play('win');
     } else {
       this.turnIndex += 1;
       this.phase = 'turnIntro';
@@ -254,6 +259,10 @@ export class WhoAmIEngine extends Observable {
   // MARK: - შიდა
 
   private record(verdict: WhoAmIVerdict): void {
+    // ხელითაც და დახრითაც — ძალიან სწრაფი მეორე პასუხი იგნორდება.
+    const now = Date.now();
+    if (now - this.lastRecordAt < REGISTER_GAP_MS) return;
+    this.lastRecordAt = now;
     this.results.push({ id: uuid(), identity: this.currentIdentity, verdict, isOvertime: false });
     this.flash = { id: uuid(), verdict };
     // ტელეფონი შუბლზეა — მფლობელი ეკრანს ვერ ხედავს, ხმა და ვიბრაცია

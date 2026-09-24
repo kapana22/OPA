@@ -66,7 +66,9 @@ export class NightLog extends Observable {
       this._startedAt = Date.now();
       setJSON(NightLog.startKey, this._startedAt);
     }
-    this._plays[id] = (this._plays[id] ?? 0) + 1;
+    // ახალი ობიექტი და არა ადგილზე ცვლა — მთავარი ეკრანის `useMemo(night.plays)`
+    // სხვაგვარად ცვლილებას ვერ ამჩნევდა და „პოპულარული“ რიგი არ ახლდებოდა.
+    this._plays = { ...this._plays, [id]: (this._plays[id] ?? 0) + 1 };
     setJSON(NightLog.playsKey, this._plays);
     this.notify();
   }

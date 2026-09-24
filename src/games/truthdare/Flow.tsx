@@ -17,7 +17,8 @@ import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
-import { TruthDareEngine, orderTitle, type TruthDareOrder } from './engine';
+import { TruthDareEngine, TRUTHDARE_LAP_OPTIONS, orderTitle, type TruthDareOrder } from './engine';
+import { TurnRotation } from '../../core/turnRotation';
 import { game as findGame } from '../catalog';
 
 /**
@@ -29,12 +30,9 @@ import { game as findGame } from '../catalog';
 
 const HEATS: TruthDareHeat[] = ['family', 'party', 'spicy'];
 const ORDERS: TruthDareOrder[] = ['circle', 'bottle'];
-const TURN_OPTIONS = [0, 10, 20, -1];
-
 function turnLabel(value: number): string {
-  if (value === 0) return 'ყველა ერთხელ';
   if (value === -1) return 'უსასრულო';
-  return String(value);
+  return TurnRotation.label(value);
 }
 
 export function TruthDareFlow({ roster, onExit }: GameFlowProps) {
@@ -116,12 +114,12 @@ function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => vo
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ჯერი</Text>
             <View style={Layout.chipRow}>
-              {TURN_OPTIONS.map((value) => (
+              {TRUTHDARE_LAP_OPTIONS.map((value) => (
                 <CategoryChip
                   key={value}
                   label={turnLabel(value)}
-                  selected={engine.settings.turns === value}
-                  onPress={() => engine.setTurns(value)}
+                  selected={engine.settings.laps === value}
+                  onPress={() => engine.setLaps(value)}
                 />
               ))}
             </View>
@@ -317,7 +315,7 @@ function Task({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
-        <GhostButton title="სხვა ბარათი" icon="shuffle" onPress={() => engine.swap()} />
+        {engine.canSwap ? <GhostButton title="სხვა ბარათი" icon="shuffle" onPress={() => engine.swap()} /> : null}
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <Pressable
             accessibilityRole="button"

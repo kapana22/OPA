@@ -1,8 +1,10 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Colors, Radius, Space, body, title as titleFont } from '../theme/theme';
 import { PrimaryButton } from './Buttons';
 import { Pressable } from './Pressable';
+import Animated from 'react-native-reanimated';
+import { popIn } from './motion';
 
 /**
  * აპისეული დიალოგი — `Alert`-ის ნაცვლად.
@@ -41,16 +43,26 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
   const [request, setRequest] = useState<DialogRequest | null>(null);
   const [value, setValue] = useState('');
 
+  // მიმდინარე მოთხოვნა ref-შიც — `onClose` state-ის updater-ში აღარ ეშვება
+  // (React მას შეიძლება ორჯერ გაუშვას და პაუზა ორჯერ მოიხსნას).
+  const currentRef = useRef<DialogRequest | null>(null);
+
   const show = useCallback<Show>((next) => {
+    // ძველი დიალოგი ახლით იცვლება — მისი `onClose` მაინც უნდა გაეშვას,
+    // თორემ მის მიერ დაკავებული პაუზა (`GamePause.hold`) გაჭედილი რჩებოდა.
+    const previous = currentRef.current;
+    currentRef.current = next;
+    previous?.onClose?.();
     setValue(next.input?.initial ?? '');
     setRequest(next);
   }, []);
 
   const close = useCallback(() => {
-    setRequest((current) => {
-      current?.onClose?.();
-      return null;
-    });
+    const current = currentRef.current;
+    if (!current) return;
+    currentRef.current = null;
+    setRequest(null);
+    current.onClose?.();
   }, []);
 
   const api = useMemo(() => show, [show]);
@@ -65,6 +77,8 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
           style={styles.backdrop}
         >
           {/* შიგთავსზე დაჭერა დიალოგს არ ხურავს */}
+          {/* ბარათი ზამბარით „ამოხტება“ — `key` ახალ მოთხოვნაზე ანიმაციას თავიდან უშვებს. */}
+          <Animated.View key={request?.title ?? 'dialog'} entering={popIn()} style={styles.cardWrap}>
           <Pressable onPress={() => {}} style={styles.card}>
             <Text style={[titleFont(20), styles.centered, { color: Colors.textPrimary }]}>{request?.title}</Text>
 
@@ -79,6 +93,7 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
                 placeholder={request.input.placeholder}
                 placeholderTextColor={Colors.textSecondary}
                 autoFocus
+                maxLength={24}
                 style={[body(17, '600'), styles.input, { color: Colors.textPrimary }]}
               />
             ) : null}
@@ -114,6 +129,7 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
               )}
             </View>
           </Pressable>
+          </Animated.View>
         </Pressable>
       </Modal>
     </DialogContext.Provider>
@@ -135,6 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: Space.l,
   },
+  cardWrap: { width: '100%', maxWidth: 420, alignItems: 'center' },
   card: {
     width: '100%',
     maxWidth: 420,

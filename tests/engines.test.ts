@@ -26,7 +26,7 @@ beforeEach(() => __resetForTests());
 
 // ═══ „10-ია, მაგრამ...“
 describe('TenBut — ქულა სიზუსტისა და გაკვირვებისთვის', () => {
-  it('ქულები საფეხურებად ნაწილდება და სამიზნეს გაკვირვება ერგება', () => {
+  it('ქულები საფეხურებად ნაწილდება, სამიზნეს გაკვირვებისთვის ქულა აღარ ერგება', () => {
     const players = names(5);
     const e = new TenButEngine(players);
     e.setLaps(1);
@@ -41,13 +41,13 @@ describe('TenBut — ქულა სიზუსტისა და გაკ�
     e.submit(8); // ზუსტი  → +3
     e.submit(7); // ერთით  → +2
     e.submit(6); // ორით   → +1
-    e.submit(2); // ექვსით → 0, სამიზნეს +1
+    e.submit(2); // ექვსით → 0; სამიზნეს ქულა არ ერიცხება (ტყუილს აჯილდოებდა)
 
     expect(e.roundPoint(guessers[0])).toBe(3);
     expect(e.roundPoint(guessers[1])).toBe(2);
     expect(e.roundPoint(guessers[2])).toBe(1);
     expect(e.roundPoint(guessers[3])).toBe(0);
-    expect(e.roundPoint(e.target!)).toBe(1);
+    expect(e.roundPoint(e.target!)).toBe(0);
   });
 
   it('სამიზნე შემდეგ რაუნდში იცვლება', () => {
@@ -100,7 +100,7 @@ describe('TenBut — ქულა სიზუსტისა და გაკ�
 
 // ═══ „ნორმაა თუ არა?“
 describe('Standards — პროგნოზი მკითხავს, ქულა უმცირესობასაც', () => {
-  it('ზუსტ პროგნოზზე +3, უმცირესობაზე +1', () => {
+  it('ზუსტ პროგნოზზე +3, უმცირესობას ქულა აღარ ერგება', () => {
     const players = names(5);
     const e = new StandardsEngine(players);
     e.setLaps(1);
@@ -120,8 +120,9 @@ describe('Standards — პროგნოზი მკითხავს, ქ�
     expect(e.normalVotes).toBe(2);
     expect(e.minoritySide).toBe('normal');
     expect(players.filter((p) => e.isInMinority(p))).toHaveLength(2);
-    // ზუსტი პროგნოზი 3 + უმცირესობა 1 = 4
-    expect(e.roundPoint(reader)).toBe(4);
+    // მხოლოდ ზუსტი პროგნოზი — 3; უმცირესობაში მყოფი მეორე მოთამაშე ქულას არ იღებს
+    expect(e.roundPoint(reader)).toBe(3);
+    expect(players.filter((p) => e.roundPoint(p) > 0)).toHaveLength(1);
   });
 
   it('ერთსულოვნებაზე უმცირესობის ქულა არავის ერგება', () => {
@@ -178,6 +179,9 @@ describe('დასტა — მეხსიერება პარტიე�
       e.startGame();
       for (let i = 0; i < 6; i++) {
         seen.push(e.currentFlaw);
+        // next() მხოლოდ შედეგის ეკრანიდან მუშაობს — რაუნდს ბოლომდე ვატარებთ.
+        e.beginRating();
+        for (let k = 0; k < players.length; k++) e.submit(5);
         e.next();
       }
     }
@@ -259,10 +263,11 @@ describe('MostLikely — სწრაფი და ფარული რეჟ�
     e.setRounds(3);
     e.startGame();
     e.beginVoting();
-    e.castVote(players[0]);
+    // საკუთარ თავს ხმას ვერავინ აძლევს.
+    e.castVote(players[1]);
     e.castVote(players[0]);
     e.castVote(players[1]);
-    e.castVote(players[1]);
+    e.castVote(players[0]);
     expect(e.phase).toBe('result');
     // ორ-ორი ხმა — ორივე გამარჯვებულია
     expect(new Set(e.roundWinners)).toEqual(new Set([players[0].id, players[1].id]));
@@ -274,11 +279,11 @@ describe('MostLikely — სწრაფი და ფარული რეჟ�
 // ═══ „გააკეთე ან...“
 describe('DareCard — ბარათების დასტა', () => {
   it('მთელი პარტია გადის, ბარათი არ მეორდება და ჯერი წრეზე ტრიალებს', () => {
-    const players = names(5);
+    const players = names(4);
     const e = new DareCardEngine(players);
     e.setHeat('party');
     e.setForfeit('tableChoice');
-    e.setCards(12);
+    e.setLaps(3); // 4 × 3 = 12
     e.startGame();
 
     expect(e.phase).toBe('card');
@@ -332,7 +337,7 @@ describe('DareCard — ბარათების დასტა', () => {
   it('ჩემპიონი ყველაზე მეტს ასრულებს', () => {
     const players = names(4);
     const e = new DareCardEngine(players);
-    e.setCards(8);
+    e.setLaps(2);
     e.startGame();
     while (e.phase === 'card') {
       if (e.currentCard.kind === 'duel') e.resolveDuel(e.holder!);
@@ -349,7 +354,7 @@ describe('RuleCard — წესები გროვდება, შვებ
   it('მიღებული წესი მოქმედ სიაში რჩება', () => {
     const players = names(4);
     const e = new RuleCardEngine(players);
-    e.setCards(30);
+    e.setLaps(0);
     e.setRuleLimit(6);
     e.startGame();
 
@@ -370,7 +375,7 @@ describe('RuleCard — წესები გროვდება, შვებ
 
   it('ჭერზე მისვლისას მხოლოდ შვება მოდის', () => {
     const e = new RuleCardEngine(names(4));
-    e.setCards(60);
+    e.setLaps(0);
     e.setRuleLimit(3);
     e.startGame();
 
@@ -386,7 +391,7 @@ describe('RuleCard — წესები გროვდება, შვებ
 
   it('შვება წესს შლის', () => {
     const e = new RuleCardEngine(names(4));
-    e.setCards(60);
+    e.setLaps(0);
     e.setRuleLimit(3);
     e.startGame();
     while (e.phase === 'card' && e.activeRules.length < 3) {

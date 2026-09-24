@@ -6,6 +6,7 @@ import { Colors, Space, body, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
+import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
 import { useKeepScreenAwake } from '../../core/orientationLock';
 import { WordBank } from '../../content/banks';
@@ -242,24 +243,39 @@ function Exploded({ engine, onExit }: { engine: BombEngine; onExit: () => void }
           <View style={{ gap: 8 }}>
             {engine.players.map((p) => {
               const lives = engine.livesLeft(p);
+              const isVictim = p.id === victim?.id;
+              // ბომბი გადაცემისას აფეთქდა — სხვა ცოცხალ მოთამაშეზე შეხება ბრალს გადაიტანს.
+              const canPick = !isVictim && lives > 0;
               return (
-                <View key={p.id} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Pressable
+                  key={p.id}
+                  disabled={!canPick}
+                  accessibilityRole={canPick ? 'button' : undefined}
+                  onPress={() => engine.reassignVictim(p)}
+                  style={{ flexDirection: 'row', alignItems: 'center', minHeight: 32 }}
+                >
                   <Text
                     style={[
-                      body(15, '600'),
-                      { color: lives > 0 ? Colors.textPrimary : Colors.textSecondary, flex: 1 },
-                      lives === 0 ? Layout.struck : null,
+                      body(15, isVictim ? '800' : '600'),
+                      {
+                        color: isVictim ? Colors.neonMagenta : lives > 0 ? Colors.textPrimary : Colors.textSecondary,
+                        flex: 1,
+                      },
+                      lives === 0 && !isVictim ? Layout.struck : null,
                     ]}
                     numberOfLines={1}
                   >
                     {p.name}
                   </Text>
                   <Text style={{ fontSize: 13, color: Colors.neonMagenta }}>{'♥'.repeat(lives)}</Text>
-                </View>
+                </Pressable>
               );
             })}
           </View>
         </GlassCard>
+        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, marginTop: 8 }]}>
+          ბომბი სხვას ეჭირა? შეეხე მის სახელს.
+        </Text>
       </View>
 
       <View style={{ flex: 1 }} />

@@ -3,11 +3,12 @@ import { StyleSheet, Switch, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, Space, body, caption, title as titleFont } from '../src/theme/theme';
+import { Colors, Radius, Space, body, caption } from '../src/theme/theme';
 import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GlassCard } from '../src/ui/Cards';
 import { PrimaryButton } from '../src/ui/Buttons';
+import { PageHeader } from '../src/ui/PageHeader';
 import { Pressable } from '../src/ui/Pressable';
 import { Sound } from '../src/core/sound';
 import { Haptics } from '../src/core/haptics';
@@ -61,8 +62,8 @@ export default function Settings() {
   return (
     <View style={{ flex: 1 }}>
       <SplashBackground />
-      <View style={{ flex: 1, paddingTop: Math.max(insets.top, 28) + 12, paddingHorizontal: 20, gap: 14 }}>
-        <Text style={[titleFont(24), { color: Colors.textPrimary, textAlign: 'center' }]}>პარამეტრები</Text>
+      <PageHeader title="პარამეტრები" />
+      <View style={{ flex: 1, paddingHorizontal: 20, gap: 14 }}>
 
         <GlassCard>
           <View style={{ gap: Space.m }}>
@@ -107,6 +108,8 @@ export default function Settings() {
 
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={didReset ? 'მეხსიერება განულდა' : 'კონტენტის მეხსიერების განულება'}
+          accessibilityState={{ disabled: didReset }}
           disabled={didReset}
           onPress={askReset}
           style={styles.resetButton}

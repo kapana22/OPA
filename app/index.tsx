@@ -27,6 +27,8 @@ import { popularIDs } from '../src/state/popular';
 import { newestFirst } from '../src/state/homeFilter';
 import { Haptics } from '../src/core/haptics';
 import { useDialog } from '../src/ui/Dialog';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
+import { enterRight, enterUp } from '../src/ui/motion';
 
 const FAMILIES: GameFamily[] = ['loud', 'bluff', 'reading', 'candid'];
 
@@ -51,6 +53,14 @@ export default function Home() {
   const open = useOpenGame();
 
   const [query, setQuery] = useState('');
+
+  // „შემირჩიე“ — აიქონი ერთხელ ბრუნდება, თითქოს კამათელი გაგორდა.
+  const shuffleTurn = useSharedValue(0);
+  const shuffleStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${shuffleTurn.value * 360}deg` }] }));
+  const spinShuffle = () => {
+    shuffleTurn.value = 0;
+    shuffleTurn.value = withTiming(1, { duration: 520, easing: Easing.out(Easing.back(1.6)) });
+  };
   const [searchOpen, setSearchOpen] = useState(false);
 
   const columnWidth = Math.floor((windowWidth - 32 - 12) / 2);
@@ -61,8 +71,8 @@ export default function Home() {
     [night.plays, catalogIDs],
   );
 
-  const visibleRecentIDs = recent.visibleIDs(catalogIDs);
-  const recentGames = useMemo(() => gamesByIDs(visibleRecentIDs), [visibleRecentIDs, catalogIDs]);
+  // `recent.ids` ყოველ ჩაწერაზე ახალი მასივია — მასზე მიბმული memo მართლა იჭერს.
+  const recentGames = useMemo(() => gamesByIDs(recent.visibleIDs(catalogIDs)), [recent.ids, catalogIDs]);
   const recentGame = recentGames[0];
 
   const gamesByFamily = useMemo(() => {
@@ -90,8 +100,6 @@ export default function Home() {
       return null;
     }
     const chosen = playable[Math.floor(Math.random() * playable.length)];
-    recent.record(chosen.id);
-    night.record(chosen.id);
     open(chosen);
     return chosen;
   };
@@ -115,8 +123,6 @@ export default function Home() {
       });
       return;
     }
-    recent.record(g.id);
-    night.record(g.id);
     open(g);
   };
 
@@ -146,7 +152,7 @@ export default function Home() {
         showsVerticalScrollIndicator={false}
       >
         {/* ── 1. HEADER ROW (OPA Logo + Shuffle + Search) ── */}
-        <View style={[styles.headerRow, styles.gutter]}>
+        <Animated.View entering={enterUp(0)} style={[styles.headerRow, styles.gutter]}>
           <Image
             source={require('../assets/Logo.png')}
             style={styles.logo}
@@ -161,11 +167,14 @@ export default function Home() {
               accessibilityLabel="შემთხვევითი თამაშის არჩევა. შემირჩიე"
               onPress={() => {
                 Haptics.medium();
+                spinShuffle();
                 openRandom();
               }}
               style={styles.randomHeaderButton}
             >
-              <MaterialCommunityIcons name={sf('shuffle')} size={14} color={Colors.phosphor} />
+              <Animated.View style={shuffleStyle}>
+                <MaterialCommunityIcons name={sf('shuffle')} size={14} color={Colors.phosphor} />
+              </Animated.View>
               <Text style={styles.randomHeaderText}>{toTT('შემირჩიე')}</Text>
             </Pressable>
 
@@ -185,19 +194,19 @@ export default function Home() {
               />
             </Pressable>
           </View>
-        </View>
+        </Animated.View>
 
         {/* ── 2. WELCOME TITLE ── */}
-        <View style={[styles.welcomeRow, styles.gutter]}>
+        <Animated.View entering={enterUp(1)} style={[styles.welcomeRow, styles.gutter]}>
           <View style={{ width: 3, height: 25, backgroundColor: Colors.phosphor, ...glow(Colors.phosphor, 'strong') }} />
           <Text style={[titleFont(23), styles.welcomeTitle, { color: Colors.warmCream }]}>
             {toTT('რას ვითამაშებთ?')}
           </Text>
-        </View>
+        </Animated.View>
 
         {/* ── SEARCH BAR (თუ გახსნილია) ── */}
         {searchOpen && (
-          <View style={[styles.gutter]}>
+          <Animated.View entering={enterUp(0)} style={[styles.gutter]}>
             <View style={styles.searchBar}>
               <MaterialCommunityIcons name={sf('magnifyingglass')} size={18} color={Colors.textSecondary} />
               <TextInput
@@ -220,7 +229,7 @@ export default function Home() {
                 </Pressable>
               )}
             </View>
-          </View>
+          </Animated.View>
         )}
 
         {/* ── ძებნის შედეგები ── */}
@@ -231,15 +240,15 @@ export default function Home() {
             </Text>
             {filteredGames.length > 0 ? (
               <View style={styles.grid}>
-                {filteredGames.map((game) => (
-                  <View key={game.id} style={{ width: columnWidth }}>
+                {filteredGames.map((game, i) => (
+                  <Animated.View key={game.id} entering={enterUp(i)} style={{ width: columnWidth }}>
                     <GameTile
                       game={game}
                       playerCount={roster.count}
                       onPlay={() => handleGamePress(game)}
                       onInfo={() => openInfo(game)}
                     />
-                  </View>
+                  </Animated.View>
                 ))}
               </View>
             ) : (
@@ -253,7 +262,7 @@ export default function Home() {
           <>
             {/* ── 3. RECENT GAME / HERO ── */}
             {recentGame && (
-              <View style={[styles.gutter]}>
+              <Animated.View entering={enterUp(2)} style={[styles.gutter]}>
                 <RecentGameCard
                   game={recentGame}
                   onPress={() => {
@@ -261,12 +270,12 @@ export default function Home() {
                     open(recentGame);
                   }}
                 />
-              </View>
+              </Animated.View>
             )}
 
             {/* ── 4. POPULAR ROW ── */}
             {popular.length > 0 && (
-              <View style={{ gap: 10 }}>
+              <Animated.View entering={enterUp(3)} style={{ gap: 10 }}>
                 <View style={styles.gutter}>
                   <SectionLabel text="პოპულარული" icon="flame.fill" accentColor={Colors.phosphor} />
                 </View>
@@ -275,26 +284,27 @@ export default function Home() {
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.horizontalRow}
                 >
-                  {popular.map((game) => (
-                    <MiniGameTile
-                      key={game.id}
-                      game={game}
-                      playerCount={roster.count}
-                      onPlay={() => handleGamePress(game)}
-                      onInfo={() => openInfo(game)}
-                    />
+                  {popular.map((game, i) => (
+                    <Animated.View key={game.id} entering={enterRight(3 + i)}>
+                      <MiniGameTile
+                        game={game}
+                        playerCount={roster.count}
+                        onPlay={() => handleGamePress(game)}
+                        onInfo={() => openInfo(game)}
+                      />
+                    </Animated.View>
                   ))}
                 </ScrollView>
-              </View>
+              </Animated.View>
             )}
 
             {/* ── 5. FAMILIES ── */}
-            {FAMILIES.map((family) => {
+            {FAMILIES.map((family, familyIndex) => {
               const list = gamesByFamily.get(family) ?? [];
               if (list.length === 0) return null;
               const conf = FAMILY_CONFIG[family];
               return (
-                <View key={family} style={{ gap: 10 }}>
+                <Animated.View key={family} entering={enterUp(4 + familyIndex)} style={{ gap: 10 }}>
                   <View style={styles.gutter}>
                     <SectionLabel
                       text={familyTitle[family]}
@@ -308,17 +318,18 @@ export default function Home() {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.horizontalRow}
                   >
-                    {list.map((game) => (
-                      <MiniGameTile
-                        key={game.id}
-                        game={game}
-                        playerCount={roster.count}
-                        onPlay={() => handleGamePress(game)}
-                        onInfo={() => openInfo(game)}
-                      />
+                    {list.map((game, i) => (
+                      <Animated.View key={game.id} entering={enterRight(4 + familyIndex + i)}>
+                        <MiniGameTile
+                          game={game}
+                          playerCount={roster.count}
+                          onPlay={() => handleGamePress(game)}
+                          onInfo={() => openInfo(game)}
+                        />
+                      </Animated.View>
                     ))}
                   </ScrollView>
-                </View>
+                </Animated.View>
               );
             })}
           </>
@@ -328,7 +339,7 @@ export default function Home() {
       {/* ── FLOATING GLASS DOCK (Bottom Navigation) ── */}
       <View style={[styles.dockContainer, { bottom: Math.max(insets.bottom, 16) }]}>
         <View style={styles.floatingDock}>
-          <Pressable accessibilityRole="button" accessibilityLabel="თამაშები" style={[styles.dockItem, styles.dockItemActive]}>
+          <Pressable accessibilityRole="button" accessibilityLabel="თამაშები" accessibilityState={{ selected: true }} style={[styles.dockItem, styles.dockItemActive]}>
             <MaterialCommunityIcons name={sf('gamecontroller.fill')} size={22} color={Colors.phosphor} />
             <Text numberOfLines={1} style={styles.dockTextActive}>თამაშები</Text>
           </Pressable>
@@ -478,6 +489,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   welcomeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     paddingTop: 4,
     paddingBottom: 4,
   },

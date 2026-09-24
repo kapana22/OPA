@@ -222,7 +222,9 @@ function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void
       </Text>
 
       <ScrollView contentContainerStyle={Layout.nameGrid}>
-        {engine.players.map((player) => (
+        {engine.players
+          .filter((player) => !engine.isSecret || player.id !== engine.currentVoter?.id)
+          .map((player) => (
           <Pressable
             key={player.id}
             accessibilityRole="button"
@@ -331,7 +333,8 @@ function Summary({ engine, roster, onExit }: { engine: MostLikelyEngine; roster:
     Haptics.success();
   });
 
-  const top = engine.ranking[0];
+  const leaders = engine.leaders;
+  const top = leaders[0];
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
@@ -346,7 +349,7 @@ function Summary({ engine, roster, onExit }: { engine: MostLikelyEngine; roster:
       {top ? (
         <>
           <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {top.name} — სულ {engine.totalFor(top)} დასახელება
+            {leaders.map((p) => p.name).join(' და ')} — სულ {engine.totalFor(top)} დასახელება
           </Text>
           <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
             საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
@@ -356,7 +359,7 @@ function Summary({ engine, roster, onExit }: { engine: MostLikelyEngine; roster:
 
       <SummaryAwards
         awards={[
-          { title: 'ტელეფონის მაგნიტი', players: top ? [top] : [], note: 'ყველაზე ხშირად დასახელებული', tint: Colors.phosphor },
+          { title: 'ტელეფონის მაგნიტი', players: leaders, note: 'ყველაზე ხშირად დასახელებული', tint: Colors.phosphor },
           { title: 'რადარის ქვემოთ', players: engine.neverNamed, note: 'ვერავინ დაასახელა ვერც ერთხელ', tint: Colors.neonCyan },
         ]}
       />

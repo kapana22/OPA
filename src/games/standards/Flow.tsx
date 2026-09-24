@@ -21,8 +21,7 @@ import { StandardsEngine, type StandardsVerdict } from './engine';
  * „ნორმაა თუ არა?“ (Where's the Line?) — სრული ნაკადი.
  *
  * პორტი: `Splash/Games/Standards/*.swift` (6 ხედი).
- * ქულა ორ ადგილას ჩნდება: **მკითხავს** ზუსტი პროგნოზისთვის და
- * **უმცირესობას** გულწრფელობისთვის.
+ * ქულას მხოლოდ **მკითხავი** იღებს — ზუსტი პროგნოზისთვის.
  */
 
 const Palette = { normal: Colors.neonCyan, tooMuch: Colors.neonMagenta, accent: Colors.neonCyan };
@@ -62,8 +61,6 @@ function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => vo
             <Rule
               text={`რაუნდის მკითხავი პროგნოზსაც წერს: რამდენი იტყვის „ნორმაა“. ზუსტი +${StandardsEngine.exactReward}, ერთით აცდენა +${StandardsEngine.closeReward}.`}
             />
-            <Rule text={`უმცირესობაში დარჩენილებს +${StandardsEngine.minorityReward} — გულწრფელობა ჯილდოვდება.`} />
-            <Rule text="ერთსულოვნებაზე უმცირესობის ქულა არავის ერგება." />
           </View>
         </GlassCard>
 
@@ -266,7 +263,7 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
           </View>
         ) : (
           <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            უმცირესობაში დარჩენა +{StandardsEngine.minorityReward} ქულაა — გულწრფელად უპასუხე.
+            გულწრფელად უპასუხე.
           </Text>
         )}
       </ScrollView>
@@ -386,8 +383,7 @@ function Result({ engine, onExit }: { engine: StandardsEngine; onExit: () => voi
       <Text
         style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}
       >
-        მკითხავს ზუსტი პროგნოზი +{StandardsEngine.exactReward} · ერთით აცდენა +{StandardsEngine.closeReward} ·
-        უმცირესობას +{StandardsEngine.minorityReward}
+        მკითხავს ზუსტი პროგნოზი +{StandardsEngine.exactReward} · ერთით აცდენა +{StandardsEngine.closeReward}
       </Text>
 
       <View style={{ flex: 1 }} />

@@ -177,28 +177,46 @@ export class MafiaEngine extends Observable {
     this.notify();
   }
 
+  /**
+   * ღამის ქმედება მხოლოდ მაშინ მიიღება, თუ ტელეფონი ახლა ამ როლის მქონეს
+   * უჭირავს. ორმაგი შეხება სხვაგვარად შემდეგ მოთამაშეს ჯერს გამოტოვებინებდა.
+   * `actor` — ვინც ღილაკს დააჭირა (ეკრანი მას იცნობს); ძველი ეკრანის
+   * დაგვიანებული შეხება ახალ მოთამაშეზე აღარ ითვლება.
+   */
+  private canAct(role: MafiaRole, actor?: Player): boolean {
+    const current = this.currentNightPlayer;
+    if (this.phase !== 'night' || !current || this.roleOf(current) !== role) return false;
+    return actor === undefined || actor.id === current.id;
+  }
+
   /** მოქალაქეს ღამით ქმედება არ აქვს — ტელეფონი მაინც გადადის, რომ როლი არ გაიცეს. */
-  skipNightTurn(): void {
+  skipNightTurn(actor?: Player): void {
+    if (!this.canAct('civilian', actor)) return;
     this.advanceNight();
   }
 
-  mafiaChoose(target: Player): void {
+  mafiaChoose(target: Player, actor?: Player): void {
+    if (!this.canAct('mafia', actor)) return;
     this.mafiaVotes[target.id] = (this.mafiaVotes[target.id] ?? 0) + 1;
     this.advanceNight();
   }
 
-  doctorSave(target: Player): void {
+  doctorSave(target: Player, actor?: Player): void {
+    if (!this.canAct('doctor', actor)) return;
     this.savedID = target.id;
     this.advanceNight();
   }
 
-  detectiveCheck(target: Player): void {
+  detectiveCheck(target: Player, actor?: Player): void {
+    // ერთი შემოწმება ღამეში — მეორე შეხება შედეგს არ ცვლის.
+    if (!this.canAct('detective', actor) || this.checkResult !== null) return;
     this.checkedID = target.id;
     this.checkResult = this.roleOf(target) === 'mafia';
     this.notify();
   }
 
-  detectiveDone(): void {
+  detectiveDone(actor?: Player): void {
+    if (!this.canAct('detective', actor) || this.checkResult === null) return;
     this.advanceNight();
   }
 
@@ -231,6 +249,7 @@ export class MafiaEngine extends Observable {
   // MARK: - დღე
 
   beginVote(): void {
+    if (this.phase !== 'morning') return;
     this.settleOrContinue(() => {
       this.phase = 'dayVote';
       this.notify();
@@ -238,6 +257,7 @@ export class MafiaEngine extends Observable {
   }
 
   voteOut(player: Player): void {
+    if (this.phase !== 'dayVote' || this.eliminated.has(player.id)) return;
     this.votedOutID = player.id;
     this.eliminated.add(player.id);
     this.phase = 'dayResult';

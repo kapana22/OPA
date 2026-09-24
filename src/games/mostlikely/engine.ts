@@ -87,6 +87,13 @@ export class MostLikelyEngine extends Observable {
     });
   }
 
+  /** ყველაზე ხშირად დასახელებული(ები) — ფრე ანბანით აღარ წყდება. */
+  get leaders(): Player[] {
+    const best = Math.max(0, ...this.players.map((p) => this.totals[p.id] ?? 0));
+    if (best === 0) return [];
+    return this.ranking.filter((p) => (this.totals[p.id] ?? 0) === best);
+  }
+
   /** ვისზეც მთელი თამაშის განმავლობაში არავის მიუთითებია. */
   get neverNamed(): Player[] {
     if (!Object.values(this.totals).some((v) => v > 0)) return [];
@@ -135,7 +142,8 @@ export class MostLikelyEngine extends Observable {
   castVote(target: Player): void {
     if (this.phase !== 'voting' || !this.player(target.id)) return;
     const voter = this.currentVoter;
-    if (!voter) return;
+    // საკუთარ თავს ხმას ვერ მისცემ — თორემ ყველა თავის თავს დაასახელებდა.
+    if (!voter || voter.id === target.id) return;
     this.votes[voter.id] = target.id;
     this.tally[target.id] = (this.tally[target.id] ?? 0) + 1;
 

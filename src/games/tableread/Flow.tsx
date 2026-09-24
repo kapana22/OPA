@@ -30,6 +30,8 @@ interface ModeInfo {
   icon: string;
   accent: string;
   minutes: number;
+  /** Herd-ს 4 სჭირდება — სამ მოთამაშეზე ყველაზე ხშირი პასუხი ძნელად გამოიკვეთება. */
+  minPlayers?: number;
 }
 
 const MODES: ModeInfo[] = [
@@ -41,6 +43,7 @@ const MODES: ModeInfo[] = [
     icon: 'person.3.fill',
     accent: Colors.phosphor,
     minutes: 12,
+    minPlayers: 4,
   },
   {
     id: 'line',
@@ -83,17 +86,22 @@ export function TableReadFlow({ roster, onExit }: GameFlowProps) {
           აირჩიე რეჟიმი: დაწერე საერთო პასუხი, იწინასწარმეტყველე მაგიდის გაყოფა ან გამოიცანი ერთი ადამიანის შეფასება.
         </Text>
 
-        {MODES.map((option) => (
+        {MODES.map((option) => {
+          const needsMore = option.minPlayers !== undefined && roster.players.length < option.minPlayers;
+          const needsText = `საჭიროა მინიმუმ ${option.minPlayers} მოთამაშე`;
+          return (
           <Pressable
             key={option.id}
             accessibilityRole="button"
             accessibilityLabel={`${option.title}. ${option.tagline}`}
-            accessibilityHint={`დაახლოებით ${option.minutes} წუთი`}
+            accessibilityHint={needsMore ? needsText : `დაახლოებით ${option.minutes} წუთი`}
+            accessibilityState={{ disabled: needsMore }}
+            disabled={needsMore}
             onPress={() => {
               Haptics.medium();
               setMode(option.id);
             }}
-            style={[styles.card, { borderColor: option.accent + '38' }]}
+            style={[styles.card, { borderColor: option.accent + '38' }, needsMore ? { opacity: 0.5 } : null]}
           >
             <View style={[styles.iconBox, { backgroundColor: option.accent + '1F' }]}>
               <MaterialCommunityIcons name={sf(option.icon)} size={23} color={option.accent} />
@@ -108,9 +116,11 @@ export function TableReadFlow({ roster, onExit }: GameFlowProps) {
                 <Chip text={option.skill} tint={option.accent} />
                 <Chip text={`~${option.minutes} წთ`} tint={Colors.textSecondary} />
               </View>
+              {needsMore ? <Text style={[caption(11), { color: Colors.textSecondary }]}>{needsText}</Text> : null}
             </View>
           </Pressable>
-        ))}
+          );
+        })}
       </ScrollView>
     </View>
   );

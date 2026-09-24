@@ -81,7 +81,15 @@ describe('Mafia — აუდიტის გასწორებები', ()
     const e = new MafiaEngine(names(8));
     e.startGame();
     for (let i = 0; i < 8; i++) e.advanceReveal();
-    while (e.phase === 'night') e.skipNightTurn();
+    while (e.phase === 'night') {
+      const actor = e.currentNightPlayer!;
+      const other = e.alive.find((p) => p.id !== actor.id && e.roleOf(p) !== 'mafia')!;
+      const role = e.roleOf(actor);
+      if (role === 'mafia') e.mafiaChoose(other, actor);
+      else if (role === 'doctor') e.doctorSave(other, actor);
+      else if (role === 'detective') { e.detectiveCheck(other, actor); e.detectiveDone(actor); }
+      else e.skipNightTurn(actor);
+    }
     e.beginVote();
     e.voteOut(e.alive.find((p) => e.roleOf(p) === 'civilian')!);
     if (e.winner !== null) return;

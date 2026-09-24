@@ -1,6 +1,7 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
 import { loadSettings, saveSettings, num, oneOf } from '../../core/settings';
+import { TurnRotation } from '../../core/turnRotation';
 import { RuleCardBank, type RuleCard } from '../../content/banks';
 import { PARTY_FORFEITS, type PartyForfeit } from '../../core/partyForfeit';
 import { uuid } from '../../core/id';
@@ -32,12 +33,23 @@ export interface ActiveRule {
 
 export interface RuleCardSettings {
   forfeit: PartyForfeit;
-  cards: number;
+  /**
+   * წრეები: 1–3 · 0 = ულიმიტოდ. ცალობითი რაოდენობა (20 / 30 / 45) მოთამაშეებზე
+   * არ იყოფოდა და ზოგს მეტი ბარათი (მეტი შანსი წესზე) ხვდებოდა.
+   */
+  laps: number;
   ruleLimit: number;
 }
 
 const KEY = 'splash.rulecard.settings.v1';
-const DEFAULTS: RuleCardSettings = { forfeit: 'tableChoice', cards: 25, ruleLimit: 6 };
+// ნაგულისხმევი მნიშვნელობა ღილაკებს შორის უნდა იყოს, თორემ პირველ გაშვებაზე არცერთი არ ინთება.
+const DEFAULTS: RuleCardSettings = { forfeit: 'tableChoice', laps: 4, ruleLimit: 6 };
+/** 0 = ულიმიტოდ. */
+// ბარათი სწრაფია (≈ ნახევარი წუთი), ამიტომ 1–3 წრე მცირე კომპანიაში ძალიან მოკლე
+// გამოდიოდა (2 კაცზე 3 წრე = 6 ბარათი). აქ წრეები უფრო დიდი ნაბიჯით მიდის.
+const CARD_LAPS = [2, 4, 6] as const;
+const MAX_LAPS = CARD_LAPS[CARD_LAPS.length - 1];
+export const RULECARD_LAP_OPTIONS = [0, ...CARD_LAPS];
 
 export class RuleCardEngine extends Observable {
   readonly players: Player[];
@@ -47,6 +59,8 @@ export class RuleCardEngine extends Observable {
   drawn = 0;
   currentCard: RuleCard = { text: '—', kind: 'now', short: null };
   holderIndex = 0;
+  /** ბარათის შეცვლა ჯერზე ერთხელ — თორემ „წესამდე“ (+1) იცვლებოდა. */
+  swapped = false;
 
   /** მოქმედი წესები — თამაშის მთელი აზრი ამ სიაშია. */
   activeRules: ActiveRule[] = [];
@@ -62,7 +76,7 @@ export class RuleCardEngine extends Observable {
     this.players = players;
     this.settings = loadSettings<RuleCardSettings>(KEY, DEFAULTS, (s) => ({
       forfeit: oneOf(s.forfeit, PARTY_FORFEITS, DEFAULTS.forfeit),
-      cards: num(s.cards, DEFAULTS.cards, 0, 60),
+      laps: RuleCardEngine.sanitizeLaps(s, players.length),
       ruleLimit: num(s.ruleLimit, DEFAULTS.ruleLimit, 3, 10),
     }));
   }
@@ -78,8 +92,18 @@ export class RuleCardEngine extends Observable {
     return this.players[this.holderIndex % this.players.length] ?? null;
   }
 
+  get isEndless(): boolean {
+    return this.settings.laps <= 0;
+  }
+  /** ბარათების რაოდენობა — მთელი წრეები, ყველას თანაბრად. ულიმიტოზე 0. */
+  get totalCards(): number {
+    return this.isEndless ? 0 : TurnRotation.rounds(this.settings.laps, this.players.length);
+  }
   get isLastCard(): boolean {
-    return this.settings.cards > 0 && this.drawn >= this.settings.cards;
+    return !this.isEndless && this.drawn >= this.totalCards;
+  }
+  get canSwap(): boolean {
+    return this.phase === 'card' && !this.swapped;
   }
   /** ჭერს მიაღწია — შემდეგი ბარათი „შვებიდან“ მოვა. */
   get rulesAreFull(): boolean {
@@ -111,8 +135,14 @@ export class RuleCardEngine extends Observable {
 
   /** ვინ ყველაზე მეტი წესი შემოიტანა. */
   get lawmaker(): Player | null {
-    const top = [...this.players].sort((a, b) => this.broughtCount(b) - this.broughtCount(a))[0];
-    return top && this.broughtCount(top) > 0 ? top : null;
+    return this.lawmakers[0] ?? null;
+  }
+
+  /** ყველა, ვინც ყველაზე მეტი წესი შემოიტანა — ფრე რიგით აღარ წყდება. */
+  get lawmakers(): Player[] {
+    const best = Math.max(0, ...this.players.map((p) => this.broughtCount(p)));
+    if (best <= 0) return [];
+    return this.players.filter((p) => this.broughtCount(p) === best);
   }
 
   get mostForfeits(): Player[] {
@@ -169,6 +199,20 @@ export class RuleCardEngine extends Observable {
     this.advance();
   }
 
+  /**
+   * მოქმედი წესი დაირღვა — ნებისმიერ ბარათზე. ჯარიმა ირიცხება, ბარათი კი
+   * რჩება: დარღვევა ჯერს არ ცვლის.
+   */
+  recordBreak(offenders: Player[]): void {
+    if (this.phase !== 'card' || this.activeRules.length === 0) return;
+    const hit = this.players.filter((player) => offenders.some((offender) => offender.id === player.id));
+    if (hit.length === 0) return;
+    for (const p of hit) this.forfeits[p.id] = (this.forfeits[p.id] ?? 0) + 1;
+    Haptics.warning();
+    Sound.play('wrong');
+    this.notify();
+  }
+
   removeRule(rule: ActiveRule): void {
     if (this.phase !== 'card' || !this.activeRules.some((r) => r.id === rule.id)) return;
     this.activeRules = this.activeRules.filter((r) => r.id !== rule.id);
@@ -178,6 +222,8 @@ export class RuleCardEngine extends Observable {
   }
 
   swapCard(): void {
+    if (!this.canSwap) return;
+    this.swapped = true;
     this.drawCard();
     Haptics.tap();
     this.notify();
@@ -210,6 +256,7 @@ export class RuleCardEngine extends Observable {
 
   private nextCard(): void {
     this.drawn += 1;
+    this.swapped = false;
     this.drawCard();
   }
 
@@ -227,9 +274,18 @@ export class RuleCardEngine extends Observable {
     this.settings = { ...this.settings, forfeit: value };
     this.persist();
   }
-  setCards(value: number): void {
-    this.settings = { ...this.settings, cards: Math.min(Math.max(0, value), 60) };
+  setLaps(value: number): void {
+    this.settings = { ...this.settings, laps: Math.min(Math.max(0, Math.round(value)), MAX_LAPS) };
     this.persist();
+  }
+
+  /** შენახული მნიშვნელობა — ახალი `laps` ან ძველი `cards` (0 = ულიმიტო, N = ცალობით). */
+  private static sanitizeLaps(s: Partial<RuleCardSettings> & { cards?: unknown }, players: number): number {
+    if (typeof s.laps === 'number' && Number.isFinite(s.laps)) return num(Math.round(s.laps), DEFAULTS.laps, 0, MAX_LAPS);
+    if (typeof s.cards === 'number' && Number.isFinite(s.cards)) {
+      return s.cards <= 0 ? 0 : Math.min(Math.max(1, Math.round(s.cards / Math.max(1, players))), MAX_LAPS);
+    }
+    return DEFAULTS.laps;
   }
   setRuleLimit(value: number): void {
     this.settings = { ...this.settings, ruleLimit: Math.min(Math.max(3, value), 10) };

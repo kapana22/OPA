@@ -10,6 +10,7 @@ import { Pressable } from '../../ui/Pressable';
 import { Confetti } from '../../ui/Confetti';
 import { Layout } from '../../ui/layout';
 import { PodiumAward } from '../../core/podiumAward';
+import { TurnRotation } from '../../core/turnRotation';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
@@ -24,7 +25,6 @@ import { game as findGame } from '../catalog';
  * დაწერილი ამბები **არსად ინახება** — პარტიის დასრულებისთანავე ქრება.
  */
 
-const TURN_OPTIONS = [3, 5, 8];
 const LIMIT = 80;
 
 export function TwoTruthsFlow({ roster, onExit }: GameFlowProps) {
@@ -95,24 +95,19 @@ function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => vo
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>ჯერების რაოდენობა</Text>
-            <CategoryChip
-              label={`ყველას თითო — ${engine.players.length}`}
-              selected={engine.settings.everyonePlays}
-              onPress={() => engine.setEveryonePlays(true)}
-            />
             <View style={Layout.segmentRow}>
-              {TURN_OPTIONS.map((count) => (
+              {TurnRotation.lapOptions.map((laps) => (
                 <CategoryChip
                   compact
-                  key={count}
-                  label={String(count)}
-                  selected={!engine.settings.everyonePlays && engine.settings.fixedTurns === count}
-                  onPress={() => engine.setFixedTurns(count)}
+                  key={laps}
+                  label={TurnRotation.label(laps)}
+                  selected={engine.settings.laps === laps}
+                  onPress={() => engine.setLaps(laps)}
                 />
               ))}
             </View>
             <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              თუ ჯერები მოთამაშეებზე მეტია, რიგი თავიდან იწყება.
+              სულ {engine.totalTurns} რაუნდი — ყველას ზუსტად თანაბრად ხვდება ჯერი.
             </Text>
           </View>
         </GlassCard>
@@ -299,6 +294,8 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
                   multiline
                   autoCapitalize="none"
                   autoCorrect={false}
+                  spellCheck={false}
+                  autoComplete="off"
                   style={[body(16, '600'), { color: Colors.textPrimary, flex: 1, minHeight: 44 }]}
                 />
               </View>
@@ -407,7 +404,7 @@ function Guess({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
       <Text
         style={[caption(12), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32, paddingBottom: Space.m }]}
       >
-        აირჩიე ის, რომელიც არ გჯერა — არჩევანს ვერავინ დაინახავს.
+        აირჩიე ის, რომელიც არ გჯერა — სხვები შენს არჩევანს მხოლოდ ბოლოს ნახავენ.
       </Text>
     </View>
   );
@@ -556,8 +553,7 @@ function Summary({
     Haptics.win();
   });
 
-  const top = engine.ranking[0];
-  const champion = top && engine.totalFor(top) > 0 ? top : null;
+  const winners = engine.winners;
 
   return (
     <View style={{ flex: 1 }}>
@@ -571,7 +567,9 @@ function Summary({
         <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>ბლეფის ოსტატი</Text>
 
         <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-          {champion ? `${champion.name} — ${engine.totalFor(champion)} ქულა` : 'ამ პარტიაში ქულა ვერავინ აიღო'}
+          {winners.length > 0
+            ? `${winners.map((p) => p.name).join(', ')} — ${engine.totalFor(winners[0])} ქულა`
+            : 'ამ პარტიაში ქულა ვერავინ აიღო'}
         </Text>
 
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
@@ -579,8 +577,14 @@ function Summary({
         </Text>
 
         <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-          {engine.ranking.map((player, rank) => (
-            <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.totalFor(player)} highlight={rank === 0} />
+          {engine.ranking.map((player) => (
+            <RankRow
+              key={player.id}
+              rank={engine.placeOf(player)}
+              name={player.name}
+              score={engine.totalFor(player)}
+              highlight={winners.includes(player)}
+            />
           ))}
         </ScrollView>
 
@@ -597,7 +601,7 @@ function Summary({
         </View>
       </View>
 
-      {champion ? <Confetti /> : null}
+      {winners.length > 0 ? <Confetti /> : null}
     </View>
   );
 }

@@ -22,8 +22,7 @@ import { TenButEngine } from './engine';
  * „10-ია, მაგრამ...“ (Rate Them) — სრული ნაკადი.
  *
  * პორტი: `Splash/Games/TenBut/*.swift` (6 ხედი).
- * ქულა ორივე მხარესაა — გამომცნობს სიზუსტისთვის, სამიზნეს გაკვირვებისთვის.
- * სწორედ ამიტომ შუა ციფრის დაჭერა მოგებული სტრატეგია აღარაა.
+ * ქულას მხოლოდ გამომცნობები იღებენ — სიზუსტისთვის.
  */
 
 /** `TenButPalette` — ფერი ციფრის მიხედვით. */
@@ -56,7 +55,6 @@ function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void 
     'სამიზნე მოთამაშე ჩვევას ფარულად აფასებს 0-დან 10-მდე. შემდეგ ტელეფონს დანარჩენებს გადასცემს.',
     'დანარჩენები რიგრიგობით წერენ, რა შეფასება აირჩია სამიზნემ. სხვის პასუხს შედეგების ეკრანამდე ვერ ხედავენ.',
     'ზუსტი გამოცნობა +3 ქულაა, ერთით აცდენა +2, ორით აცდენა +1.',
-    'სამიზნე იღებს თითო ქულას ყოველი გამომცნობისთვის, რომელიც მინიმუმ 3-ით აცდა მის შეფასებას.',
     'შემდეგ სამიზნე იცვლება. ყველას თანაბარი რაოდენობის სვლა აქვს. ბოლოს ითვლება საერთო შედეგი.'
   ];
   return (
@@ -247,7 +245,7 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
 
       <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.85, paddingHorizontal: 28 }]}>
         {isTarget
-          ? 'რაც უფრო გააკვირვებ მაგიდას, მით მეტ ქულას აიღებ.'
+          ? 'შეაფასე გულწრფელად.'
           : `ზუსტად +${TenButEngine.exactReward} · ერთით აცდენა +${TenButEngine.closeReward} · ორით +${TenButEngine.nearReward}`}
       </Text>
 
@@ -324,8 +322,7 @@ function Result({ engine, onExit }: { engine: TenButEngine; onExit: () => void }
       </ScrollView>
 
       <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
-        ზუსტად +{TenButEngine.exactReward} · ერთით აცდენა +{TenButEngine.closeReward} · ორით +{TenButEngine.nearReward} ·
-        სამიზნეს +1 ყოველ აცდენილზე
+        ზუსტად +{TenButEngine.exactReward} · ერთით აცდენა +{TenButEngine.closeReward} · ორით +{TenButEngine.nearReward}
       </Text>
 
       <View style={{ flex: 1 }} />

@@ -17,19 +17,13 @@ export function useLandscapeOnly(): void {
   useEffect(() => {
     let active = true;
 
+    // ორივე ლანდშაფტი: აპი პორტრეტშია ჩაკეტილი, ამიტომ „მიმდინარე“ ორიენტაცია
+    // ყოველთვის PORTRAIT_UP იყო და ყოველთვის LANDSCAPE_RIGHT ირჩეოდა — ვინც ტელეფონს
+    // მეორე მხრით იდებდა შუბლზე, მაგიდა სიტყვას თავდაყირა ხედავდა.
+    // დახრას ეს არ ცვლის — სენსორი გრავიტაციის z-ს (ეკრანის ნორმალს) კითხულობს.
     const lockLandscape = async () => {
-      try {
-        const current = await ScreenOrientation.getOrientationAsync();
-        if (!active) return;
-        if (current === ScreenOrientation.Orientation.LANDSCAPE_LEFT) {
-          await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
-        } else {
-          await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
-        }
-      } catch {
-        if (!active) return;
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).catch(() => {});
-      }
+      if (!active) return;
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).catch(() => {});
     };
 
     void lockLandscape();

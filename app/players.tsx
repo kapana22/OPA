@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
+import Animated, { FadeOutLeft, ReduceMotion } from 'react-native-reanimated';
+import { enterUp, listLayout } from '../src/ui/motion';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors, Radius, Space, body, caption, title as titleFont, toTT } from '../src/theme/theme';
+import { Colors, Radius, Space, body, caption, toTT } from '../src/theme/theme';
 import { icon as sf } from '../src/theme/icons';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GlyphIcon } from '../src/ui/Cards';
 import { CharacterPicker } from '../src/ui/CharacterPicker';
 import { PlayerAvatarView } from '../src/ui/PlayerAvatarView';
 import { PrimaryButton } from '../src/ui/Buttons';
+import { PageHeader } from '../src/ui/PageHeader';
 import { Pressable } from '../src/ui/Pressable';
 import { useRoster } from '../src/state/state';
 import { MAX_PLAYERS, type Player } from '../src/core/roster';
@@ -76,9 +79,12 @@ export default function Players() {
   };
 
   // `Alert.prompt` მხოლოდ iOS-ზეა — Android-ზე სახელის შეცვლა საერთოდ არ იმუშავებდა.
-  const rename = (id: string, current: string) => {
+  // შეცდომა იმავე დიალოგში ჩანს — ადრე დამატების ველის ქვეშ იწერებოდა,
+  // ცარიელ სახელზე კი უბრალოდ ვიბრირებდა და არაფერს ამბობდა.
+  const rename = (id: string, current: string, error?: string) => {
     dialog({
       title: 'სახელის შეცვლა',
+      message: error,
       input: { placeholder: 'სახელი', initial: current },
       actions: [
         {
@@ -87,7 +93,7 @@ export default function Players() {
           onPress: (value) => {
             if (roster.rename(id, value)) return;
             Haptics.warning();
-            if (value.trim()) setAddError('ეს სახელი უკვე სიაშია');
+            rename(id, value, value.trim() ? 'ეს სახელი უკვე სიაშია' : 'სახელი ცარიელია');
           },
         },
         { label: 'გაუქმება' },
@@ -101,11 +107,9 @@ export default function Players() {
       <CharacterPicker playerID={characterPlayer} onClose={() => setCharacterPlayer(null)} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1, paddingTop: Math.max(insets.top, 28) + 12, gap: 14 }}
+        style={{ flex: 1, gap: 14 }}
       >
-        <Text style={[titleFont(21), { color: Colors.textPrimary, textAlign: 'center', letterSpacing: 0.6, textTransform: 'uppercase' }]}>
-          {toTT(`მოთამაშეები ${roster.count}/${MAX_PLAYERS}`)}
-        </Text>
+        <PageHeader title={`მოთამაშეები ${roster.count}/${MAX_PLAYERS}`} />
 
         <View style={styles.addRow}>
           <TextInput
@@ -182,7 +186,13 @@ export default function Players() {
               contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
             >
               {roster.players.map((player, index) => (
-                <View key={player.id} style={styles.row}>
+                <Animated.View
+                  key={player.id}
+                  entering={enterUp(index)}
+                  exiting={FadeOutLeft.duration(220).reduceMotion(ReduceMotion.System)}
+                  layout={listLayout}
+                  style={styles.row}
+                >
                   <Text style={[body(13, '900'), { color: Colors.textSecondary, width: 22 }]}>{index + 1}</Text>
                   <Pressable accessibilityRole="button" accessibilityLabel={`${player.name} — პერსონაჟის შეცვლა`}
                     onPress={() => setCharacterPlayer(player.id)}>
@@ -245,7 +255,7 @@ export default function Players() {
                       onPress={() => removePlayer(player, index)}
                     />
                   )}
-                </View>
+                </Animated.View>
               ))}
             </ScrollView>
           </>
@@ -257,7 +267,7 @@ export default function Players() {
               <Text style={[body(14, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
                 {removed.player.name} წაიშალა
               </Text>
-              <Pressable accessibilityRole="button" onPress={undoRemove} hitSlop={8}>
+              <Pressable accessibilityRole="button" accessibilityLabel={`${removed.player.name} — დაბრუნება`} onPress={undoRemove} hitSlop={8}>
                 <Text style={[body(14, '900'), { color: Colors.phosphor }]}>დაბრუნება</Text>
               </Pressable>
             </View>

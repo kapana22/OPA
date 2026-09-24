@@ -126,4 +126,18 @@ describe('TiltGate', () => {
     const want = Array.from({ length: 8 }, (_, i) => (i % 3 !== 2 ? 'forward' : 'back'));
     expect(r.fired).toEqual(want);
   });
+
+  it('9. 1 წმ დახრილად დაყოვნება + ვერტიკალის გადაცდენა = ერთი პასუხი', () => {
+    for (const holdFor of [0.3, 1, 2]) {
+      const r = new Rig();
+      r.settle();
+      r.sweep(0.8, 0.2);
+      r.hold(0.8, holdFor);
+      r.sweep(-0.3, 0.25);
+      r.hold(-0.3, 0.3);
+      r.sweep(0.0, 0.3);
+      r.hold(0.0, 1);
+      expect(r.fired).toEqual(['forward']);
+    }
+  });
 });

@@ -49,7 +49,7 @@ describe('Classic Herd', () => {
 });
 describe('Participant attribution and penalties', () => {
   it.each(['group', 'target'] as const)('%s records only chosen players with mixed outcomes', kind => {
-    const e = new DareCardEngine(players); e.setCards(1); e.setForfeit('point'); e.startGame();
+    const e = new DareCardEngine(players); e.setLaps(1); e.setForfeit('point'); e.startGame(); e.drawn = e.totalCards;
     e.currentCard = { text: 'test', kind, heat: 'family' };
     e.markDone(); expect(e.done).toEqual({});
     e.resolveParticipants({ '1': 'done', '3': 'forfeit', unknown: 'done' });
@@ -58,13 +58,13 @@ describe('Participant attribution and penalties', () => {
     e.resolveParticipants({ '1': 'done' }); expect(e.doneCount(players[1])).toBe(1);
   });
   it('duel penalties affect the loser, and non-point forfeits do not reduce scores', () => {
-    const e = new DareCardEngine(players); e.setCards(1); e.startGame();
+    const e = new DareCardEngine(players); e.setLaps(1); e.startGame(); e.drawn = e.totalCards;
     e.currentCard = { text: 'test', kind: 'duel', heat: 'family' }; e.rivalIndex = 1;
     e.resolveDuel(players[0]); expect(e.scoreFor(players[1])).toBe(0);
     e.setForfeit('point'); expect(e.results.find(r => r.player.id === '1')?.score).toBe(-1);
   });
   it('rule-card penalties subtract once per valid offender and affect ranking', () => {
-    const e = new RuleCardEngine(players); e.setCards(1); e.setForfeit('point'); e.startGame();
+    const e = new RuleCardEngine(players); e.setLaps(1); e.setForfeit('point'); e.startGame(); e.drawn = e.totalCards;
     e.brought = { '0': 2, '1': 2 };
     e.finishForfeits([players[0], players[0], { id: 'outside', name: 'x', score: 0 }]);
     expect(e.scoreFor(players[0])).toBe(1); expect(e.ranking[0].id).toBe('1'); expect(e.forfeits).toEqual({ '0': 1 });

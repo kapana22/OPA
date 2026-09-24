@@ -30,6 +30,10 @@ export const TurnRotation = {
         return 'ყველა ორჯერ';
       case 3:
         return 'ყველა სამჯერ';
+      case 4:
+        return 'ყველა ოთხჯერ';
+      case 6:
+        return 'ყველა ექვსჯერ';
       default:
         return `ყველა ${laps}-ჯერ`;
     }

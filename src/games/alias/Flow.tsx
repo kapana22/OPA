@@ -29,7 +29,8 @@ import { game as findGame } from '../catalog';
 
 const TIME_OPTIONS = [30, 60, 90];
 const TARGET_OPTIONS = [30, 50, 70];
-const TEAM_COLORS = [Colors.neonCyan, Colors.neonMagenta, Colors.phosphor, Colors.neonCyan];
+// მეოთხე ფერი ადრე პირველს იმეორებდა — 4 გუნდისას 1-ლი და მე-4 ერთნაირი ჩანდა.
+const TEAM_COLORS = [Colors.neonCyan, Colors.neonMagenta, Colors.phosphor, Colors.amber];
 
 const teamColor = (index: number) => TEAM_COLORS[((index % TEAM_COLORS.length) + TEAM_COLORS.length) % TEAM_COLORS.length];
 const signed = (n: number) => (n > 0 ? `+${n}` : String(n));

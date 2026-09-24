@@ -117,27 +117,50 @@ export const Elevation = {
   },
 } as const;
 
-// MARK: - ფონტები (FiraGO Only)
+// MARK: - ფონტები (Noto Sans Georgian)
+//
+// FiraGO-ში მთავრული (U+1C90–1CBF) არ არის, სათაურები კი დიდი ასოებით იწერება —
+// ამიტომ Noto Sans Georgian: მხედრული, მთავრული, ლათინური და ციფრები ერთ ოჯახში.
+// ფაილები `assets/fonts/`-შია, იტვირთება `AppStateProvider`-ში (`FontSources`).
 export const FontFamilies = {
-  regular: 'FiraGO-Regular',
-  medium: 'FiraGO-Medium',
-  semiBold: 'FiraGO-SemiBold',
-  bold: 'FiraGO-Bold',
-  extraBold: 'FiraGO-ExtraBold',
-  heavy: 'FiraGO-Heavy',
+  regular: 'NotoSansGeorgian-Regular',
+  medium: 'NotoSansGeorgian-Medium',
+  semiBold: 'NotoSansGeorgian-SemiBold',
+  bold: 'NotoSansGeorgian-Bold',
+  extraBold: 'NotoSansGeorgian-ExtraBold',
+  heavy: 'NotoSansGeorgian-Black',
 } as const;
 
+export const FontSources = {
+  [FontFamilies.regular]: require('../../assets/fonts/NotoSansGeorgian-Regular.ttf'),
+  [FontFamilies.medium]: require('../../assets/fonts/NotoSansGeorgian-Medium.ttf'),
+  [FontFamilies.semiBold]: require('../../assets/fonts/NotoSansGeorgian-SemiBold.ttf'),
+  [FontFamilies.bold]: require('../../assets/fonts/NotoSansGeorgian-Bold.ttf'),
+  [FontFamilies.extraBold]: require('../../assets/fonts/NotoSansGeorgian-ExtraBold.ttf'),
+  [FontFamilies.heavy]: require('../../assets/fonts/NotoSansGeorgian-Black.ttf'),
+};
+
+/**
+ * RN-ის `Text` სისტემის შრიფტის მასშტაბს თვითონ ამრავლებს (`allowFontScaling`).
+ * ადრე აქაც ვამრავლებდით და 1.3×-ზე ტექსტი ~1.69× გამოდიოდა. ახლა ზომას ისე
+ * ვაბრუნებთ, რომ RN-ის გამრავლების **შემდეგ** საბოლოო ზომა იყოს
+ * `size × max(1, min(fontScale, cap))` — ანუ ზუსტად ის, რაც აქ იყო ჩაფიქრებული.
+ */
 function scaled(size: number, cap = Number.MAX_SAFE_INTEGER): number {
-  const scale = Math.max(1, Math.min(PixelRatio.getFontScale(), cap));
-  return Math.round(size * scale);
+  const system = PixelRatio.getFontScale() || 1;
+  const wanted = Math.max(1, Math.min(system, cap));
+  return Math.round((size * wanted) / system);
 }
 
 export type FontWeight = '400' | '500' | '600' | '700' | '800' | '900';
 
+/**
+ * `fontWeight` განზრახ არ არის: სისქე უკვე ფაილშია (თითო სისქე — თითო ფაილი).
+ * Android ერთ ფაილიან ოჯახზე `fontWeight`-ს ხელოვნურად „ასქელებს“ და ასოები მახინჯდება.
+ */
 export interface TextStyleToken {
   fontSize: number;
   fontFamily: string;
-  fontWeight?: FontWeight;
   letterSpacing?: number;
   textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 }
@@ -153,7 +176,6 @@ export function toTT(text: string | null | undefined): string {
 export const display = (size = 38): TextStyleToken => ({
   fontSize: scaled(size, 1.3),
   fontFamily: FontFamilies.heavy,
-  fontWeight: '900',
   letterSpacing: 0.8,
   textTransform: 'uppercase',
 });
@@ -161,7 +183,6 @@ export const display = (size = 38): TextStyleToken => ({
 export const title = (size = 24): TextStyleToken => ({
   fontSize: scaled(size, 1.4),
   fontFamily: FontFamilies.extraBold,
-  fontWeight: '800',
   letterSpacing: 0.5,
   textTransform: 'uppercase',
 });
@@ -173,14 +194,12 @@ export const body = (size = 15, weight: FontWeight = '600'): TextStyleToken => (
     : weight === '500' ? FontFamilies.medium
     : weight === '400' ? FontFamilies.regular
     : FontFamilies.semiBold,
-  fontWeight: weight,
   letterSpacing: 0.2,
 });
 
 export const caption = (size = 12, weight: FontWeight = '600'): TextStyleToken => ({
   fontSize: scaled(size),
   fontFamily: (weight === '700' || weight === '800' || weight === '900') ? FontFamilies.bold : FontFamilies.medium,
-  fontWeight: weight,
   letterSpacing: 0.15,
 });
 

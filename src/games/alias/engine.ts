@@ -63,6 +63,9 @@ const DEFAULTS: AliasSettings = { teamCount: 2, seconds: 60, target: 50, categor
 /** ზღვრები ერთ ადგილას — ჩატვირთვაც და ეკრანიდან შეცვლაც ერთსა და იმავეს ამოწმებს. */
 const LIMITS = { seconds: [15, 180], target: [10, 200] } as const;
 
+/** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება ორ ჯარიმას და უნახავ სიტყვას არ დახარჯავს. */
+export const REGISTER_GAP_MS = 600;
+
 export class AliasEngine extends Observable {
   static readonly defaultTeamNames = ['ცისფრები', 'ვარდისფრები', 'მწვანეები', 'ყვითლები'];
 
@@ -85,6 +88,7 @@ export class AliasEngine extends Observable {
   private shoe = new WideningShoe('word.charades-all', [], 'word.charades-all', []);
   private timer = new Ticker();
   private countdownTimer = new Ticker();
+  private lastRegisterAt = -Infinity;
 
   constructor(players: Player[]) {
     super();
@@ -315,6 +319,7 @@ export class AliasEngine extends Observable {
     this.flash = null;
     this.remaining = this.settings.seconds;
     this.countdown = 3;
+    this.lastRegisterAt = -Infinity;
     this.phase = 'countdown';
     Screen.keepAwake();
     this.startCountdown();
@@ -323,6 +328,9 @@ export class AliasEngine extends Observable {
 
   register(verdict: AliasVerdict): void {
     if (this.phase !== 'playing') return;
+    const now = Date.now();
+    if (now - this.lastRegisterAt < REGISTER_GAP_MS) return;
+    this.lastRegisterAt = now;
     this.results.push({ id: uuid(), word: this.currentWord, verdict, isOvertime: false });
     this.flash = { id: uuid(), verdict };
     this.nextWord();
@@ -364,7 +372,7 @@ export class AliasEngine extends Observable {
           this.winnerTeamID = leaders[0].id;
           // ვიბრაცია გამარჯვების ეკრანზეა (`win`) — აქ მეორედ აღარ ზუზუნებს.
           this.phase = 'winner';
-          Sound.play('correct');
+          Sound.play('win');
           this.notify();
           return;
         }

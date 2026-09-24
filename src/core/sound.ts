@@ -9,8 +9,9 @@ import { getJSON, setJSON } from './storage';
  * აწყობის დროს გადის** (`tools/gen-sounds.mjs`) და WAV-ებად ჯდება.
  * ტალღა ისევ კოდიდან იბადება — უბრალოდ ერთხელ და ადრე.
  *
- * სესია `mixWithOthers`-ია და ჩუმ რეჟიმს პატივს სცემს (Swift: `.ambient`):
- * წვეულებაზე ფონად მუსიკა უკრავს და თამაშმა ის არ უნდა გააჩეროს.
+ * სესია `mixWithOthers`-ია: წვეულებაზე ფონად მუსიკა უკრავს და თამაშმა ის არ
+ * უნდა გააჩეროს. Swift-ისგან (`.ambient`) განსხვავებით ხმა **ჩუმ რეჟიმშიც**
+ * ისმის — განზრახ; ვისაც არ უნდა, აპის პარამეტრებში თიშავს.
  */
 
 export type SoundEffect = 'tick' | 'tickHot' | 'boom' | 'correct' | 'wrong' | 'reveal' | 'start' | 'win';
@@ -71,6 +72,14 @@ function prepareIfNeeded(): void {
 }
 
 export const Sound = {
+  /**
+   * წინასწარ მომზადება გაშვებისას — ადრე პლეერები პირველ `play()`-ზე იქმნებოდა
+   * და სესიის პირველი ბგერა (მაგ. „start“) იგვიანებდა.
+   */
+  preload(): void {
+    prepareIfNeeded();
+  },
+
   get isEnabled(): boolean {
     return isOn();
   },

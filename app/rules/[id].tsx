@@ -6,6 +6,7 @@ import { Colors, Space, body, caption, title as titleFont } from '../../src/them
 import { icon as sf } from '../../src/theme/icons';
 import { SplashBackground } from '../../src/ui/SplashBackground';
 import { PrimaryButton } from '../../src/ui/Buttons';
+import { PageHeader } from '../../src/ui/PageHeader';
 import { game as findGame } from '../../src/games/catalog';
 import { energyIcon, energyTitle } from '../../src/games/types';
 
@@ -16,10 +17,16 @@ export default function Rules() {
   const insets = useSafeAreaInsets();
   const game = findGame(String(id));
 
+  // უცნობი თამაში (მაგ. ძველი ღრმა ბმული) — ცარიელი ფონი გამოსასვლელის გარეშე აღარ.
   if (!game) {
     return (
       <View style={{ flex: 1 }}>
         <SplashBackground />
+        <PageHeader title="წესები" />
+        <View style={{ flex: 1, justifyContent: 'center', gap: Space.m, paddingHorizontal: 32 }}>
+          <Text style={[body(16, '600'), styles.centered, { color: Colors.textSecondary }]}>ეს თამაში ვერ მოიძებნა</Text>
+          <PrimaryButton title="მთავარზე დაბრუნება" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+        </View>
       </View>
     );
   }
@@ -29,8 +36,9 @@ export default function Rules() {
   return (
     <View style={{ flex: 1 }}>
       <SplashBackground />
-      <View style={{ flex: 1, paddingTop: insets.top, gap: Space.m, alignItems: 'center' }}>
-        <View style={[styles.iconBox, { backgroundColor: accent + '1F', marginTop: 32 }]}>
+      <PageHeader title="წესები" />
+      <View style={{ flex: 1, gap: Space.m, alignItems: 'center' }}>
+        <View style={[styles.iconBox, { backgroundColor: accent + '1F' }]}>
           <MaterialCommunityIcons name={sf(game.icon)} size={30} color={accent} />
         </View>
 

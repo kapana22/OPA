@@ -8,7 +8,8 @@ import type { Player } from '../../core/roster';
 
 /**
  * „ნორმაა თუ არა?“ — ერთი მოლოდინი ჩნდება და ყველა წყვეტს, ნორმაა თუ გადამეტება.
- * რაუნდის **მკითხავი** პროგნოზსაც წერს; ქულა ზუსტ პროგნოზსა და უმცირესობას ერგება.
+ * რაუნდის **მკითხავი** პროგნოზსაც წერს; ქულა მხოლოდ ზუსტ პროგნოზს ერგება. უმცირესობის
+ * ქულა მოვხსენით — „გულწრფელად უპასუხე“ წესს ეწინააღმდეგებოდა.
  *
  * პორტი: `Splash/Games/Standards/StandardsEngine.swift`.
  */
@@ -27,7 +28,6 @@ const DEFAULTS: StandardsSettings = { laps: 1, categoryID: null };
 export class StandardsEngine extends Observable {
   static readonly exactReward = 3;
   static readonly closeReward = 1;
-  static readonly minorityReward = 1;
 
   readonly players: Player[];
   settings: StandardsSettings;
@@ -165,6 +165,7 @@ export class StandardsEngine extends Observable {
   }
 
   beginVoting(): void {
+    if (this.phase !== 'intro') return;
     this.verdicts = {};
     this.prediction = null;
     this.roundPoints = {};
@@ -197,6 +198,7 @@ export class StandardsEngine extends Observable {
   }
 
   next(): void {
+    if (this.phase !== 'result') return;
     if (this.isLastRound) {
       this.phase = 'summary';
       this.notify();
@@ -208,6 +210,7 @@ export class StandardsEngine extends Observable {
   }
 
   swapExpectation(): void {
+    if (this.phase !== 'intro') return;
     this.loadExpectation();
   }
   restart(): void {
@@ -238,15 +241,6 @@ export class StandardsEngine extends Observable {
       if (points > 0) {
         this.roundPoints[reader.id] = (this.roundPoints[reader.id] ?? 0) + points;
         this.totals[reader.id] = (this.totals[reader.id] ?? 0) + points;
-      }
-    }
-
-    const side = this.minoritySide;
-    if (side !== null) {
-      for (const p of this.players) {
-        if (this.verdicts[p.id] !== side) continue;
-        this.roundPoints[p.id] = (this.roundPoints[p.id] ?? 0) + StandardsEngine.minorityReward;
-        this.totals[p.id] = (this.totals[p.id] ?? 0) + StandardsEngine.minorityReward;
       }
     }
 

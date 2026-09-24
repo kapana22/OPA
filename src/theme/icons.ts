@@ -15,6 +15,18 @@ export type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
  * ერთი-ერთზე რჩება), თარგმანი კი მხოლოდ აქ ხდება.
  */
 const MAP: Record<string, IconName> = {
+  // ── ადრე რუკაში არ იყო და ცარიელ წრედ ჩანდა
+  'bolt.card.fill': 'cards',
+  'book.closed.fill': 'book-open-page-variant',
+  'clock.arrow.circlepath': 'history',
+  'face.smiling.inverse': 'emoticon-happy',
+  'heart.fill': 'heart',
+  'lightning.fill': 'lightning-bolt',
+  'list.bullet.clipboard.fill': 'clipboard-list',
+  'pencil.line': 'pencil',
+  'person.fill.badge.minus': 'account-minus',
+  'questionmark': 'help',
+  'rectangle.on.rectangle': 'card-multiple',
   // ── კატალოგის თამაშები
   'person.crop.circle.badge.questionmark': 'account-question',
   'person.2.wave.2.fill': 'account-group',

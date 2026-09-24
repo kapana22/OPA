@@ -59,6 +59,8 @@ export class SpyEngine extends Observable {
   civilianWord = '';
   undercoverWord = '';
   categoryLabel = '';
+  /** წყვილის კატეგორიის ყველა სიტყვა — მისტერ უაითის ვარიანტებისთვის. */
+  private categoryWords: string[] = [];
 
   revealIndex = 0;
   startingPlayerID: string | null = null;
@@ -85,8 +87,12 @@ export class SpyEngine extends Observable {
 
   // MARK: - წარმოებული მნიშვნელობები
 
+  /**
+   * ოთხზე მისტერ უაითი + ჯაშუში ორი ორზე იქნებოდა — პირველივე შეცდომა
+   * თამაშს დაასრულებდა. ამიტომ ორივე როლს ხუთი მოთამაშე სჭირდება.
+   */
   get canIncludeMrWhite(): boolean {
-    return this.players.length >= 4;
+    return this.players.length >= 5;
   }
 
   private get maxSpecials(): number {
@@ -168,6 +174,7 @@ export class SpyEngine extends Observable {
 
     const { pair, category } = this.drawPair();
     this.categoryLabel = category.name;
+    this.categoryWords = category.pairs.flatMap((p) => [p.a, p.b]);
     // შემთხვევით ვწყვეტთ, რომელი სიტყვა მიიღოს უმრავლესობამ.
     if (Math.random() < 0.5) {
       this.civilianWord = pair.a;
@@ -273,9 +280,9 @@ export class SpyEngine extends Observable {
     if (result === 'civilians') {
       for (const p of this.playersWith('civilian')) points[p.id] = 2;
     } else if (result === 'undercovers') {
-      // გამარჯვება გადარჩენილებმა მოიტანეს — ამოვარდნილ ჯაშუშს არაფერი ერგება,
-      // ცოცხალ Mr White-ს კი იგივე, რაც ჯაშუშს: `evaluate()` მასაც სპეციალურად თვლის.
-      for (const p of this.alive) if (this.roles[p.id] !== 'civilian') points[p.id] = 3;
+      // გუნდური გამარჯვებაა — როგორც მოქალაქეებისას, ამოვარდნილიც იღებს.
+      // Mr White-იც ამ გუნდშია: `evaluate()` მასაც სპეციალურად თვლის.
+      for (const p of this.players) if (this.roleOf(p) !== 'civilian') points[p.id] = 3;
     } else {
       for (const p of this.playersWith('mrWhite')) points[p.id] = 4;
     }
@@ -312,9 +319,16 @@ export class SpyEngine extends Observable {
     return from[Math.floor(Math.random() * from.length)]?.id ?? null;
   }
 
+  /**
+   * საერთო სიტყვა + ჯაშუშის სიტყვა + ოთხი იმავე კატეგორიიდან. სხვა
+   * კატეგორიის სიტყვები მაშინვე გამოირიცხებოდა. კატეგორია მცირეა — ბანკიდან ვავსებთ.
+   */
   private makeMrWhiteOptions(): string[] {
-    const others = shuffled(PairBank.allWords.filter((w) => w !== this.civilianWord)).slice(0, 5);
-    return shuffled([...others, this.civilianWord]);
+    const taken = new Set([this.civilianWord, this.undercoverWord]);
+    const fromCategory = shuffled([...new Set(this.categoryWords)].filter((w) => !taken.has(w))).slice(0, 4);
+    for (const w of fromCategory) taken.add(w);
+    const filler = shuffled(PairBank.allWords.filter((w) => !taken.has(w))).slice(0, 4 - fromCategory.length);
+    return shuffled([this.civilianWord, this.undercoverWord, ...fromCategory, ...filler]);
   }
 
   // MARK: - პარამეტრები

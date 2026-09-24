@@ -293,6 +293,10 @@ function Composer({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => vo
           placeholderTextColor={Colors.textSecondary}
           multiline
           autoFocus
+          // კლავიატურამ დაწერილი არ უნდა დაიმახსოვროს და შემდეგს არ შესთავაზოს.
+          autoCorrect={false}
+          spellCheck={false}
+          autoComplete="off"
           style={[body(18, '600'), styles.input, { color: Colors.textPrimary }]}
         />
 
@@ -531,7 +535,7 @@ function Summary({
     Haptics.success();
   });
 
-  const top = engine.ranking[0];
+  const winners = engine.winners;
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
@@ -541,12 +545,14 @@ function Summary({
         <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
       </View>
 
-      <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>გამარჯვებული</Text>
+      <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>
+        {winners.length > 1 ? 'გამარჯვებულები' : 'გამარჯვებული'}
+      </Text>
 
-      {top ? (
+      {winners.length > 0 ? (
         <>
           <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {top.name} — {engine.totalFor(top)} ქულა
+            {winners.map((p) => p.name).join(', ')} — {engine.totalFor(winners[0])} ქულა
           </Text>
           <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
             საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
@@ -555,8 +561,14 @@ function Summary({
       ) : null}
 
       <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-        {engine.ranking.map((player, rank) => (
-          <RankRow key={player.id} rank={rank + 1} name={player.name} score={engine.totalFor(player)} highlight={rank === 0} />
+        {engine.ranking.map((player) => (
+          <RankRow
+            key={player.id}
+            rank={engine.placeOf(player)}
+            name={player.name}
+            score={engine.totalFor(player)}
+            highlight={winners.includes(player)}
+          />
         ))}
       </ScrollView>
 

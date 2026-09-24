@@ -8,9 +8,11 @@ import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHead
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
+import { useDialog } from '../../ui/Dialog';
 import { Confetti } from '../../ui/Confetti';
 import { Layout } from '../../ui/layout';
 import { useKeepScreenAwake } from '../../core/orientationLock';
+import { GamePause } from '../../core/ticker';
 import { CharadesBank } from '../../content/banks';
 import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
@@ -201,7 +203,23 @@ function Tip({ icon, text }: { icon: string; text: string }) {
 
 function Play({ engine, onExit }: { engine: WordRushEngine; onExit: () => void }) {
   useKeepScreenAwake();
+  const dialog = useDialog();
   const hot = engine.remaining <= 5;
+
+  // ღილაკი ჩათვლის არესთან ახლოსაა — შემთხვევითი შეხება ჯერს არ უნდა წყვეტდეს.
+  // დიალოგის დროს წამზომი ჩერდება, როგორც გასვლის დიალოგზე.
+  const confirmEnd = () => {
+    Haptics.tap();
+    GamePause.hold('end-turn-dialog');
+    dialog({
+      title: 'ჯერის დასრულება?',
+      onClose: () => GamePause.release('end-turn-dialog'),
+      actions: [
+        { label: 'გაგრძელება' },
+        { label: 'დასრულება', primary: true, onPress: () => engine.endTurn() },
+      ],
+    });
+  };
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
@@ -261,7 +279,7 @@ function Play({ engine, onExit }: { engine: WordRushEngine; onExit: () => void }
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="დასრულება"
-          onPress={() => engine.endTurn()}
+          onPress={confirmEnd}
           style={styles.secondaryButton}
         >
           <Text style={[body(16, '700'), { color: Colors.textPrimary }]}>დასრულება</Text>
@@ -352,6 +370,7 @@ function Summary({
   });
 
   const best = engine.best;
+  const champions = engine.champions;
 
   return (
     <View style={{ flex: 1 }}>
@@ -368,7 +387,7 @@ function Summary({
 
         {best ? (
           <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {best.name} — {engine.totalFor(best)} სიტყვა
+            {champions.map((p) => p.name).join(', ')} — {engine.totalFor(best)} სიტყვა
           </Text>
         ) : null}
 
@@ -377,13 +396,13 @@ function Summary({
         </Text>
 
         <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-          {engine.ranking.map((player, rank) => (
+          {engine.ranking.map((player) => (
             <RankRow
               key={player.id}
-              rank={rank + 1}
+              rank={engine.rankOf(player)}
               name={player.name}
               score={engine.totalFor(player)}
-              highlight={rank === 0}
+              highlight={champions.some((c) => c.id === player.id)}
             />
           ))}
         </ScrollView>

@@ -15,6 +15,14 @@ import { usePortraitDefault } from '../src/core/portraitDefault';
  * `AppStateProvider` საცავს ჯერ ჩატვირთავს და მხოლოდ მერე აშენებს `Roster`-ს —
  * თორემ შენახული შემადგენლობა პირველივე კადრში დაიკარგებოდა.
  */
+/**
+ * ტაბლო, მოთამაშეები, პარამეტრები, წესები და ღამის შედეგები — **სრულ ეკრანზე**.
+ * ადრე ქვემოდან ამოსრიალებული ფურცელი იყო და დასახურად ჩამოსრიალება სჭირდებოდა;
+ * ახლა ზემოთ „უკან“ ღილაკია (`PageHeader`), iOS-ზე კი უკან გასრიალება
+ * ეკრანის ნებისმიერი ადგილიდან მუშაობს და არა მხოლოდ კიდიდან.
+ */
+const PAGE = { gestureEnabled: true, fullScreenGestureEnabled: true } as const;
+
 export default function RootLayout() {
   usePortraitDefault();
 
@@ -34,34 +42,11 @@ export default function RootLayout() {
               <Stack.Screen name="index" />
               {/* კიდიდან შემთხვევითი გასრიალება რაუნდს უსიტყვოდ წყვეტდა — გასვლა მხოლოდ ✕-ით, დადასტურებით. */}
               <Stack.Screen name="game/[id]" options={{ gestureEnabled: false }} />
-              <Stack.Screen
-                name="players"
-                options={{
-                  presentation: 'pageSheet',
-                  gestureEnabled: true,
-                }}
-              />
-              <Stack.Screen
-                name="scoreboard"
-                options={{
-                  presentation: 'pageSheet',
-                  gestureEnabled: true,
-                }}
-              />
-              <Stack.Screen
-                name="settings"
-                options={{
-                  presentation: 'pageSheet',
-                  gestureEnabled: true,
-                }}
-              />
-              <Stack.Screen
-                name="rules/[id]"
-                options={{
-                  presentation: 'pageSheet',
-                  gestureEnabled: true,
-                }}
-              />
+              <Stack.Screen name="players" options={PAGE} />
+              <Stack.Screen name="scoreboard" options={PAGE} />
+              <Stack.Screen name="night" options={PAGE} />
+              <Stack.Screen name="settings" options={PAGE} />
+              <Stack.Screen name="rules/[id]" options={PAGE} />
             </Stack>
           </DialogProvider>
         </AppStateProvider>

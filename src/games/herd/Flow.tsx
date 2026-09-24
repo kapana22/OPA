@@ -10,18 +10,32 @@ import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { HerdEngine } from './engine';
+import { useDialog } from '../../ui/Dialog';
 
 const textStyle = [body(15, '500'), { color: Colors.textPrimary }];
 export function HerdFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new HerdEngine([...roster.players]));
   useObservable(engine);
+  const dialog = useDialog();
+  // თამაშის შუაში ერთი შეხება მთელ პარტიას აგდებდა — სხვა რეჟიმების მსგავსად ჯერ ვეკითხებით.
+  const back = () => {
+    if (engine.phase === 'setup' || engine.phase === 'summary') return onExit();
+    dialog({
+      title: 'თამაშიდან გასვლა?',
+      message: 'მიმდინარე რაუნდი დაიკარგება.',
+      actions: [
+        { label: 'გაგრძელება' },
+        { label: 'გასვლა', primary: true, destructive: true, onPress: onExit },
+      ],
+    });
+  };
   useEffect(() => {
     const sub = AppState.addEventListener('change', state => { if (state !== 'active') engine.hideAnswer(); });
     return () => sub.remove();
   }, [engine]);
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={Layout.header}><ScreenHeader title="Herd Mentality" subtitle="კლასიკური · როგორც ყველა" onBack={onExit} /></View>
+      <View style={Layout.header}><ScreenHeader title="Herd Mentality" subtitle="კლასიკური · როგორც ყველა" onBack={back} /></View>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[Layout.scroll, { gap: 16 }]}>
         {engine.phase === 'setup' ? <>
           <GlassCard><Text style={textStyle}>
@@ -64,7 +78,9 @@ export function HerdFlow({ roster, onExit }: GameFlowProps) {
   );
 }
 function Answer({ engine }: { engine: HerdEngine }) {
-  const [answer, setAnswer] = useState('');
+  // ფონზე გადასვლისას ეკრანი იმალება; იმავე მოთამაშეს დაწერილი ტექსტი უბრუნდება.
+  const [answer, setAnswerState] = useState(engine.draft);
+  const setAnswer = (text: string) => { setAnswerState(text); engine.setDraft(text); };
   return <>
     <Text style={textStyle}>{engine.currentVoter?.name}</Text>
     <Text style={[titleFont(23), { color: Colors.textPrimary }]}>{engine.question}</Text>

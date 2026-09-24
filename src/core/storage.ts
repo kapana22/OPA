@@ -28,9 +28,11 @@ let backend: StorageBackend | null = null;
 
 /** backend-ის მიბმა და დისკიდან ჩატვირთვა. აპის გაშვებისას ერთხელ. */
 export async function hydrate(next: StorageBackend): Promise<void> {
-  backend = next;
   const stored = await next.load();
   for (const [k, v] of Object.entries(stored)) memory.set(k, v);
+  // backend მხოლოდ **წარმატებული** ჩატვირთვის შემდეგ ებმება. თუ წაკითხვა ჩავარდა,
+  // აპი ცარიელი იხსნება და პირველი შენახვა დისკზე არსებულ რეალურ სიას გადააწერდა.
+  backend = next;
 }
 
 export function getString(key: string): string | null {

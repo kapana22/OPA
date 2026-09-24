@@ -4,6 +4,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
 import { GamePause } from '../core/ticker';
 import { Haptics } from '../core/haptics';
+import { Sound } from '../core/sound';
 import { PrimaryButton, GhostButton } from './Buttons';
 import { GlassCard, GameExitButton } from './Cards';
 
@@ -52,9 +53,14 @@ export function DiscussionPanel({
       setRemaining(remainingRef.current);
       if (remainingRef.current === 0) {
         Haptics.error();
+        // მაგიდაზე დადებულ ტელეფონზე ვიბრაცია არავის ესმის — ბგერაც საჭიროა.
+        Sound.play('boom');
         // ნულზე ათვლა დასრულდა — ინტერვალი ტყუილად აღარ უნდა ტრიალებდეს.
         clearInterval(handle);
-      } else if (remainingRef.current <= 5) Haptics.tap();
+      } else if (remainingRef.current <= 5) {
+        Haptics.tap();
+        Sound.play('tick');
+      }
     }, 1000);
     return () => clearInterval(handle);
   }, [hasTimer, running]);

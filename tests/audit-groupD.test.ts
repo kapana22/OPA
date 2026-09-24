@@ -104,9 +104,12 @@ describe('MostLikely', () => {
     e.setMode('secret');
     e.startGame();
     e.beginVoting();
-    p.forEach(() => e.castVote(p[1]));
+    // საკუთარ თავს ხმას ვერავინ აძლევს: p0→p1, p1→p0, p2→p1.
+    e.castVote(p[1]);
+    e.castVote(p[0]);
+    e.castVote(p[1]);
     e.castVote(p[1]);
     expect(e.totalFor(p[1])).toBe(1);
-    expect(e.votesFor(p[1])).toBe(3);
+    expect(e.votesFor(p[1])).toBe(2);
   });
 });

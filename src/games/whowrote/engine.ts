@@ -117,6 +117,18 @@ export class WhoWroteEngine extends Observable {
     });
   }
 
+  /** ყველა, ვინც პირველ ადგილს იყოფს — ფრე ანბანით არ წყდება (`PodiumAward`-ის წესი). ნულით — არავინ. */
+  get winners(): Player[] {
+    const best = Math.max(0, ...this.players.map((p) => this.totalFor(p)));
+    return best > 0 ? this.ranking.filter((p) => this.totalFor(p) === best) : [];
+  }
+
+  /** სპორტული ადგილი: ორი პირველის შემდეგ მესამე მოდის. */
+  placeOf(player: Player): number {
+    const score = this.totalFor(player);
+    return 1 + this.players.filter((p) => this.totalFor(p) > score).length;
+  }
+
   get results(): { player: Player; score: number }[] {
     return this.players.map((p) => ({ player: p, score: this.totalFor(p) }));
   }

@@ -44,6 +44,9 @@ export interface CharadesSettings {
 const KEY = 'splash.charades.settings.v2'; // v1 ცალობით ჯერს ინახავდა
 const DEFAULTS: CharadesSettings = { seconds: 60, laps: 1, categoryID: null, invertTilt: false };
 
+/** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება ან დახრა მეორე, უნახავ სიტყვას არ ჩაითვლის. */
+export const REGISTER_GAP_MS = 600;
+
 export class CharadesEngine extends Observable {
   readonly players: Player[];
   settings: CharadesSettings;
@@ -61,6 +64,7 @@ export class CharadesEngine extends Observable {
   private tilt = new TiltSensor();
   private timer = new Ticker();
   private countdownTimer = new Ticker();
+  private lastRecordAt = -Infinity;
 
   constructor(players: Player[]) {
     super();
@@ -173,6 +177,7 @@ export class CharadesEngine extends Observable {
     this.flash = null;
     this.remaining = this.settings.seconds;
     this.countdown = 3;
+    this.lastRecordAt = -Infinity;
     this.phase = 'countdown';
     Screen.keepAwake();
     this.startCountdown();
@@ -210,7 +215,7 @@ export class CharadesEngine extends Observable {
     if (this.isLastTurn) {
       // ვიბრაცია შეჯამების ეკრანზეა (`win`) — აქ მეორედ აღარ ზუზუნებს.
       this.phase = 'summary';
-      Sound.play('correct');
+      Sound.play('win');
     } else {
       this.turnIndex += 1;
       this.phase = 'turnIntro';
@@ -263,6 +268,10 @@ export class CharadesEngine extends Observable {
   // MARK: - შიდა
 
   private record(verdict: CharadesVerdict): void {
+    // ხელითაც და დახრითაც — ძალიან სწრაფი მეორე პასუხი იგნორდება.
+    const now = Date.now();
+    if (now - this.lastRecordAt < REGISTER_GAP_MS) return;
+    this.lastRecordAt = now;
     this.results.push({ id: uuid(), word: this.currentWord, verdict, isOvertime: false });
     this.flash = { id: uuid(), verdict };
     // ტელეფონი შუბლზეა — ეკრანს ვერ ხედავს, ვიბრაცია დადასტურებაა.

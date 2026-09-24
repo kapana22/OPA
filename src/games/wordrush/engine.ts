@@ -37,6 +37,8 @@ export class WordRushEngine extends Observable {
   categoryName = '';
   /** საწყისი სიტყვა — მხოლოდ ბიძგისთვის. */
   starter = '';
+  /** ამ ჯერზე კატეგორია უკვე შეიცვალა — ერთზე მეტი ცვლა არ შეიძლება. */
+  swappedThisTurn = false;
 
   totals: Record<string, number> = {};
   lastTurn: { player: Player; count: number } | null = null;
@@ -86,6 +88,20 @@ export class WordRushEngine extends Observable {
     return top && this.totalFor(top) > 0 ? top : null;
   }
 
+  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  get champions(): Player[] {
+    const best = this.best;
+    if (!best) return [];
+    const top = this.totalFor(best);
+    return this.ranking.filter((p) => this.totalFor(p) === top);
+  }
+
+  /** სპორტული ადგილი: ერთნაირ ქულას ერთი ადგილი აქვს. */
+  rankOf(player: Player): number {
+    const score = this.totalFor(player);
+    return 1 + this.players.filter((p) => this.totalFor(p) > score).length;
+  }
+
   /** დარჩენილი დროის წილი — ეკრანის რკალისთვის. */
   get fraction(): number {
     return this.remaining / Math.max(1, this.settings.seconds);
@@ -102,6 +118,7 @@ export class WordRushEngine extends Observable {
     this.round = 1;
     this.turnIndex = 0;
     this.lastTurn = null;
+    this.swappedThisTurn = false;
     this.loadCategory();
     this.phase = 'intro';
     this.notify();
@@ -166,18 +183,22 @@ export class WordRushEngine extends Observable {
     } else {
       this.turnIndex += 1;
     }
+    this.swappedThisTurn = false;
     this.loadCategory();
     this.phase = 'intro';
     this.notify();
   }
 
   /** მხოლოდ შემთხვევით რეჟიმში აქვს აზრი — ფიქსირებული კატეგორია იგივე დარჩებოდა,
-   *  სიტყვა კი საერთო დასტიდან (`word.<id>`) ტყუილად დაიხარჯებოდა. */
+   *  სიტყვა კი საერთო დასტიდან (`word.<id>`) ტყუილად დაიხარჯებოდა.
+   *  ჯერზე მხოლოდ ერთხელ — თორემ ყველა მსუბუქ კატეგორიამდე ცვლიდა და ქულები
+   *  არათანაბარ დავალებებზე შედარდებოდა. */
   get canSwapCategory(): boolean {
-    return this.settings.categoryID === null;
+    return this.settings.categoryID === null && !this.swappedThisTurn;
   }
   swapCategory(): void {
-    if (!this.canSwapCategory) return;
+    if (!this.canSwapCategory || this.phase !== 'intro') return;
+    this.swappedThisTurn = true;
     this.loadCategory();
     this.notify();
   }

@@ -34,8 +34,20 @@ describe('player characters', () => {
   it('swaps occupied choices and rejects invalid IDs', () => {
     const r = new Roster(); r.add('a'); r.add('b');
     const [a, b] = r.players; const oldA = a.characterID; const oldB = b.characterID;
-    r.setCharacter(a.id, oldB!); expect(a.characterID).toBe(oldB); expect(b.characterID).toBe(oldA);
+    const genderB = b.gender;
+    r.setCharacter(a.id, oldB!); expect(a.characterID).toBe(oldB);
+    // მეორე არასოდეს დუბლირდება, სქესს ინარჩუნებს და თავისუფალს იღებს (ან ადგილს ცვლის).
+    expect(b.characterID).not.toBe(oldB); expect(b.gender).toBe(genderB);
+    expect(b.characterID === oldA || !r.players.some((p) => p !== b && p.characterID === b.characterID)).toBe(true);
     r.setCharacter(a.id, 12); expect(a.characterID).toBe(oldB);
+  });
+  it('taking a girl character from a girl keeps her a girl', () => {
+    const r = new Roster(); r.add('მარი'); r.add('გიო', 'boy');
+    const [mari, gio] = r.players;
+    r.setCharacter(gio.id, mari.characterID!);
+    expect(mari.gender).toBe('girl');
+    expect([1, 3, 5, 7, 9]).toContain(mari.characterID);
+    expect(mari.characterID).not.toBe(gio.characterID);
   });
   it('assigns correct girl characters for female names and allows toggling gender', () => {
     const r = new Roster();

@@ -95,6 +95,20 @@ export class NoLaughEngine extends Observable {
     return top && this.scoreFor(top) > 0 ? top : null;
   }
 
+  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  get champions(): Player[] {
+    const best = this.champion;
+    if (!best) return [];
+    const top = this.scoreFor(best);
+    return this.ranking.filter((p) => this.scoreFor(p) === top);
+  }
+
+  /** სპორტული ადგილი: ერთნაირ ქულას ერთი ადგილი აქვს. */
+  rankOf(player: Player): number {
+    const score = this.scoreFor(player);
+    return 1 + this.players.filter((p) => this.scoreFor(p) > score).length;
+  }
+
   get results(): { player: Player; score: number }[] {
     return this.players.map((p) => ({ player: p, score: this.scoreFor(p) }));
   }
@@ -145,6 +159,7 @@ export class NoLaughEngine extends Observable {
     this.verdict = 'laughed';
     for (const p of this.challengers) this.scores[p.id] = (this.scores[p.id] ?? 0) + 1;
     this.phase = 'result';
+    Sound.play('wrong');
     this.notify();
   }
 
@@ -207,6 +222,7 @@ export class NoLaughEngine extends Observable {
     const holder = this.holder;
     if (holder) this.scores[holder.id] = (this.scores[holder.id] ?? 0) + 2;
     this.phase = 'result';
+    Sound.play('correct');
     this.notify();
   }
 

@@ -1,6 +1,7 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
 import { shuffled } from '../../core/shuffle';
+import { TurnRotation } from '../../core/turnRotation';
 import { loadSettings, saveSettings, num, oneOf } from '../../core/settings';
 import { TruthDareBank, heatName, type TruthDareHeat } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
@@ -26,13 +27,18 @@ export const orderIcon: Record<TruthDareOrder, string> = {
 
 export interface TruthDareSettings {
   heat: TruthDareHeat;
-  /** 0 = ერთი წრე · −1 = ულიმიტოდ · >0 = ზუსტი რაოდენობა. */
-  turns: number;
+  /**
+   * წრეები: 1–3 · −1 = ულიმიტოდ. ცალობითი რაოდენობა (10 / 20) აღარ გვაქვს —
+   * მოთამაშეთა რიცხვზე არ იყოფოდა და ზოგს მეტი ჯერი ხვდებოდა, ქულა კი პოდიუმზე მიდის.
+   */
+  laps: number;
   order: TruthDareOrder;
 }
 
 const KEY = 'splash.truthdare.settings.v2'; // v1 ნაგულისხმევად წრეს ინახავდა
-const DEFAULTS: TruthDareSettings = { heat: 'party', turns: 0, order: 'bottle' };
+const DEFAULTS: TruthDareSettings = { heat: 'party', laps: 1, order: 'bottle' };
+/** −1 = ულიმიტოდ. */
+export const TRUTHDARE_LAP_OPTIONS = [...TurnRotation.lapOptions, -1];
 const HEATS: TruthDareHeat[] = ['family', 'party', 'spicy'];
 const ORDERS: TruthDareOrder[] = ['circle', 'bottle'];
 
@@ -47,6 +53,8 @@ export class TruthDareEngine extends Observable {
   currentText = '';
   scores: Record<string, number> = {};
   passes: Record<string, number> = {};
+  /** ბარათის შეცვლა ჯერზე ერთხელ — თორემ „მოქმედება“ (+2) იოლ ბარათამდე იცვლებოდა. */
+  swapped = false;
 
   private bottleOrder: number[] = [];
   private bottleStep = 0;
@@ -58,7 +66,7 @@ export class TruthDareEngine extends Observable {
     this.players = players;
     this.settings = loadSettings<TruthDareSettings>(KEY, DEFAULTS, (s) => ({
       heat: oneOf(s.heat, HEATS, DEFAULTS.heat),
-      turns: num(s.turns, DEFAULTS.turns, -1, 50),
+      laps: TruthDareEngine.sanitizeLaps(s, players.length),
       order: oneOf(s.order, ORDERS, DEFAULTS.order),
     }));
   }
@@ -70,13 +78,16 @@ export class TruthDareEngine extends Observable {
   }
 
   get isEndless(): boolean {
-    return this.settings.turns < 0;
+    return this.settings.laps < 0;
   }
 
   get totalTurns(): number {
-    if (this.settings.turns > 0) return this.settings.turns;
-    if (this.settings.turns === 0) return Math.max(1, this.players.length);
-    return Number.MAX_SAFE_INTEGER;
+    if (this.isEndless) return Number.MAX_SAFE_INTEGER;
+    return TurnRotation.rounds(this.settings.laps, this.players.length);
+  }
+
+  get canSwap(): boolean {
+    return this.phase === 'task' && !this.swapped;
   }
 
   get isLastTurn(): boolean {
@@ -143,6 +154,7 @@ export class TruthDareEngine extends Observable {
     if (this.phase !== 'turn') return;
     this.choice = value;
     this.currentText = this.draw(value === 'truth');
+    this.swapped = false;
     Haptics.medium();
     Sound.play('reveal');
     this.phase = 'task';
@@ -151,7 +163,8 @@ export class TruthDareEngine extends Observable {
 
   /** ბარათი არ მოგვწონს — სხვა მოდის, არჩევანი კი იგივე რჩება. */
   swap(): void {
-    if (this.phase !== 'task') return;
+    if (!this.canSwap) return;
+    this.swapped = true;
     this.currentText = this.draw(this.choice === 'truth');
     Haptics.tap();
     this.notify();
@@ -237,9 +250,20 @@ export class TruthDareEngine extends Observable {
     this.settings = { ...this.settings, heat: value };
     this.persist();
   }
-  setTurns(value: number): void {
-    this.settings = { ...this.settings, turns: Math.min(Math.max(-1, value), 50) };
+  setLaps(value: number): void {
+    this.settings = { ...this.settings, laps: value < 0 ? -1 : Math.min(Math.max(1, Math.round(value)), 3) };
     this.persist();
+  }
+
+  /** შენახული მნიშვნელობა — ახალი `laps` ან ძველი `turns` (0 = წრე, −1 = ულიმიტო, N = ცალობით). */
+  private static sanitizeLaps(s: Partial<TruthDareSettings> & { turns?: unknown }, players: number): number {
+    if (typeof s.laps === 'number' && Number.isFinite(s.laps)) return s.laps < 0 ? -1 : num(Math.round(s.laps), 1, 1, 3);
+    if (typeof s.turns === 'number' && Number.isFinite(s.turns)) {
+      if (s.turns < 0) return -1;
+      if (s.turns === 0) return 1;
+      return TurnRotation.lapsFromLegacy(s.turns, players);
+    }
+    return DEFAULTS.laps;
   }
   setOrder(value: TruthDareOrder): void {
     this.settings = { ...this.settings, order: value };

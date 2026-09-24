@@ -5,6 +5,14 @@ import { RecentGames } from '../core/recentGames';
 import { hydrate } from '../core/storage';
 import { asyncStorageBackend } from '../core/storageBackend';
 import { useObservable } from '../core/observable';
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { FontSources } from '../theme/theme';
+import { Sound } from '../core/sound';
+
+// გამშვები ეკრანი რჩება, სანამ საცავი და შრიფტი არ ჩაიტვირთება —
+// თორემ მთავარ ეკრანამდე ცარიელი შავი კადრი ციმციმებდა.
+void SplashScreen.preventAutoHideAsync().catch(() => {});
 
 /**
  * აპის საერთო მდგომარეობა.
@@ -29,14 +37,19 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
-    void hydrate(asyncStorageBackend)
-      .catch(() => {
+    void Promise.all([
+      hydrate(asyncStorageBackend).catch(() => {
         // საცავი მიუწვდომელია — აპი მაინც უნდა გაიხსნას, უბრალოდ ცარიელი.
-      })
-      .then(() => {
-        if (cancelled) return;
-        setState({ roster: new Roster(), night: new NightLog(), recent: new RecentGames() });
-      });
+      }),
+      Font.loadAsync(FontSources).catch(() => {
+        // შრიფტი ვერ ჩაიტვირთა — სისტემური შრიფტით გაგრძელდება.
+      }),
+    ]).then(() => {
+      if (cancelled) return;
+      setState({ roster: new Roster(), night: new NightLog(), recent: new RecentGames() });
+      void SplashScreen.hideAsync().catch(() => {});
+      Sound.preload();
+    });
     return () => {
       cancelled = true;
     };

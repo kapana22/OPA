@@ -124,10 +124,13 @@ export class Roster extends Observable {
     if (!player || !isCharacterID(characterID) || player.characterID === characterID) return;
     const other = this._players.find(p => p.characterID === characterID);
     if (other) {
-      other.characterID = player.characterID;
-      if (typeof other.characterID === 'number') {
-        other.gender = characterGender(other.characterID);
-      }
+      // მეორე მოთამაშის სქესი არ იცვლება: ჯერ მისივე სქესის თავისუფალ პერსონაჟს
+      // ვაძლევთ, და მხოლოდ ასეთის არქონისას ვცვლით ადგილებს. ადრე გოგოს
+      // შეიძლება ბიჭის პერსონაჟი და 👦 შეხვედროდა.
+      const used = new Set(this._players.map(p => p.characterID).filter(isCharacterID));
+      const pool = other.gender === 'girl' ? GIRL_CHARACTERS : other.gender === 'boy' ? BOY_CHARACTERS : null;
+      const sameGenderFree = pool?.find(c => !used.has(c));
+      other.characterID = sameGenderFree ?? player.characterID;
     }
     player.characterID = characterID;
     player.gender = characterGender(characterID);

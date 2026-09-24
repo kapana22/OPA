@@ -129,6 +129,11 @@ function Reveal({ engine, onExit }: { engine: MafiaEngine; onExit: () => void })
 
   const role = engine.roleOf(player);
   const isLast = engine.revealIndex + 1 >= engine.players.length;
+  // მაფიამ ერთმანეთი უნდა იცნოს — თორემ ღამით ბრმად ხმობენ და დღით ერთმანეთს აძევებენ.
+  const mates = role === 'mafia' ? engine.playersWith('mafia').filter((p) => p.id !== player.id) : [];
+  const note = mates.length
+    ? `${roleNote[role]}\n\n${mates.length > 1 ? 'შენი თანაგუნდელები' : 'შენი თანაგუნდელი'}: ${mates.map((p) => p.name).join(', ')}`
+    : roleNote[role];
 
   return (
     <PassPhoneReveal
@@ -141,7 +146,7 @@ function Reveal({ engine, onExit }: { engine: MafiaEngine; onExit: () => void })
       card={{
         word: roleTitle[role],
         hint: null,
-        note: roleNote[role],
+        note,
         tint: role === 'mafia' ? Colors.neonMagenta : Colors.neonCyan,
       }}
       nextTitle={isLast ? 'ვნახე — ღამე დგება' : 'ვნახე — შემდეგი'}
@@ -210,27 +215,6 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
     );
   }
 
-  // მოქალაქეს ღამით ქმედება არ აქვს — ტელეფონი მაინც გადადის, რომ როლი არ გაიცეს.
-  if (role === 'civilian') {
-    return (
-      <View style={{ flex: 1, gap: Space.m }}>
-        {header}
-        <View style={{ flex: 1 }} />
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon name="zzz" size={37} tint={Colors.textSecondary} />
-        </View>
-        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]}>შენ გძინავს</Text>
-        <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}>
-          არაფერი გჭირდება — უბრალოდ გადაეცი შემდეგს.
-        </Text>
-        <View style={{ flex: 1 }} />
-        <View style={Layout.footer}>
-          <PrimaryButton title="გადავეცი" icon="chevron.right" tint={Colors.neonCyan} onPress={() => engine.skipNightTurn()} />
-        </View>
-      </View>
-    );
-  }
-
   // დეტექტივს შედეგი უკვე აქვს — ჩვენება.
   if (role === 'detective' && engine.checkResult !== null) {
     const isMafia = engine.checkResult === true;
@@ -254,12 +238,14 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
         </Text>
         <View style={{ flex: 1 }} />
         <View style={Layout.footer}>
-          <PrimaryButton title="დავიმახსოვრე" icon="checkmark" tint={Colors.neonCyan} onPress={() => engine.detectiveDone()} />
+          <PrimaryButton title="დავიმახსოვრე" icon="checkmark" tint={Colors.neonCyan} onPress={() => engine.detectiveDone(player ?? undefined)} />
         </View>
       </View>
     );
   }
 
+  // `actor` — ეკრანის პატრონი: ორმაგი შეხება შემდეგ მოთამაშეს ჯერს ვერ გამოტოვებინებს.
+  const actor = player ?? undefined;
   const config =
     role === 'mafia'
       ? {
@@ -267,21 +253,30 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
           subtitle: 'ღამით ის დაიღუპება, თუ ექიმი არ გადაარჩენს',
           // მაფია ერთმანეთს არ ხოცავს — ორი მაფიის შემთხვევაში ბრმად რომ არ ხმობდნენ.
           exclude: engine.alive.filter((p) => engine.roleOf(p) === 'mafia').map((p) => p.id),
-          onPick: (t: Player) => engine.mafiaChoose(t),
+          onPick: (t: Player) => engine.mafiaChoose(t, actor),
         }
       : role === 'doctor'
         ? {
             title: 'ვინ გადაარჩინო?',
             subtitle: 'შეგიძლია საკუთარი თავიც აირჩიო',
             exclude: [] as string[],
-            onPick: (t: Player) => engine.doctorSave(t),
+            onPick: (t: Player) => engine.doctorSave(t, actor),
           }
-        : {
-            title: 'ვინ შეამოწმო?',
-            subtitle: 'გაიგებ, მაფიაა თუ არა',
-            exclude: player ? [player.id] : [],
-            onPick: (t: Player) => engine.detectiveCheck(t),
-          };
+        : role === 'detective'
+          ? {
+              title: 'ვინ შეამოწმო?',
+              subtitle: 'გაიგებ, მაფიაა თუ არა',
+              exclude: player ? [player.id] : [],
+              onPick: (t: Player) => engine.detectiveCheck(t, actor),
+            }
+          : {
+              // მოქალაქეს ღამით ქმედება არ აქვს, მაგრამ ისიც სახელს ირჩევს — ყველა
+              // ჯერი ერთნაირად გამოიყურება და შეხების რაოდენობა როლს ვერ გასცემს.
+              title: 'ვის ეჭვობ?',
+              subtitle: 'მოქალაქე ხარ — არჩევანი თამაშზე არ მოქმედებს',
+              exclude: player ? [player.id] : [],
+              onPick: (_t: Player) => engine.skipNightTurn(actor),
+            };
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
@@ -375,8 +370,8 @@ function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
 
       <View style={Layout.footer}>
         <PrimaryButton
-          title="განხილვა და კენჭისყრა"
-          icon="person.3.fill"
+          title={engine.winner !== null ? 'შედეგები' : 'განხილვა და კენჭისყრა'}
+          icon={engine.winner !== null ? 'flag.checkered' : 'person.3.fill'}
           tint={Colors.neonCyan}
           onPress={() => engine.beginVote()}
         />
@@ -497,7 +492,12 @@ function DayResult({ engine, onExit }: { engine: MafiaEngine; onExit: () => void
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
-        <PrimaryButton title="ღამე დგება" icon="moon.stars.fill" tint={Colors.neonCyan} onPress={() => engine.continueGame()} />
+        <PrimaryButton
+          title={engine.winner !== null ? 'შედეგები' : 'ღამე დგება'}
+          icon={engine.winner !== null ? 'flag.checkered' : 'moon.stars.fill'}
+          tint={Colors.neonCyan}
+          onPress={() => engine.continueGame()}
+        />
       </View>
     </View>
   );

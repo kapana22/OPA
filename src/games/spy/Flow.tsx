@@ -102,7 +102,7 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
               subtitle={
                 engine.canIncludeMrWhite
                   ? 'სიტყვა საერთოდ არ აქვს — ბლეფით უნდა გაძლოს'
-                  : 'მინიმუმ 4 მოთამაშე სჭირდება'
+                  : 'მინიმუმ 5 მოთამაშე სჭირდება'
               }
               value={engine.settings.includeMrWhite}
               onChange={(v) => {

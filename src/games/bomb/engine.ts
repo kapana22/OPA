@@ -109,6 +109,24 @@ export class BombEngine extends Observable {
     this.armFuse();
   }
 
+  /**
+   * აფეთქების შემდეგ დაზარალებულის შესწორება — ბომბი ხშირად გადაცემისას ფეთქდება
+   * და ტელეფონი ჯერ კიდევ წინა მოთამაშეზეა. სიცოცხლე წინას უბრუნდება და
+   * არჩეულს აკლდება; ახალი რაუნდიც მისი ადგილიდან იწყება.
+   */
+  reassignVictim(player: Player): void {
+    if (this.phase !== 'exploded' || !this.victimID || player.id === this.victimID) return;
+    // მხოლოდ ის, ვინც აფეთქებამდე თამაშში იყო.
+    if (this.livesLeft(player) <= 0) return;
+    this.lives[this.victimID] = (this.lives[this.victimID] ?? 0) + 1;
+    // ახლა `alive` ზუსტად აფეთქებამდელი სიაა — `continueGame` ამ ინდექსით იწყებს.
+    this.currentIndex = Math.max(0, this.alive.findIndex((p) => p.id === player.id));
+    this.victimID = player.id;
+    this.lives[player.id] = Math.max(0, this.livesLeft(player) - 1);
+    Haptics.tap();
+    this.notify();
+  }
+
   restart(): void {
     this.startGame();
   }

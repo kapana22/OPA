@@ -4,8 +4,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Radius, Space, body, title as titleFont } from '../src/theme/theme';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { PrimaryButton, GhostButton } from '../src/ui/Buttons';
+import { PageHeader } from '../src/ui/PageHeader';
 import { useNightLog, useRoster } from '../src/state/state';
 import { useDialog } from '../src/ui/Dialog';
+import Animated from 'react-native-reanimated';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { icon as sf } from '../src/theme/icons';
+import { enterUp, listLayout, popIn } from '../src/ui/motion';
 
 /** პორტი: `Splash/App/ScoreboardView.swift`. */
 export default function Scoreboard() {
@@ -39,8 +44,8 @@ export default function Scoreboard() {
   return (
     <View style={{ flex: 1 }}>
       <SplashBackground />
-      <View style={{ flex: 1, paddingTop: Math.max(insets.top, 28) + 12, gap: 12 }}>
-        <Text style={[titleFont(24), { color: Colors.textPrimary, textAlign: 'center' }]}>ტაბლო</Text>
+      <PageHeader title="ტაბლო" />
+      <View style={{ flex: 1, gap: 12 }}>
 
         {board.length === 0 ? (
           <View style={styles.empty}>
@@ -55,11 +60,16 @@ export default function Scoreboard() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 8, gap: 8 }}
           >
             {board.map((player, rank) => (
-              <View key={player.id} style={styles.row}>
+              <Animated.View key={player.id} entering={enterUp(rank)} layout={listLayout} style={styles.row}>
                 <Text style={[body(18, '900'), { color: Colors.textSecondary, width: 34 }]}>{rank + 1}</Text>
                 <Text style={[body(17, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
                   {player.name}
                 </Text>
+                {rank === 0 && player.score > 0 ? (
+                  <Animated.View entering={popIn(420)} style={{ marginRight: 8 }}>
+                    <MaterialCommunityIcons name={sf('crown.fill')} size={20} color={Colors.phosphor} />
+                  </Animated.View>
+                ) : null}
                 <Text
                   style={[
                     titleFont(22),
@@ -68,7 +78,7 @@ export default function Scoreboard() {
                 >
                   {player.score}
                 </Text>
-              </View>
+              </Animated.View>
             ))}
           </ScrollView>
         )}
@@ -83,7 +93,6 @@ export default function Scoreboard() {
             />
           ) : null}
           <GhostButton title="ახალი საღამო" icon="arrow.clockwise" onPress={askReset} />
-          <GhostButton title="დახურვა" icon="xmark" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
       </View>
     </View>

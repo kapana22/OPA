@@ -353,6 +353,7 @@ function Summary({
   });
 
   const champion = engine.champion;
+  const champions = engine.champions;
 
   return (
     <View style={{ flex: 1 }}>
@@ -363,8 +364,12 @@ function Summary({
           <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
         </View>
 
-        <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>
-          {champion ? champion.name : 'ქულა ვერავინ აიღო'}
+        <Text
+          style={[titleFont(28), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
+          adjustsFontSizeToFit
+          numberOfLines={2}
+        >
+          {champion ? champions.map((p) => p.name).join(', ') : 'ქულა ვერავინ აიღო'}
         </Text>
 
         {champion ? (
@@ -378,13 +383,13 @@ function Summary({
         </Text>
 
         <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-          {engine.ranking.map((player, rank) => (
+          {engine.ranking.map((player) => (
             <RankRow
               key={player.id}
-              rank={rank + 1}
+              rank={engine.rankOf(player)}
               name={player.name}
               score={engine.scoreFor(player)}
-              highlight={rank === 0}
+              highlight={champions.some((c) => c.id === player.id)}
             />
           ))}
         </ScrollView>

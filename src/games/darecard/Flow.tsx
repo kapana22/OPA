@@ -18,7 +18,8 @@ import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
-import { DareCardEngine } from './engine';
+import { DareCardEngine, DARECARD_LAP_OPTIONS } from './engine';
+import { TurnRotation } from '../../core/turnRotation';
 
 /**
  * „გააკეთე ან...“ (Do or Pay) — სრული ნაკადი.
@@ -28,7 +29,6 @@ import { DareCardEngine } from './engine';
  */
 
 const HEATS: TruthDareHeat[] = ['family', 'party', 'spicy'];
-const CARD_OPTIONS = [0, 15, 25, 40];
 
 export function DareCardFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new DareCardEngine([...roster.players]));
@@ -101,15 +101,18 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ბარათი</Text>
             <View style={Layout.chipRow}>
-              {CARD_OPTIONS.map((count) => (
+              {DARECARD_LAP_OPTIONS.map((laps) => (
                 <CategoryChip
-                  key={count}
-                  label={count === 0 ? 'სანამ მოგბეზრდებათ' : String(count)}
-                  selected={engine.settings.cards === count}
-                  onPress={() => engine.setCards(count)}
+                  key={laps}
+                  label={laps === 0 ? 'სანამ მოგბეზრდებათ' : TurnRotation.label(laps)}
+                  selected={engine.settings.laps === laps}
+                  onPress={() => engine.setLaps(laps)}
                 />
               ))}
             </View>
+            {engine.isEndless ? null : (
+              <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>სულ {engine.totalCards} ბარათი.</Text>
+            )}
           </View>
         </GlassCard>
       </ScrollView>
@@ -153,18 +156,20 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
         <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-          {engine.settings.cards > 0 ? `ბარათი ${engine.drawn} / ${engine.settings.cards}` : `ბარათი ${engine.drawn}`}
+          {engine.isEndless ? `ბარათი ${engine.drawn}` : `ბარათი ${engine.drawn} / ${engine.totalCards}`}
         </Text>
         <View style={{ flex: 1 }} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="სხვა ბარათი"
-          onPress={() => engine.swapCard()}
-          style={styles.pill}
-        >
-          <MaterialCommunityIcons name={sf('shuffle')} size={12} color={Colors.textSecondary} />
-          <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
-        </Pressable>
+        {engine.canSwap ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="სხვა ბარათი"
+            onPress={() => engine.swapCard()}
+            style={styles.pill}
+          >
+            <MaterialCommunityIcons name={sf('shuffle')} size={12} color={Colors.textSecondary} />
+            <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
+          </Pressable>
+        ) : null}
       </View>
 
       <View style={{ flex: 1 }} />
@@ -262,7 +267,7 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
           </>
         )}
 
-        {engine.settings.cards === 0 ? (
+        {engine.isEndless ? (
           <Pressable
             accessibilityRole="button"
             onPress={() => {
@@ -298,6 +303,7 @@ function Summary({
   });
 
   const champion = engine.champion;
+  const champions = engine.champions;
   const worst = engine.mostForfeits;
   const forfeitLine =
     worst.length > 0 && engine.forfeitCount(worst[0]) > 0
@@ -319,7 +325,7 @@ function Summary({
 
         {champion ? (
           <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {champion.name} — {engine.doneCount(champion)} შესრულებული ბარათი
+            {champions.map((p) => `${p.name} — ${engine.doneCount(p)} შესრულებული ბარათი`).join('\n')}
           </Text>
         ) : null}
 

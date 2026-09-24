@@ -138,7 +138,10 @@ export class ImpostorEngine extends Observable {
     }
 
     this.impostorIDs = new Set(shuffled(this.players).slice(0, this.settings.impostorCount).map((p) => p.id));
-    this.startingPlayerID = this.players[Math.floor(Math.random() * this.players.length)]?.id ?? null;
+    // იმპოსტორი არასდროს იწყებს — სიტყვის გარეშე პირველი მინიშნება მაშინვე გასცემს.
+    const civilians = this.players.filter((p) => !this.impostorIDs.has(p.id));
+    const starters = civilians.length > 0 ? civilians : this.players;
+    this.startingPlayerID = starters[Math.floor(Math.random() * starters.length)]?.id ?? null;
 
     this.revealIndex = 0;
     this.accusedID = null;
@@ -211,15 +214,18 @@ export class ImpostorEngine extends Observable {
     } else {
       for (const p of this.impostors) points[p.id] = 3;
     }
+    // კენჭისყრა ერთია — რამდენიმე იმპოსტორისას დანარჩენები ვერ იპოვეს.
+    // ვინც ეჭვს გადაურჩა, გაქცეულის ქულას იღებს, დაჭერილის ბედს არ იზიარებს.
+    for (const p of this.impostors) if (p.id !== this.accusedID) points[p.id] = 3;
 
     this.roundPoints = points;
     this.phase = 'result';
     this.notify();
   }
 
-  /** ხუთი მცდარი ვარიანტი + სწორი, არეული. */
+  /** ცხრა მცდარი ვარიანტი (რამდენიც კატეგორიაში მოიძებნება) + სწორი, არეული. */
   private makeGuessOptions(): string[] {
-    const others = shuffled(this.category.words.filter((w) => w !== this.secretWord)).slice(0, 5);
+    const others = shuffled(this.category.words.filter((w) => w !== this.secretWord)).slice(0, 9);
     return shuffled([...others, this.secretWord]);
   }
 

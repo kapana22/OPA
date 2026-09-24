@@ -2,19 +2,22 @@ import { Observable } from '../../core/observable';
 import { shuffled } from '../../core/shuffle';
 import { loadSettings, saveSettings, num, bool } from '../../core/settings';
 import { TwoTruthsBank } from '../../content/banks';
+import { TurnRotation } from '../../core/turnRotation';
 import type { Player } from '../../core/roster';
 
 /**
  * „ორი სიმართლე, ერთი ტყუილი“ — ავტორი წერს სამ ამბავს, ერთი მოგონილია.
  *
- * ქულა ორივე მხარეს: გამომცნობს — ტყუილის პოვნისთვის, ავტორს — იმდენი,
- * რამდენიც მოატყუა (ჭერით).
+ * ქულა ორივე მხარეს და თანაბრად: ყოველი გამოცნობა ორის დუელია — იპოვე
+ * ტყუილი და +2 შენ, მოტყუვდი და +2 ავტორს. ჭერი არ არის: ადრე ავტორი
+ * მაქსიმუმ +3-ს იღებდა, მპოვნელი კი ყოველ ჯერზე +2-ს — საუკეთესო
+ * მატყუარა ვერასდროს იგებდა.
  *
  * პორტი: `Splash/Games/TwoTruths/TwoTruthsEngine.swift`.
  */
 
 export type TwoTruthsPhase =
-  | 'setup'         // ჯერების რაოდენობა და მინიშნებები
+  | 'setup'         // წრეების რაოდენობა და მინიშნებები
   | 'writeHandoff'  // ტელეფონი ავტორს გადაეცემა
   | 'write'         // ავტორი წერს სამ დებულებას და ნიშნავს ტყუილს
   | 'guessHandoff'  // ტელეფონი შემდეგ გამომცნობს გადაეცემა
@@ -23,8 +26,8 @@ export type TwoTruthsPhase =
   | 'summary';
 
 export interface TwoTruthsSettings {
-  everyonePlays: boolean;
-  fixedTurns: number;
+  /** რამდენჯერ წერს თითოეული — მთელი წრეები, რომ ჯერი ყველას თანაბრად ხვდებოდეს. */
+  laps: number;
   showHints: boolean;
 }
 
@@ -34,13 +37,20 @@ export interface TwoTruthsHint {
 }
 
 const KEY = 'splash.twotruths.settings.v1';
-const DEFAULTS: TwoTruthsSettings = { everyonePlays: true, fixedTurns: 5, showHints: true };
-const clampTurns = (n: number) => Math.min(Math.max(2, n), 12);
+const DEFAULTS: TwoTruthsSettings = { laps: 1, showHints: true };
+const MAX_LAPS = TurnRotation.lapOptions[TurnRotation.lapOptions.length - 1];
+
+/** ძველი შენახული პარამეტრი: `everyonePlays` / `fixedTurns` (3 / 5 / 8 ჯერი). */
+interface LegacySettings {
+  everyonePlays?: unknown;
+  fixedTurns?: unknown;
+}
 
 export class TwoTruthsEngine extends Observable {
-  /** ავტორს ერთ ჯერზე მაქსიმუმ ამდენი ერგება. */
-  static readonly authorCap = 3;
+  /** ტყუილის მპოვნელს. */
   static readonly finderReward = 2;
+  /** ავტორს — ყოველ მოტყუებულზე, ჭერის გარეშე. */
+  static readonly authorRewardPerFooled = 2;
 
   readonly players: Player[];
   settings: TwoTruthsSettings;
@@ -64,17 +74,22 @@ export class TwoTruthsEngine extends Observable {
   constructor(players: Player[]) {
     super();
     this.players = players;
-    this.settings = loadSettings<TwoTruthsSettings>(KEY, DEFAULTS, (s) => ({
-      everyonePlays: bool(s.everyonePlays, DEFAULTS.everyonePlays),
-      fixedTurns: clampTurns(num(s.fixedTurns, DEFAULTS.fixedTurns, 2, 12)),
-      showHints: bool(s.showHints, DEFAULTS.showHints),
-    }));
+    this.settings = loadSettings<TwoTruthsSettings>(KEY, DEFAULTS, (s) => {
+      const legacy = s as LegacySettings;
+      const laps =
+        typeof s.laps === 'number'
+          ? num(s.laps, DEFAULTS.laps, 1, MAX_LAPS)
+          : legacy.everyonePlays === false && typeof legacy.fixedTurns === 'number'
+            ? TurnRotation.lapsFromLegacy(legacy.fixedTurns, players.length)
+            : DEFAULTS.laps;
+      return { laps, showHints: bool(s.showHints, DEFAULTS.showHints) };
+    });
   }
 
   // MARK: - წარმოებული მნიშვნელობები
 
   get totalTurns(): number {
-    return this.settings.everyonePlays ? Math.max(1, this.players.length) : clampTurns(this.settings.fixedTurns);
+    return TurnRotation.rounds(this.settings.laps, this.players.length);
   }
 
   get author(): Player {
@@ -140,6 +155,18 @@ export class TwoTruthsEngine extends Observable {
       const b = this.totals[y.id] ?? 0;
       return a !== b ? b - a : x.name.localeCompare(y.name, 'ka');
     });
+  }
+
+  /** ყველა, ვინც პირველ ადგილს იყოფს — ფრე ანბანით არ წყდება (`PodiumAward`-ის წესი). ნულით — არავინ. */
+  get winners(): Player[] {
+    const best = Math.max(0, ...this.players.map((p) => this.totalFor(p)));
+    return best > 0 ? this.ranking.filter((p) => this.totalFor(p) === best) : [];
+  }
+
+  /** სპორტული ადგილი: ორი პირველის შემდეგ მესამე მოდის. */
+  placeOf(player: Player): number {
+    const score = this.totalFor(player);
+    return 1 + this.players.filter((p) => this.totalFor(p) > score).length;
   }
 
   get results(): { player: Player; score: number }[] {
@@ -260,7 +287,7 @@ export class TwoTruthsEngine extends Observable {
       else fooledCount += 1;
     }
 
-    const authorPoints = Math.min(TwoTruthsEngine.authorCap, fooledCount);
+    const authorPoints = fooledCount * TwoTruthsEngine.authorRewardPerFooled;
     if (authorPoints > 0) points[this.author.id] = authorPoints;
 
     this.turnPoints = points;
@@ -269,12 +296,8 @@ export class TwoTruthsEngine extends Observable {
 
   // MARK: - პარამეტრები
 
-  setEveryonePlays(value: boolean): void {
-    this.settings = { ...this.settings, everyonePlays: value };
-    this.persist();
-  }
-  setFixedTurns(count: number): void {
-    this.settings = { ...this.settings, everyonePlays: false, fixedTurns: clampTurns(count) };
+  setLaps(value: number): void {
+    this.settings = { ...this.settings, laps: Math.min(Math.max(1, value), MAX_LAPS) };
     this.persist();
   }
   setShowHints(value: boolean): void {

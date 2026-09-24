@@ -10,8 +10,8 @@ import type { Player } from '../../core/roster';
  * „10-ია, მაგრამ...“ — ერთი ჩვევა ჩნდება; **სამიზნე** ფარულად აფასებს 0-დან
  * 10-მდე, დანარჩენები კი გამოიცნობენ, რა დაწერა.
  *
- * ქულა ორივე მხარესაა: გამომცნობს — სიზუსტისთვის, სამიზნეს — გაკვირვებისთვის.
- * სწორედ ამიტომ შუა ციფრის დაჭერა მოგებული სტრატეგია აღარაა.
+ * ქულას მხოლოდ გამომცნობები იღებენ — სიზუსტისთვის. სამიზნეს გაკვირვებისთვის
+ * ქულა აღარ ერიცხება: ეს ტყუილს (ყოველთვის 0 ან 10) აჯილდოებდა.
  *
  * პორტი: `Splash/Games/TenBut/TenButEngine.swift`.
  */
@@ -30,7 +30,7 @@ export class TenButEngine extends Observable {
   static readonly exactReward = 3;
   static readonly closeReward = 2;
   static readonly nearReward = 1;
-  /** ამ სხვაობიდან ითვლება, რომ სამიზნემ გააკვირვა. */
+  /** ამ სხვაობიდან ითვლება, რომ სამიზნემ გააკვირვა (მხოლოდ სათაურისთვის, ქულა არ ერიცხება). */
   static readonly surpriseGap = 3;
 
   readonly players: Player[];
@@ -149,6 +149,7 @@ export class TenButEngine extends Observable {
   }
 
   beginRating(): void {
+    if (this.phase !== 'intro') return;
     this.targetScore = null;
     this.guesses = {};
     this.roundPoints = {};
@@ -188,6 +189,7 @@ export class TenButEngine extends Observable {
   }
 
   next(): void {
+    if (this.phase !== 'result') return;
     if (this.isLastRound) {
       this.phase = 'summary';
       this.notify();
@@ -199,6 +201,7 @@ export class TenButEngine extends Observable {
   }
 
   swapFlaw(): void {
+    if (this.phase !== 'intro') return;
     this.loadFlaw();
   }
   restart(): void {
@@ -225,7 +228,6 @@ export class TenButEngine extends Observable {
     const actual = this.targetScore;
     if (actual === null) return;
 
-    let surprised = 0;
     for (const player of this.guessers) {
       const guess = this.guesses[player.id];
       if (guess === undefined) continue;
@@ -236,13 +238,6 @@ export class TenButEngine extends Observable {
         this.roundPoints[player.id] = points;
         this.totals[player.id] = (this.totals[player.id] ?? 0) + points;
       }
-      if (gap >= TenButEngine.surpriseGap) surprised += 1;
-    }
-
-    const target = this.target;
-    if (target && surprised > 0) {
-      this.roundPoints[target.id] = surprised;
-      this.totals[target.id] = (this.totals[target.id] ?? 0) + surprised;
     }
     Haptics.success();
   }

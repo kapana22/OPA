@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming, Easing } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withTiming, Easing } from 'react-native-reanimated';
 import { useEffect } from 'react';
 import { Colors } from '../theme/theme';
 
@@ -77,6 +77,8 @@ function Piece({
 
 export function Confetti({ count = 40 }: { count?: number }) {
   const { width, height } = useWindowDimensions();
+  // „მოძრაობის შემცირება“ ჩართულია — ცვენა-ტრიალს არ ვაჩვენებთ.
+  const reduceMotion = useReducedMotion();
 
   const pieces = useMemo(() => {
     const next = rng(42);
@@ -91,6 +93,8 @@ export function Confetti({ count = 40 }: { count?: number }) {
       isCircle: next() > 0.55,
     }));
   }, [count, width]);
+
+  if (reduceMotion) return null;
 
   return (
     <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>

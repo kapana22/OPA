@@ -34,6 +34,10 @@ export class TiltGate {
   calibrationSamples = 16;
   /** გლუვება — მაღალი მნიშვნელობა უფრო სწრაფია, დაბალი უფრო მშვიდი. */
   smoothing = 0.28;
+  /** კადრიდან კადრამდე ცვლილება, რომელზე ნაკლებიც „ტელეფონი გაჩერდა“-ა. */
+  stillLevel = 0.004;
+  /** რამდენი ზედიზედ „გაჩერებული“ კადრი სჭირდება ნულის ხელახლა აზომვას (≈ 130 მწმ). */
+  stillHold = 8;
 
   // MARK: - მდგომარეობა
 
@@ -48,6 +52,7 @@ export class TiltGate {
   private neutralFrames = 0;
   private blockedUntil = -Number.MAX_VALUE;
   private heldSince = -Number.MAX_VALUE;
+  private stillFrames = 0;
 
   get state(): TiltState {
     return this._state;
@@ -71,6 +76,7 @@ export class TiltGate {
     this.neutralFrames = 0;
     this.blockedUntil = -Number.MAX_VALUE;
     this.heldSince = -Number.MAX_VALUE;
+    this.stillFrames = 0;
   }
 
   /**
@@ -97,7 +103,9 @@ export class TiltGate {
   feed(z: number, now: number): TiltDirection | null {
     // გლუვება — ერთი ხტუნვა პასუხად აღარ ითვლება.
     if (this.hasSignal) {
-      this.smoothed += this.smoothing * (z - this.smoothed);
+      const step = this.smoothing * (z - this.smoothed);
+      this.smoothed += step;
+      this.stillFrames = Math.abs(step) < this.stillLevel ? this.stillFrames + 1 : 0;
     } else {
       this.smoothed = z;
       this.hasSignal = true;
@@ -136,7 +144,15 @@ export class TiltGate {
     // 'held' — მთავარი შესწორება: ვერტიკალის ჩაქროლება არ კმარა, უნდა დაყოვნდეს.
     // თუ 750 მწმ გავიდა და ტელეფონი ტრიგერის ზონიდან გამოსულია — ავტომატური განბლოკვა
     // და ნულის ადაპტაცია, რომ რამდენიმე დახრის შემდეგ სენსორი არ გაიჭედოს.
-    if (now - this.heldSince > this.heldTimeout && Math.abs(delta) < this.triggerLevel * 0.75) {
+    //
+    // ნულს მხოლოდ **გაჩერებულ** ტელეფონზე ვზომავთ: ადრე ეს დაბრუნების შუა გზაზეც
+    // ხდებოდა (მაგ. 1 წმ დახრილად დაყოვნება → ვერტიკალს ოდნავ გადაცდენა), ახალი
+    // ნული მოძრავ წერტილზე ჯდებოდა და დაბრუნება ცრუ „გამოტოვებად“ ითვლებოდა.
+    if (
+      now - this.heldSince > this.heldTimeout &&
+      Math.abs(delta) < this.triggerLevel * 0.75 &&
+      this.stillFrames >= this.stillHold
+    ) {
       this._baseline = Math.min(Math.max(this.smoothed, -0.28), 0.28);
       this.neutralFrames = 0;
       this.triggerFrames = 0;

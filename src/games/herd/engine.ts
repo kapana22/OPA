@@ -17,6 +17,8 @@ export class HerdEngine extends Observable {
   roundWinners: string[] = [];
   winners: string[] = [];
   isTie = false;
+  /** მიმდინარე მოთამაშის დაუსრულებელი პასუხი — აპის ფონზე გადასვლისას ეკრანი იმალება, ტექსტი კი არ იკარგება. */
+  draft = '';
   private shoe = new ContentShoe('herd.classic.v1', HERD_QUESTIONS);
 
   constructor(players: Player[]) { super(); this.players = players; }
@@ -40,15 +42,17 @@ export class HerdEngine extends Observable {
   }
   private loadQuestion() {
     this.question = this.shoe.draw() ?? HERD_QUESTIONS[0];
-    this.answers = {}; this.groups = {}; this.voterIndex = 0;
+    this.answers = {}; this.groups = {}; this.voterIndex = 0; this.draft = '';
     this.roundWinners = []; this.isTie = false; this.phase = 'intro'; this.notify();
   }
   beginVoting() { if (this.phase === 'intro') { this.phase = 'pass'; this.notify(); } }
   beginWriting() { if (this.phase === 'pass') { this.phase = 'writing'; this.notify(); } }
+  setDraft(text: string) { if (this.phase === 'writing') this.draft = text; }
   hideAnswer() { if (this.phase === 'writing') { this.phase = 'pass'; this.notify(); } }
   submit(answer: string) {
     if (this.phase !== 'writing' || !this.currentVoter || !answer.trim() || answer.trim().length > 80) return;
     this.answers[this.currentVoter.id] = answer.trim();
+    this.draft = '';
     this.voterIndex++;
     if (this.voterIndex === this.players.length) {
       this.phase = 'review'; this.resetGroups();
