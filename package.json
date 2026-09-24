@@ -35,6 +35,8 @@
   "devDependencies": {
     "@types/react": "~19.2.2",
     "eas-cli": "^23.1.0",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.2",
     "typescript": "~6.0.3",
     "vitest": "^4.1.11"
   },
@@ -46,7 +48,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "test:watch": "vitest",
-    "gen:content": "node tools/extract-banks.mjs"
+    "gen:content": "node tools/extract-banks.mjs",
+    "lint": "expo lint"
   },
   "private": true
 }
