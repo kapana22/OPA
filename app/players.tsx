@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import Animated, { FadeOutLeft, ReduceMotion } from 'react-native-reanimated';
-import { enterUp, listLayout } from '../src/ui/motion';
+import Animated from 'react-native-reanimated';
+import { listExit, listLayout } from '../src/ui/motion';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -35,8 +35,11 @@ export default function Players() {
   const [newName, setNewName] = useState('');
   const [reordering, setReordering] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
-  // ბოლო წაშლილი — ერთი შემთხვევითი შეხება მოთამაშეს ქულიანად არ უნდა კარგავდეს.
-  const [removed, setRemoved] = useState<{ player: Player; index: number } | null>(null);
+  // წაშლილების დასტა — ერთი შემთხვევითი შეხება მოთამაშეს ქულიანად არ უნდა
+  // კარგავდეს. ადრე მხოლოდ ბოლო ინახებოდა: ზედიზედ ორი წაშლისას პირველი სამუდამოდ
+  // იკარგებოდა. „დაბრუნება“ ახლა უკუღმა, თითო-თითოდ აბრუნებს.
+  const [removedStack, setRemovedStack] = useState<{ player: Player; index: number }[]>([]);
+  const removed = removedStack[removedStack.length - 1] ?? null;
   const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dialog = useDialog();
 
@@ -64,16 +67,22 @@ export default function Players() {
   const removePlayer = (player: Player, index: number) => {
     Haptics.warning();
     roster.remove(player.id);
-    setRemoved({ player, index });
+    setRemovedStack((stack) => [...stack, { player, index }]);
+    armUndoTimer();
+  };
+
+  const armUndoTimer = () => {
     if (undoTimer.current) clearTimeout(undoTimer.current);
-    undoTimer.current = setTimeout(() => setRemoved(null), 5000);
+    undoTimer.current = setTimeout(() => setRemovedStack([]), 5000);
   };
 
   const undoRemove = () => {
     if (!removed) return;
     roster.restore(removed.player, removed.index);
-    setRemoved(null);
-    if (undoTimer.current) clearTimeout(undoTimer.current);
+    setRemovedStack((stack) => stack.slice(0, -1));
+    // დასტაში კიდევ ვინმეა — ღილაკი ისევ ჩანს და დრო თავიდან ითვლება.
+    if (removedStack.length > 1) armUndoTimer();
+    else if (undoTimer.current) clearTimeout(undoTimer.current);
     Haptics.tap();
   };
 
@@ -187,8 +196,7 @@ export default function Players() {
               {roster.players.map((player, index) => (
                 <Animated.View
                   key={player.id}
-                  entering={enterUp(index)}
-                  exiting={FadeOutLeft.duration(220).reduceMotion(ReduceMotion.System)}
+                  exiting={listExit}
                   layout={listLayout}
                   style={styles.row}
                 >

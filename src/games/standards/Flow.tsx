@@ -2,7 +2,7 @@ import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import {useState} from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker, RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -47,23 +47,19 @@ export function StandardsFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => void }) {
+  const [showRules, setShowRules] = useState(false);
+  const rules = [
+    'ეკრანზე ერთი მოლოდინია — ყველა ფარულად წყვეტს: ნორმაა თუ გადამეტება.',
+    `რაუნდის მკითხავი პროგნოზსაც წერს: რამდენი იტყვის „ნორმაა“. ზუსტი +${StandardsEngine.exactReward}, ერთით აცდენა +${StandardsEngine.closeReward}.`,
+  ];
   return (
     <View style={{ flex: 1 }}>
       <View style={Layout.header}>
-        <ScreenHeader title="ნორმაა თუ არა?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} />
+        <RulesSheet visible={showRules} title="ნორმაა თუ არა?" accent={Colors.neonCyan} steps={rules} onClose={() => setShowRules(false)} />
+        <ScreenHeader title="ნორმაა თუ არა?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose} onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>როგორ ითვლება ქულა</Text>
-            <Rule text="ეკრანზე ერთი მოლოდინია — ყველა ფარულად წყვეტს: ნორმაა თუ გადამეტება." />
-            <Rule
-              text={`რაუნდის მკითხავი პროგნოზსაც წერს: რამდენი იტყვის „ნორმაა“. ზუსტი +${StandardsEngine.exactReward}, ერთით აცდენა +${StandardsEngine.closeReward}.`}
-            />
-          </View>
-        </GlassCard>
-
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რაუნდები</Text>
@@ -79,7 +75,7 @@ function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => vo
               ))}
             </View>
             <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              სულ {engine.totalRounds} რაუნდი — მკითხავობა ყველას თანაბრად ხვდება.
+              სულ {engine.totalRounds} რაუნდი.
             </Text>
           </View>
         </GlassCard>
@@ -103,14 +99,6 @@ function Setup({ engine, onClose }: { engine: StandardsEngine; onClose: () => vo
   );
 }
 
-function Rule({ text }: { text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>•</Text>
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
-    </View>
-  );
-}
 
 // ── მოლოდინის გაცნობა
 

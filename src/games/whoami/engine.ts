@@ -39,10 +39,12 @@ export interface WhoAmISettings {
   laps: number;
   categoryID: string | null;
   invertTilt: boolean;
+  /** გამოტოვება −1 ქულა ღირს — ალიასის `penalizeSkip`-ის ტყუპი; ნაგულისხმევად გამორთულია. */
+  penalizePass: boolean;
 }
 
 const KEY = 'splash.whoami.settings.v2'; // v1 ცალობით ჯერს ინახავდა
-const DEFAULTS: WhoAmISettings = { seconds: 90, laps: 1, categoryID: null, invertTilt: false };
+const DEFAULTS: WhoAmISettings = { seconds: 90, laps: 1, categoryID: null, invertTilt: false, penalizePass: false };
 
 /** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება ან დახრა მეორე, უნახავ სიტყვას არ ჩაითვლის. */
 export const REGISTER_GAP_MS = 600;
@@ -74,6 +76,7 @@ export class WhoAmIEngine extends Observable {
       laps: num(s.laps, DEFAULTS.laps, 1, 3),
       categoryID: categoryID(s.categoryID, (id) => IdentityBank.category(id) !== undefined),
       invertTilt: bool(s.invertTilt, DEFAULTS.invertTilt),
+      penalizePass: bool(s.penalizePass, DEFAULTS.penalizePass),
     }));
   }
 
@@ -103,6 +106,17 @@ export class WhoAmIEngine extends Observable {
     return this.results.filter((e) => e.verdict === 'passed').length;
   }
 
+  /** დროის ამოწურვისას დარჩენილი სახელი ჯარიმას არ იწვევს — როგორც ალიასში. */
+  get turnPenalty(): number {
+    if (!this.settings.penalizePass) return 0;
+    return this.results.filter((e) => e.verdict === 'passed' && !e.isOvertime).length;
+  }
+
+  /** ჯერის ქულა; ჯარიმით შეიძლება უარყოფითიც იყოს (ალიასის მსგავსად). */
+  get turnScore(): number {
+    return this.turnGuessed - this.turnPenalty;
+  }
+
   scoreFor(player: Player): number {
     return this.scores[player.id] ?? 0;
   }
@@ -110,7 +124,7 @@ export class WhoAmIEngine extends Observable {
   liveScore(player: Player): number {
     const isCurrent = player.id === this.currentPlayer?.id;
     if (!isCurrent || (this.phase !== 'playing' && this.phase !== 'turnResult')) return this.scoreFor(player);
-    return this.scoreFor(player) + this.turnGuessed;
+    return this.scoreFor(player) + this.turnScore;
   }
 
   get ranking(): Player[] {
@@ -202,7 +216,7 @@ export class WhoAmIEngine extends Observable {
     if (this.phase !== 'turnResult') return;
 
     const player = this.currentPlayer;
-    if (player) this.scores[player.id] = (this.scores[player.id] ?? 0) + this.turnGuessed;
+    if (player) this.scores[player.id] = (this.scores[player.id] ?? 0) + this.turnScore;
     this.results = [];
     this.currentIdentity = '';
 
@@ -355,6 +369,11 @@ export class WhoAmIEngine extends Observable {
   }
   setInvertTilt(on: boolean): void {
     this.settings = { ...this.settings, invertTilt: on };
+    this.persist();
+  }
+
+  setPenalizePass(on: boolean): void {
+    this.settings = { ...this.settings, penalizePass: on };
     this.persist();
   }
 

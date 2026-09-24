@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import type React from 'react';
 import type { Roster } from '../core/roster';
 
@@ -25,6 +26,15 @@ export function registerGame(id: string, flow: GameFlow): void {
 
 export function gameFlow(id: string): GameFlow | undefined {
   return registry[id];
+}
+
+/**
+ * თამაშის ეკრანი ელემენტად. რეესტრი სტატიკურია, მაგრამ `const Flow = gameFlow(id)`
+ * რენდერში React-ს „ახლად შექმნილ კომპონენტად“ ეჩვენება — ელემენტი აქ იქმნება.
+ */
+export function renderGameFlow(id: string, props: GameFlowProps): React.ReactElement | null {
+  const Flow = registry[id];
+  return Flow ? createElement(Flow, props) : null;
 }
 
 export function isPlayable(id: string): boolean {

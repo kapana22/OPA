@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
 import { Colors, title as titleFont } from '../theme/theme';
 import { Haptics } from '../core/haptics';
 import { Pressable } from './Pressable';
-import { enterUp } from './motion';
 import { Icon } from './Icon';
 
 /** უკან — თუ ისტორია არ არის (ღრმა ბმული), მთავარზე. */
@@ -27,7 +25,7 @@ export function PageHeader({ title, trailing }: { title: string; trailing?: Reac
   const goBack = useGoBack();
 
   return (
-    <Animated.View entering={enterUp(0)} style={[styles.row, { paddingTop: Math.max(insets.top, 20) + 6 }]}>
+    <View style={[styles.row, { paddingTop: Math.max(insets.top, 20) + 6 }]}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="უკან"
@@ -53,7 +51,7 @@ export function PageHeader({ title, trailing }: { title: string; trailing?: Reac
 
       {/* მარჯვენა მხარე — სათაური ზუსტად შუაში რომ დადგეს. */}
       <View style={styles.side}>{trailing}</View>
-    </Animated.View>
+    </View>
   );
 }
 

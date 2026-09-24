@@ -59,7 +59,7 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
   const gameData = findGame('impostor');
   return (
     <View style={{ flex: 1 }}>
-      <RulesSheet visible={showRules} title="Impostor" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+      <RulesSheet visible={showRules} title={gameData?.title ?? 'Imposter'} accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
         <ScreenHeader title="ერთმა არ იცის" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
@@ -181,11 +181,7 @@ function Discussion({ engine, onExit }: { engine: ImpostorEngine; onExit: () => 
       title="რიგრიგობით — თითოეული ერთ სიტყვას ამბობს"
       starterName={engine.startingPlayer?.name}
       seconds={engine.settings.discussionSeconds}
-      tips={[
-        'ერთი სიტყვა და გაჩერდი — მეტი არა.',
-        'ძალიან ზუსტი ნუ იქნები — იმპოსტორი გისმენს.',
-        'როცა მზად ხართ — გადადით კენჭისყრაზე.',
-      ]}
+      tips={['ერთი სიტყვა და გაჩერდი — მეტი არა.']}
       accent={Colors.neonMagenta}
       actionTitle="კენჭისყრა"
       onAction={() => engine.beginVoting()}

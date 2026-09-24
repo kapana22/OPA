@@ -10,6 +10,9 @@ const ToggleRightIcon: PhosphorIcon = require('phosphor-react-native/src/icons/T
 const CircleIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Circle').CircleIcon;
 const InfinityIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Infinity').InfinityIcon;
 const RadioButtonIcon: PhosphorIcon = require('phosphor-react-native/src/icons/RadioButton').RadioButtonIcon;
+const HexagonIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Hexagon').HexagonIcon;
+const WifiSlashIcon: PhosphorIcon = require('phosphor-react-native/src/icons/WifiSlash').WifiSlashIcon;
+const ArrowRightIcon: PhosphorIcon = require('phosphor-react-native/src/icons/ArrowRight').ArrowRightIcon;
 const BedIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Bed').BedIcon;
 const BeerBottleIcon: PhosphorIcon = require('phosphor-react-native/src/icons/BeerBottle').BeerBottleIcon;
 const BookOpenTextIcon: PhosphorIcon = require('phosphor-react-native/src/icons/BookOpenText').BookOpenTextIcon;
@@ -190,6 +193,9 @@ const MAP: Record<string, [PhosphorIcon, IconWeight]> = {
   'sunrise.fill': [SunHorizonIcon, 'fill'],
   'minus': [MinusIcon, 'bold'],
   'toggle-switch': [ToggleRightIcon, 'fill'],
+  'circle.hexagongrid.fill': [HexagonIcon, 'duotone'],
+  'wifi.slash': [WifiSlashIcon, 'bold'],
+  'arrow.right': [ArrowRightIcon, 'bold'],
   'heart-outline': [HeartIcon, 'regular'],
   'circle-outline': [CircleIcon, 'regular'],
   'infinity': [InfinityIcon, 'bold'],

@@ -7,6 +7,7 @@ import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
 import { Confetti } from '../../ui/Confetti';
+import { DiscussionPanel } from '../../ui/DiscussionPanel';
 import { Layout } from '../../ui/layout';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
@@ -24,6 +25,9 @@ import { Icon } from '../../ui/Icon';
  * **წამყვანი არ სჭირდება** — ღამით ტელეფონი წრეზე გადადის და თითოეული
  * თავის ეკრანს ხედავს.
  */
+
+/** იგივე არჩევანი, რაც იმპოსტორსა და Undercover-ში; 0 = ტაიმერის გარეშე. */
+const TIMER_OPTIONS = [0, 120, 180, 300];
 
 const roleNote: Record<MafiaRole, string> = {
   civilian: 'ღამით გძინავს. დღისით იპოვე მაფია.',
@@ -45,6 +49,8 @@ export function MafiaFlow({ roster, onExit }: GameFlowProps) {
       return <Night key={engine.nightIndex} engine={engine} onExit={onExit} />;
     case 'morning':
       return <Morning engine={engine} onExit={onExit} />;
+    case 'discussion':
+      return <Discussion engine={engine} onExit={onExit} />;
     case 'dayVote':
       return <DayVote engine={engine} onExit={onExit} />;
     case 'dayResult':
@@ -106,6 +112,23 @@ function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }
             />
           </View>
         </GlassCard>
+
+        <GlassCard>
+          <View style={{ gap: 12 }}>
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>განხილვის დრო</Text>
+            <View style={Layout.segmentRow}>
+              {TIMER_OPTIONS.map((secs) => (
+                <CategoryChip
+                  compact
+                  key={secs}
+                  label={secs === 0 ? '∞' : `${secs / 60}:00`}
+                  selected={engine.settings.discussionSeconds === secs}
+                  onPress={() => engine.setDiscussionSeconds(secs)}
+                />
+              ))}
+            </View>
+          </View>
+        </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -163,7 +186,11 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
   const [ready, setReady] = useState(false);
   // „გადავეცი“/„დავიმახსოვრე“ იმავე ადგილასაა, სადაც „მე ვარ“ — ორმაგი შეხება
   // წინა მოთამაშეს შემდეგის როლს აჩვენებდა. ახალ ეკრანზე პირველ წამს ვერ დააჭერ.
-  const mountedAt = useRef(Date.now());
+  // ეკრანის გაჩენის დრო — effect-ში იწერება (რენდერი სუფთა უნდა იყოს).
+  const mountedAt = useRef(0);
+  useEffect(() => {
+    mountedAt.current = Date.now();
+  }, []);
   const player = engine.currentNightPlayer;
   const role = player ? engine.roleOf(player) : 'civilian';
 
@@ -257,8 +284,9 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
       : role === 'doctor'
         ? {
             title: 'ვინ გადაარჩინო?',
-            subtitle: 'შეგიძლია საკუთარი თავიც აირჩიო',
-            exclude: [] as string[],
+            subtitle: 'ერთსა და იმავე ადამიანს ზედიზედ ორ ღამეს ვერ გადაარჩენ',
+            // წუხანდელი გადარჩენილი ამაღამ ბადეში არ ჩანს — ძრავაც იმავეს ამოწმებს.
+            exclude: engine.doctorExcluded,
             onPick: (t: Player) => engine.doctorSave(t, actor),
           }
         : role === 'detective'
@@ -379,6 +407,22 @@ function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
   );
 }
 
+// ── დღის განხილვა (მხოლოდ ჩართული ტაიმერით)
+
+function Discussion({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) {
+  return (
+    <DiscussionPanel
+      title="ვინ არის მაფია?"
+      seconds={engine.settings.discussionSeconds}
+      tips={['განიხილეთ და ერთად აირჩიეთ.', 'როცა მზად ხართ — გადადით კენჭისყრაზე.']}
+      accent={Colors.neonCyan}
+      actionTitle="კენჭისყრა"
+      onAction={() => engine.endDiscussion()}
+      onExit={onExit}
+    />
+  );
+}
+
 // ── დღის კენჭისყრა
 
 function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) {
@@ -440,6 +484,7 @@ function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
             if (player) engine.voteOut(player);
           }}
         />
+        <GhostButton title="არავის ვაძევებთ" icon="xmark" onPress={() => engine.voteNobody()} />
       </View>
     </View>
   );
@@ -448,11 +493,14 @@ function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
 // ── დღის შედეგი
 
 function DayResult({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) {
+  const votedOut = engine.votedOut;
+
   useEffect(() => {
-    Haptics.warning();
+    if (votedOut) Haptics.warning();
+    // მხოლოდ ეკრანის გამოჩენისას.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const votedOut = engine.votedOut;
   const role = votedOut ? engine.roleOf(votedOut) : 'civilian';
   const wasMafia = role === 'mafia';
 
@@ -464,29 +512,42 @@ function DayResult({ engine, onExit }: { engine: MafiaEngine; onExit: () => void
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon
-          name={wasMafia ? 'party.popper.fill' : 'exclamationmark.circle.fill'}
-          size={34}
-          tint={wasMafia ? Colors.phosphor : Colors.neonMagenta}
-        />
-      </View>
+      {votedOut ? (
+        <>
+          <View style={{ alignItems: 'center' }}>
+            <GlyphIcon
+              name={wasMafia ? 'party.popper.fill' : 'exclamationmark.circle.fill'}
+              size={34}
+              tint={wasMafia ? Colors.phosphor : Colors.neonMagenta}
+            />
+          </View>
 
-      <Text
-        style={[titleFont(32), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
-      >
-        {votedOut?.name ?? '—'}
-      </Text>
+          <Text
+            style={[titleFont(32), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
+            adjustsFontSizeToFit
+            numberOfLines={2}
+          >
+            {votedOut.name}
+          </Text>
 
-      <Text style={[titleFont(22), Layout.centered, { color: wasMafia ? Colors.phosphor : Colors.neonMagenta }]}>
-        {roleTitle[role]} იყო
-      </Text>
+          <Text style={[titleFont(22), Layout.centered, { color: wasMafia ? Colors.phosphor : Colors.neonMagenta }]}>
+            {roleTitle[role]} იყო
+          </Text>
 
-      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        {wasMafia ? 'ქალაქმა ზუსტად მიაგნო.' : 'უდანაშაულო გააძევეს — მაფია ხარობს.'}
-      </Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+            {wasMafia ? 'ქალაქმა ზუსტად მიაგნო.' : 'უდანაშაულო გააძევეს — მაფია ხარობს.'}
+          </Text>
+        </>
+      ) : (
+        <>
+          <View style={{ alignItems: 'center' }}>
+            <GlyphIcon name="moon.stars.fill" size={34} tint={Colors.neonCyan} />
+          </View>
+          <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}>
+            არავინ გააძევეს
+          </Text>
+        </>
+      )}
 
       <View style={{ flex: 1 }} />
 

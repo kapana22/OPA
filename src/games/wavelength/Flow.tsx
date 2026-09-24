@@ -60,7 +60,7 @@ function Setup({ engine, onExit }: Props) {
     <View style={Layout.header}><ScreenHeader title="ერთ ტალღაზე" subtitle="კლასიკური · ორი გუნდი"
       onBack={onExit} onInfo={() => setRules(true)} /></View>
     <ScrollView contentContainerStyle={Layout.scroll}>
-      <Text style={paragraph}>გაიყავით ორ გუნდად. სახელზე შეხებით მოთამაშეს სხვა გუნდში გადაიყვან.</Text>
+      <Text style={paragraph}>სახელზე შეხებით მოთამაშეს სხვა გუნდში გადაიყვან.</Text>
       {engine.teams.map((team, index) => <GlassCard key={index}>
         <View style={{ gap: 12 }}>
           <Text style={[body(18, '700'), { color: Colors.phosphor }]}>{engine.teamName(index)}</Text>
@@ -95,8 +95,7 @@ function Clue({ engine, onExit }: Props) {
       style={{ padding: 20, borderRadius: 16, borderWidth: 1, borderColor: Colors.phosphor, backgroundColor: Colors.surfaceHigh }}>
       <Text style={[body(16, '700'), { textAlign: 'center', color: Colors.phosphor }]}>{holding ? 'აშვებისას სამიზნე დაიმალება' : 'სამიზნის სანახავად აქ გეჭიროს'}</Text>
     </Pressable>
-    <Text style={paragraph}>თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა, რომელიც ამ ორ ცნებას შორის სამიზნის ადგილს შეეფერება. არ გამოიყენო შკალის სიტყვები, მათი სინონიმები ან ადგილის მიმანიშნებელი რიცხვები.</Text>
-    <Text style={paragraph}>მინიშნების შემდეგ თანაგუნდელებს აღარ დაეხმარო არც სიტყვით, არც ჟესტით.</Text>
+    <Text style={paragraph}>თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.</Text>
   </Frame>;
 }
 
@@ -104,9 +103,11 @@ function Round({ engine, onExit }: Props) {
   const phase = engine.phase;
   // ფაზის ღილაკები ერთსა და იმავე ადგილასაა — ორმაგი შეხება შემდეგ ნაბიჯსაც
   // დააჭერდა (მაგ. „დაფიქსირება“ → მეტოქის „მარჯვნივ“). ახალ ფაზაზე პირველ წამს ვერ დააჭერ.
-  const phaseAt = useRef({ phase, at: Date.now() });
-  if (phaseAt.current.phase !== phase) phaseAt.current = { phase, at: Date.now() };
-  const guard = (action: () => void) => () => { if (Date.now() - phaseAt.current.at >= 600) action(); };
+  const phaseAt = useRef(0);
+  useEffect(() => {
+    phaseAt.current = Date.now();
+  }, [phase]);
+  const guard = (action: () => void) => () => { if (Date.now() - phaseAt.current >= 600) action(); };
   useEffect(() => {
     if (phase === 'result') {
       Sound.play(engine.lastPoints ? 'correct' : 'wrong');
@@ -118,7 +119,7 @@ function Round({ engine, onExit }: Props) {
   switch (phase) {
     case 'pass':
       content = <><PlayerCharacter player={engine.clueGiver} /><Text style={paragraph}>გადაეცი ტელეფონი</Text>
-        <Text style={heading}>{engine.clueGiver?.name}</Text><Text style={paragraph}>სამიზნეს მხოლოდ მიმანიშნებელი ხედავს. დანარჩენებმა ეკრანს არ შეხედოთ.</Text></>;
+        <Text style={heading}>{engine.clueGiver?.name}</Text><Text style={paragraph}>დანარჩენებმა ეკრანს არ შეხედოთ.</Text></>;
       footer = <PrimaryButton title="ტელეფონი ჩემთანაა" onPress={guard(() => engine.readyForClue())} />; break;
     case 'handoff':
       content = <><Text style={heading}>სამიზნე დამალულია</Text><Text style={paragraph}>გადაეცი ტელეფონი თანაგუნდელებს:</Text>

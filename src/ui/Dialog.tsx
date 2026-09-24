@@ -3,8 +3,6 @@ import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Colors, Radius, Space, body, title as titleFont } from '../theme/theme';
 import { PrimaryButton } from './Buttons';
 import { Pressable } from './Pressable';
-import Animated from 'react-native-reanimated';
-import { popIn } from './motion';
 
 /**
  * აპისეული დიალოგი — `Alert`-ის ნაცვლად.
@@ -77,8 +75,7 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
           style={styles.backdrop}
         >
           {/* შიგთავსზე დაჭერა დიალოგს არ ხურავს */}
-          {/* ბარათი ზამბარით „ამოხტება“ — `key` ახალ მოთხოვნაზე ანიმაციას თავიდან უშვებს. */}
-          <Animated.View key={request?.title ?? 'dialog'} entering={popIn()} style={styles.cardWrap}>
+          <View style={styles.cardWrap}>
           <Pressable onPress={() => {}} style={styles.card}>
             <Text style={[titleFont(20), styles.centered, { color: Colors.textPrimary }]}>{request?.title}</Text>
 
@@ -129,7 +126,7 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
               )}
             </View>
           </Pressable>
-          </Animated.View>
+          </View>
         </Pressable>
       </Modal>
     </DialogContext.Provider>

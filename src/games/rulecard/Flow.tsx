@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader , RulesSheet } from '../../ui/Cards';
@@ -141,12 +141,14 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
   const isRelief = card.kind === 'relief';
   const canReportBreak = engine.activeRules.length > 0;
 
-  // ახალი ბარათი — ჯარიმების არჩევანი იწმინდება.
-  useEffect(() => {
+  // ახალი ბარათი — ჯარიმების არჩევანი იწმინდება (რენდერში, effect-ის გარეშე).
+  const [seenCard, setSeenCard] = useState(card.text);
+  if (seenCard !== card.text) {
+    setSeenCard(card.text);
     setCharged(new Set());
     setBreaking(false);
     setBreakers(new Set());
-  }, [card.text]);
+  }
 
   const tint = isRule ? Colors.neonMagenta : isRelief ? Colors.neonCyan : Colors.phosphor;
 

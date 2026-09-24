@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { SplashBackground } from '../../src/ui/SplashBackground';
 import { ComingSoon, Notice } from '../../src/ui/Cards';
 import { game as findGame } from '../../src/games/catalog';
-import { gameFlow } from '../../src/games/registry';
+import { renderGameFlow } from '../../src/games/registry';
 import { useRoster } from '../../src/state/state';
 import { useKeepScreenAwake } from '../../src/core/orientationLock';
 import { Sound } from '../../src/core/sound';
@@ -73,7 +73,7 @@ export default function GameHost() {
   }, [dialog]);
 
   const game = findGame(String(id));
-  const Flow = game ? gameFlow(game.id) : undefined;
+  const flow = game ? renderGameFlow(game.id, { roster, onExit: exit }) : null;
 
   // მთავარი ეკრანი ამას ადრევე ამოწმებს, ღრმა ბმული კი — არა. ცარიელი როსტერით
   // ძრავი ცარიელ ეკრანზე ჩერდება, ამიტომ კარი აქვე იკეტება, გამოსასვლელით.
@@ -81,7 +81,7 @@ export default function GameHost() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground />
+      <SplashBackground pattern={game?.id} />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom', 'left', 'right']}>
         {tooFew ? (
           <Notice
@@ -90,8 +90,8 @@ export default function GameHost() {
             text={`${game.title} — მინიმუმ ${game.minPlayers} მოთამაშე სჭირდება.`}
             onBack={exit}
           />
-        ) : Flow ? (
-          <Flow roster={roster} onExit={exit} />
+        ) : flow ? (
+          flow
         ) : (
           <ComingSoon onBack={exit} />
         )}

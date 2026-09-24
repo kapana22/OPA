@@ -76,7 +76,7 @@ function Setup({ engine, onClose }: { engine: AliasEngine; onClose: () => void }
           <Text style={[titleFont(24), Layout.centered, { color: Colors.textPrimary }]}>ალიასი გუნდური თამაშია</Text>
           <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {engine.players.length === 0
-              ? 'სია ჯერ ცარიელია. დაამატე მინიმუმ ოთხი მოთამაშე — თითო გუნდში ორი მაინც უნდა იყოს.'
+              ? 'დაამატე მინიმუმ ოთხი მოთამაშე.'
               : `ახლა ${engine.players.length} ხართ. საჭიროა ოთხი მაინც, რომ ორი გუნდი შედგეს.`}
           </Text>
         </View>

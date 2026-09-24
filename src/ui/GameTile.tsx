@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View, useWindowDimensions, type ImageSourcePropType } from 'react-native';
-import { Colors, Elevation, Radius, body, caption, toTT } from '../theme/theme';
+import { Colors, Elevation, Radius, body, caption } from '../theme/theme';
 import { type PartyGame } from '../games/types';
 import { gameArtwork, gameCaptions } from '../games/artwork';
 import { groupedGames } from '../games/groups';
@@ -26,11 +26,11 @@ interface TileProps {
  */
 export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: TileProps) {
   const { fontScale } = useWindowDimensions();
+  const largeText = fontScale > 1.3;
   const poster = artwork ?? gameArtwork[game.id];
   const modeCount = groupedGames.find((group) => group.id === game.id)?.modes.length ?? (game.id === 'tableread' ? 3 : 0);
   const accent = Colors[game.accent];
   const needsMore = !game.comingSoon && playerCount > 0 && playerCount < game.minPlayers;
-  const largeText = fontScale > 1.3;
   const captionText = gameCaptions[game.id] ?? game.tagline;
 
   return (
@@ -64,14 +64,12 @@ export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: Til
           )}
         </View>
 
-        {/* ── Dark Surface ქვედა დეტალები: სათაური + აღწერა ── */}
+        {/* ინგლისური სახელი სურათზე უკვე წერია — ქვემოთ მხოლოდ ქართული აღწერა,
+            რომ ინგლისურის არმცოდნემაც მაშინვე გაიგოს, რა თამაშია. */}
         <View style={styles.details}>
-          <Text style={[body(12, '800'), styles.tileTitle, { color: Colors.warmCream }]} numberOfLines={1}>
-            {toTT(game.title)}
-          </Text>
           <Text
             style={[caption(11, '500'), styles.captionText]}
-            numberOfLines={largeText ? undefined : 2}
+            numberOfLines={largeText ? undefined : 3}
           >
             {captionText}
           </Text>
@@ -140,14 +138,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 8,
     paddingBottom: 10,
-    paddingRight: 34, // leave room for "?" button
-    minHeight: 52,
+    // „?“ სურათის კუთხეშია — აღწერა მთელ სიგანეს იყენებს და სამ ხაზამდე ეტევა.
+    // სიმაღლე სამ ხაზზეა, რომ რიგში ყველა ფილა ერთნაირი იყოს.
+    minHeight: 62,
     justifyContent: 'center',
-    gap: 2,
-  },
-  tileTitle: {
-    textTransform: 'uppercase',
-    letterSpacing: 0.4,
   },
   captionText: {
     color: Colors.textSecondary,
@@ -155,7 +149,7 @@ const styles = StyleSheet.create({
   },
   infoButton: {
     position: 'absolute',
-    bottom: 8,
+    top: 6,
     right: 6,
     width: 34,
     height: 34,
@@ -163,14 +157,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   infoCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(203, 184, 246, 0.15)',
+    // სურათის თავზე დგას — მუქი ფონი, რომ ნებისმიერ ფერზე იკითხებოდეს.
+    backgroundColor: 'rgba(7, 8, 10, 0.55)',
     borderWidth: 1,
-    borderColor: 'rgba(203, 184, 246, 0.25)',
+    borderColor: 'rgba(203, 184, 246, 0.35)',
   },
   infoText: {
     fontSize: 11,

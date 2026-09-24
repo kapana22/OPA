@@ -40,7 +40,7 @@ export function TwoTruthsFlow({ roster, onExit }: GameFlowProps) {
           kicker={`ჯერი ${engine.turnIndex + 1} / ${engine.totalTurns}`}
           playerName={engine.author.name}
           headline="შენი ჯერია"
-          note="დაწერე სამი ამბავი შენს თავზე: ორი მართალი, ერთი მოგონილი. სხვას ეკრანი არ დაანახო."
+          note="დაწერე სამი ამბავი შენს თავზე: ორი მართალი, ერთი მოგონილი."
           actionTitle="დაწერა"
           icon="square.and.pencil"
           onStart={() => engine.beginWriting()}
@@ -106,7 +106,7 @@ function Setup({ engine, onClose }: { engine: TwoTruthsEngine; onClose: () => vo
               ))}
             </View>
             <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              სულ {engine.totalTurns} რაუნდი — ყველას ზუსტად თანაბრად ხვდება ჯერი.
+              სულ {engine.totalTurns} რაუნდი.
             </Text>
           </View>
         </GlassCard>
@@ -334,7 +334,7 @@ function Write({ engine, onExit }: { engine: TwoTruthsEngine; onExit: () => void
 
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 12 }]}>
           {lie === null
-            ? 'მონიშნე, რომელი მოიგონე — ამის გარეშე ვერ გააგრძელებ.'
+            ? 'მონიშნე, რომელი მოიგონე.'
             : 'მზად ხარ. ღილაკზე დაჭერისთანავე ეკრანი დაიმალება.'}
         </Text>
       </ScrollView>

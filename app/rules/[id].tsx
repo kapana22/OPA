@@ -1,4 +1,5 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { gameArtwork } from '../../src/games/artwork';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Space, body, caption, title as titleFont } from '../../src/theme/theme';
@@ -31,17 +32,24 @@ export default function Rules() {
   }
 
   const accent = Colors[game.accent];
+  const poster = gameArtwork[game.id];
 
   return (
     <View style={{ flex: 1 }}>
-      <SplashBackground />
+      <SplashBackground pattern={game?.id} />
       <PageHeader title="წესები" />
       <View style={{ flex: 1, gap: Space.m, alignItems: 'center' }}>
-        <View style={[styles.iconBox, { backgroundColor: accent + '1F' }]}>
-          <Icon name={game.icon} size={30} color={accent} />
-        </View>
-
-        <Text style={[titleFont(28), { color: Colors.textPrimary }]}>{game.title}</Text>
+        {/* თამაშის სურათი — სახელი მასზეა, ცალკე ინგლისური სათაური აღარ სჭირდება. */}
+        {poster ? (
+          <Image source={poster} resizeMode="cover" accessibilityLabel={game.title} style={styles.poster} />
+        ) : (
+          <>
+            <View style={[styles.iconBox, { backgroundColor: accent + '1F' }]}>
+              <Icon name={game.icon} size={30} color={accent} />
+            </View>
+            <Text style={[titleFont(28), { color: Colors.textPrimary }]}>{game.title}</Text>
+          </>
+        )}
         <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
           {game.tagline}
         </Text>
@@ -90,6 +98,7 @@ function Fact({ icon, text }: { icon: string; text: string }) {
 }
 
 const styles = StyleSheet.create({
+  poster: { width: 132, height: 176, borderRadius: 18, borderWidth: 1, borderColor: Colors.stroke },
   iconBox: { width: 66, height: 66, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   centered: { textAlign: 'center' },
   facts: { flexDirection: 'row', gap: 8, paddingTop: 2 },

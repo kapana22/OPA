@@ -1,5 +1,4 @@
-import type { Player } from './roster';
-import type { Roster } from './roster';
+import type { Player, Roster } from './roster';
 
 export interface PodiumResult {
   player: Player;

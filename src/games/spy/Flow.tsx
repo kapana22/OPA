@@ -69,7 +69,7 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
   const gameData = findGame('spy');
   return (
     <View style={{ flex: 1 }}>
-      <RulesSheet visible={showRules} title="Undercover" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+      <RulesSheet visible={showRules} title={gameData?.title ?? 'Spyfall'} accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
         <ScreenHeader title="სხვა სიტყვა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
@@ -191,11 +191,7 @@ function Discussion({ engine, onExit }: { engine: SpyEngine; onExit: () => void 
       title={`რაუნდი ${engine.turn} — თითოეული ერთი სიტყვით აღწერს თავისას`}
       starterName={engine.startingPlayer?.name}
       seconds={engine.settings.discussionSeconds}
-      tips={[
-        'შენი სიტყვა შეიძლება სხვებისას ოდნავ ასცდეს — ეს ნორმალურია.',
-        'ზედმეტად ზუსტი ნუ იქნები, თორემ ჯაშუში მიხვდება.',
-        'მოუსმინე — ვინც ოდნავ „აცდენილად“ აღწერს, ალბათ ჯაშუშია.',
-      ]}
+      tips={[]}
       accent={Colors.neonCyan}
       actionTitle="კენჭისყრა"
       onAction={() => engine.beginVoting()}

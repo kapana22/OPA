@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { PanResponder, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Defs, Line, LinearGradient, Path, Stop, Text as SvgText } from 'react-native-svg';
 import { Colors, Space, body, caption } from '../../theme/theme';
@@ -20,8 +20,11 @@ const bandColors = [Colors.phosphorLime, Colors.violet, Colors.softLavender];
 /** A covered semicircular dial; no secret geometry is rendered while covered. */
 export function SpectrumBar({ spectrum, target, guess, showBands = false, interactive = false, onValueChange, onSlidingComplete }: SpectrumBarProps) {
   const [width, setWidth] = useState(320);
+  // ჟესტის დამმუშავებლები ერთხელ იქმნება, ამიტომ უახლეს მნიშვნელობებს ref-იდან კითხულობენ.
   const live = useRef({ width, interactive, onValueChange, onSlidingComplete, guess });
-  live.current = { width, interactive, onValueChange, onSlidingComplete, guess };
+  useLayoutEffect(() => {
+    live.current = { width, interactive, onValueChange, onSlidingComplete, guess };
+  });
   const start = useRef({ x: 0, y: 0 });
   const lastValue = useRef(guess ?? 0.5);
   const change = (value: number) => {
@@ -32,7 +35,9 @@ export function SpectrumBar({ spectrum, target, guess, showBands = false, intera
     live.current.onValueChange?.(clamped);
   };
   const move = (x: number, y: number) => change(dialValue(x, y, live.current.width, lastValue.current));
-  const responder = useRef(PanResponder.create({
+  // ref-ებს მხოლოდ ჟესტის callback-ები კითხულობენ (რენდერის შემდეგ), არა თავად რენდერი.
+  // eslint-disable-next-line react-hooks/refs
+  const [responder] = useState(() => PanResponder.create({
     onStartShouldSetPanResponder: () => live.current.interactive,
     onMoveShouldSetPanResponder: () => live.current.interactive,
     onPanResponderGrant: (event) => {
@@ -43,7 +48,7 @@ export function SpectrumBar({ spectrum, target, guess, showBands = false, intera
     onPanResponderMove: (_event, gesture) => move(start.current.x + gesture.dx, start.current.y + gesture.dy),
     onPanResponderRelease: () => { Haptics.medium(); live.current.onSlidingComplete?.(); },
     onPanResponderTerminationRequest: () => false,
-  })).current;
+  }));
   const visible = target != null;
   const needle = dialPoint(guess ?? 0.5, 126);
 

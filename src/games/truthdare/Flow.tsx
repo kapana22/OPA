@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader , RulesSheet } from '../../ui/Cards';
@@ -104,7 +104,7 @@ function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => vo
             <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
               {engine.settings.order === 'circle'
                 ? 'ჯერი წრეზე ტრიალებს — ყველას თანაბრად ერგება.'
-                : 'ტელეფონი ბოთლივით ირჩევს — ზედიზედ ერთი და იგივე არავის ერგება.'}
+                : 'ტელეფონი ბოთლივით ირჩევს.'}
             </Text>
           </View>
         </GlassCard>
@@ -148,13 +148,11 @@ function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => vo
 // ── ჯერი (ბოთლი ან პირდაპირ არჩევანი)
 
 function Turn({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void }) {
-  const [bottleDone, setBottleDone] = useState(false);
+  // რომელ ჯერზე დატრიალდა ბოთლი — ახალ ჯერზე ისევ უნდა დატრიალდეს.
+  const [bottleTurn, setBottleTurn] = useState<number | null>(null);
+  const bottleDone = bottleTurn === engine.turn;
+  const setBottleDone = (done: boolean) => setBottleTurn(done ? engine.turn : null);
   const needsBottle = engine.settings.order === 'bottle' && engine.players.length >= 2 && !bottleDone;
-
-  // ახალი ჯერი — ბოთლი ისევ უნდა დატრიალდეს.
-  useEffect(() => {
-    setBottleDone(false);
-  }, [engine.turn]);
 
   const header = (
     <View style={Layout.topBar}>
@@ -300,7 +298,7 @@ function Task({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
 
       <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {isTruth
-          ? 'პასუხი გულწრფელი უნდა იყოს — მაგიდა ხომ ისედაც მიხვდება.'
+          ? 'პასუხი გულწრფელი უნდა იყოს.'
           : 'შესრულება ახლავე, ყველას თვალწინ.'}
       </Text>
 

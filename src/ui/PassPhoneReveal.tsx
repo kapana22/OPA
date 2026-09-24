@@ -1,6 +1,6 @@
 import { PlayerCharacter } from './PlayerCharacter';
 import { PlayerAvatarView } from './PlayerAvatarView';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
@@ -58,10 +58,14 @@ export function PassPhoneReveal({
   const tint = card.tint ?? Colors.textPrimary;
 
   // ახალი მოთამაშე — ტელეფონი ისევ გადასაცემია, დადასტურება თავიდან.
-  useEffect(() => {
+  // რენდერის დროს და არა effect-ში: ასე ძველი მოთამაშის ბარათი ერთი კადრითაც არ ჩანს.
+  const turnKey = `${index}:${confirmFirst}`;
+  const [seenTurn, setSeenTurn] = useState(turnKey);
+  if (seenTurn !== turnKey) {
+    setSeenTurn(turnKey);
     setConfirmed(!confirmFirst);
     setHolding(false);
-  }, [index, confirmFirst]);
+  }
 
   const revealedLabel = [card.hint, card.word, card.note].filter(Boolean).join(', ');
 

@@ -8,7 +8,7 @@ import { PageHeader } from '../src/ui/PageHeader';
 import { useNightLog, useRoster } from '../src/state/state';
 import { useDialog } from '../src/ui/Dialog';
 import Animated from 'react-native-reanimated';
-import { enterUp, listLayout, popIn } from '../src/ui/motion';
+import { listLayout } from '../src/ui/motion';
 import { Icon } from '../src/ui/Icon';
 
 /** პორტი: `Splash/App/ScoreboardView.swift`. */
@@ -25,7 +25,7 @@ export default function Scoreboard() {
   const askReset = () =>
     dialog({
       title: 'ახალი საღამო?',
-      message: 'ქულები განულდება და საღამოს ჟურნალიც თავიდან დაიწყება. მოთამაშეები რჩება.',
+      message: 'ქულები განულდება. მოთამაშეები რჩება.',
       actions: [
         {
           label: 'დიახ',
@@ -59,15 +59,15 @@ export default function Scoreboard() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 8, gap: 8 }}
           >
             {board.map((player, rank) => (
-              <Animated.View key={player.id} entering={enterUp(rank)} layout={listLayout} style={styles.row}>
+              <Animated.View key={player.id} layout={listLayout} style={styles.row}>
                 <Text style={[body(18, '900'), { color: Colors.textSecondary, width: 34 }]}>{rank + 1}</Text>
                 <Text style={[body(17, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
                   {player.name}
                 </Text>
                 {rank === 0 && player.score > 0 ? (
-                  <Animated.View entering={popIn(420)} style={{ marginRight: 8 }}>
+                  <View style={{ marginRight: 8 }}>
                     <Icon name={'crown.fill'} size={20} color={Colors.phosphor} />
-                  </Animated.View>
+                  </View>
                 ) : null}
                 <Text
                   style={[
@@ -86,7 +86,7 @@ export default function Scoreboard() {
           {hasScores ? (
             <PrimaryButton
               title="ღამის შედეგები"
-              icon="square.and.arrow.up"
+              icon="party.popper.fill"
               tint={Colors.phosphor}
               onPress={() => router.push('/night')}
             />

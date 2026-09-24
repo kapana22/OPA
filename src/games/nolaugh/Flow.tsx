@@ -98,7 +98,7 @@ function Setup({ engine, onClose }: { engine: NoLaughEngine; onClose: () => void
               ))}
             </View>
             <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              სულ {engine.totalRounds} რაუნდი — ყველას ზუსტად თანაბრად ხვდება ჯერი.
+              სულ {engine.totalRounds} რაუნდი.
             </Text>
           </View>
         </GlassCard>

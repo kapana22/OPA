@@ -1,5 +1,5 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import {useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
 import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
@@ -30,9 +30,8 @@ import { Icon } from '../../ui/Icon';
 const ROUND_OPTIONS = [5, 10, 15, 20];
 
 export function MostLikelyFlow({ roster, onExit }: GameFlowProps) {
-  const engineRef = useRef<MostLikelyEngine | null>(null);
-  if (!engineRef.current) engineRef.current = new MostLikelyEngine([...roster.players]);
-  const engine = useObservable(engineRef.current);
+  const [instance] = useState(() => new MostLikelyEngine([...roster.players]));
+  const engine = useObservable(instance);
 
   switch (engine.phase) {
     case 'setup':

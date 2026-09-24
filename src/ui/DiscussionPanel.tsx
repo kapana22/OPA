@@ -6,7 +6,6 @@ import { Haptics } from '../core/haptics';
 import { Sound } from '../core/sound';
 import { PrimaryButton, GhostButton } from './Buttons';
 import { GlassCard, GameExitButton } from './Cards';
-import { Icon } from './Icon';
 
 /**
  * განხილვის ეტაპი — ტაიმერი, ვინ იწყებს და მოკლე მინიშნებები.
@@ -40,8 +39,13 @@ export function DiscussionPanel({
   const [running, setRunning] = useState(true);
   const remainingRef = useRef(seconds);
 
-  useEffect(() => {
+  // ახალი ხანგრძლივობა — ათვლა თავიდან (რენდერში, effect-ის ზედმეტი ციკლის გარეშე).
+  const [seenSeconds, setSeenSeconds] = useState(seconds);
+  if (seenSeconds !== seconds) {
+    setSeenSeconds(seconds);
     setRemaining(seconds);
+  }
+  useEffect(() => {
     remainingRef.current = seconds;
   }, [seconds]);
 
@@ -108,22 +112,20 @@ export function DiscussionPanel({
         </>
       ) : null}
 
+      {tips.length > 0 ? (
       <View style={styles.tipsSlot}>
         <GlassCard>
           <View style={{ gap: 8 }}>
             {tips.map((tip, i) => (
               <View key={i} style={styles.tipRow}>
-                <Icon
-                  name={`numeric-${Math.min(i + 1, 9)}-circle` as never}
-                  size={17}
-                  color={Colors.textSecondary}
-                />
+                <View style={styles.tipDot} />
                 <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{tip}</Text>
               </View>
             ))}
           </View>
         </GlassCard>
       </View>
+      ) : null}
 
       <View style={{ flex: 1 }} />
 
@@ -142,6 +144,7 @@ const styles = StyleSheet.create({
   clock: { fontSize: 64, fontWeight: '900', textAlign: 'center', fontVariant: ['tabular-nums'] },
   pauseSlot: { paddingHorizontal: 60 },
   tipsSlot: { paddingHorizontal: 24 },
+  tipDot: { width: 6, height: 6, borderRadius: 3, marginTop: 8, backgroundColor: Colors.textSecondary },
   tipRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
   footer: { paddingHorizontal: 24, paddingBottom: Space.m },
 });

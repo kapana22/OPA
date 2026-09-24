@@ -2,7 +2,7 @@ import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { AppState, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { Colors, body, title as titleFont } from '../../theme/theme';
-import { GlassCard, ScreenHeader } from '../../ui/Cards';
+import { GlassCard, RulesSheet, ScreenHeader } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
@@ -13,10 +13,18 @@ import { HerdEngine } from './engine';
 import { useDialog } from '../../ui/Dialog';
 
 const textStyle = [body(15, '500'), { color: Colors.textPrimary }];
+const HERD_RULES = [
+  'ერთი კითხვა — თითოეული ფარულად წერს ერთ პასუხს. იფიქრე, რას დაწერენ სხვები!',
+  'ყველაზე ხშირ პასუხზე თითოეულს +1 ქულა ერგება. ყველაზე ხშირ პასუხებს შორის ფრისას ქულა არავის ეწერება.',
+  'თუ მხოლოდ ერთ ადამიანს აქვს უნიკალური პასუხი, მას „ვარდისფერი ძროხა“ გადაეცემა. ძროხა რჩება მასთან, სანამ სხვა ერთადერთი განსხვავებული პასუხი არ გამოჩნდება.',
+  'მიზანი: 8 ქულა ძროხის გარეშე. ძროხით ქულებს აგროვებ, მაგრამ ვერ იგებ. ერთდროულად მიზნის მიღწევისას გამარჯვებას იყოფთ.',
+  'ერთ ტელეფონზე რიგრიგობით ჩაწერეთ პასუხები. სხვისი პასუხის ნახვამდე საკუთარი უნდა დააფიქსირო.',
+];
 export function HerdFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new HerdEngine([...roster.players]));
   useObservable(engine);
   const dialog = useDialog();
+  const [showRules, setShowRules] = useState(false);
   // თამაშის შუაში ერთი შეხება მთელ პარტიას აგდებდა — სხვა რეჟიმების მსგავსად ჯერ ვეკითხებით.
   const back = () => {
     if (engine.phase === 'setup' || engine.phase === 'summary') return onExit();
@@ -35,16 +43,11 @@ export function HerdFlow({ roster, onExit }: GameFlowProps) {
   }, [engine]);
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={Layout.header}><ScreenHeader title="Herd Mentality" subtitle="კლასიკური · როგორც ყველა" onBack={back} /></View>
+      <RulesSheet visible={showRules} title="Herd Mentality" accent={Colors.phosphor} steps={HERD_RULES} onClose={() => setShowRules(false)} />
+      <View style={Layout.header}><ScreenHeader title="Herd Mentality" subtitle="კლასიკური · როგორც ყველა" onBack={back} onInfo={() => setShowRules(true)} /></View>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[Layout.scroll, { gap: 16 }]}>
         {engine.phase === 'setup' ? <>
-          <GlassCard><Text style={textStyle}>
-            ერთი კითხვა — თითოეული ფარულად წერს ერთ პასუხს. იფიქრე, რას დაწერენ სხვები!{ '\n\n' }
-            ყველაზე ხშირ პასუხზე თითოეულს +1 ქულა ერგება. ყველაზე ხშირ პასუხებს შორის ფრისას ქულა არავის ეწერება.{ '\n\n' }
-            თუ მხოლოდ ერთ ადამიანს აქვს უნიკალური პასუხი, მას „ვარდისფერი ძროხა“ გადაეცემა. ძროხა რჩება მასთან, სანამ სხვა ერთადერთი განსხვავებული პასუხი არ გამოჩნდება.{ '\n\n' }
-            მიზანი: 8 ქულა ძროხის გარეშე. ძროხით ქულებს აგროვებ, მაგრამ ვერ იგებ. ერთდროულად მიზნის მიღწევისას გამარჯვებას იყოფთ.
-          </Text></GlassCard>
-          <Text style={textStyle}>ერთ ტელეფონზე რიგრიგობით ჩაწერეთ პასუხები. სხვისი პასუხის ნახვამდე საკუთარი უნდა დააფიქსირო.</Text>
+          <GlassCard><Text style={textStyle}>ერთი კითხვა — თითოეული ფარულად წერს ერთ პასუხს. იფიქრე, რას დაწერენ სხვები!</Text></GlassCard>
           {!engine.canPlay && <Text style={textStyle}>საჭიროა მინიმუმ 4 მოთამაშე.</Text>}
           <PrimaryButton title="დაწყება" enabled={engine.canPlay} onPress={() => engine.startGame()} />
         </> : null}
@@ -54,12 +57,11 @@ export function HerdFlow({ roster, onExit }: GameFlowProps) {
           <Text style={textStyle}>წაიკითხეთ ხმამაღლა. პასუხები ჯერ არ თქვათ.</Text>
           <PrimaryButton title="ფარულად ვპასუხობთ" onPress={() => engine.beginVoting()} />
           <GhostButton title="სხვა კითხვა" onPress={() => engine.skipQuestion()} />
-          <Scores engine={engine} />
         </> : null}
         {engine.phase === 'pass' ? <>
           <PlayerCharacter player={engine.currentVoter} />
           <Text style={[titleFont(26), { color: Colors.phosphor }]}>გადაეცი {engine.currentVoter?.name}-ს</Text>
-          <Text style={textStyle}>მხოლოდ შენ ნახე ეკრანი. დაწერე პასუხი, რომელსაც სხვებისგანაც ელოდები.</Text>
+          <Text style={textStyle}>დაწერე პასუხი, რომელსაც სხვებისგანაც ელოდები.</Text>
           <PrimaryButton title="ტელეფონი ჩემთანაა" onPress={() => engine.beginWriting()} />
         </> : null}
         {engine.phase === 'writing' ? <Answer key={`${engine.round}:${engine.voterIndex}`} engine={engine} /> : null}
@@ -95,7 +97,7 @@ function Review({ engine }: { engine: HerdEngine }) {
   const [selected, setSelected] = useState<string[]>([]);
   return <>
     <Text style={[titleFont(24), { color: Colors.phosphor }]}>გამოვაჩინოთ პასუხები</Text>
-    <Text style={textStyle}>ერთნაირი მნიშვნელობის პასუხები სხვადასხვა ჯგუფშია? მონიშნეთ და გააერთიანეთ მხოლოდ ყველას შეთანხმებით.</Text>
+    <Text style={textStyle}>ერთნაირი მნიშვნელობის პასუხები სხვადასხვა ჯგუფშია? მონიშნეთ და გააერთიანეთ.</Text>
     {engine.answerGroups.map(group => <Pressable key={group.id} accessibilityRole="checkbox"
       accessibilityState={{ checked: selected.includes(group.id) }}
       onPress={() => setSelected(prev => prev.includes(group.id) ? prev.filter(id => id !== group.id) : [...prev, group.id])}

@@ -32,6 +32,7 @@ export type MafiaPhase =
   | 'reveal'    // როლების დარიგება
   | 'night'     // ტელეფონი წრეზე — თითოეული თავის ქმედებას ასრულებს
   | 'morning'   // ვინ დაიღუპა
+  | 'discussion' // დღის განხილვა ტაიმერით — მხოლოდ თუ ტაიმერი ჩართულია
   | 'dayVote'   // ქალაქი ხმას აძლევს
   | 'dayResult' // ვინ გავიდა და რა როლი ჰქონდა
   | 'gameOver';
@@ -42,10 +43,13 @@ export interface MafiaSettings {
   mafiaCount: number;
   includeDoctor: boolean;
   includeDetective: boolean;
+  /** დღის განხილვის ტაიმერი; 0 = ტაიმერის გარეშე (კლასიკა — პირდაპირ კენჭისყრაზე). */
+  discussionSeconds: number;
 }
 
 const KEY = 'splash.mafia.settings.v1';
-const DEFAULTS: MafiaSettings = { mafiaCount: 1, includeDoctor: true, includeDetective: true };
+const DEFAULTS: MafiaSettings = { mafiaCount: 1, includeDoctor: true, includeDetective: true, discussionSeconds: 0 };
+const DISCUSSION = [30, 600] as const;
 
 export class MafiaEngine extends Observable {
   readonly players: Player[];
@@ -61,6 +65,8 @@ export class MafiaEngine extends Observable {
 
   mafiaVotes: Record<string, number> = {};
   savedID: string | null = null;
+  /** წინა ღამეს გადარჩენილი — ექიმი მას ზედიზედ მეორე ღამეს ვერ აირჩევს. */
+  lastSavedID: string | null = null;
   checkedID: string | null = null;
   checkResult: boolean | null = null;
 
@@ -75,6 +81,7 @@ export class MafiaEngine extends Observable {
       mafiaCount: num(s.mafiaCount, DEFAULTS.mafiaCount, 1, 6),
       includeDoctor: bool(s.includeDoctor, DEFAULTS.includeDoctor),
       includeDetective: bool(s.includeDetective, DEFAULTS.includeDetective),
+      discussionSeconds: s.discussionSeconds === 0 ? 0 : num(s.discussionSeconds, DEFAULTS.discussionSeconds, ...DISCUSSION),
     }));
     this.clampSettings();
   }
@@ -151,6 +158,8 @@ export class MafiaEngine extends Observable {
     this.winner = null;
     this.killedID = null;
     this.votedOutID = null;
+    this.savedID = null;
+    this.lastSavedID = null;
     this.phase = 'reveal';
     this.notify();
   }
@@ -169,6 +178,7 @@ export class MafiaEngine extends Observable {
   private beginNight(): void {
     this.nightIndex = 0;
     this.mafiaVotes = {};
+    this.lastSavedID = this.savedID;
     this.savedID = null;
     this.checkedID = null;
     this.checkResult = null;
@@ -201,8 +211,14 @@ export class MafiaEngine extends Observable {
     this.advanceNight();
   }
 
+  /** ვის ვერ აირჩევს ექიმი ამაღამ — წუხანდელ გადარჩენილს (კლასიკური წესი). */
+  get doctorExcluded(): string[] {
+    return this.lastSavedID ? [this.lastSavedID] : [];
+  }
+
   doctorSave(target: Player, actor?: Player): void {
     if (!this.canAct('doctor', actor)) return;
+    if (target.id === this.lastSavedID) return;
     this.savedID = target.id;
     this.advanceNight();
   }
@@ -248,18 +264,35 @@ export class MafiaEngine extends Observable {
 
   // MARK: - დღე
 
+  /** დილიდან — განხილვაზე (თუ ტაიმერი ჩართულია) ან პირდაპირ კენჭისყრაზე. */
   beginVote(): void {
     if (this.phase !== 'morning') return;
     this.settleOrContinue(() => {
-      this.phase = 'dayVote';
+      this.phase = this.settings.discussionSeconds > 0 ? 'discussion' : 'dayVote';
       this.notify();
     });
+  }
+
+  /** განხილვიდან კენჭისყრაზე — ცალკე მეთოდია, რომ ორმაგმა შეხებამ დილიდან განხილვა არ გამოტოვოს. */
+  endDiscussion(): void {
+    if (this.phase !== 'discussion') return;
+    this.phase = 'dayVote';
+    this.notify();
   }
 
   voteOut(player: Player): void {
     if (this.phase !== 'dayVote' || this.eliminated.has(player.id)) return;
     this.votedOutID = player.id;
     this.eliminated.add(player.id);
+    this.phase = 'dayResult';
+    this.evaluate();
+    this.notify();
+  }
+
+  /** ქალაქმა დღეს არავინ გააძევა — შედეგის ეკრანი, მერე ღამე. */
+  voteNobody(): void {
+    if (this.phase !== 'dayVote') return;
+    this.votedOutID = null;
     this.phase = 'dayResult';
     this.evaluate();
     this.notify();
@@ -315,6 +348,15 @@ export class MafiaEngine extends Observable {
   }
   setDetective(on: boolean): void {
     this.settings = { ...this.settings, includeDetective: on };
+    this.persist();
+  }
+
+  /** 0 = ტაიმერის გარეშე — `DiscussionPanel` ამას იცნობს. */
+  setDiscussionSeconds(value: number): void {
+    this.settings = {
+      ...this.settings,
+      discussionSeconds: value === 0 ? 0 : num(value, DEFAULTS.discussionSeconds, ...DISCUSSION),
+    };
     this.persist();
   }
 

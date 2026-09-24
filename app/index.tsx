@@ -25,8 +25,8 @@ import { popularIDs } from '../src/state/popular';
 import { newestFirst } from '../src/state/homeFilter';
 import { Haptics } from '../src/core/haptics';
 import { useDialog } from '../src/ui/Dialog';
+import { Onboarded, Onboarding } from '../src/ui/Onboarding';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
-import { enterRight, enterUp } from '../src/ui/motion';
 import { Icon } from '../src/ui/Icon';
 
 const FAMILIES: GameFamily[] = ['loud', 'bluff', 'reading', 'candid'];
@@ -39,9 +39,18 @@ const FAMILY_CONFIG: Record<GameFamily, { icon: string; color: string }> = {
 };
 
 /**
+ * პირველ გაშვებაზე ჯერ გაცნობა (სამი ეკრანი), შემდეგ მთავარი. საცავი ამ
+ * მომენტისთვის უკვე ჩატვირთულია (`AppStateProvider`), ამიტომ ციმციმი არ ხდება.
+ */
+export default function Index() {
+  const [onboarded, setOnboarded] = useState(() => Onboarded.done);
+  return onboarded ? <Home /> : <Onboarding onFinish={() => setOnboarded(true)} />;
+}
+
+/**
  * მთავარი ეკრანი — OPA-ს ორიგინალი დიზაინი ჰორიზონტალური გადასაქროლი რიგებით.
  */
-export default function Home() {
+function Home() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width: windowWidth } = useWindowDimensions();
@@ -58,7 +67,7 @@ export default function Home() {
   const shuffleStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${shuffleTurn.value * 360}deg` }] }));
   const spinShuffle = () => {
     shuffleTurn.value = 0;
-    shuffleTurn.value = withTiming(1, { duration: 520, easing: Easing.out(Easing.back(1.6)) });
+    shuffleTurn.value = withTiming(1, { duration: 320, easing: Easing.out(Easing.quad) });
   };
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -71,7 +80,9 @@ export default function Home() {
   );
 
   // `recent.ids` ყოველ ჩაწერაზე ახალი მასივია — მასზე მიბმული memo მართლა იჭერს.
-  const recentGames = useMemo(() => gamesByIDs(recent.visibleIDs(catalogIDs)), [recent.ids, catalogIDs]);
+  // `recent` ერთი და იგივე ობიექტია — ცვლილებას მხოლოდ `recent.ids` ამჩნევს.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const recentGames = useMemo(() => gamesByIDs(recent.visibleIDs(catalogIDs)), [recent, recent.ids, catalogIDs]);
   const recentGame = recentGames[0];
 
   const gamesByFamily = useMemo(() => {
@@ -151,7 +162,7 @@ export default function Home() {
         showsVerticalScrollIndicator={false}
       >
         {/* ── 1. HEADER ROW (OPA Logo + Shuffle + Search) ── */}
-        <Animated.View entering={enterUp(0)} style={[styles.headerRow, styles.gutter]}>
+        <View style={[styles.headerRow, styles.gutter]}>
           <Image
             source={require('../assets/Logo.png')}
             style={styles.logo}
@@ -193,19 +204,19 @@ export default function Home() {
               />
             </Pressable>
           </View>
-        </Animated.View>
+        </View>
 
         {/* ── 2. WELCOME TITLE ── */}
-        <Animated.View entering={enterUp(1)} style={[styles.welcomeRow, styles.gutter]}>
+        <View style={[styles.welcomeRow, styles.gutter]}>
           <View style={{ width: 3, height: 25, backgroundColor: Colors.phosphor, ...glow(Colors.phosphor, 'strong') }} />
           <Text style={[titleFont(23), styles.welcomeTitle, { color: Colors.warmCream }]}>
             {toTT('რას ვითამაშებთ?')}
           </Text>
-        </Animated.View>
+        </View>
 
         {/* ── SEARCH BAR (თუ გახსნილია) ── */}
         {searchOpen && (
-          <Animated.View entering={enterUp(0)} style={[styles.gutter]}>
+          <View style={[styles.gutter]}>
             <View style={styles.searchBar}>
               <Icon name={'magnifyingglass'} size={18} color={Colors.textSecondary} />
               <TextInput
@@ -228,7 +239,7 @@ export default function Home() {
                 </Pressable>
               )}
             </View>
-          </Animated.View>
+          </View>
         )}
 
         {/* ── ძებნის შედეგები ── */}
@@ -239,15 +250,15 @@ export default function Home() {
             </Text>
             {filteredGames.length > 0 ? (
               <View style={styles.grid}>
-                {filteredGames.map((game, i) => (
-                  <Animated.View key={game.id} entering={enterUp(i)} style={{ width: columnWidth }}>
+                {filteredGames.map((game) => (
+                  <View key={game.id} style={{ width: columnWidth }}>
                     <GameTile
                       game={game}
                       playerCount={roster.count}
                       onPlay={() => handleGamePress(game)}
                       onInfo={() => openInfo(game)}
                     />
-                  </Animated.View>
+                  </View>
                 ))}
               </View>
             ) : (
@@ -261,7 +272,7 @@ export default function Home() {
           <>
             {/* ── 3. RECENT GAME / HERO ── */}
             {recentGame && (
-              <Animated.View entering={enterUp(2)} style={[styles.gutter]}>
+              <View style={[styles.gutter]}>
                 <RecentGameCard
                   game={recentGame}
                   onPress={() => {
@@ -269,12 +280,12 @@ export default function Home() {
                     open(recentGame);
                   }}
                 />
-              </Animated.View>
+              </View>
             )}
 
             {/* ── 4. POPULAR ROW ── */}
             {popular.length > 0 && (
-              <Animated.View entering={enterUp(3)} style={{ gap: 10 }}>
+              <View style={{ gap: 10 }}>
                 <View style={styles.gutter}>
                   <SectionLabel text="პოპულარული" icon="flame.fill" accentColor={Colors.phosphor} />
                 </View>
@@ -283,27 +294,27 @@ export default function Home() {
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.horizontalRow}
                 >
-                  {popular.map((game, i) => (
-                    <Animated.View key={game.id} entering={enterRight(3 + i)}>
+                  {popular.map((game) => (
+                    <View key={game.id}>
                       <MiniGameTile
                         game={game}
                         playerCount={roster.count}
                         onPlay={() => handleGamePress(game)}
                         onInfo={() => openInfo(game)}
                       />
-                    </Animated.View>
+                    </View>
                   ))}
                 </ScrollView>
-              </Animated.View>
+              </View>
             )}
 
             {/* ── 5. FAMILIES ── */}
-            {FAMILIES.map((family, familyIndex) => {
+            {FAMILIES.map((family) => {
               const list = gamesByFamily.get(family) ?? [];
               if (list.length === 0) return null;
               const conf = FAMILY_CONFIG[family];
               return (
-                <Animated.View key={family} entering={enterUp(4 + familyIndex)} style={{ gap: 10 }}>
+                <View key={family} style={{ gap: 10 }}>
                   <View style={styles.gutter}>
                     <SectionLabel
                       text={familyTitle[family]}
@@ -317,18 +328,18 @@ export default function Home() {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.horizontalRow}
                   >
-                    {list.map((game, i) => (
-                      <Animated.View key={game.id} entering={enterRight(4 + familyIndex + i)}>
+                    {list.map((game) => (
+                      <View key={game.id}>
                         <MiniGameTile
                           game={game}
                           playerCount={roster.count}
                           onPlay={() => handleGamePress(game)}
                           onInfo={() => openInfo(game)}
                         />
-                      </Animated.View>
+                      </View>
                     ))}
                   </ScrollView>
-                </Animated.View>
+                </View>
               );
             })}
           </>
@@ -421,10 +432,8 @@ function RecentGameCard({ game, onPress }: { game: PartyGame; onPress: () => voi
             <Icon name={'clock.arrow.circlepath'} size={12} color={Colors.phosphor} />
             <Text style={styles.recentBadgeText}>{toTT('ბოლოს ითამაშეთ')}</Text>
           </View>
-          <Text style={[titleFont(18), { color: Colors.warmCream, letterSpacing: 0.5 }]} numberOfLines={1}>
-            {toTT(game.title)}
-          </Text>
-          <Text style={[caption(11, '500'), { color: Colors.textSecondary, lineHeight: 15 }]} numberOfLines={2}>
+          {/* სახელი სურათზე წერია — აქ მხოლოდ ქართული მინიშნება. */}
+          <Text style={[caption(12, '500'), { color: Colors.textSecondary, lineHeight: 16 }]} numberOfLines={2}>
             {captionText}
           </Text>
         </View>

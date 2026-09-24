@@ -82,7 +82,7 @@ function Setup({ engine, onClose }: { engine: TenButEngine; onClose: () => void 
               ))}
             </View>
             <Text style={[caption(11), { color: Colors.textSecondary }]}>
-              სულ {engine.totalRounds} რაუნდი — ყველას ზუსტად თანაბრად ხვდება ჯერი.
+              სულ {engine.totalRounds} რაუნდი.
             </Text>
           </View>
         </GlassCard>

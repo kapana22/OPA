@@ -83,15 +83,7 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard>
-          <View style={{ gap: 10 }}>
-            <Step n="1" text="ერთი მოთამაშე ტელეფონს შუბლზე იჭერს, ეკრანით სხვებისკენ." />
-            <Step n="2" text="დანარჩენები სიტყვას ხსნიან — თვითონ სიტყვის წარმოთქმის გარეშე." />
-            <Step n="3" text="გამოიცანი — წინ დახარე; ვერ გამოიცანი — უკან დახარე." />
-            <Step n="4" text="ჯერი წრეზე ტრიალებს — ქულა იმას ერიცხება, ვისაც ტელეფონი ეჭირა." />
-          </View>
-        </GlassCard>
-
+        {/* წესები „?“-შია — setup-ზე მხოლოდ პარამეტრები. */}
         <GlassCard>
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>დრო</Text>
@@ -124,7 +116,7 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
               ))}
             </View>
             <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              სულ {engine.totalTurns} ჯერი — ყველას ზუსტად თანაბრად ხვდება.
+              სულ {engine.totalTurns} ჯერი.
             </Text>
           </View>
         </GlassCard>
@@ -179,44 +171,7 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
   );
 }
 
-function Step({ n, text }: { n: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-      <View style={styles.stepBadge}>
-        <Text style={[body(12, '900'), { color: Colors.ink }]}>{n}</Text>
-      </View>
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
-    </View>
-  );
-}
 
-// ── ჯერის შესავალი
-
-function ScoreStrip({ engine }: { engine: CharadesEngine }) {
-  return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-      {engine.players.map((player) => {
-        const active = player.id === engine.currentPlayer?.id;
-        return (
-          <View
-            key={player.id}
-            style={[styles.scoreCell, { backgroundColor: active ? Colors.phosphor + '2E' : Colors.surface }]}
-          >
-            <Text
-              style={[body(11, '600'), { color: active ? Colors.textPrimary : Colors.textSecondary }]}
-              numberOfLines={1}
-            >
-              {player.name}
-            </Text>
-            <Text style={[body(19, '900'), Layout.digits, { color: active ? Colors.phosphor : Colors.textPrimary }]}>
-              {engine.liveScore(player)}
-            </Text>
-          </View>
-        );
-      })}
-    </ScrollView>
-  );
-}
 
 function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }) {
   return (
@@ -231,28 +186,22 @@ function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
           {engine.categoryLabel}
         </Text>
       </View>
-      <PlayerCharacter player={engine.currentPlayer} compact />
-
-      <View style={{ paddingHorizontal: 20 }}>
-        <ScoreStrip engine={engine} />
-      </View>
-
       <View style={{ flex: 1 }} />
+      <PlayerCharacter player={engine.currentPlayer} />
 
-      <View style={{ gap: 12, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={2}>
-          {engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე
+      {/* დიდად სახელი, ქვემოთ — მოკლედ და პატარა ასოებით. */}
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          {engine.currentPlayer?.name ?? ''}
         </Text>
-        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-          მაგიდა სიტყვას გიხსნის — თვითონ სიტყვის თქმის გარეშე.
-        </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი შუბლზე</Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
-          გამოიცანი — წინ დახარე; ვერ იცნობ — უკან. ტელეფონი ყოველ ჯერზე შუბლთან დააბრუნე.
+          გამოიცანი — წინ დახარე; ვერ იცნობ — უკან.
         </Text>
         <PrimaryButton title="მზად ვარ" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginTurn()} />
       </View>

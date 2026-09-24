@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import type { Player } from '../core/roster';
 import { usePlayerCharacter } from './PlayerAvatarView';
 import { Colors } from '../theme/theme';
-import { popIn } from './motion';
+import { turnFade } from './motion';
 
 /** პერსონაჟის სურათის პროპორცია (640×768). */
 const ART_RATIO = 640 / 768;
@@ -31,26 +31,30 @@ export function PlayerCharacter({ player, name, compact = false }: { player?: Pl
   const character = usePlayerCharacter(player, name);
   if (!player && !name) return null;
 
-  const cardHeight = Math.min(compact ? 176 : 300, height * (compact ? 0.22 : 0.36));
-  const cardWidth = Math.min(width - 64, cardHeight * ART_RATIO);
+  const frameHeight = Math.min(compact ? 210 : 340, height * (compact ? 0.26 : 0.4));
+  const frameWidth = Math.min(width - 64, frameHeight * ART_RATIO);
+  // ფერადი ჩარჩო (როგორც კოლექციურ ბარათზე) და შიგნით თეთრი ბარათი.
+  const frame = compact ? 3 : 4;
+  const cardHeight = frameHeight - frame * 2;
+  const cardWidth = frameWidth - frame * 2;
   const accent = accentFor(character.color);
-  const radius = compact ? 22 : 28;
+  const radius = compact ? 24 : 30;
   const id = compact ? 'pcC' : 'pcF';
 
   return (
     <Animated.View
       key={character.name}
-      entering={popIn()}
+      entering={turnFade}
       pointerEvents="none"
       accessible={false}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       style={[
         styles.shadow,
-        { width: cardWidth, height: cardHeight, borderRadius: radius, shadowColor: accent },
+        { width: frameWidth, height: frameHeight, borderRadius: radius, padding: frame, backgroundColor: accent, shadowColor: accent },
       ]}
     >
-      <View style={[styles.card, { borderRadius: radius, borderColor: accent }]}>
+      <View style={[styles.card, { borderRadius: radius - frame }]}>
         <Svg width={cardWidth} height={cardHeight} style={[StyleSheet.absoluteFill, { zIndex: 0 }]}>
           <Defs>
             <LinearGradient id={`${id}-base`} x1="0" y1="0" x2="0" y2="1">
@@ -75,7 +79,7 @@ export function PlayerCharacter({ player, name, compact = false }: { player?: Pl
             position: 'absolute',
             bottom: 0,
             left: 0,
-            width: cardWidth - 4,
+            width: cardWidth,
             height: cardHeight * 0.94,
             zIndex: 1,
           }}
@@ -89,14 +93,16 @@ const styles = StyleSheet.create({
   shadow: {
     alignSelf: 'center',
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.35,
-    shadowRadius: 22,
+    shadowOpacity: 0.45,
+    shadowRadius: 26,
     elevation: 10,
   },
   card: {
     flex: 1,
     overflow: 'hidden',
-    borderWidth: 2,
+    // თხელი თეთრი შიდა ხაზი — ფერად ჩარჩოსა და ფოტოს შორის სისუფთავე.
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
     backgroundColor: Colors.warmCream,
   },
 });

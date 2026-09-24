@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Image, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRoster } from '../state/state';
@@ -17,13 +17,13 @@ export function CharacterPicker({ playerID, onClose }: { playerID: string | null
   const player = roster.players.find(p => p.id === playerID);
   const [filter, setFilter] = useState<FilterType>('all');
 
-  useEffect(() => {
-    if (player?.gender) {
-      setFilter(player.gender);
-    } else {
-      setFilter('all');
-    }
-  }, [playerID, player?.gender]);
+  // სხვა მოთამაშე ან სქესი შეიცვალა — ფილტრი მას მიჰყვება.
+  const filterKey = `${playerID}:${player?.gender ?? ''}`;
+  const [seenFilterKey, setSeenFilterKey] = useState(filterKey);
+  if (seenFilterKey !== filterKey) {
+    setSeenFilterKey(filterKey);
+    setFilter(player?.gender ?? 'all');
+  }
 
   const items = PLAYER_CHARACTERS.map((character, id) => ({ character, id })).filter(
     ({ character }) => filter === 'all' || character.gender === filter

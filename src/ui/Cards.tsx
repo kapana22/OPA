@@ -335,7 +335,8 @@ export function CategoryPicker({
   selectedID: string | null;
   onSelect: (id: string | null) => void;
 }) {
-  const entries = React.useMemo(build, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // ერთხელ, გახსნისას — ჩიპების რიგი თამაშის შუაში არ უნდა ხტოდეს.
+  const entries = React.useMemo(() => build(), []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
       {entries.map((e) => (

@@ -46,9 +46,9 @@ export function NeverFlow({ roster, onExit }: GameFlowProps) {
 // ── პარამეტრები
 
 function livesHint(lives: number): string {
-  if (lives === 3) return 'სამი — სწრაფი პარტია, პირველი გასვლები მალევე იწყება.';
+  if (lives === 3) return 'სამი — სწრაფი პარტია.';
   if (lives === 5) return 'ხუთი — ოქროს შუალედი დიდი კომპანიისთვის.';
-  return 'შვიდი — გრძელი პარტია, ბოლომდე ყველა თამაშობს.';
+  return 'შვიდი — გრძელი პარტია.';
 }
 
 function Setup({ engine, onClose }: { engine: NeverEngine; onClose: () => void }) {

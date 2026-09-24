@@ -2,7 +2,7 @@ import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
@@ -29,6 +29,7 @@ import { Icon } from '../../ui/Icon';
  */
 
 const TIME_OPTIONS = [60, 90, 120];
+const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
 
 export function WhoAmIFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new WhoAmIEngine([...roster.players]));
@@ -117,7 +118,7 @@ function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void 
               ))}
             </View>
             <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              სულ {engine.totalTurns} ჯერი — ყველას ზუსტად თანაბრად ხვდება.
+              სულ {engine.totalTurns} ჯერი.
             </Text>
           </View>
         </GlassCard>
@@ -157,6 +158,15 @@ function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void 
             />
           </Pressable>
         </GlassCard>
+
+        <GlassCard>
+          <ToggleRow
+            title="ჯარიმა გამოტოვებაზე"
+            subtitle="ყოველი გამოტოვებული სახელი −1 ქულა"
+            value={engine.settings.penalizePass}
+            onChange={(v) => engine.setPenalizePass(v)}
+          />
+        </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -187,43 +197,22 @@ function TurnIntro({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => voi
           {engine.categoryLabel}
         </Text>
       </View>
-      <PlayerCharacter player={engine.currentPlayer} compact />
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}>
-        {engine.players.map((player) => {
-          const active = player.id === engine.currentPlayer?.id;
-          return (
-            <View
-              key={player.id}
-              style={[styles.scoreCell, { backgroundColor: active ? Colors.phosphor + '2E' : Colors.surface }]}
-            >
-              <Text style={[body(11, '600'), { color: active ? Colors.textPrimary : Colors.textSecondary }]} numberOfLines={1}>
-                {player.name}
-              </Text>
-              <Text style={[body(19, '900'), Layout.digits, { color: active ? Colors.phosphor : Colors.textPrimary }]}>
-                {engine.liveScore(player)}
-              </Text>
-            </View>
-          );
-        })}
-      </ScrollView>
-
       <View style={{ flex: 1 }} />
+      <PlayerCharacter player={engine.currentPlayer} />
 
-      <View style={{ gap: 12, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={2}>
-          {engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე
+      {/* დიდად სახელი, ქვემოთ — მოკლედ და პატარა ასოებით. */}
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          {engine.currentPlayer?.name ?? ''}
         </Text>
-        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-          კითხვებს შენ სვამ — მაგიდას მხოლოდ ორი პასუხის უფლება აქვს: კი და არა.
-        </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი შუბლზე</Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
-          ეკრანი ლანდშაფტში გადავა — სახელი შორიდანაც უნდა იკითხებოდეს.
+          კითხვებს შენ სვამ — მაგიდას მხოლოდ ორი პასუხის უფლება აქვს: კი და არა.
         </Text>
         <PrimaryButton title="მზად ვარ" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginTurn()} />
       </View>
@@ -353,9 +342,24 @@ function TurnResult({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => vo
         <Text style={[titleFont(24), { color: Colors.phosphor }]} numberOfLines={1} adjustsFontSizeToFit>
           {engine.currentPlayer?.name ?? ''}
         </Text>
-        <Text style={[display(58), Layout.digits, { color: Colors.textPrimary }]}>{engine.turnGuessed}</Text>
-        <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>გამოცნობილი</Text>
-        {engine.turnPassed > 0 ? (
+        {engine.settings.penalizePass ? (
+          <>
+            <Text
+              style={[display(58), Layout.digits, { color: engine.turnScore < 0 ? Colors.neonMagenta : Colors.textPrimary }]}
+            >
+              {signed(engine.turnScore)}
+            </Text>
+            <Text style={[body(14, '600'), Layout.digits, { color: Colors.textSecondary }]}>
+              {engine.turnGuessed} გამოცნობილი · {engine.turnPassed} გამოტოვებული
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text style={[display(58), Layout.digits, { color: Colors.textPrimary }]}>{engine.turnGuessed}</Text>
+            <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>გამოცნობილი</Text>
+          </>
+        )}
+        {!engine.settings.penalizePass && engine.turnPassed > 0 ? (
           <Text style={[body(13, '500'), Layout.digits, { color: Colors.textSecondary, opacity: 0.8 }]}>
             გამოტოვებული — {engine.turnPassed}
           </Text>
@@ -424,7 +428,7 @@ function IdentityRow({ engine, entry }: { engine: WhoAmIEngine; entry: WhoAmIEnt
         ) : null}
       </View>
       <Text style={[body(14, '900'), Layout.digits, { color: guessed ? Colors.phosphor : Colors.textSecondary }]}>
-        {guessed ? '+1' : '0'}
+        {guessed ? '+1' : engine.settings.penalizePass && !entry.isOvertime ? '−1' : '0'}
       </Text>
     </Pressable>
   );
@@ -462,7 +466,7 @@ function Summary({
       </Text>
 
       <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        {champions.length > 0 ? `${champions.map((p) => p.name).join(', ')} — ${engine.scoreFor(champions[0])} გამოცნობილი` : 'ამ პარტიაში ვერავინ გამოიცნო'}
+        {champions.length > 0 ? `${champions.map((p) => p.name).join(', ')} — ${engine.scoreFor(champions[0])} ${engine.settings.penalizePass ? 'ქულა' : 'გამოცნობილი'}` : 'ამ პარტიაში ვერავინ გამოიცნო'}
       </Text>
 
       <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
