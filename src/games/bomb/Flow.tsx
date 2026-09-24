@@ -167,20 +167,12 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="timer" size={34} tint={Colors.neonMagenta} />
-      </View>
-
       <PlayerCharacter player={engine.currentPlayer} compact />
-      <View style={{ alignItems: 'center', gap: 6 }}>
-        <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>ბომბი აქვს</Text>
-        <Text
-          style={[titleFont(34), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-          adjustsFontSizeToFit
-          numberOfLines={2}
-        >
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
           {engine.currentPlayer?.name ?? '—'}
         </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ბომბი აქვს</Text>
       </View>
 
       <View style={Layout.content}>

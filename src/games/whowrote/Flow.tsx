@@ -40,7 +40,6 @@ export function WhoWroteFlow({ roster, onExit }: GameFlowProps) {
         <Handoff
           playerName={engine.currentWriter?.name ?? '—'}
           counter={`${engine.writerIndex + 1} / ${engine.players.length}`}
-          prompt={engine.currentPrompt}
           note="დანარჩენებმა ეკრანს არ უნდა უყურონ."
           actionTitle="მზად ვარ"
           onAction={() => engine.revealScreen()}
@@ -56,7 +55,7 @@ export function WhoWroteFlow({ roster, onExit }: GameFlowProps) {
         <Handoff
           playerName={engine.currentGuesser?.name ?? '—'}
           counter={`${engine.guesserIndex + 1} / ${engine.players.length}`}
-          note="ერთი პასუხი გელოდება. წაიკითხე და თქვი, ვინ დაწერა."
+          note="წაიკითხე და თქვი, ვინ დაწერა."
           actionTitle="პასუხის ნახვა"
           onAction={() => engine.revealScreen()}
           onExit={onExit}
@@ -194,7 +193,6 @@ function Intro({ engine, onExit }: { engine: WhoWroteEngine; onExit: () => void 
 function Handoff({
   playerName,
   counter,
-  prompt,
   note,
   actionTitle,
   onAction,
@@ -202,7 +200,6 @@ function Handoff({
 }: {
   playerName: string;
   counter: string;
-  prompt?: string;
   note: string;
   actionTitle: string;
   onAction: () => void;
@@ -215,34 +212,22 @@ function Handoff({
         <View style={{ flex: 1 }} />
         <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>{counter}</Text>
       </View>
-      <PlayerCharacter name={playerName} compact />
-
       <View style={{ flex: 1 }} />
+      <PlayerCharacter name={playerName} />
 
-      <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-
-      <Text
-        style={[titleFont(36), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
-      >
-        {playerName}
-      </Text>
-
-      <View style={Layout.content}>
-        <GlassCard>
-          <View style={{ gap: 10, alignItems: 'center' }}>
-            {prompt ? (
-              <Text style={[body(16, '700'), Layout.centered, { color: Colors.textPrimary }]}>{prompt}</Text>
-            ) : null}
-            <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>{note}</Text>
-          </View>
-        </GlassCard>
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          {playerName}
+        </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+          {note}
+        </Text>
         <PrimaryButton title={actionTitle} icon="hand.tap.fill" tint={Colors.phosphor} onPress={onAction} />
       </View>
     </View>

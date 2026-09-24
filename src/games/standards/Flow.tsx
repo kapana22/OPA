@@ -173,23 +173,18 @@ function Vote({ engine, onExit }: { engine: StandardsEngine; onExit: () => void 
       <View style={{ flex: 1, gap: 20 }}>
         {header}
         <View style={{ flex: 1 }} />
-          <PlayerCharacter player={engine.currentVoter} />
-        <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-        <Text
-          style={[titleFont(36), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-          adjustsFontSizeToFit
-          numberOfLines={2}
-        >
-          {engine.currentVoter?.name ?? '—'}
-        </Text>
-        {engine.currentVoterIsReader ? (
-          <Text style={[body(14, '700'), Layout.centered, { color: Colors.phosphor }]}>
-            შენ ხარ ამ რაუნდის მკითხავი
+        <PlayerCharacter player={engine.currentVoter} />
+        <View style={{ gap: 6, paddingHorizontal: 24 }}>
+          <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+            {engine.currentVoter?.name ?? '—'}
           </Text>
-        ) : null}
-        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>დანარჩენები არ იყურებიან</Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        </View>
         <View style={{ flex: 1 }} />
         <View style={Layout.footer}>
+          <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+            დანარჩენები არ იყურებიან
+          </Text>
           <PrimaryButton
             title="ჩემი ჯერია"
             icon="hand.raised.fill"

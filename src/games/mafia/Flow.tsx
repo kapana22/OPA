@@ -210,23 +210,18 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
       <View style={{ flex: 1, gap: 18 }}>
         {header}
         <View style={{ flex: 1 }} />
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon name="moon.stars.fill" size={32} tint={Colors.neonCyan} />
+        <PlayerCharacter player={player} />
+        <View style={{ gap: 6, paddingHorizontal: 24 }}>
+          <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+            {player?.name ?? '—'}
+          </Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
         </View>
-          <PlayerCharacter player={player} />
-        <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-        <Text
-          style={[titleFont(34), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-          adjustsFontSizeToFit
-          numberOfLines={2}
-        >
-          {player?.name ?? '—'}
-        </Text>
-        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-          დანარჩენებო, თვალები დახუჭეთ
-        </Text>
         <View style={{ flex: 1 }} />
         <View style={Layout.footer}>
+          <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+            დანარჩენებო, თვალები დახუჭეთ
+          </Text>
           <PrimaryButton
             title="მე ვარ — გავაგრძელოთ"
             icon="chevron.right"

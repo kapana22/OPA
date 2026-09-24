@@ -188,17 +188,12 @@ function Turn({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
 
       {/* პორტრეტის ბარათი თვითონ ამბობს, ვისი ჯერია — ზემოთ ცალკე ხატულა ზედმეტი იყო. */}
       <PlayerCharacter player={engine.currentPlayer} compact />
-      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ჯერი გიდგება</Text>
-
-      <Text
-        style={[titleFont(38), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
-      >
-        {engine.currentPlayer?.name ?? '—'}
-      </Text>
-
-      <Text style={[body(13, '700'), Layout.centered, { color: Colors.textSecondary }]}>აირჩიე</Text>
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          {engine.currentPlayer?.name ?? '—'}
+        </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ჯერი გიდგება</Text>
+      </View>
 
       <View style={{ flex: 1 }} />
 

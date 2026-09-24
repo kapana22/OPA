@@ -125,26 +125,22 @@ function Setup({ engine, onClose }: { engine: WordRushEngine; onClose: () => voi
 function Intro({ engine, onExit }: { engine: WordRushEngine; onExit: () => void }) {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, gap: Space.m, paddingVertical: Space.m }}>
-      <View style={Layout.exitSlot}>
+      <View style={[Layout.topBar, { paddingTop: 0 }]}>
         <GameExitButton onExit={onExit} />
+        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
+          წრე {engine.round} / {engine.settings.rounds}
+        </Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="bolt.fill" size={30} tint={Colors.phosphor} />
+      <PlayerCharacter player={engine.currentPlayer} compact />
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          {engine.currentPlayer?.name ?? '—'}
+        </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი გადაეცი</Text>
       </View>
-
-          <PlayerCharacter player={engine.currentPlayer} compact />
-      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი გადაეცი</Text>
-
-      <Text
-        style={[titleFont(36), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
-      >
-        {engine.currentPlayer?.name ?? '—'}
-      </Text>
 
       <View style={Layout.content}>
         <View style={styles.categoryBox}>
@@ -166,35 +162,15 @@ function Intro({ engine, onExit }: { engine: WordRushEngine; onExit: () => void 
         </Pressable>
       ) : null}
 
-      <View style={Layout.content}>
-        <GlassCard>
-          <View style={{ gap: 8 }}>
-            <Tip icon="megaphone.fill" text="ასახელებ ამ კატეგორიის სიტყვებს, სანამ დრო გაქვს." />
-            <Tip icon="hand.tap.fill" text="ყოველ ჩათვლილზე ეკრანს ეხები." />
-            <Tip icon="person.3.fill" text="მაგიდა მსაჯობს — არ ჩაითვალა? „−1“ იქვეა." />
-          </View>
-        </GlassCard>
-      </View>
-
-      <Text style={[body(13, '700'), Layout.centered, Layout.digits, { color: Colors.textSecondary }]}>
-        წრე {engine.round} / {engine.settings.rounds}
-      </Text>
-
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+          ასახელებ ამ კატეგორიის სიტყვებს, სანამ დრო გაქვს.
+        </Text>
         <PrimaryButton title="დროის დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginTurn()} />
       </View>
     </ScrollView>
-  );
-}
-
-function Tip({ icon, text }: { icon: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <Icon name={icon} size={16} color={Colors.textSecondary} />
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
-    </View>
   );
 }
 

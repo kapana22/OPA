@@ -178,23 +178,18 @@ function Rate({ engine, onExit }: { engine: TenButEngine; onExit: () => void }) 
       <View style={{ flex: 1, gap: 20 }}>
         {header}
         <View style={{ flex: 1 }} />
-          <PlayerCharacter player={engine.currentHolder} />
-        <Text style={[body(16, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-        <Text
-          style={[titleFont(36), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-          adjustsFontSizeToFit
-          numberOfLines={2}
-        >
-          {engine.currentHolder?.name ?? '—'}
-        </Text>
-        <Text
-          style={[body(14, '600'), Layout.centered, { color: isTarget ? Colors.phosphor : Colors.neonCyan, paddingHorizontal: 28 }]}
-        >
-          {isTarget ? 'შენ ხარ ამ რაუნდის სამიზნე' : `გამოიცანი, რა დაწერა ${targetName}-მა`}
-        </Text>
-        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>დანარჩენები არ იყურებიან</Text>
+        <PlayerCharacter player={engine.currentHolder} />
+        <View style={{ gap: 6, paddingHorizontal: 24 }}>
+          <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+            {engine.currentHolder?.name ?? '—'}
+          </Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        </View>
         <View style={{ flex: 1 }} />
         <View style={Layout.footer}>
+          <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+            დანარჩენები არ იყურებიან
+          </Text>
           <PrimaryButton
             title="ჩემი ჯერია"
             icon="hand.raised.fill"

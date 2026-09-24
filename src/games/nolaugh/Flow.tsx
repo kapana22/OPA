@@ -127,57 +127,33 @@ function Setup({ engine, onClose }: { engine: NoLaughEngine; onClose: () => void
 function Announce({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: 18 }}>
-      <View style={Layout.exitSlot}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
+        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
+          რაუნდი {engine.round} / {engine.totalRounds}
+        </Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <PlayerCharacter player={engine.holder} compact />
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="face.dashed.fill" size={32} tint={Colors.phosphor} />
+      <PlayerCharacter player={engine.holder} />
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          {engine.holder?.name ?? '—'}
+        </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
+          ამ რაუნდში არ უნდა გაიცინოს
+        </Text>
       </View>
-
-      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-        ამ რაუნდში არ უნდა გაიცინოს
-      </Text>
-
-      <Text
-        style={[titleFont(36), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
-      >
-        {engine.holder?.name ?? '—'}
-      </Text>
-
-      <View style={Layout.content}>
-        <GlassCard>
-          <View style={{ gap: 8 }}>
-            <Tip icon="iphone.gen3" text="ტელეფონი ჯგუფს გადაეცი, არა მას." />
-            <Tip icon="timer" text={`დანარჩენები ${engine.settings.seconds} წამის განმავლობაში აცინებენ.`} />
-            <Tip icon="face.smiling" text="ღიმილიც ითვლება — კბილი არ უნდა გამოჩნდეს." />
-          </View>
-        </GlassCard>
-      </View>
-
-      <Text style={[body(13, '700'), Layout.centered, Layout.digits, { color: Colors.textSecondary }]}>
-        რაუნდი {engine.round} / {engine.totalRounds}
-      </Text>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+          ტელეფონი ჯგუფს გადაეცი, არა მას.
+        </Text>
         <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginRound()} />
       </View>
-    </View>
-  );
-}
-
-function Tip({ icon, text }: { icon: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <Icon name={icon} size={16} color={Colors.textSecondary} />
-      <Text style={[body(14, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
     </View>
   );
 }

@@ -56,7 +56,7 @@ export function TwoTruthsFlow({ roster, onExit }: GameFlowProps) {
           kicker={`${engine.guesserIndex + 1} / ${engine.guessers.length}`}
           playerName={engine.currentGuesser?.name ?? '—'}
           headline="იპოვე ტყუილი"
-          note={`ავტორი — ${engine.author.name}. სამი ამბავიდან ერთი მოგონილია, აირჩიე ის, რომელიც არ გჯერა.`}
+          note={`ავტორი — ${engine.author.name}.`}
           actionTitle="ნახვა"
           icon="eye.slash.fill"
           onStart={() => engine.beginGuessing()}
@@ -171,29 +171,22 @@ function Pass({
         <View style={{ flex: 1 }} />
         <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>{kicker}</Text>
       </View>
-      <PlayerCharacter name={playerName} compact />
-
       <View style={{ flex: 1 }} />
+      <PlayerCharacter name={playerName} />
 
-      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>{headline}</Text>
-
-      <Text
-        style={[titleFont(36), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
-      >
-        {playerName}
-      </Text>
-
-      <View style={Layout.content}>
-        <GlassCard>
-          <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>{note}</Text>
-        </GlassCard>
+      <View style={{ gap: 6, paddingHorizontal: 24 }}>
+        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          {playerName}
+        </Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>{headline}</Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+          {note}
+        </Text>
         <PrimaryButton title={actionTitle} icon={icon} tint={Colors.neonMagenta} onPress={onStart} />
       </View>
     </View>

@@ -177,20 +177,25 @@ function Vote({ engine, onExit }: { engine: MostLikelyEngine; onExit: () => void
   if (engine.isSecret && readyFor !== engine.voterIndex) {
     return (
       <View style={{ flex: 1, gap: Space.m }}>
-        <View style={Layout.exitSlot}>
+        <View style={Layout.topBar}>
           <GameExitButton onExit={onExit} />
-        </View>
-        <View style={{ flex: 1 }} />
-        <View style={{ alignItems: 'center', gap: 4 }}>
-          <PlayerCharacter player={engine.currentVoter} compact />
-          <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-          <Text style={[titleFont(30), { color: Colors.neonCyan }]}>{engine.currentVoter?.name ?? '—'}</Text>
-          <Text style={[body(13, '700'), { color: Colors.textSecondary, fontVariant: ['tabular-nums'] }]}>
+          <View style={{ flex: 1 }} />
+          <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
             {engine.voterIndex + 1} / {engine.players.length}
           </Text>
         </View>
         <View style={{ flex: 1 }} />
-        <PrimaryButton title="მზად ვარ" icon="checkmark" onPress={() => setReadyFor(engine.voterIndex)} />
+        <PlayerCharacter player={engine.currentVoter} />
+        <View style={{ gap: 6, paddingHorizontal: 24 }}>
+          <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+            {engine.currentVoter?.name ?? '—'}
+          </Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        </View>
+        <View style={{ flex: 1 }} />
+        <View style={Layout.footer}>
+          <PrimaryButton title="მზად ვარ" icon="checkmark" onPress={() => setReadyFor(engine.voterIndex)} />
+        </View>
       </View>
     );
   }

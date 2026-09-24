@@ -118,8 +118,15 @@ function Round({ engine, onExit }: Props) {
   let content: React.ReactNode;
   switch (phase) {
     case 'pass':
-      content = <><PlayerCharacter player={engine.clueGiver} /><Text style={paragraph}>გადაეცი ტელეფონი</Text>
-        <Text style={heading}>{engine.clueGiver?.name}</Text><Text style={paragraph}>დანარჩენებმა ეკრანს არ შეხედოთ.</Text></>;
+      content = <><View style={{ flex: 1 }} /><PlayerCharacter player={engine.clueGiver} />
+        <View style={{ gap: 6 }}>
+          <Text style={[title(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+            {engine.clueGiver?.name ?? ''}
+          </Text>
+          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        </View>
+        <View style={{ flex: 1 }} />
+        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8 }]}>დანარჩენებმა ეკრანს არ შეხედოთ.</Text></>;
       footer = <PrimaryButton title="ტელეფონი ჩემთანაა" onPress={guard(() => engine.readyForClue())} />; break;
     case 'handoff':
       content = <><Text style={heading}>სამიზნე დამალულია</Text><Text style={paragraph}>გადაეცი ტელეფონი თანაგუნდელებს:</Text>

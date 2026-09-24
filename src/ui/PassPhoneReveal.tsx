@@ -85,15 +85,17 @@ export function PassPhoneReveal({
       {!confirmed ? (
         <>
           <PlayerCharacter name={playerName} />
-          <View style={styles.nameBlock} accessible accessibilityLabel={`გადაეცი ტელეფონი ${playerName}-ს`}>
-            <Text style={[body(16, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-            <Text style={[titleFont(36), styles.centered, { color: Colors.textPrimary }]}>{playerName}</Text>
-            <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>
-              დანარჩენებო, ეკრანს ნუ უყურებთ
+          <View style={styles.passBlock} accessible accessibilityLabel={`გადაეცი ტელეფონი ${playerName}-ს`}>
+            <Text style={[titleFont(36), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+              {playerName}
             </Text>
+            <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
           </View>
           <View style={{ flex: 1 }} />
           <View style={styles.footer}>
+            <Text style={[body(12, '500'), styles.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
+              დანარჩენებო, ეკრანს ნუ უყურებთ
+            </Text>
             <PrimaryButton
               title="მე ვარ"
               icon="checkmark"
@@ -179,6 +181,7 @@ const styles = StyleSheet.create({
   root: { flex: 1, gap: Space.l },
   header: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24, paddingTop: Space.m },
   nameBlock: { gap: Space.l, alignItems: 'center', paddingHorizontal: 24 },
+  passBlock: { gap: 6, paddingHorizontal: 24 },
   centered: { textAlign: 'center' },
   card: {
     height: 260,
@@ -188,5 +191,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardInner: { alignItems: 'center', gap: 12, paddingHorizontal: Space.m },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m },
+  footer: { paddingHorizontal: 24, paddingBottom: Space.m, gap: 10 },
 });

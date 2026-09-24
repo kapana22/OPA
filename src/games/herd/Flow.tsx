@@ -45,7 +45,7 @@ export function HerdFlow({ roster, onExit }: GameFlowProps) {
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <RulesSheet visible={showRules} title="Herd Mentality" accent={Colors.phosphor} steps={HERD_RULES} onClose={() => setShowRules(false)} />
       <View style={Layout.header}><ScreenHeader title="Herd Mentality" subtitle="კლასიკური · როგორც ყველა" onBack={back} onInfo={() => setShowRules(true)} /></View>
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[Layout.scroll, { gap: 16 }]}>
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[Layout.scroll, { gap: 16, flexGrow: 1 }]}>
         {engine.phase === 'setup' ? <>
           <GlassCard><Text style={textStyle}>ერთი კითხვა — თითოეული ფარულად წერს ერთ პასუხს. იფიქრე, რას დაწერენ სხვები!</Text></GlassCard>
           {!engine.canPlay && <Text style={textStyle}>საჭიროა მინიმუმ 4 მოთამაშე.</Text>}
@@ -59,9 +59,18 @@ export function HerdFlow({ roster, onExit }: GameFlowProps) {
           <GhostButton title="სხვა კითხვა" onPress={() => engine.skipQuestion()} />
         </> : null}
         {engine.phase === 'pass' ? <>
+          <View style={{ flex: 1 }} />
           <PlayerCharacter player={engine.currentVoter} />
-          <Text style={[titleFont(26), { color: Colors.phosphor }]}>გადაეცი {engine.currentVoter?.name}-ს</Text>
-          <Text style={textStyle}>დაწერე პასუხი, რომელსაც სხვებისგანაც ელოდები.</Text>
+          <View style={{ gap: 6 }}>
+            <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+              {engine.currentVoter?.name ?? ''}
+            </Text>
+            <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+          </View>
+          <View style={{ flex: 1 }} />
+          <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8 }]}>
+            დაწერე პასუხი, რომელსაც სხვებისგანაც ელოდები.
+          </Text>
           <PrimaryButton title="ტელეფონი ჩემთანაა" onPress={() => engine.beginWriting()} />
         </> : null}
         {engine.phase === 'writing' ? <Answer key={`${engine.round}:${engine.voterIndex}`} engine={engine} /> : null}
