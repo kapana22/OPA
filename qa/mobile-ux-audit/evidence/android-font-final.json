@@ -1,0 +1,976 @@
+[
+  {
+    "op": "route",
+    "arg": "/game/charades",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წმ",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "90 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "120 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა ერთხელ",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "ყველა ორჯერ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა სამჯერ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დახრის შებრუნება",
+          "role": "switch",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Heads Up",
+        "დრო",
+        "რამდენი ჯერი",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დახრის შებრუნება",
+        "თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ყველა კატეგორია",
+        "Ana",
+        "ტელეფონი შუბლზე",
+        "წინ — გამოვიცანი, უკან — გამოტოვება",
+        "მზად ვარ"
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ყველა კატეგორია",
+        "Ana",
+        "ტელეფონი შუბლზე",
+        "წინ — გამოვიცანი, უკან — გამოტოვება",
+        "მზად ვარ"
+      ]
+    }
+  },
+  {
+    "op": "meta",
+    "result": {
+      "appState": "active",
+      "screen": {
+        "fontScale": 1.5,
+        "height": 914.2857142857143,
+        "scale": 2.625,
+        "width": 411.42857142857144
+      },
+      "window": {
+        "fontScale": 1.5,
+        "height": 914.2857142857143,
+        "scale": 2.625,
+        "width": 411.42857142857144
+      }
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ყველა კატეგორია",
+        "Ana",
+        "ტელეფონი შუბლზე",
+        "წინ — გამოვიცანი, უკან — გამოტოვება",
+        "მზად ვარ"
+      ]
+    }
+  },
+  {
+    "op": "meta",
+    "result": {
+      "appState": "active",
+      "screen": {
+        "fontScale": 1,
+        "height": 914.2857142857143,
+        "scale": 2.625,
+        "width": 411.42857142857144
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 914.2857142857143,
+        "scale": 2.625,
+        "width": 411.42857142857144
+      }
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/game/wordrush",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "45 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Word Rush",
+        "დრო",
+        "წრეები",
+        "ერთი წრე — თითო ჯერი ყველას.",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "30 წამი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "45 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Word Rush",
+        "დრო",
+        "წრეები",
+        "ერთი წრე — თითო ჯერი ყველას.",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "ქართული ტრადიცია",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ქართული ტრადიცია",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 29,
+      "time": 1791064055202
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 27,
+      "time": 1791064059987
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ქართული ტრადიცია",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/game/charades",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წმ",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "90 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "120 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა ერთხელ",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "ყველა ორჯერ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა სამჯერ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დახრის შებრუნება",
+          "role": "switch",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Heads Up",
+        "დრო",
+        "რამდენი ჯერი",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დახრის შებრუნება",
+        "თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება",
+        "დაწყება"
+      ]
+    }
+  }
+]

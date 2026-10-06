@@ -1,0 +1,3 @@
+2026-10-04: cua.getApp("Simulator") after cua.rewriteDocumentation()
+Result: Sky Computer Use native pipe startup failed
+Multiple previous retries returned the same failure. Native physical-touch automation, native AX/VoiceOver and app-switcher inspection are BLOCKED. No alternative mouse/keyboard injector was installed or used. simctl/adb screenshots and app launch plus debug React callback/public ref checks are recorded separately.

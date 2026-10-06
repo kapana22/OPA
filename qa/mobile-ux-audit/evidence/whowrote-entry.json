@@ -1,0 +1,72 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "ყველა, 409 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "😄 მეგობრებში, 89 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🙊 გულახდილად, 87 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🛸 აბსურდი, 89 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🏡 ცხოვრებისეული, 74 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🇬🇪 ქართულად, 70 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Who Wrote It?",
+    "კატეგორიები",
+    "ყველა",
+    "მეგობრებში",
+    "გულახდილად",
+    "აბსურდი",
+    "ცხოვრებისეული",
+    "ქართულად",
+    "დაწყება"
+  ]
+}

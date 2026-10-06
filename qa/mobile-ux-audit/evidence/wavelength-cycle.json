@@ -1,0 +1,3535 @@
+[
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Luka",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "AnaGioN",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "AnaGioN",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Mari",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Luka",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Luka",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Ana",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Mari",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Mari",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "AnaGioN",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Luka",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "AnaGioN",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "AnaGioN",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "4",
+        "3",
+        "2",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Mari",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "4",
+        "3",
+        "2",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "4",
+        "3",
+        "2",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Luka",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Luka",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Ana",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Mari",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Mari",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "AnaGioN",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Luka",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "AnaGioN",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "AnaGioN",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Mari",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შემდეგი გუნდი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Luka",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Luka",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩემთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "სამიზნის სანახავად აქ გეჭიროს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "აშვებისას სამიზნე დაიმალება",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დამალე და გადაეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "სამიზნის სანახავად აქ გეჭიროს",
+        "თქვი ერთი მინიშნება — სიტყვა ან მოკლე ფრაზა.",
+        "დამალე და გადაეცი",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამალე და გადაეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩვენთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე დამალულია",
+        "გადაეცი ტელეფონი თანაგუნდელებს:",
+        "Ana",
+        "ტელეფონი ჩვენთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ტელეფონი ჩვენთანაა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დაფიქსირება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სად ჯდება მინიშნება?",
+        "სამიზნე დამალულია",
+        "ისარი თითით მოატრიალეთ",
+        "შეთანხმდით და ისარი დააყენეთ.",
+        "დაფიქსირება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაფიქსირება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ისრის მარცხნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ისრის მარჯვნივ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?",
+        "სამიზნე დამალულია",
+        "სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.",
+        "ისრის მარცხნივ",
+        "ისრის მარჯვნივ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ისრის მარცხნივ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოაჩინე სამიზნე",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ორივე პასუხი დაფიქსირებულია",
+        "სამიზნე დამალულია",
+        "ეკრანი ყველას აჩვენეთ და ერთად ნახეთ შედეგი.",
+        "გამოაჩინე სამიზნე",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გამოაჩინე სამიზნე",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შედეგები",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შედეგები",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შედეგები",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდი 1",
+        "გუნდი 2",
+        "სამიზნე გახსნილია",
+        "2",
+        "3",
+        "4",
+        "4 ქულა",
+        "3 ქულა",
+        "2 ქულა",
+        "შედეგები",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შედეგები",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "კიდევ ვითამაშოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana · Luka",
+        "გუნდი 1",
+        "გუნდი 2",
+        "კიდევ ვითამაშოთ",
+        "დასრულება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "კიდევ ვითამაშოთ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ტელეფონი ჩემთანაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "დანარჩენებმა ეკრანს არ შეხედოთ.",
+        "ტელეფონი ჩემთანაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  }
+]

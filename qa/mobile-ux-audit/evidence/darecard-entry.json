@@ -1,0 +1,46 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "ოჯახური",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "წვეულება",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ცხარე",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Do or Pay",
+    "სიცხარე",
+    "პირადი კითხვები და თამამი დავალებები — მხოლოდ თავის ხალხში.",
+    "დაწყება"
+  ]
+}

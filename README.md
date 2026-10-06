@@ -1,15 +1,16 @@
 # OPA
 
 ქართული წვეულების თამაშები ერთი ტელეფონით, React Native / Expo SDK 57.
-მთავარ ეკრანზე არის 19 ჩანაწერი; Read the Room აერთიანებს Herd Mentality,
-Where’s the Line? და Rate Them რეჟიმებს.
+ერთადერთი აპი, მხოლოდ Android-ისა და iOS-ისთვის.
+კატალოგში არის 21 დამოუკიდებელი თამაში, საკუთარი ქარდით, წესებითა და ნაკადით.
 
 კლასიკური Wavelength: ორი გუნდი, ნახევარწრიული დისკი, ფარული სამიზნე,
 მეტოქის მარცხენა/მარჯვენა ვარაუდი და 10 ქულამდე თამაში.
-კლასიკური Herd: თავისუფალი პასუხები, ვარდისფერი ძროხა და 8 ქულამდე თამაში.
+Herd Mentality-ში პასუხები ხმამაღლა ითქმის; Most Likely-ში მოთამაშეები ხელს
+იშვერენ; The Line თავისუფალი განხილვაა. ამ თამაშებში ხმის მიცემა და ქულები არ არის.
 
 OPA-ს ვიზუალი: მუქი იისფერი ფონი, ფოსფორისფერი აქცენტები, 3D პოსტერები
-და 12 გამჭვირვალე PNG პერსონაჟი. ორიგინალი სიტყვების ბანკი უცვლელია.
+და 12 გამჭვირვალე PNG პერსონაჟი. თამაშების პოსტერი 3:4 პროპორციას ინარჩუნებს.
 
 ---
 
@@ -18,14 +19,14 @@ OPA-ს ვიზუალი: მუქი იისფერი ფონი, 
 ```bash
 npm install
 npx expo start          # ტელეფონზე — Expo Go ან dev build
-npx expo start --web    # ბრაუზერში
 ```
 
 ტესტები და ტიპები:
 
 ```bash
 npm test                # თამაშის ლოგიკისა და პერსონაჟების ტესტები
-npx tsc --noEmit
+npm run typecheck
+npm run lint
 ```
 
 ---
@@ -36,10 +37,9 @@ npx tsc --noEmit
 საჭირო არაა — მხოლოდ მაშინ, თუ `app.json`-ის ნატიური ნაწილი შეიცვალა
 (ვერსია, ხატულა, splash, ნებართვები, პლაგინები).
 
-> `prebuild` `ios/`-ში `Podfile.lock`-ს, `PrivacyInfo.xcprivacy`-ს და
-> `project.pbxproj`-ს თავიდან წერს. გაშვების შემდეგ ისინი git-იდან დააბრუნე
-> (`git checkout -- ios/Podfile.lock ios/megobrebi/PrivacyInfo.xcprivacy`)
-> და `pod install` გაუშვი.
+> `prebuild` ნატიურ ფაილებს თავიდან წერს. ჯერ შეინახე მიმდინარე ცვლილებები და
+> შეადარე მიღებული diff; ავტომატური `git checkout` მომხმარებლის სამუშაოს წაშლის.
+> შეინარჩუნე საჭირო ნატიური ცვლილებები და შემდეგ გაუშვი `pod install`.
 
 ### მაღაზიისთვის ვერსიის აწევა
 
@@ -50,12 +50,32 @@ npx tsc --noEmit
 
 ### Android
 
+სისტემური შრიფტის შეცვლა მიმდინარე თამაშს აღარ გადატვირთავს: `fontScale`
+არის `MainActivity`-ის კონფიგურაციაში და მას prebuild-ისას
+`plugins/withRuntimeFontScale.js` ინარჩუნებს. პროცესი თუ შეწყდა, პარტიის
+ავტომატური აღდგენა ამ ცვლილების დაპირება არ არის.
+
+Debug build Metro-ს იყენებს. `MainApplication.kt`-ში Expo host-ს გადაეცემა
+აპის `BuildConfig.DEBUG`; ბიბლიოთეკის default build flag-მა შეიძლება Debug-შიც
+ძველი ჩაშენებული JS ჩატვირთოს. Release-ში developer support გამორთულია.
+
 ```bash
 export JAVA_HOME=/opt/homebrew/opt/openjdk@17
 export ANDROID_HOME=$HOME/Library/Android/sdk
 cd android && ./gradlew assembleRelease
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
+
+QA რუკა და მტკიცებულებები: [qa/mobile-ux-audit/report.md](qa/mobile-ux-audit/report.md)
+და [coverage.md](qa/mobile-ux-audit/coverage.md). შემდგომი ცვლილებების აუცილებელი
+ლოგიკური წესები წერია [AGENTS.md](AGENTS.md)-ში.
+
+კონტენტის ერთადერთი წყაროა `src/content/banks.generated.json` და
+`src/content/games/*.json`. სახელში `generated` ისტორიულია; ფაილი ახლა
+პირდაპირ რედაქტირდება `../Tools/word-editor`-ით. Swift წყარო აღარ გამოიყენება.
+`npm run validate:content` ამოწმებს JSON-ის ფორმატს; ძველი `gen:content`
+ბრძანებაც ამავე შემოწმებას აკეთებს და ტექსტებს არ გადაწერს.
+`TruthDareBank`-ის ფორმატია `{ heat, truths, dares }`.
 
 ### iOS
 
@@ -118,10 +138,10 @@ debug-ხელმოწერაზე ბრუნდება: არ წყ�
 ```
 app/            expo-router-ის მარშრუტები (6 ეკრანი)
 src/core/       საერთო ლოგიკა — საცავი, ხმა, ჰაპტიკა, სენსორი, როსტერი
-src/content/    6,764 ერთეული — Swift-იდან სკრიპტით ამოღებული
-src/games/      19 საქაღალდე: engine.ts + Flow.tsx
+src/content/    JSON კონტენტი — აპისა და რედაქტორის საერთო წყარო
+src/games/      21 თამაში: engine.ts + Flow.tsx
 src/ui/         საერთო კომპონენტები
-tools/          extract-banks.mjs · gen-sounds.mjs
+tools/          validate-content.mjs · gen-sounds.mjs
 tests/          Vitest — ძრავები React-ისა და ნატიური მოდულების გარეშე
 ```
 

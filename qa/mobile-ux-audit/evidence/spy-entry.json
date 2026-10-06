@@ -1,0 +1,220 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "შემცირება",
+      "role": "button",
+      "state": {
+        "disabled": true
+      }
+    },
+    {
+      "label": "გაზრდა",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    },
+    {
+      "label": "მისტერ უაითი",
+      "role": "switch",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "შემთხვევითი, 632 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🍕 საკვები და სასმელი, 54 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🍇 ქართული სუფრა, 30 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🐾 ცხოველები და ბუნება, 60 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "📍 ადგილები, 51 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "💼 პროფესიები, 43 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "🏠 ნივთები, 50 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "⚽️ სპორტი და თამაშები, 41 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🎭 მუსიკა და ხელოვნება, 44 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "✈️ ტრანსპორტი და მოგზაურობა, 35 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🏙 ქალაქი და უბანი, 34 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "👨‍👩‍👧 ოჯახი და ნათესავები, 30 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "📱 ტექნიკა და ინტერნეტი, 32 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "🌦 ამინდი და სეზონები, 31 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🚀 კოსმოსი, 31 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🙂 ემოციები, 40 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "📱 ინტერნეტი და აპები, 33 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "∞",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "1:00",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "2:00",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "3:00",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "5:00",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "თამაშის დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Spyfall",
+    "ჯაშუშები",
+    "მისტერ უაითი",
+    "სიტყვა საერთოდ არ აქვს — ბლეფით უნდა გაძლოს",
+    "კატეგორიები",
+    "შემთხვევითი",
+    "საკვები და სასმელი",
+    "ქართული სუფრა",
+    "ცხოველები და ბუნება",
+    "ადგილები",
+    "პროფესიები",
+    "ნივთები",
+    "სპორტი და თამაშები",
+    "მუსიკა და ხელოვნება",
+    "ტრანსპორტი და მოგზაურობა",
+    "ქალაქი და უბანი",
+    "ოჯახი და ნათესავები",
+    "ტექნიკა და ინტერნეტი",
+    "ამინდი და სეზონები",
+    "კოსმოსი",
+    "ემოციები",
+    "ინტერნეტი და აპები",
+    "განხილვის დრო",
+    "თამაშის დაწყება"
+  ]
+}

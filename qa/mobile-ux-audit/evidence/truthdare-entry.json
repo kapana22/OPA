@@ -1,0 +1,61 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "ოჯახური",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "წვეულება",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "ცხარე",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ბოთლით",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "რიგით",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Truth or Dare",
+    "დონე",
+    "მეგობრებში, ხმაურით — ოდნავ უხერხული, მაგრამ უსაფრთხო.",
+    "ვის ერგება ჯერი",
+    "დაწყება"
+  ]
+}

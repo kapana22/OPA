@@ -1,0 +1,134 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "60 წამი",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "90 წამი",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "120 წამი",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა ერთხელ",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "ყველა ორჯერ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა სამჯერ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა, 452 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "🇬🇪 ქართული, 82 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🌍 მსოფლიო, 81 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🧰 პროფესიები, 97 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🐘 ცხოველები, 106 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🎈 პერსონაჟები, 86 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "გამოტოვების ჯარიმა",
+      "role": "switch",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დახრის შებრუნება",
+      "role": "switch",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Who Am I?",
+    "დრო",
+    "ჯერები",
+    "კატეგორიები",
+    "ყველა",
+    "ქართული",
+    "მსოფლიო",
+    "პროფესიები",
+    "ცხოველები",
+    "პერსონაჟები",
+    "გამოტოვების ჯარიმა",
+    "გამოტოვებული სახელი −1 ქულაა",
+    "დახრის შებრუნება",
+    "თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება",
+    "დაწყება"
+  ]
+}

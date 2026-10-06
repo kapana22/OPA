@@ -1,0 +1,1130 @@
+[
+  {
+    "op": "route",
+    "arg": "/game/impostor",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "შემცირება",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        },
+        {
+          "label": "გაზრდა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "შემთხვევითი, 2165 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍕 საკვები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥘 ქართული კერძები, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍎 ხილი და ბოსტნეული, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐾 ცხოველები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌿 ბუნება, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌍 ქვეყნები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🗽 ცნობილი ადგილები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📍 ადგილები, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🇬🇪 საქართველო, 43 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "💼 პროფესიები, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⚽️ სპორტი, 42 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏠 სახლის ნივთები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎒 სკოლა, 99 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎵 მუსიკა, 85 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚗 ტრანსპორტი, 72 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👗 ტანსაცმელი, 89 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ტექნოლოგია, 94 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 87 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📖 ზღაპრები, 60 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎲 სათამაშოები, 69 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥤 სასმელები, 65 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🖐 სხეული, 106 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🔧 ხელსაწყოები, 62 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👵 ოჯახი და ნათესავები, 64 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 დღესასწაულები, 47 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌦 ამინდი და სეზონები, 57 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚀 კოსმოსი, 55 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌊 ზღვა და მდინარე, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🙂 ემოციები და ხასიათი, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍳 სამზარეულო, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ინტერნეტი და აპები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐉 მითები და ჯადოქრობა, 54 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🩺 ჯანმრთელობა, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "∞",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "1:00",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "2:00",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3:00",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "5:00",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "იმპოსტორმა კატეგორია იცოდეს",
+          "role": "switch",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "დაჭერილ იმპოსტორს ბოლო შანსი ჰქონდეს",
+          "role": "switch",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "რაუნდის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Imposter",
+        "იმპოსტორები",
+        "კატეგორიები",
+        "შემთხვევითი",
+        "საკვები",
+        "ქართული კერძები",
+        "ხილი და ბოსტნეული",
+        "ცხოველები",
+        "ბუნება",
+        "ქვეყნები",
+        "ცნობილი ადგილები",
+        "ადგილები",
+        "საქართველო",
+        "პროფესიები",
+        "სპორტი",
+        "სახლის ნივთები",
+        "სკოლა",
+        "მუსიკა",
+        "ტრანსპორტი",
+        "ტანსაცმელი",
+        "ტექნოლოგია",
+        "ფილმები",
+        "ზღაპრები",
+        "სათამაშოები",
+        "სასმელები",
+        "სხეული",
+        "ხელსაწყოები",
+        "ოჯახი და ნათესავები",
+        "დღესასწაულები",
+        "ამინდი და სეზონები",
+        "კოსმოსი",
+        "ზღვა და მდინარე",
+        "ემოციები და ხასიათი",
+        "სამზარეულო",
+        "ინტერნეტი და აპები",
+        "მითები და ჯადოქრობა",
+        "ჯანმრთელობა",
+        "განხილვის დრო",
+        "იმპოსტორმა კატეგორია იცოდეს",
+        "უფრო სამართლიანია დამწყებთათვის",
+        "დაჭერილ იმპოსტორს ბოლო შანსი ჰქონდეს",
+        "სიტყვა უნდა გამოიცნოს",
+        "რაუნდის დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "რაუნდის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მე ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ნინო",
+        "დანარჩენებო, ეკრანს ნუ უყურებთ",
+        "მე ვარ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "მე ვარ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ნინო",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "დახურული ბარათი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ნინო",
+        "სკოლა",
+        "ალგებრა",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ნინო",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ვნახე — შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მე ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "გიორგი",
+        "დანარჩენებო, ეკრანს ნუ უყურებთ",
+        "მე ვარ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "მე ვარ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "გიორგი",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "დახურული ბარათი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "გიორგი",
+        "სკოლა",
+        "ალგებრა",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "გიორგი",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ვნახე — შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მე ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ანა",
+        "დანარჩენებო, ეკრანს ნუ უყურებთ",
+        "მე ვარ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "მე ვარ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ანა",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "დახურული ბარათი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ანა",
+        "სკოლა",
+        "იმპოსტორი ხარ",
+        "ილაპარაკე ისე, თითქოს იცოდე.",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ანა",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ვნახე — შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მე ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ლუკა",
+        "დანარჩენებო, ეკრანს ნუ უყურებთ",
+        "მე ვარ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "მე ვარ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ლუკა",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "დახურული ბარათი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ლუკა",
+        "სკოლა",
+        "ალგებრა",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "ლუკა",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ვნახე — შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მე ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "მარიამ",
+        "დანარჩენებო, ეკრანს ნუ უყურებთ",
+        "მე ვარ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "მე ვარ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "მარიამ",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "დახურული ბარათი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "მარიამ",
+        "სკოლა",
+        "ალგებრა",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "მარიამ",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — შემდეგი"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ვნახე — შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მე ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "დათო",
+        "დანარჩენებო, ეკრანს ნუ უყურებთ",
+        "მე ვარ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "მე ვარ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "დათო",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "hold",
+    "arg": "დახურული ბარათი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "დათო",
+        "სკოლა",
+        "ალგებრა",
+        "ვნახე — დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "release",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ვნახე — დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 1",
+        "დათო",
+        "დააჭირე და გეჭიროს",
+        "ხელს აიღებ — მაშინვე გაქრება",
+        "ვნახე — დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ვნახე — დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "პასუხის ნახვა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "თითოეული თითო სიტყვას ამბობს",
+        "იწყებს",
+        "დათო",
+        "პასუხის ნახვა"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "პასუხის ნახვა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დიახ, ბოლო შანსი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "არა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "იმპოსტორი დაიჭირეთ?",
+        "თუ კი, ტელეფონი მას გადაეცით.",
+        "დიახ, ბოლო შანსი",
+        "არა"
+      ]
+    }
+  },
+  {
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "დიახ, ბოლო შანსი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "არა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "იმპოსტორი დაიჭირეთ?",
+        "თუ კი, ტელეფონი მას გადაეცით.",
+        "დიახ, ბოლო შანსი",
+        "არა"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "არა",
+    "result": {
+      "controls": [
+        {
+          "label": "შემდეგი რაუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "იმპოსტორმა გაასწრო!",
+        "საიდუმლო სიტყვა",
+        "ალგებრა",
+        "კატეგორია",
+        "🎒 სკოლა",
+        "იმპოსტორი",
+        "ანა",
+        "შემდეგი რაუნდი",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი რაუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მე ვარ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი 2",
+        "ნინო",
+        "დანარჩენებო, ეკრანს ნუ უყურებთ",
+        "მე ვარ"
+      ]
+    }
+  }
+]

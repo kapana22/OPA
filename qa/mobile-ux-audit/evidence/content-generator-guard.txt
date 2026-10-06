@@ -1,0 +1,16 @@
+{"exit":1,"unchanged":true}
+❌ ამოღება შეჩერდა:
+  · RuleCardBank: ექსპორტში 62, აქ 100
+  · StandardsBank: ექსპორტშია, ამოღებაში — არა
+  · TenButBank: ექსპორტშია, ამოღებაში — არა
+  · StandardsBank/couple: ექსპორტშია, ამოღებაში — არა
+  · StandardsBank/friends: ექსპორტშია, ამოღებაში — არა
+  · StandardsBank/family: ექსპორტშია, ამოღებაში — არა
+  · StandardsBank/absurd: ექსპორტშია, ამოღებაში — არა
+  · StandardsBank/work: ექსპორტშია, ამოღებაში — არა
+  · TenButBank/daily: ექსპორტშია, ამოღებაში — არა
+  · TenButBank/georgia: ექსპორტშია, ამოღებაში — არა
+  · TenButBank/friends: ექსპორტშია, ამოღებაში — არა
+  · TenButBank/absurd: ექსპორტშია, ამოღებაში — არა
+  · TenButBank/date: ექსპორტშია, ამოღებაში — არა
+  · TruthDareBank: Swift-ის წყაროს აკლია 60 არსებული ტექსტი. ჯერ შეათანხმე წყარო; მიმდინარე JSON არ გადაიწერება.

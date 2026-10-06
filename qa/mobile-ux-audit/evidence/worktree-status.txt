@@ -1,0 +1,177 @@
+ M AGENTS.md
+ M README.md
+ M android/app/src/main/AndroidManifest.xml
+ M android/app/src/main/java/ge/splash/megobrebi/MainApplication.kt
+ M android/app/src/main/res/drawable-hdpi/splashscreen_logo.png
+ M android/app/src/main/res/drawable-mdpi/splashscreen_logo.png
+ M android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png
+ M android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png
+ M android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png
+ M app.json
+ M app/_layout.tsx
+ M app/games.tsx
+ M app/index.tsx
+ D app/night.tsx
+ M app/players.tsx
+ D app/scoreboard.tsx
+ M app/settings.tsx
+ M ios/Podfile.lock
+ M ios/megobrebi.xcodeproj/project.pbxproj
+ M ios/megobrebi/AppDelegate.swift
+ M src/content/banks.generated.json
+ M src/content/banks.ts
+ D src/core/partyForfeit.ts
+ D src/core/podiumAward.ts
+ M src/core/roster.ts
+ M src/core/settings.ts
+ M src/core/sound.ts
+ M src/games/alias/Flow.tsx
+ M src/games/alias/engine.ts
+ M src/games/artwork.ts
+ M src/games/bomb/Flow.tsx
+ M src/games/bomb/engine.ts
+ M src/games/catalog.data.json
+ M src/games/categoryEntries.ts
+ M src/games/charades/Flow.tsx
+ M src/games/charades/engine.ts
+ M src/games/darecard/Flow.tsx
+ M src/games/darecard/engine.ts
+ M src/games/flows.ts
+ D src/games/groups.ts
+ M src/games/herd/Flow.tsx
+ M src/games/herd/engine.ts
+ M src/games/herd/questions.ts
+ M src/games/impostor/Flow.tsx
+ M src/games/impostor/engine.ts
+ M src/games/mafia/Flow.tsx
+ M src/games/mafia/engine.ts
+ M src/games/mostlikely/Flow.tsx
+ M src/games/mostlikely/engine.ts
+ M src/games/never/Flow.tsx
+ M src/games/never/engine.ts
+ M src/games/nolaugh/Flow.tsx
+ M src/games/nolaugh/engine.ts
+ D src/games/pointone/Flow.tsx
+ D src/games/pointone/engine.ts
+ M src/games/rulecard/Flow.tsx
+ M src/games/rulecard/engine.ts
+ M src/games/spy/Flow.tsx
+ M src/games/spy/engine.ts
+ M src/games/standards/Flow.tsx
+ M src/games/standards/engine.ts
+ D src/games/tableread/Flow.tsx
+ M src/games/tenbut/Flow.tsx
+ M src/games/tenbut/engine.ts
+ M src/games/truthdare/Flow.tsx
+ M src/games/truthdare/engine.ts
+ M src/games/twotruths/Flow.tsx
+ M src/games/twotruths/engine.ts
+ M src/games/wavelength/Flow.tsx
+ M src/games/wavelength/engine.ts
+ M src/games/whoami/Flow.tsx
+ M src/games/whoami/engine.ts
+ M src/games/whowrote/Flow.tsx
+ M src/games/whowrote/engine.ts
+ M src/games/wordrush/Flow.tsx
+ M src/games/wordrush/engine.ts
+ M src/state/state.tsx
+ M src/theme/theme.ts
+ M src/ui/Buttons.tsx
+ M src/ui/Cards.tsx
+ M src/ui/CharacterPicker.tsx
+ M src/ui/Dialog.tsx
+ M src/ui/GameTile.tsx
+ M src/ui/Icon.tsx
+ M src/ui/Onboarding.tsx
+ M src/ui/PageHeader.tsx
+ M src/ui/PassPhoneReveal.tsx
+ M src/ui/PlayerAvatarView.tsx
+ M src/ui/PlayerCharacter.tsx
+ M src/ui/Pressable.tsx
+ M src/ui/SplashBackground.tsx
+ D src/ui/SummaryAwards.tsx
+ M src/ui/layout.ts
+ M src/ui/patternGlyphs.ts
+ M tests/audit-gameLogic.test.ts
+ M tests/audit-groupC.test.ts
+ M tests/audit-groupD.test.ts
+ M tests/audit-groupE.test.ts
+ M tests/characters.test.ts
+ M tests/classicHerd.test.ts
+ M tests/content.test.ts
+ M tests/engines.test.ts
+ M tests/fixes.test.ts
+ M tests/gameLogicFixes.test.ts
+ M tests/gameOptions.test.ts
+ M tests/rosterAudit.test.ts
+ M tests/wavelength.test.ts
+ M tests/zero.test.ts
+ M tools/extract-banks.mjs
+?? assets/backgrounds/
+?? assets/game-cards/opa-alias-tt-v2.jpg
+?? assets/game-cards/opa-alias-v3.jpg
+?? assets/game-cards/opa-bomb-tt-v1.jpg
+?? assets/game-cards/opa-charades-tt-v2.jpg
+?? assets/game-cards/opa-charades-v3.jpg
+?? assets/game-cards/opa-darecard-tt-v1.jpg
+?? assets/game-cards/opa-herd-tt-v1.jpg
+?? assets/game-cards/opa-herd-v1.jpg
+?? assets/game-cards/opa-herd-v2.jpg
+?? assets/game-cards/opa-impostor-tt-v1.jpg
+?? assets/game-cards/opa-mafia-tt-v1.jpg
+?? assets/game-cards/opa-mostlikely-tt-v1.jpg
+?? assets/game-cards/opa-never-tt-v1.jpg
+?? assets/game-cards/opa-nolaugh-tt-v1.jpg
+?? assets/game-cards/opa-nolaugh-v2.jpg
+?? assets/game-cards/opa-noyesno-tt-v1.jpg
+?? assets/game-cards/opa-noyesno-v1.jpg
+?? assets/game-cards/opa-pointone-v2.jpg
+?? assets/game-cards/opa-rulecard-tt-v1.jpg
+?? assets/game-cards/opa-rulecard-v2.jpg
+?? assets/game-cards/opa-spy-tt-v1.jpg
+?? assets/game-cards/opa-spyfall-v3.jpg
+?? assets/game-cards/opa-standards-tt-v1.jpg
+?? assets/game-cards/opa-standards-v1.jpg
+?? assets/game-cards/opa-standards-v2.jpg
+?? assets/game-cards/opa-tenbut-tt-v1.jpg
+?? assets/game-cards/opa-tenbut-v1.jpg
+?? assets/game-cards/opa-tenbut-v2.jpg
+?? assets/game-cards/opa-truthdare-tt-v1.jpg
+?? assets/game-cards/opa-twotruths-tt-v2.jpg
+?? assets/game-cards/opa-twotruths-v2.jpg
+?? assets/game-cards/opa-wavelength-tt-v1.jpg
+?? assets/game-cards/opa-wavelength-v2.jpg
+?? assets/game-cards/opa-whoami-tt-v2.jpg
+?? assets/game-cards/opa-whowrote-tt-v1.jpg
+?? assets/game-cards/opa-wordrush-tt-v1.jpg
+?? assets/music/
+?? build-simulator/
+?? design/
+?? plugins/withRuntimeFontScale.js
+?? qa/
+?? src/content/gameTextCategories.ts
+?? src/content/games/
+?? src/core/privateReveal.ts
+?? src/core/startupTiming.ts
+?? src/games/mafia/narration.ts
+?? src/games/noyesno/
+?? src/theme/responsive.ts
+?? src/ui/ChargePicker.tsx
+?? src/ui/FitText.tsx
+?? src/ui/GamePattern.tsx
+?? src/ui/LaunchAnimation.tsx
+?? src/ui/categoryPresentation.ts
+?? src/ui/gamePatternData.ts
+?? src/ui/modalOrientations.ts
+?? src/ui/patternSketches.ts
+?? tests/categorySelection.test.ts
+?? tests/editorTruthDare.test.ts
+?? tests/funOptions.test.ts
+?? tests/gamePattern.test.ts
+?? tests/noyesno.test.ts
+?? tests/privateReveal.test.ts
+?? tests/responsive.test.ts
+?? tests/restoredOptions.test.ts
+?? tests/runtimeFontScale.test.ts
+?? tests/sound.test.ts
+?? tests/standalone-games.test.ts

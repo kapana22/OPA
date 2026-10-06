@@ -1,0 +1,72 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "ყველა, 276 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "☕️ ყოველდღიური, 66 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🏠 სახლში და ოჯახში, 50 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "✈️ მოგზაურობა, 65 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🎒 სკოლა და სამსახური, 57 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🍽 სუფრა და სტუმრობა, 38 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Never Have I Ever",
+    "კატეგორიები",
+    "ყველა",
+    "ყოველდღიური",
+    "სახლში და ოჯახში",
+    "მოგზაურობა",
+    "სკოლა და სამსახური",
+    "სუფრა და სტუმრობა",
+    "დაწყება"
+  ]
+}

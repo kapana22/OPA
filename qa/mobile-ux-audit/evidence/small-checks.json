@@ -1,0 +1,4202 @@
+[
+  {
+    "op": "route",
+    "arg": "/",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშის ძიება",
+          "role": "button"
+        },
+        {
+          "label": "Heads Up. შუბლზე დაიდე და გამოიცანი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Heads Up",
+          "role": "button"
+        },
+        {
+          "label": "Most Likely. ვის შეეფერება ეს აღწერა?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Most Likely",
+          "role": "button"
+        },
+        {
+          "label": "Imposter. გამოიცანი, ვინ ბლეფობს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Imposter",
+          "role": "button"
+        },
+        {
+          "label": "Truth or Dare. სიმართლე თუ მოქმედება?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Truth or Dare",
+          "role": "button"
+        },
+        {
+          "label": "Spyfall. იპოვე, ვის აქვს სხვა სიტყვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Spyfall",
+          "role": "button"
+        },
+        {
+          "label": "Bomb Party. თქვი სიტყვა და გადაეცი ტელეფონი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Bomb Party",
+          "role": "button"
+        },
+        {
+          "label": "No Yes No. უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — No Yes No",
+          "role": "button"
+        },
+        {
+          "label": "Don't Laugh. ეცადე, არ გაგეცინოს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Don't Laugh",
+          "role": "button"
+        },
+        {
+          "label": "Alias. აუხსენი სიტყვა შენს გუნდს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Alias",
+          "role": "button"
+        },
+        {
+          "label": "Who Am I?. კითხვებით გამოიცანი, ვინ ხარ.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Am I?",
+          "role": "button"
+        },
+        {
+          "label": "Word Rush. რამდენ სიტყვას მოასწრებ?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Word Rush",
+          "role": "button"
+        },
+        {
+          "label": "Mafia. გამოიცანი, ვინ არის მაფია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Mafia",
+          "role": "button"
+        },
+        {
+          "label": "Who Wrote It?. გამოიცანი, ვინ დაწერა პასუხი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Wrote It?",
+          "role": "button"
+        },
+        {
+          "label": "2 Truths, 1 Lie. სამი ამბიდან რომელია ტყუილი?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — 2 Truths, 1 Lie",
+          "role": "button"
+        },
+        {
+          "label": "Herd Mentality. უპასუხე ისე, როგორც უმრავლესობა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Herd Mentality",
+          "role": "button"
+        },
+        {
+          "label": "The Line. ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — The Line",
+          "role": "button"
+        },
+        {
+          "label": "Rate Them. გამოიცანი მეგობრის შეფასება.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Rate Them",
+          "role": "button"
+        },
+        {
+          "label": "Wavelength. გამოიცანით ადგილი შკალაზე.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Wavelength",
+          "role": "button"
+        },
+        {
+          "label": "Never Have I Ever. აღიარე, თუ შენც გაგიკეთებია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Never Have I Ever",
+          "role": "button"
+        },
+        {
+          "label": "House Rules. დაიმახსოვრე და დაიცავი წესები.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — House Rules",
+          "role": "button"
+        },
+        {
+          "label": "Do or Pay. შეასრულე დავალება ან მიიღე ჯარიმა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "მოთამაშეები",
+          "role": "button"
+        },
+        {
+          "label": "პარამეტრები",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ᲠᲐᲡ ᲕᲘᲗᲐᲛᲐᲨᲔᲑᲗ?",
+        "ᲞᲝᲞᲣᲚᲐᲠᲣᲚᲘ",
+        "შუბლზე დაიდე და გამოიცანი.",
+        "ვის შეეფერება ეს აღწერა?",
+        "გამოიცანი, ვინ ბლეფობს.",
+        "სიმართლე თუ მოქმედება?",
+        "იპოვე, ვის აქვს სხვა სიტყვა.",
+        "თქვი სიტყვა და გადაეცი ტელეფონი.",
+        "ᲮᲛᲐᲣᲠᲘ ᲓᲐ ᲡᲘᲡᲬᲠᲐᲤᲔ",
+        "7",
+        "უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+        "ეცადე, არ გაგეცინოს.",
+        "აუხსენი სიტყვა შენს გუნდს.",
+        "კითხვებით გამოიცანი, ვინ ხარ.",
+        "რამდენ სიტყვას მოასწრებ?",
+        "ᲑᲚᲔᲤᲘ ᲓᲐ ᲒᲐᲛᲝᲪᲜᲝᲑᲐ",
+        "5",
+        "გამოიცანი, ვინ არის მაფია.",
+        "გამოიცანი, ვინ დაწერა პასუხი.",
+        "სამი ამბიდან რომელია ტყუილი?",
+        "ᲛᲐᲒᲘᲓᲘᲡ ᲙᲘᲗᲮᲕᲐ",
+        "უპასუხე ისე, როგორც უმრავლესობა.",
+        "ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+        "გამოიცანი მეგობრის შეფასება.",
+        "გამოიცანით ადგილი შკალაზე.",
+        "ᲒᲣᲚᲐᲮᲓᲘᲚᲐᲓ",
+        "4",
+        "აღიარე, თუ შენც გაგიკეთებია.",
+        "დაიმახსოვრე და დაიცავი წესები.",
+        "შეასრულე დავალება ან მიიღე ჯარიმა.",
+        "თამაშები",
+        "მოთამაშე",
+        "მართვა"
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/games",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "No Yes No. უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — No Yes No",
+          "role": "button"
+        },
+        {
+          "label": "Herd Mentality. უპასუხე ისე, როგორც უმრავლესობა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Herd Mentality",
+          "role": "button"
+        },
+        {
+          "label": "The Line. ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — The Line",
+          "role": "button"
+        },
+        {
+          "label": "Rate Them. გამოიცანი მეგობრის შეფასება.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Rate Them",
+          "role": "button"
+        },
+        {
+          "label": "House Rules. დაიმახსოვრე და დაიცავი წესები.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — House Rules",
+          "role": "button"
+        },
+        {
+          "label": "Do or Pay. შეასრულე დავალება ან მიიღე ჯარიმა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "Most Likely. ვის შეეფერება ეს აღწერა?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Most Likely",
+          "role": "button"
+        },
+        {
+          "label": "Imposter. გამოიცანი, ვინ ბლეფობს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Imposter",
+          "role": "button"
+        },
+        {
+          "label": "Spyfall. იპოვე, ვის აქვს სხვა სიტყვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Spyfall",
+          "role": "button"
+        },
+        {
+          "label": "Heads Up. შუბლზე დაიდე და გამოიცანი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Heads Up",
+          "role": "button"
+        },
+        {
+          "label": "Bomb Party. თქვი სიტყვა და გადაეცი ტელეფონი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Bomb Party",
+          "role": "button"
+        },
+        {
+          "label": "Mafia. გამოიცანი, ვინ არის მაფია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Mafia",
+          "role": "button"
+        },
+        {
+          "label": "Who Wrote It?. გამოიცანი, ვინ დაწერა პასუხი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Wrote It?",
+          "role": "button"
+        },
+        {
+          "label": "2 Truths, 1 Lie. სამი ამბიდან რომელია ტყუილი?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — 2 Truths, 1 Lie",
+          "role": "button"
+        },
+        {
+          "label": "Never Have I Ever. აღიარე, თუ შენც გაგიკეთებია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Never Have I Ever",
+          "role": "button"
+        },
+        {
+          "label": "Don't Laugh. ეცადე, არ გაგეცინოს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Don't Laugh",
+          "role": "button"
+        },
+        {
+          "label": "Alias. აუხსენი სიტყვა შენს გუნდს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Alias",
+          "role": "button"
+        },
+        {
+          "label": "Wavelength. გამოიცანით ადგილი შკალაზე.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Wavelength",
+          "role": "button"
+        },
+        {
+          "label": "Who Am I?. კითხვებით გამოიცანი, ვინ ხარ.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Am I?",
+          "role": "button"
+        },
+        {
+          "label": "Word Rush. რამდენ სიტყვას მოასწრებ?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Word Rush",
+          "role": "button"
+        },
+        {
+          "label": "Truth or Dare. სიმართლე თუ მოქმედება?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Truth or Dare",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ყველა თამაში",
+        "21 თამაში",
+        "ყველა",
+        "ჩვენს კომპანიას",
+        "10-15 წუთი",
+        "ჩუმი",
+        "ბლეფი და გამოცნობა",
+        "ხმაური და სისწრაფე",
+        "მაგიდის კითხვა",
+        "გულახდილად",
+        "21 ᲗᲐᲛᲐᲨᲘ",
+        "უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+        "უპასუხე ისე, როგორც უმრავლესობა.",
+        "ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+        "გამოიცანი მეგობრის შეფასება.",
+        "დაიმახსოვრე და დაიცავი წესები.",
+        "შეასრულე დავალება ან მიიღე ჯარიმა.",
+        "ვის შეეფერება ეს აღწერა?",
+        "გამოიცანი, ვინ ბლეფობს.",
+        "იპოვე, ვის აქვს სხვა სიტყვა.",
+        "შუბლზე დაიდე და გამოიცანი.",
+        "თქვი სიტყვა და გადაეცი ტელეფონი.",
+        "გამოიცანი, ვინ არის მაფია.",
+        "გამოიცანი, ვინ დაწერა პასუხი.",
+        "სამი ამბიდან რომელია ტყუილი?",
+        "აღიარე, თუ შენც გაგიკეთებია.",
+        "ეცადე, არ გაგეცინოს.",
+        "აუხსენი სიტყვა შენს გუნდს.",
+        "გამოიცანით ადგილი შკალაზე.",
+        "კითხვებით გამოიცანი, ვინ ხარ.",
+        "რამდენ სიტყვას მოასწრებ?",
+        "სიმართლე თუ მოქმედება?"
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/settings",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "მოსმენა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "კონტენტის მეხსიერების განულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზადაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "პარამეტრები",
+        "ხმა",
+        "ტაიმერის ტკაცუნი, აფეთქება, გამარჯვება",
+        "ვიბრაცია",
+        "ყოველი შეხება და რაუნდის დასასრული",
+        "მოსმენა",
+        "აპს ახსოვს, რომელი სიტყვები და კითხვები უკვე ითამაშეთ, და გამეორებამდე მთელ კატეგორიას გადის.",
+        "კონტენტის მეხსიერების განულება",
+        "მზადაა"
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/rules/mafia",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "გასაგებია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "წესები",
+        "იპოვეთ მაფია წამყვანის გარეშე.",
+        "4–12",
+        "~25 წთ",
+        "ცოცხალი",
+        "აირჩიე, რამდენი მაფიაა და ითამაშებს თუ არა ექიმი და დეტექტივი.",
+        "ტელეფონი წრეზე გადაეცით, თითოეული ფარულად ნახავს როლს.",
+        "ღამით ტელეფონი შუაში დადეთ და თვალები დახუჭეთ. აპი თვითონ გააღვიძებს, ვისაც საჭიროა.",
+        "დილით აპი იტყვის, ვინ დაიღუპა.",
+        "ერთად იმსჯელეთ და აირჩიეთ, ვინ გააძევოთ.",
+        "ქალაქი იგებს, თუ მაფიას გააძევებს. მაფია იგებს, თუ ქალაქს რაოდენობით გაუტოლდება.",
+        "გასაგებია"
+      ]
+    }
+  },
+  {
+    "op": "scroll",
+    "arg": "900",
+    "result": {
+      "scrolled": true
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/players",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ალექსანდრე გიორგაძე",
+        "👦",
+        "ანა-მარიამი",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დალაგება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "მზადაა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        },
+        {
+          "label": "ნინო — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "ისრებით დაალაგე სუფრის რიგზე",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲛᲖᲐᲓᲐᲐ",
+        "ნინო",
+        "ალექსანდრე გიორგაძე",
+        "ანა-მარიამი",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ალექსანდრე გიორგაძე — ქვემოთ",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "მზადაა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        },
+        {
+          "label": "ნინო — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — ზემოთ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — ქვემოთ",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "ისრებით დაალაგე სუფრის რიგზე",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲛᲖᲐᲓᲐᲐ",
+        "ნინო",
+        "ანა-მარიამი",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "მზადაა",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ლუკა #1 — წაშლა",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — დაბრუნება",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 5/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "დაბრუნება",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "ლუკა #1 — დაბრუნება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამატება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "ეს სახელი უკვე სიაშია",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 6/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამატება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 7/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 7/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამატება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 8/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 8/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამატება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 10 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 10. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 10 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 9/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "QA 10",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 10 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 10. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 10 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 9/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "QA 10",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამატება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 10 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 10. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 10 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 11 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 11. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 11 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 10/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "QA 10",
+        "QA 11",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 10 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 10. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 10 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 11 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 11. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 11 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 10/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "QA 10",
+        "QA 11",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამატება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 10 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 10. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 10 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 11 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 11. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 11 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 12 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 12. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 12 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 11/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "QA 10",
+        "QA 11",
+        "QA 12",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "input",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 10 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 10. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 10 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 11 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 11. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 11 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 12 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 12. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 12 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 11/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "QA 10",
+        "QA 11",
+        "QA 12",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დამატება",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: გოგო",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ანა-მარიამი — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "ანა-მარიამი — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე გიორგაძე — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Alex Smith — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Alex Smith — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Player 7 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Player 7. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Player 7 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "ლუკა #1 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა #1 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 8 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 8. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 8 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 9 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 9. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 9 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 10 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 10. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 10 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 11 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 11. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 11 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 12 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 12. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 12 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "QA 13 — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "QA 13. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "QA 13 — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 12/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "ნინო",
+        "👧",
+        "ანა-მარიამი",
+        "👦",
+        "ალექსანდრე გიორგაძე",
+        "Alex Smith",
+        "Player 7",
+        "ლუკა #1",
+        "QA 8",
+        "QA 9",
+        "QA 10",
+        "QA 11",
+        "QA 12",
+        "QA 13",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "op": "scroll",
+    "arg": "1600",
+    "result": {
+      "scrolled": true
+    }
+  },
+  {
+    "op": "meta",
+    "result": {
+      "appState": "active",
+      "screen": {
+        "fontScale": 1,
+        "height": 667,
+        "scale": 2,
+        "width": 375
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 667,
+        "scale": 2,
+        "width": 375
+      }
+    }
+  }
+]

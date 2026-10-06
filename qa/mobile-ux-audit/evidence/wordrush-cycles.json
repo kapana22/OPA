@@ -1,0 +1,1377 @@
+[
+  {
+    "at": "2026-10-03T21:14:27.877Z",
+    "op": "route",
+    "arg": "/game/wordrush",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "45 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Word Rush",
+        "დრო",
+        "წრეები",
+        "ერთი წრე — თითო ჯერი ყველას.",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:29.835Z",
+    "op": "press",
+    "arg": "30 წამი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "45 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Word Rush",
+        "დრო",
+        "წრეები",
+        "ერთი წრე — თითო ჯერი ყველას.",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:31.795Z",
+    "op": "press",
+    "arg": "დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ყოფა-ცხოვრება",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:33.749Z",
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ყოფა-ცხოვრება",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:35.702Z",
+    "op": "press",
+    "arg": "ჩათვლა. ახლა 0",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ყოფა-ცხოვრება",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:37.656Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ყოფა-ცხოვრება",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:39.605Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "შემდეგი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:41.548Z",
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ქართული სუფრა",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:43.558Z",
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ქართული სუფრა",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:45.491Z",
+    "op": "press",
+    "arg": "ჩათვლა. ახლა 0",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ქართული სუფრა",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:47.438Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ქართული სუფრა",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:49.399Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "შემდეგი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:51.342Z",
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "მსოფლიოს ცნობილები",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:53.285Z",
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "მსოფლიოს ცნობილები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:55.233Z",
+    "op": "press",
+    "arg": "ჩათვლა. ახლა 0",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "მსოფლიოს ცნობილები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:57.180Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მსოფლიოს ცნობილები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:14:59.113Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "შემდეგი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:01.061Z",
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ცნობილი ქართველები",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:03.015Z",
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ცნობილი ქართველები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:04.973Z",
+    "op": "press",
+    "arg": "ჩათვლა. ახლა 0",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ცნობილი ქართველები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:06.915Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცნობილი ქართველები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:08.854Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "შემდეგი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:10.804Z",
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მარიამ",
+        "სიტუაციები",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:12.740Z",
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "სიტუაციები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:14.674Z",
+    "op": "press",
+    "arg": "ჩათვლა. ახლა 0",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "სიტუაციები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:16.628Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სიტუაციები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:18.587Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მარიამ",
+        "შემდეგი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:20.532Z",
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ემოციები",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:22.476Z",
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ემოციები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:24.438Z",
+    "op": "press",
+    "arg": "ჩათვლა. ახლა 0",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ემოციები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:26.394Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 1",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ემოციები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:28.336Z",
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შედეგები",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "შედეგები"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:30.381Z",
+    "op": "press",
+    "arg": "შედეგები",
+    "result": {
+      "controls": [
+        {
+          "label": "თავიდან",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რბოლის გამარჯვებული",
+        "ანა",
+        "გიორგი",
+        "დათო",
+        "ლუკა",
+        "მარიამ",
+        "ნინო",
+        "თავიდან",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:15:32.520Z",
+    "op": "press",
+    "arg": "თავიდან",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ზეიმი",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  }
+]

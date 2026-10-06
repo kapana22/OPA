@@ -1,0 +1,72 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "ყველა, 238 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "💞 წყვილში, 58 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🤝 მეგობრობაში, 52 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🏠 ოჯახში, 43 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🌀 აბსურდი, 42 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "💼 სამსახურში, 43 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "The Line",
+    "კატეგორიები",
+    "ყველა",
+    "წყვილში",
+    "მეგობრობაში",
+    "ოჯახში",
+    "აბსურდი",
+    "სამსახურში",
+    "დაწყება"
+  ]
+}
