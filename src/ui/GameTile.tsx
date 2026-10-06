@@ -1,8 +1,7 @@
 import { Image, StyleSheet, Text, View, useWindowDimensions, type ImageSourcePropType } from 'react-native';
-import { Colors, Elevation, Radius, body, caption } from '../theme/theme';
+import { Colors, Controls, Elevation, Radius, body, caption } from '../theme/theme';
 import { type PartyGame } from '../games/types';
 import { gameArtwork, gameCaptions } from '../games/artwork';
-import { groupedGames } from '../games/groups';
 import { Haptics } from '../core/haptics';
 import { Pressable } from './Pressable';
 import { Icon } from './Icon';
@@ -19,16 +18,10 @@ interface TileProps {
  * თამაშის ფილა მთავარ ეკრანზე.
  * პორტი: `Splash/App/HomeView.swift` (`GameTile`).
  *
- * ვიზუალი:
- * - 3:4 პოსტერის არტვორკი + რეჟიმების კაფსულა (Warm Cream + Deep Purple)
- * - ქვედა დეტალები: Warm Cream (#FAF5E8) ფონი, Deep Purple (#380B70) ტექსტი
- * - წესების მრგვალი "?" ღილაკი Soft Lavender ფონით და Deep Purple სიმბოლოთი
+ * 3:4 პოსტერი, მოკლე ქართული აღწერა და წესების ღილაკი.
  */
 export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: TileProps) {
-  const { fontScale } = useWindowDimensions();
-  const largeText = fontScale > 1.3;
   const poster = artwork ?? gameArtwork[game.id];
-  const modeCount = groupedGames.find((group) => group.id === game.id)?.modes.length ?? (game.id === 'tableread' ? 3 : 0);
   const accent = Colors[game.accent];
   const needsMore = !game.comingSoon && playerCount > 0 && playerCount < game.minPlayers;
   const captionText = gameCaptions[game.id] ?? game.tagline;
@@ -37,7 +30,7 @@ export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: Til
     <View style={styles.tileWrapper}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`${game.title}. ${captionText}${modeCount ? `. ${modeCount} რეჟიმი` : ''}`}
+        accessibilityLabel={`${game.title}. ${captionText}`}
         accessibilityHint={needsMore ? `საჭიროა მინიმუმ ${game.minPlayers} მოთამაშე` : 'დასაწყებად დააჭირე'}
         onPress={() => {
           Haptics.medium();
@@ -67,10 +60,7 @@ export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: Til
         {/* ინგლისური სახელი სურათზე უკვე წერია — ქვემოთ მხოლოდ ქართული აღწერა,
             რომ ინგლისურის არმცოდნემაც მაშინვე გაიგოს, რა თამაშია. */}
         <View style={styles.details}>
-          <Text
-            style={[caption(11, '500'), styles.captionText]}
-            numberOfLines={largeText ? undefined : 3}
-          >
+          <Text style={[caption(12, '500'), styles.captionText]}>
             {captionText}
           </Text>
         </View>
@@ -85,11 +75,10 @@ export function GameTile({ game, playerCount = 0, onPlay, onInfo, artwork }: Til
             Haptics.tap();
             onInfo();
           }}
-          hitSlop={8}
           style={styles.infoButton}
         >
           <View style={styles.infoCircle}>
-            <Text style={styles.infoText}>?</Text>
+            <Icon name="questionmark" size={16} weight="bold" color={Colors.softLavender} />
           </View>
         </Pressable>
       ) : null}
@@ -101,7 +90,7 @@ export function MiniGameTile(props: TileProps & { size?: 'popular' | 'row' }) {
   const { width } = useWindowDimensions();
   const tileWidth = Math.min(170, Math.max(150, width * 0.42));
   return (
-    <View style={{ width: tileWidth }}>
+    <View style={{ width: tileWidth, flexGrow: 1 }}>
       <GameTile {...props} />
     </View>
   );
@@ -110,10 +99,12 @@ export function MiniGameTile(props: TileProps & { size?: 'popular' | 'row' }) {
 const styles = StyleSheet.create({
   tileWrapper: {
     width: '100%',
+    flexGrow: 1,
     ...Elevation.card,
   },
   tile: {
     width: '100%',
+    flexGrow: 1,
     overflow: 'hidden',
     borderRadius: Radius.tile,
     backgroundColor: Colors.surface,
@@ -135,24 +126,26 @@ const styles = StyleSheet.create({
 
   details: {
     backgroundColor: Colors.surface,
-    paddingHorizontal: 10,
-    paddingTop: 8,
-    paddingBottom: 10,
-    // „?“ სურათის კუთხეშია — აღწერა მთელ სიგანეს იყენებს და სამ ხაზამდე ეტევა.
-    // სიმაღლე სამ ხაზზეა, რომ რიგში ყველა ფილა ერთნაირი იყოს.
-    minHeight: 62,
+    paddingHorizontal: 12,
+    paddingTop: 10,
+    paddingBottom: 12,
+    // Two lines by default; longer or enlarged text grows without truncation.
+    // Stretch remaining space so cards in the same row share a bottom edge.
+    minHeight: 56,
+    flexGrow: 1,
     justifyContent: 'center',
   },
   captionText: {
     color: Colors.textSecondary,
-    lineHeight: 14,
+    lineHeight: 17,
+    textAlign: 'center',
   },
   infoButton: {
     position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 34,
-    height: 34,
+    top: 1,
+    right: 1,
+    width: Controls.icon.size,
+    height: Controls.icon.size,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -166,10 +159,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(7, 8, 10, 0.55)',
     borderWidth: 1,
     borderColor: 'rgba(203, 184, 246, 0.35)',
-  },
-  infoText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: Colors.softLavender,
   },
 });

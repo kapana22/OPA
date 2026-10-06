@@ -1,7 +1,8 @@
 import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ALL_ORIENTATIONS } from './modalOrientations';
+import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Colors, Radius, Space, body, title as titleFont } from '../theme/theme';
-import { PrimaryButton } from './Buttons';
+import { PrimaryButton, GhostButton } from './Buttons';
 import { Pressable } from './Pressable';
 
 /**
@@ -68,15 +69,18 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
   return (
     <DialogContext.Provider value={api}>
       {children}
-      <Modal visible={request !== null} transparent animationType="fade" onRequestClose={close}>
+      <Modal supportedOrientations={ALL_ORIENTATIONS} visible={request !== null} transparent animationType="fade" onRequestClose={close}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Pressable
+          animate={false}
           accessibilityLabel="დახურვა"
           onPress={close}
           style={styles.backdrop}
         >
           {/* შიგთავსზე დაჭერა დიალოგს არ ხურავს */}
-          <View style={styles.cardWrap}>
-          <Pressable onPress={() => {}} style={styles.card}>
+          <View style={styles.cardWrap} accessibilityViewIsModal>
+          <Pressable animate={false} onPress={() => {}} style={styles.card}>
+            <ScrollView keyboardShouldPersistTaps="handled" style={{ flexGrow: 0 }} contentContainerStyle={{ gap: Space.s }}>
             <Text style={[titleFont(20), styles.centered, { color: Colors.textPrimary }]}>{request?.title}</Text>
 
             {request?.message ? (
@@ -101,33 +105,28 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
                   <PrimaryButton
                     key={i}
                     title={action.label}
-                    tint={action.destructive ? Colors.neonMagenta : Colors.phosphor}
                     onPress={() => {
                       close();
                       action.onPress?.(value);
                     }}
                   />
                 ) : (
-                  // `GhostButton`-ის ფონი `surface`-ია — დიალოგის ბარათსაც
-                  // იგივე ფერი აქვს, ამიტომ იქ ის უბრალოდ ქრებოდა.
-                  <Pressable
+                  <GhostButton
                     key={i}
-                    accessibilityRole="button"
-                    accessibilityLabel={action.label}
+                    title={action.label}
                     onPress={() => {
                       close();
                       action.onPress?.(value);
                     }}
-                    style={styles.secondary}
-                  >
-                    <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>{action.label}</Text>
-                  </Pressable>
+                  />
                 ),
               )}
             </View>
+            </ScrollView>
           </Pressable>
           </View>
         </Pressable>
+        </KeyboardAvoidingView>
       </Modal>
     </DialogContext.Provider>
   );
@@ -148,11 +147,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: Space.l,
   },
-  cardWrap: { width: '100%', maxWidth: 420, alignItems: 'center' },
+  cardWrap: { width: '100%', maxWidth: 420, maxHeight: '100%', alignItems: 'center' },
   card: {
     width: '100%',
     maxWidth: 420,
-    gap: Space.s,
+    maxHeight: '100%',
     padding: Space.l,
     borderRadius: Radius.default,
     backgroundColor: Colors.surface,
@@ -160,13 +159,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.stroke,
   },
   centered: { textAlign: 'center' },
-  secondary: {
-    paddingVertical: 17,
-    borderRadius: Radius.default,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.surfaceHigh,
-  },
   input: {
     paddingHorizontal: Space.m,
     paddingVertical: 14,

@@ -1,6 +1,16 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { Icon as PhosphorIcon, IconWeight } from 'phosphor-react-native';
+const ForkKnifeIcon: PhosphorIcon = require('phosphor-react-native/src/icons/ForkKnife').ForkKnifeIcon;
+const MountainsIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Mountains').MountainsIcon;
+const BuildingsIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Buildings').BuildingsIcon;
+const GlobeHemisphereWestIcon: PhosphorIcon = require('phosphor-react-native/src/icons/GlobeHemisphereWest').GlobeHemisphereWestIcon;
+const FilmStripIcon: PhosphorIcon = require('phosphor-react-native/src/icons/FilmStrip').FilmStripIcon;
+const PawPrintIcon: PhosphorIcon = require('phosphor-react-native/src/icons/PawPrint').PawPrintIcon;
+const SoccerBallIcon: PhosphorIcon = require('phosphor-react-native/src/icons/SoccerBall').SoccerBallIcon;
+const PaintBrushIcon: PhosphorIcon = require('phosphor-react-native/src/icons/PaintBrush').PaintBrushIcon;
+const AirplaneIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Airplane').AirplaneIcon;
+const MusicNotesIcon: PhosphorIcon = require('phosphor-react-native/src/icons/MusicNotes').MusicNotesIcon;
 const ArrowClockwiseIcon: PhosphorIcon = require('phosphor-react-native/src/icons/ArrowClockwise').ArrowClockwiseIcon;
 const ArrowCounterClockwiseIcon: PhosphorIcon = require('phosphor-react-native/src/icons/ArrowCounterClockwise').ArrowCounterClockwiseIcon;
 const ArrowsClockwiseIcon: PhosphorIcon = require('phosphor-react-native/src/icons/ArrowsClockwise').ArrowsClockwiseIcon;
@@ -10,6 +20,8 @@ const ToggleRightIcon: PhosphorIcon = require('phosphor-react-native/src/icons/T
 const CircleIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Circle').CircleIcon;
 const InfinityIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Infinity').InfinityIcon;
 const RadioButtonIcon: PhosphorIcon = require('phosphor-react-native/src/icons/RadioButton').RadioButtonIcon;
+const CheckSquareIcon: PhosphorIcon = require('phosphor-react-native/src/icons/CheckSquare').CheckSquareIcon;
+const SquareIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Square').SquareIcon;
 const HexagonIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Hexagon').HexagonIcon;
 const WifiSlashIcon: PhosphorIcon = require('phosphor-react-native/src/icons/WifiSlash').WifiSlashIcon;
 const ArrowRightIcon: PhosphorIcon = require('phosphor-react-native/src/icons/ArrowRight').ArrowRightIcon;
@@ -61,6 +73,7 @@ const PersonSimpleRunIcon: PhosphorIcon = require('phosphor-react-native/src/ico
 const PlayIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Play').PlayIcon;
 const PlusIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Plus').PlusIcon;
 const QuestionIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Question').QuestionIcon;
+const QuestionMarkIcon: PhosphorIcon = require('phosphor-react-native/src/icons/QuestionMark').QuestionMarkIcon;
 const SealCheckIcon: PhosphorIcon = require('phosphor-react-native/src/icons/SealCheck').SealCheckIcon;
 const ShuffleIcon: PhosphorIcon = require('phosphor-react-native/src/icons/Shuffle').ShuffleIcon;
 const SkipForwardCircleIcon: PhosphorIcon = require('phosphor-react-native/src/icons/SkipForwardCircle').SkipForwardCircleIcon;
@@ -107,6 +120,16 @@ const XCircleIcon: PhosphorIcon = require('phosphor-react-native/src/icons/XCirc
 // `require` და არა `import`: ბიბლიოთეკის წყაროს ტიპები ჩვენს react-native-svg-ს
 // არ ემთხვევა და tsc მათ არ უნდა ამოწმებდეს. Metro ფაილს ჩვეულებრივ აკინძავს.
 const MAP: Record<string, [PhosphorIcon, IconWeight]> = {
+  'category.food': [ForkKnifeIcon, 'regular'],
+  'category.nature': [MountainsIcon, 'regular'],
+  'category.city': [BuildingsIcon, 'regular'],
+  'category.world': [GlobeHemisphereWestIcon, 'regular'],
+  'category.movies': [FilmStripIcon, 'regular'],
+  'category.animals': [PawPrintIcon, 'regular'],
+  'category.sport': [SoccerBallIcon, 'regular'],
+  'category.art': [PaintBrushIcon, 'regular'],
+  'category.travel': [AirplaneIcon, 'regular'],
+  'category.music': [MusicNotesIcon, 'regular'],
   'bolt.card.fill': [CardsIcon, 'fill'],
   'book.closed.fill': [BookOpenTextIcon, 'fill'],
   'clock.arrow.circlepath': [ClockCounterClockwiseIcon, 'bold'],
@@ -116,7 +139,7 @@ const MAP: Record<string, [PhosphorIcon, IconWeight]> = {
   'list.bullet.clipboard.fill': [ClipboardTextIcon, 'fill'],
   'pencil.line': [PencilSimpleLineIcon, 'bold'],
   'person.fill.badge.minus': [UserMinusIcon, 'fill'],
-  'questionmark': [QuestionIcon, 'bold'],
+  'questionmark': [QuestionMarkIcon, 'bold'],
   'rectangle.on.rectangle': [CardsThreeIcon, 'fill'],
   'person.crop.circle.badge.questionmark': [UserCircleDashedIcon, 'fill'],
   'person.2.wave.2.fill': [UsersThreeIcon, 'fill'],
@@ -201,6 +224,8 @@ const MAP: Record<string, [PhosphorIcon, IconWeight]> = {
   'infinity': [InfinityIcon, 'bold'],
   'radiobox-marked': [RadioButtonIcon, 'fill'],
   'radiobox-blank': [CircleIcon, 'regular'],
+  'checkbox-marked': [CheckSquareIcon, 'fill'],
+  'checkbox-blank-outline': [SquareIcon, 'regular'],
   'toggle-switch-off-outline': [ToggleLeftIcon, 'regular'],
   'heart': [HeartIcon, 'fill'],
   'check-decagram': [SealCheckIcon, 'fill'],

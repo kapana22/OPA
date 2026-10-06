@@ -26,7 +26,7 @@ export function PlayerAvatarView({ player, name = player?.name ?? '', color, siz
   const borderColor = glowing ? Colors.phosphor : color ?? character.color;
   return <View accessibilityLabel={`მოთამაშე: ${name}`} style={{ width: size, height: size, borderRadius: size / 2,
     backgroundColor: Colors.surfaceHigh, borderColor, borderWidth: glowing ? 2 : 1,
-    ...glow(borderColor, glowing ? 'medium' : 'soft') }}>
+    ...(glowing ? glow(borderColor, 'medium') : {}) }}>
     <Image source={character.avatar} resizeMode="contain" accessible={false}
       style={{ width: '100%', height: '100%', borderRadius: size / 2 }} />
   </View>;

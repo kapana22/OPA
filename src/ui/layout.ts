@@ -22,7 +22,7 @@ export const Layout = StyleSheet.create({
   /** არჩევანის ჩიპების რიგი ბარათის შიგნით — გრძელი წარწერები, იშლება. */
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   /** მოკლე ვარიანტების ერთი რიგი — `CategoryChip compact`-ით, თანაბარი სიგანეები. */
-  segmentRow: { flexDirection: 'row', gap: 8 },
+  segmentRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   /** ქვედა ღილაკები — ბარათებთან ერთ სიგანეზე. */
   footer: { paddingHorizontal: GUTTER, paddingBottom: Space.m, gap: 10 },
   /** თამაშის ეკრანის ზედა ზოლი: exit ღილაკი + მრიცხველები. */

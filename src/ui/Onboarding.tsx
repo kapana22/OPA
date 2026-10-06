@@ -11,11 +11,10 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import { Colors, body, title as titleFont } from '../theme/theme';
+import { Colors, Controls, body, title as titleFont } from '../theme/theme';
 import { getJSON, setJSON } from '../core/storage';
 import { Haptics } from '../core/haptics';
 import { SplashBackground } from './SplashBackground';
-import { GlyphIcon } from './Cards';
 import { PrimaryButton } from './Buttons';
 import { Pressable } from './Pressable';
 
@@ -38,19 +37,16 @@ export const Onboarded = {
 
 const PAGES = [
   {
-    icon: 'circle.hexagongrid.fill',
     title: 'ერთი ტელეფონი,\nმთელი კომპანია',
     text: 'წვეულების თამაშები, სადაც ტელეფონი წრეზე გადადის. სხვა არაფერი დაგჭირდებათ — არც მაგიდა, არც კალამი.',
     tint: Colors.phosphor,
   },
   {
-    icon: 'person.2.fill',
     title: 'სახელებს ერთხელ\nწერ და მორჩა',
-    text: 'ერთი სია ყველა თამაშს ემსახურება, ქულებიც ერთ ტაბლოზე გროვდება.',
+    text: 'ერთი სია ყველა თამაშს ემსახურება.',
     tint: Colors.softLavender,
   },
   {
-    icon: 'wifi.slash',
     title: 'ინტერნეტი\nარ დაგჭირდება',
     text: 'ყველა სიტყვა და კითხვა უკვე ტელეფონშია — იმუშავებს მთაშიც, თვითმფრინავშიც და იქაც, სადაც ქსელი არ იჭერს.',
     tint: Colors.softLavender,
@@ -106,14 +102,15 @@ export function Onboarding({ onFinish }: { onFinish: () => void }) {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={onScrollEnd}
-          style={{ flexGrow: 0, marginTop: 'auto' }}
+          style={{ flex: 1, marginTop: 16 }}
         >
           {PAGES.map((p, i) => (
-            <View key={i} style={[styles.page, { width }]}>
-              <GlyphIcon name={p.icon} size={40} tint={p.tint} />
+            <ScrollView key={i} style={{ width }} nestedScrollEnabled showsVerticalScrollIndicator={false}
+              accessibilityElementsHidden={i !== page} importantForAccessibility={i === page ? 'auto' : 'no-hide-descendants'}
+              contentContainerStyle={[styles.page, { flexGrow: 1, justifyContent: 'center', paddingVertical: 20 }]}>
               <Text style={[titleFont(30), styles.title]}>{p.title}</Text>
               <Text style={[body(16, '500'), styles.text]}>{p.text}</Text>
-            </View>
+            </ScrollView>
           ))}
         </ScrollView>
 
@@ -123,7 +120,7 @@ export function Onboarding({ onFinish }: { onFinish: () => void }) {
           ))}
         </View>
 
-        <View style={{ marginTop: 'auto', paddingHorizontal: 28, gap: 4 }}>
+        <View style={{ marginTop: 16, paddingHorizontal: 28, gap: 4 }}>
           <PrimaryButton
             title={last ? 'დავიწყოთ' : 'შემდეგი'}
             icon={last ? 'checkmark' : 'arrow.right'}
@@ -151,5 +148,5 @@ const styles = StyleSheet.create({
   text: { color: Colors.textSecondary, textAlign: 'center' },
   dots: { flexDirection: 'row', gap: 7, justifyContent: 'center', marginTop: 24 },
   dot: { height: 7, borderRadius: 4 },
-  skip: { alignSelf: 'center', paddingVertical: 12, paddingHorizontal: 20 },
+  skip: { minHeight: Controls.compact.minHeight, alignSelf: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 20 },
 });
