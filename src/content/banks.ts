@@ -1,4 +1,7 @@
 import raw from './banks.generated.json';
+import standards from './games/standards.json';
+import tenbut from './games/tenbut.json';
+import { gameTextCategories } from './gameTextCategories';
 import { shuffled } from '../core/shuffle';
 import { ContentShoe } from '../core/contentShoe';
 
@@ -73,8 +76,6 @@ interface RawBanks {
   LaughBank: TextCategory[];
   NeverBank: TextCategory[];
   PointOneBank: TextCategory[];
-  StandardsBank: TextCategory[];
-  TenButBank: TextCategory[];
   TwoTruthsBank: TextCategory[];
   TruthDareBank: TruthDareSet[];
   DareCardBank: DareCard[];
@@ -87,6 +88,33 @@ const B = raw as unknown as RawBanks;
 
 function find<T extends { id: string }>(list: T[], id: string | null | undefined): T | undefined {
   return id ? list.find((c) => c.id === id) : undefined;
+}
+
+/**
+ * კატეგორიების მონიშვნა: ერთი id (ძველი ფორმა), რამდენიმე id, ან `null`/`[]` — ყველა.
+ */
+export type CategorySelection = string | readonly string[] | null | undefined;
+
+/**
+ * მონიშნული კატეგორიები ბანკის რიგით. `undefined` — მონიშვნა ცარიელია ან
+ * არცერთი id აღარ არსებობს, ანუ მთელი ბანკი.
+ */
+export function selectedCategories<T extends { id: string }>(list: T[], sel: CategorySelection): T[] | undefined {
+  const ids = sel == null ? [] : typeof sel === 'string' ? [sel] : sel;
+  if (ids.length === 0) return undefined;
+  const picked = list.filter((c) => ids.includes(c.id));
+  return picked.length > 0 ? picked : undefined;
+}
+
+/**
+ * მონიშვნის სახელი ეკრანისთვის: ცარიელი — „ყველა კატეგორია“, ერთი ან ორი —
+ * სახელებით, მეტი — „3 კატეგორია“.
+ */
+export function selectionName(list: { id: string; name: string }[], sel: CategorySelection): string {
+  const cats = selectedCategories(list, sel);
+  if (!cats) return 'ყველა კატეგორია';
+  if (cats.length <= 2) return cats.map((c) => c.name).join(', ');
+  return `${cats.length} კატეგორია`;
 }
 
 /** უნიკალურობის შენარჩუნებით გაერთიანება — ერთი სიტყვა ორ კატეგორიაშიც გვხვდება. */
@@ -102,7 +130,11 @@ function textBank(categories: TextCategory[]) {
     categories,
     all,
     category: (id: string | null | undefined) => find(categories, id),
-    deck: (categoryID: string | null | undefined) => shuffled(find(categories, categoryID)?.items ?? all),
+    /** მონიშნული კატეგორიების გაერთიანება (დუბლიკატების გარეშე); ცარიელი — მთელი ბანკი. */
+    deck: (sel: CategorySelection) => {
+      const cats = selectedCategories(categories, sel);
+      return shuffled(cats ? unique(cats.flatMap((c) => c.items)) : all);
+    },
   };
 }
 
@@ -114,12 +146,14 @@ function wordBank(categories: WordCategory[]) {
     categories,
     all,
     category: (id: string | null | undefined) => find(categories, id),
-    /** შემთხვევითი კატეგორია — `BombEngine`-ს სჭირდება, როცა დასტა ამოიწურა. */
-    randomCategory: (): WordCategory => categories[Math.floor(Math.random() * categories.length)],
-    deck: (categoryID: string | null | undefined) => {
-      const cat = find(categories, categoryID);
-      if (cat) return shuffled(cat.words);
-      return shuffled(all);
+    /** შემთხვევითი კატეგორია მონიშნულებიდან (ცარიელი მონიშვნა — ყველადან). */
+    randomCategory: (sel?: CategorySelection): WordCategory => {
+      const pool = selectedCategories(categories, sel) ?? categories;
+      return pool[Math.floor(Math.random() * pool.length)];
+    },
+    deck: (sel: CategorySelection) => {
+      const cats = selectedCategories(categories, sel);
+      return shuffled(cats ? unique(cats.flatMap((c) => c.words)) : all);
     },
   };
 }
@@ -134,23 +168,26 @@ export const PairBank = {
   all: B.PairBank.flatMap((c) => c.pairs),
   allWords: unique(B.PairBank.flatMap((c) => c.pairs.flatMap((p) => [p.a, p.b]))),
   category: (id: string | null | undefined) => find(B.PairBank, id),
-  pairs: (categoryID: string | null | undefined) =>
-    find(B.PairBank, categoryID)?.pairs ?? B.PairBank.flatMap((c) => c.pairs),
+  pairs: (sel: CategorySelection) =>
+    (selectedCategories(B.PairBank, sel) ?? B.PairBank).flatMap((c) => c.pairs),
   /** დასტის გასაღები `"a|b"`-ია — `ContentShoe` სტრიქონებზე მუშაობს. */
-  deck: (categoryID: string | null | undefined) =>
-    shuffled(PairBank.pairs(categoryID).map((p) => `${p.a}|${p.b}`)),
-  /** გასაღებით პოვნა — წყვილიც და კატეგორიაც. */
-  pair: (key: string): { pair: { a: string; b: string }; category: PairCategory } | undefined => {
-    for (const c of B.PairBank) {
+  deck: (sel: CategorySelection) =>
+    shuffled(PairBank.pairs(sel).map((p) => `${p.a}|${p.b}`)),
+  /**
+   * გასაღებით პოვნა — წყვილიც და კატეგორიაც. ერთი წყვილი ორ კატეგორიაშიც
+   * შეიძლება იყოს — `sel`-ით მონიშნული კატეგორია პირველი მოწმდება.
+   */
+  pair: (key: string, sel?: CategorySelection): { pair: { a: string; b: string }; category: PairCategory } | undefined => {
+    const first = selectedCategories(B.PairBank, sel) ?? [];
+    for (const c of [...first, ...B.PairBank]) {
       const found = c.pairs.find((p) => `${p.a}|${p.b}` === key);
       if (found) return { pair: found, category: c };
     }
     return undefined;
   },
   /** სათადარიგო გზა — დასტა ცარიელი რომ აღმოჩნდეს. */
-  randomPair: (categoryID: string | null | undefined) => {
-    const cats = categoryID ? [find(B.PairBank, categoryID)].filter((c): c is PairCategory => !!c) : B.PairBank;
-    const pool = cats.length > 0 ? cats : B.PairBank;
+  randomPair: (sel: CategorySelection) => {
+    const pool = selectedCategories(B.PairBank, sel) ?? B.PairBank;
     const category = pool[Math.floor(Math.random() * pool.length)];
     const pair = category.pairs[Math.floor(Math.random() * category.pairs.length)];
     return { pair, category };
@@ -164,16 +201,39 @@ export const PairBank = {
 
 // MARK: - კითხვები ტონით
 
+/**
+ * Most Likely To-ს კითხვები. Point at One ცალკე თამაში აღარაა — მისი კითხვები
+ * (`PointOneBank`, რედაქტორში ისევ ცალკე ჩანს) აქ ემატება: ერთნაირი id-ის
+ * კატეგორია ერთდება, დანარჩენი ახალ კატეგორიად ჩნდება.
+ */
+const PROMPT_CATEGORIES: PromptCategory[] = (() => {
+  const merged = B.PromptBank.map((c) => ({ ...c, prompts: [...c.prompts] }));
+  for (const extra of B.PointOneBank) {
+    const extraPrompts = extra.items.map((text) => ({ text, register: 'playful' as PromptRegister }));
+    const same = merged.find((c) => c.id === extra.id);
+    if (same) {
+      const seen = new Set(same.prompts.map((p) => p.text));
+      same.prompts.push(...extraPrompts.filter((p) => !seen.has(p.text)));
+    } else {
+      const { items: _items, ...base } = extra;
+      merged.push({ ...base, prompts: extraPrompts });
+    }
+  }
+  return merged;
+})();
+
 export const PromptBank = {
-  categories: B.PromptBank,
-  all: unique(B.PromptBank.flatMap((c) => c.prompts.map((p) => p.text))),
-  allEntries: B.PromptBank.flatMap((c) => c.prompts),
-  category: (id: string | null | undefined) => find(B.PromptBank, id),
+  categories: PROMPT_CATEGORIES,
+  all: unique(PROMPT_CATEGORIES.flatMap((c) => c.prompts.map((p) => p.text))),
+  allEntries: PROMPT_CATEGORIES.flatMap((c) => c.prompts),
+  category: (id: string | null | undefined) => find(PROMPT_CATEGORIES, id),
   /** ტონი ეკრანზე არ ჩანს — ფილტრისთვისაა. */
   registerOf: (text: string): PromptRegister =>
-    B.PromptBank.flatMap((c) => c.prompts).find((p) => p.text === text)?.register ?? 'playful',
-  deck: (categoryID: string | null | undefined) =>
-    shuffled(find(B.PromptBank, categoryID)?.prompts.map((p) => p.text) ?? PromptBank.all),
+    PROMPT_CATEGORIES.flatMap((c) => c.prompts).find((p) => p.text === text)?.register ?? 'playful',
+  deck: (sel: CategorySelection) => {
+    const cats = selectedCategories(PROMPT_CATEGORIES, sel);
+    return shuffled(cats ? unique(cats.flatMap((c) => c.prompts.map((p) => p.text))) : PromptBank.all);
+  },
 };
 
 // MARK: - სპექტრი და დილემა
@@ -207,8 +267,8 @@ export const IdentityBank = textBank(B.IdentityBank);
 export const LaughBank = textBank(B.LaughBank);
 export const NeverBank = textBank(B.NeverBank);
 export const PointOneBank = textBank(B.PointOneBank);
-export const StandardsBank = textBank(B.StandardsBank);
-export const TenButBank = textBank(B.TenButBank);
+export const StandardsBank = textBank(gameTextCategories(standards));
+export const TenButBank = textBank(gameTextCategories(tenbut));
 export const TwoTruthsBank = {
   ...textBank(B.TwoTruthsBank),
   /**
