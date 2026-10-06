@@ -38,3 +38,7 @@ play-service-account.json
 # Local Xcode derived data
 /build/
 /build-device/
+
+# Simulator build output and heavy QA screenshots (kept locally)
+/build-simulator/
+qa/mobile-ux-audit/screenshots/
