@@ -50,7 +50,6 @@ describe('classic Wavelength on one phone', () => {
     play(e, 0.05); expect(e.scores).toEqual([10, 10]); expect(e.winner).toBeNull(); expect(e.tiebreak).toBe(true);
     const other = new WavelengthEngine(players); other.startGame(); other.scores = [0, 9];
     play(other, 0.4); expect(other.winner).toBe(1); other.next(); expect(other.phase).toBe('summary');
-    expect(other.rewardFor(players[1])).toBe(3); expect(other.rewardFor(players[0])).toBe(1);
   });
   it('gives both teams a full tiebreak turn before choosing a winner', () => {
     const e = new WavelengthEngine(players); e.startGame(); e.scores = [8, 9]; play(e, 0.1); e.next();

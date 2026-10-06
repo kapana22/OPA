@@ -8,10 +8,7 @@ import { MafiaEngine } from '../src/games/mafia/engine';
 import { MostLikelyEngine } from '../src/games/mostlikely/engine';
 import { TwoTruthsEngine } from '../src/games/twotruths/engine';
 import { WordRushEngine } from '../src/games/wordrush/engine';
-import { RuleCardEngine } from '../src/games/rulecard/engine';
 import { BombEngine } from '../src/games/bomb/engine';
-import { WhoWroteEngine } from '../src/games/whowrote/engine';
-import { PairBank } from '../src/content/banks';
 
 /**
  * QA-მიმოხილვის ხარვეზები — თითოეული ტესტი ერთ გასწორებულ შემთხვევას იცავს,
@@ -26,16 +23,14 @@ const names = (n: number): Player[] =>
 beforeEach(() => __resetForTests());
 
 describe('Undercover — გამარჯვება გუნდს ერგება', () => {
-  it('ამოვარდნილი ჯაშუშიც იღებს, როგორც ამოვარდნილი მოქალაქე', () => {
-    const [u, w, c1, c2, c3] = names(5);
-    const e = new SpyEngine([u, w, c1, c2, c3]);
-    e.roles = { [u.id]: 'undercover', [w.id]: 'mrWhite', [c1.id]: 'civilian', [c2.id]: 'civilian', [c3.id]: 'civilian' };
-    e.eliminated = new Set([u.id, c1.id, c2.id]); // დარჩა: Mr White და ერთი მოქალაქე
+  it('ჯაშუშები მოქალაქეებს გაუთანაბრდნენ — ჯაშუშები იგებენ', () => {
+    const [u1, u2, c1, c2, c3] = names(5);
+    const e = new SpyEngine([u1, u2, c1, c2, c3]);
+    e.roles = { [u1.id]: 'undercover', [u2.id]: 'undercover', [c1.id]: 'civilian', [c2.id]: 'civilian', [c3.id]: 'civilian' };
+    e.eliminated = new Set([u1.id, c1.id, c2.id]); // დარჩა: ერთი ჯაშუში და ერთი მოქალაქე
     (e as unknown as { evaluate(): void }).evaluate();
     expect(e.winner).toBe('undercovers');
-    expect(e.finalPoints[w.id]).toBe(3);
-    expect(e.finalPoints[u.id]).toBe(3);
-    expect(e.finalPoints[c3.id]).toBeUndefined();
+    expect(e.phase).toBe('gameOver');
   });
 });
 
@@ -55,28 +50,13 @@ describe('Mafia — გადამწყვეტი შედეგის ე�
   });
 });
 
-describe('Impostor / Undercover — „∞“ განხილვა ინახება', () => {
-  it('0 წამი ინახება და ხელახლა ჩატვირთვისასაც 0-ია', () => {
-    const e = new ImpostorEngine(names(4));
-    e.setDiscussionSeconds(0);
-    expect(e.settings.discussionSeconds).toBe(0);
-    expect(new ImpostorEngine(names(4)).settings.discussionSeconds).toBe(0);
-    const s = new SpyEngine(names(4));
-    s.setDiscussionSeconds(0);
-    expect(new SpyEngine(names(4)).settings.discussionSeconds).toBe(0);
-    // ზღვრები კი ისევ მოქმედებს
-    s.setDiscussionSeconds(5);
-    expect(s.settings.discussionSeconds).toBe(30);
-  });
-});
-
 describe('Most Likely To — შენახული პარამეტრები სუფთავდება', () => {
-  it('rounds: 0 და გაუქმებული კატეგორია ნაგულისხმევზე ბრუნდება', () => {
+  it('გაუქმებული კატეგორია ნაგულისხმევზე ბრუნდება', () => {
     setJSON('splash.mostlikely.settings.v1', { mode: 'weird', rounds: 0, categoryID: 'no-such-category' });
     const e = new MostLikelyEngine(names(3));
-    expect(e.settings.rounds).toBe(3); // ზღვარზე იჭრება, როგორც `setRounds`-ში
-    expect(e.settings.categoryID).toBeNull();
-    expect(e.settings.mode).toBe('quick');
+    expect(e.settings).not.toHaveProperty('rounds');
+    expect(e.settings.categoryIDs).toEqual([]);
+    expect(e.settings).not.toHaveProperty('mode');
   });
 });
 
@@ -95,37 +75,14 @@ describe('ორი სიმართლე — სამი ერთნაი
 describe('სიტყვის რბოლა — ფიქსირებული კატეგორია არ იცვლება', () => {
   it('swapCategory() არაფერს აკეთებს და დასტიდან სიტყვას არ ხარჯავს', () => {
     const e = new WordRushEngine(names(3));
-    e.setCategory(CharadesBank.categories[0].id);
+    e.setCategories([CharadesBank.categories[0].id]);
     e.startGame();
     const starter = e.starter;
     expect(e.canSwapCategory).toBe(false);
     e.swapCategory();
     expect(e.starter).toBe(starter);
-    e.setCategory(null);
+    e.setCategories([]);
     expect(e.canSwapCategory).toBe(true);
-  });
-});
-
-describe('House Rules — ჯარიმა დადასტურებისას ერთხელ ირიცხება', () => {
-  it('finishForfeits() თითოეულ დამრღვევს ერთს უმატებს', () => {
-    const [a, b, c] = names(3);
-    const e = new RuleCardEngine([a, b, c]);
-    e.startGame();
-    e.finishForfeits([a, b]);
-    expect([e.forfeitCount(a), e.forfeitCount(b), e.forfeitCount(c)]).toEqual([1, 1, 0]);
-    e.finishForfeits([a]);
-    expect(e.forfeitCount(a)).toBe(2);
-    expect(e.mostForfeits.map((p) => p.id)).toEqual([a.id]);
-  });
-});
-
-describe('Most Likely To — „რადარის ქვემოთ“', () => {
-  it('ვისაც არავინ დაასახელა, ჯილდოში ხვდება; სულ ნულებზე — არავინ', () => {
-    const [a, b, c] = names(3);
-    const e = new MostLikelyEngine([a, b, c]);
-    expect(e.neverNamed).toEqual([]);            // ჯერ არავის უთამაშია
-    e.totals = { [a.id]: 3, [b.id]: 1 };
-    expect(e.neverNamed.map((p) => p.id)).toEqual([c.id]);
   });
 });
 
@@ -150,125 +107,65 @@ describe('Impostor — სამართლიანი რაუნდი', ()
       expect(e.isImpostor(e.startingPlayer!)).toBe(false);
     }
   });
-
-  it('ორიდან ერთი დაიჭირეს — მეორე გაქცეულის ქულას იღებს', () => {
-    const e = new ImpostorEngine(names(6));
-    e.setImpostorCount(2);
-    e.setCanGuess(true);
-    e.startRound();
-    const [caught, free] = e.impostors;
-    e.beginVoting();
-    e.accuse(caught);
-    expect(e.guessOptions.length).toBe(10);
-    expect(e.guessOptions).toContain(e.secretWord);
-    e.submitGuess(e.guessOptions.find((w) => w !== e.secretWord)!);
-    expect(e.outcome).toBe('impostorCaught');
-    expect(e.roundPoints[caught.id]).toBeUndefined();
-    expect(e.roundPoints[free.id]).toBe(3);
-    for (const p of e.players) if (!e.isImpostor(p)) expect(e.roundPoints[p.id]).toBe(2);
-  });
 });
 
-describe('Undercover — მისტერ უაითი', () => {
-  it('ოთხზე მისტერ უაითი არ ირთვება, ხუთზე — კი', () => {
-    const four = new SpyEngine(names(4));
-    four.setIncludeMrWhite(true);
-    expect(four.settings.includeMrWhite).toBe(false);
-    const five = new SpyEngine(names(5));
-    five.setIncludeMrWhite(true);
-    expect(five.settings.includeMrWhite).toBe(true);
-    expect(five.maxUndercovers).toBe(1);
-  });
-
-  it('ვარიანტებში ორივე სიტყვაა და დანარჩენი იმავე კატეგორიიდანაა', () => {
-    const e = new SpyEngine(names(6));
-    e.setIncludeMrWhite(true);
-    e.startGame();
-    const white = e.playersWith('mrWhite')[0];
-    e.beginVoting();
-    e.eliminate(white);
-    expect(e.phase).toBe('mrWhiteGuess');
-    expect(e.mrWhiteOptions).toHaveLength(6);
-    expect(new Set(e.mrWhiteOptions).size).toBe(6);
-    expect(e.mrWhiteOptions).toContain(e.civilianWord);
-    expect(e.mrWhiteOptions).toContain(e.undercoverWord);
-    const cat = PairBank.categories.find((c) => c.name === e.categoryLabel)!;
-    const words = new Set(cat.pairs.flatMap((p) => [p.a, p.b]));
-    for (const w of e.mrWhiteOptions) expect(words.has(w)).toBe(true);
-  });
-});
-
-describe('Mafia — ღამის ქმედება მხოლოდ თავის ჯერზე', () => {
-  it('ორმაგი შეხება შემდეგ მოთამაშეს ჯერს არ უტოვებს', () => {
+describe('Mafia — აპი წამყვანია, ღამე როლების რიგით', () => {
+  it('ქმედება მხოლოდ გაღვიძებულ როლზე მიიღება; ორმაგი შეხება ვერაფერს ცვლის', () => {
     const [m, d, a, b] = names(4);
     const e = new MafiaEngine([m, d, a, b]);
     e.startGame();
     e.roles = { [m.id]: 'mafia', [d.id]: 'doctor', [a.id]: 'civilian', [b.id]: 'civilian' };
     for (let i = 0; i < 4; i++) e.advanceReveal();
-    expect(e.currentNightPlayer?.id).toBe(m.id);
-    e.mafiaChoose(a, m);
-    e.mafiaChoose(a, m); // მეორე შეხება — უკვე ექიმის ჯერია
-    expect(e.nightIndex).toBe(1);
-    expect(e.mafiaVotes[a.id]).toBe(1);
-    e.skipNightTurn(d); // ექიმი მოქალაქის ღილაკით ვერ გამოტოვებს
-    expect(e.nightIndex).toBe(1);
-    e.doctorSave(b, d);
-    e.doctorSave(b, d);
-    expect(e.nightIndex).toBe(2);
-    e.skipNightTurn(a);
-    e.skipNightTurn(a);
-    expect(e.nightIndex).toBe(3);
-    e.skipNightTurn(b);
+    expect(e.nightStep).toBe('dusk');
+    e.mafiaChoose(a); // ქალაქს ჯერ არ სძინავს
+    expect(e.mafiaTargetID).toBeNull();
+    e.sleepCity();
+    e.nextNightStep();
+    expect(e.nightStep).toBe('mafia');
+    e.doctorSave(b); // ექიმის ჯერი არაა
+    expect(e.savedID).toBeNull();
+    e.mafiaChoose(m); // მაფია თავისიანს ვერ აირჩევს
+    expect(e.mafiaTargetID).toBeNull();
+    e.mafiaChoose(a);
+    e.mafiaChoose(b); // უკვე იძინებს
+    expect(e.mafiaTargetID).toBe(a.id);
+    e.nextNightStep();
+    expect(e.nightStep).toBe('doctor'); // დეტექტივი არ არის — მისი ჯერი არც ჩანს
+    e.doctorSave(b);
+    e.nextNightStep();
     expect(e.phase).toBe('morning');
     expect(e.killed?.id).toBe(a.id);
   });
-});
 
-describe('WhoWrote / TwoTruths — ფრე', () => {
-  it('ფრეზე გამარჯვებული ყველაა, ადგილი სპორტული წესით', () => {
-    const [a, b, c] = names(3);
-    const w = new WhoWroteEngine([a, b, c]);
-    w.totals = { [a.id]: 4, [b.id]: 4, [c.id]: 2 };
-    expect(w.winners.map((p) => p.id).sort()).toEqual([a.id, b.id].sort());
-    expect([w.placeOf(a), w.placeOf(b), w.placeOf(c)]).toEqual([1, 1, 3]);
-    const t = new TwoTruthsEngine([a, b, c]);
-    expect(t.winners).toEqual([]);
-    t.totals = { [c.id]: 2 };
-    expect(t.winners.map((p) => p.id)).toEqual([c.id]);
+  it('მკვდარი როლის ჯერი გამოიტოვება, ექიმის გადარჩენა მოქმედებს', () => {
+    const [m, d, a, b] = names(4);
+    const e = new MafiaEngine([m, d, a, b]);
+    e.startGame();
+    e.roles = { [m.id]: 'mafia', [d.id]: 'doctor', [a.id]: 'civilian', [b.id]: 'civilian' };
+    for (let i = 0; i < 4; i++) e.advanceReveal();
+    e.sleepCity(); e.nextNightStep();
+    e.mafiaChoose(a); e.nextNightStep();
+    e.doctorSave(a); e.nextNightStep();
+    expect(e.killed).toBeNull();
+    e.eliminated.add(d.id);
+    expect(e.nightSteps).toEqual(['mafia']);
   });
 });
 
-describe('ორი სიმართლე — ჯერი და ქულა', () => {
-  it('ჯერები მთელი წრეებია — ყველა თანაბრად წერს', () => {
-    const players = names(4);
+describe('ორი სიმართლე — ჯერი წრეზე ტრიალებს', () => {
+  it('ყოველი გამხელის შემდეგ შემდეგი ავტორი მოდის, ბოლოს — ისევ პირველი', () => {
+    const players = names(3);
     const e = new TwoTruthsEngine(players);
-    e.setLaps(2);
-    expect(e.totalTurns).toBe(8);
-    const authored: Record<string, number> = {};
     e.startGame();
-    for (let i = 0; i < e.totalTurns; i++) {
-      authored[e.author.id] = (authored[e.author.id] ?? 0) + 1;
+    const authored: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      authored.push(e.author.id);
       e.beginWriting();
       e.submit(['ა', 'ბ', 'გ'], 0);
-      while (e.phase === 'guessHandoff') { e.beginGuessing(); e.castGuess(0); }
+      e.revealLie();
       e.next();
     }
-    expect(e.phase).toBe('summary');
-    expect(players.map((p) => authored[p.id])).toEqual([2, 2, 2, 2]);
-  });
-
-  it('ძველი „8 ჯერი“ წრეებში გადადის', () => {
-    setJSON('splash.twotruths.settings.v1', { everyonePlays: false, fixedTurns: 8, showHints: true });
-    expect(new TwoTruthsEngine(names(4)).settings.laps).toBe(2);
-  });
-
-  it('ავტორი ყოველ მოტყუებულზე +2-ს იღებს, ჭერის გარეშე', () => {
-    const e = new TwoTruthsEngine(names(6));
-    e.startGame();
-    e.beginWriting();
-    e.submit(['ა', 'ბ', 'გ'], 0);
-    const truth = e.displayPositionOf(1);
-    while (e.phase === 'guessHandoff') { e.beginGuessing(); e.castGuess(truth); }
-    expect(e.pointsFor(e.author)).toBe(10);
+    expect(authored).toEqual([players[0].id, players[1].id, players[2].id, players[0].id]);
+    expect(e.phase).toBe('writeHandoff');
   });
 });

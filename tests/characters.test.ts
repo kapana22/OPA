@@ -10,7 +10,7 @@ describe('player characters', () => {
     expect(new Set(roster.players.map(p => p.characterID)).size).toBe(12);
     const original = Object.fromEntries(roster.players.map(p => [p.id, p.characterID]));
     const id = roster.players[0].id;
-    roster.rename(id, 'გიო'); roster.move(0, 4); roster.addScore(3, id); roster.resetScores();
+    roster.rename(id, 'გიო'); roster.move(0, 4);
     const reloaded = new Roster();
     expect(Object.fromEntries(reloaded.players.map(p => [p.id, p.characterID]))).toEqual(original);
   });

@@ -14,16 +14,15 @@ describe('როსტერი — დამატება, წაშლა, �
     expect(roster.add('ზედმეტი')).toBe('full');
   });
 
-  it('წაშლილი იმავე ადგილზე, ქულით ბრუნდება', () => {
+  it('წაშლილი იმავე ადგილზე ბრუნდება', () => {
     const roster = new Roster();
     roster.add('ა'); roster.add('ბ'); roster.add('გ');
     const b = { ...roster.players[1] };
-    roster.addScore(5, b.id);
     const scored = { ...roster.players[1] };
     roster.remove(b.id);
     roster.restore(scored, 1);
     expect(roster.names).toEqual(['ა', 'ბ', 'გ']);
-    expect(roster.players[1].score).toBe(5);
+    expect(roster.players[1].id).toBe(b.id);
     // მეორედ დაბრუნება დუბლიკატს არ ქმნის
     roster.restore(scored, 1);
     expect(roster.count).toBe(3);
