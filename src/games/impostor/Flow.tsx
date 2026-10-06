@@ -6,31 +6,33 @@ import {
   Divider,
   GameExitButton,
   GlassCard,
-  GlyphIcon,
   ScreenHeader,
   Stepper,
-  ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
+  ToggleRow,
+  CategoryChecklist, RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
+import { FitText } from '../../ui/FitText';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
 import { DiscussionPanel } from '../../ui/DiscussionPanel';
 import { Layout } from '../../ui/layout';
+import { Confetti } from '../../ui/Confetti';
+import { DISCUSSION_OPTIONS, discussionLabel } from '../../core/settings';
 import { WordBank } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
-import { ImpostorEngine, type ImpostorOutcome } from './engine';
+import { ImpostorEngine } from './engine';
 import { game as findGame } from '../catalog';
 
 /**
  * „ერთმა არ იცის“ (Impostor) — სრული ნაკადი.
  *
- * პორტი: `Splash/Games/Impostor/*.swift` (7 ხედი).
+ * პორტი: `Splash/Games/Impostor/*.swift`. კენჭისყრა მაგიდასთან, ხმამაღლა ხდება —
+ * ტელეფონი მხოლოდ ბარათებს და ბოლოს პასუხს აჩვენებს.
  */
-
-const TIMER_OPTIONS = [0, 60, 120, 180, 300];
 
 export function ImpostorFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new ImpostorEngine([...roster.players]));
@@ -43,12 +45,12 @@ export function ImpostorFlow({ roster, onExit }: GameFlowProps) {
       return <Reveal engine={engine} onExit={onExit} />;
     case 'discussion':
       return <Discussion engine={engine} onExit={onExit} />;
-    case 'voting':
-      return <Voting engine={engine} onExit={onExit} />;
+    case 'caughtCheck':
+      return <CaughtCheck engine={engine} onExit={onExit} />;
     case 'impostorGuess':
       return <Guess engine={engine} onExit={onExit} />;
     case 'result':
-      return <Result engine={engine} roster={roster} onExit={onExit} />;
+      return <Result engine={engine} onExit={onExit} />;
   }
 }
 
@@ -62,7 +64,7 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
       <RulesSheet visible={showRules} title={gameData?.title ?? 'Imposter'} accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
-        <ScreenHeader title="ერთმა არ იცის" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Imposter"  onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -86,11 +88,11 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
               build={() => wordEntries(WordBank, 'შემთხვევითი', null)}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
@@ -99,13 +101,13 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>განხილვის დრო</Text>
             <View style={Layout.segmentRow}>
-              {TIMER_OPTIONS.map((secs) => (
+              {DISCUSSION_OPTIONS.map((secs) => (
                 <CategoryChip
                   compact
                   key={secs}
-                  label={secs === 0 ? '∞' : `${secs / 60}:00`}
-                  selected={engine.settings.discussionSeconds === secs}
-                  onPress={() => engine.setDiscussionSeconds(secs === 0 ? 0 : secs)}
+                  label={discussionLabel(secs)}
+                  selected={engine.settings.discussionTimer === secs}
+                  onPress={() => engine.setDiscussionSeconds(secs)}
                 />
               ))}
             </View>
@@ -123,7 +125,7 @@ function Setup({ engine, onClose }: { engine: ImpostorEngine; onClose: () => voi
             <Divider />
             <ToggleRow
               title="დაჭერილ იმპოსტორს ბოლო შანსი ჰქონდეს"
-              subtitle="თუ სიტყვას გამოიცნობს, ქულებს იტოვებს"
+              subtitle="სიტყვა უნდა გამოიცნოს"
               value={engine.settings.impostorCanGuess}
               onChange={(v) => engine.setCanGuess(v)}
             />
@@ -163,7 +165,7 @@ function Reveal({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
       card={{
         word: info.word,
         hint: info.hint,
-        note: info.isImpostor ? 'არავინ იცის, რომ შენ არ იცი.\nჩაერიე ისე, თითქოს იცოდე.' : null,
+        note: info.isImpostor ? 'ილაპარაკე ისე, თითქოს იცოდე.' : null,
         tint: info.isImpostor ? Colors.neonMagenta : Colors.textPrimary,
       }}
       nextTitle={isLast ? 'ვნახე — დაწყება' : 'ვნახე — შემდეგი'}
@@ -178,23 +180,21 @@ function Reveal({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
 function Discussion({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void }) {
   return (
     <DiscussionPanel
-      title="რიგრიგობით — თითოეული ერთ სიტყვას ამბობს"
+      title="თითოეული თითო სიტყვას ამბობს"
       starterName={engine.startingPlayer?.name}
-      seconds={engine.settings.discussionSeconds}
-      tips={['ერთი სიტყვა და გაჩერდი — მეტი არა.']}
+      seconds={engine.settings.discussionTimer}
+      tips={[]}
       accent={Colors.neonMagenta}
-      actionTitle="კენჭისყრა"
-      onAction={() => engine.beginVoting()}
+      actionTitle="პასუხის ნახვა"
+      onAction={() => engine.showResult()}
       onExit={onExit}
     />
   );
 }
 
-// ── კენჭისყრა
+// ── დაიჭირეს?
 
-function Voting({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void }) {
-  const [selected, setSelected] = useState<string | null>(null);
-
+function CaughtCheck({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void }) {
   return (
     <View style={{ flex: 1, gap: 18 }}>
       <View style={Layout.exitSlot}>
@@ -203,54 +203,23 @@ function Voting({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center', gap: 6 }}>
-        <Text style={[titleFont(28), { color: Colors.textPrimary }]}>ვინ არის იმპოსტორი?</Text>
-        <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>დათვალეთ სამამდე და ერთად აირჩიეთ</Text>
-      </View>
-
-      <ScrollView contentContainerStyle={Layout.nameGrid}>
-        {engine.players.map((player) => {
-          const on = selected === player.id;
-          return (
-            <Pressable
-              key={player.id}
-              accessibilityRole="button"
-              accessibilityLabel={player.name}
-              accessibilityState={{ selected: on }}
-              onPress={() => {
-                Haptics.tap();
-                setSelected(player.id);
-              }}
-              style={[
-                styles.nameCell,
-                { backgroundColor: on ? Colors.neonMagenta : Colors.surface, borderColor: on ? 'transparent' : Colors.stroke },
-              ]}
-            >
-              <Text
-                style={[body(17, '700'), Layout.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
-                numberOfLines={2}
-                adjustsFontSizeToFit
-              >
-                {player.name}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
+      <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}>
+        {engine.impostors.length > 1 ? 'იმპოსტორები დაიჭირეთ?' : 'იმპოსტორი დაიჭირეთ?'}
+      </Text>
+      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+        თუ კი, ტელეფონი მას გადაეცით.
+      </Text>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
         <PrimaryButton
-          title="დადასტურება"
-          icon="checkmark"
+          title="დიახ, ბოლო შანსი"
+          icon="target"
           tint={Colors.phosphor}
-          enabled={selected !== null}
-          onPress={() => {
-            const player = engine.players.find((p) => p.id === selected);
-            if (player) engine.accuse(player);
-          }}
+          onPress={() => engine.impostorCaught()}
         />
+        <GhostButton title="არა" icon="xmark" onPress={() => engine.impostorNotCaught()} />
       </View>
     </View>
   );
@@ -267,14 +236,10 @@ function Guess({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void 
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="target" size={31} tint={Colors.phosphor} />
-      </View>
-
       <View style={{ alignItems: 'center', gap: 6 }}>
         <Text style={[titleFont(30), { color: Colors.neonMagenta }]}>დაგიჭირეს!</Text>
         <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-          ბოლო შანსი — რომელი სიტყვა იყო?
+          ბოლო შანსი: რომელი სიტყვა იყო?
         </Text>
       </View>
 
@@ -298,7 +263,9 @@ function Guess({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void 
             }}
             style={styles.optionRow}
           >
-            <Text style={[body(18, '700'), { color: Colors.textPrimary }]}>{word}</Text>
+            <FitText style={[body(18, '700'), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>
+              {word}
+            </FitText>
           </Pressable>
         ))}
       </ScrollView>
@@ -308,72 +275,27 @@ function Guess({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void 
   );
 }
 
-// ── შედეგი
+// ── პასუხი
 
-interface Headline {
-  icon: string;
-  title: string;
-  subtitle: string;
-  color: string;
-}
-
-function headlineFor(engine: ImpostorEngine): Headline {
-  const outcome: ImpostorOutcome | null = engine.outcome;
-  if (outcome === 'impostorCaught')
-    return {
-      icon: 'party.popper.fill',
-      title: 'იმპოსტორი დაიჭირეს!',
-      subtitle: 'ჯგუფმა ზუსტად მიაგნო — ბლეფი არ გაჭრა.',
-      color: Colors.phosphor,
-    };
-  if (outcome === 'impostorGuessedWord')
-    return {
-      icon: 'exclamationmark.circle.fill',
-      title: 'დაიჭირეს, მაგრამ გამოიცნო!',
-      subtitle: 'ბოლო წამს გადაირჩინა თავი — ქულები გაიყო.',
-      color: Colors.phosphor,
-    };
-  if (outcome === 'impostorEscaped')
-    return {
-      icon: 'eye.slash.fill',
-      title: 'იმპოსტორმა გაასწრო!',
-      subtitle: `${engine.accused?.name ?? 'არჩეული'} სულ უდანაშაულო აღმოჩნდა.`,
-      color: Colors.neonMagenta,
-    };
-  return { icon: 'questionmark.circle', title: 'რაუნდი დასრულდა', subtitle: '', color: Colors.textPrimary };
-}
-
-function Result({
-  engine,
-  roster,
-  onExit,
-}: {
-  engine: ImpostorEngine;
-  roster: GameFlowProps['roster'];
-  onExit: () => void;
-}) {
-  const head = headlineFor(engine);
-
+function Result({ engine, onExit }: { engine: ImpostorEngine; onExit: () => void }) {
   useAwardOnce(() => {
-    for (const [id, points] of Object.entries(engine.roundPoints)) roster.addScore(points, id);
     Haptics.success();
   });
 
-  const scored = engine.players.filter((p) => (engine.roundPoints[p.id] ?? 0) > 0);
+  const winner = engine.winner;
 
   return (
+    <View style={{ flex: 1 }}>
     <ScrollView contentContainerStyle={{ flexGrow: 1, gap: Space.m, paddingVertical: Space.m }}>
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name={head.icon} size={32} tint={head.color} />
-      </View>
-
-      <Text style={[titleFont(28), Layout.centered, { color: head.color, paddingHorizontal: 24 }]}>{head.title}</Text>
-
-      {head.subtitle ? (
-        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-          {head.subtitle}
+      {winner ? (
+        <Text style={[titleFont(28), Layout.centered, { color: winner === 'group' ? Colors.phosphor : Colors.neonMagenta, paddingHorizontal: 24 }]}>
+          {winner === 'group'
+            ? 'იმპოსტორი დაიჭირეს!'
+            : engine.caught
+              ? 'დაიჭირეს, მაგრამ გამოიცნო!'
+              : 'იმპოსტორმა გაასწრო!'}
         </Text>
       ) : null}
 
@@ -389,37 +311,19 @@ function Result({
               value={engine.impostors.map((p) => p.name).join(', ')}
               tint={Colors.phosphor}
             />
-            {engine.impostorGuess ? (
+            {engine.impostorGuess !== null ? (
               <>
                 <Divider />
                 <Row
                   label="ვარაუდი"
-                  value={engine.impostorGuess}
-                  tint={engine.impostorGuess === engine.secretWord ? Colors.phosphor : Colors.textSecondary}
+                  value={`${engine.impostorGuess} · ${engine.guessedRight ? 'გამოიცნო!' : 'ვერ გამოიცნო'}`}
+                  tint={engine.guessedRight ? Colors.phosphor : Colors.textSecondary}
                 />
               </>
             ) : null}
           </View>
         </GlassCard>
       </View>
-
-      {scored.length > 0 ? (
-        <View style={Layout.content}>
-          <GlassCard>
-            <View style={{ gap: 8 }}>
-              <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>რაუნდის ქულები</Text>
-              {scored.map((p) => (
-                <View key={p.id} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={[body(15, '600'), { color: Colors.textPrimary, flex: 1 }]}>{p.name}</Text>
-                  <Text style={[body(15, '900'), { color: Colors.phosphor, fontVariant: ['tabular-nums'] }]}>
-                    +{engine.roundPoints[p.id] ?? 0}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </GlassCard>
-        </View>
-      ) : null}
 
       <View style={{ flex: 1 }} />
 
@@ -435,6 +339,8 @@ function Result({
         <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
       </View>
     </ScrollView>
+      {winner ? <Confetti /> : null}
+    </View>
   );
 }
 
@@ -443,24 +349,17 @@ function Row({ label, value, tint = Colors.textPrimary }: { label: string; value
     <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
       <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>{label}</Text>
       <View style={{ flex: 1 }} />
-      <Text style={[body(16, '700'), { color: tint, textAlign: 'right', flexShrink: 1 }]}>{value}</Text>
+      <FitText style={[body(16, '700'), { color: tint, textAlign: 'right', flexShrink: 1 }]} maxLines={3}>
+        {value}
+      </FitText>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  nameCell: {
-    width: '47%',
-    flexGrow: 1,
-    minHeight: 70,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    borderRadius: Radius.small,
-    borderWidth: 1,
-  },
   optionRow: {
     paddingVertical: 18,
+    paddingHorizontal: 16,
     borderRadius: Radius.small,
     alignItems: 'center',
     backgroundColor: Colors.surface,

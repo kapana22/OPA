@@ -2,16 +2,15 @@ import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, body, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, RankRow, ScreenHeader, CategoryChecklist , RulesSheet } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
-import { Pressable } from '../../ui/Pressable';
-import { Confetti } from '../../ui/Confetti';
 import { Layout } from '../../ui/layout';
+import { Confetti } from '../../ui/Confetti';
+import { FitText } from '../../ui/FitText';
 import { useKeepScreenAwake } from '../../core/orientationLock';
 import { LaughBank } from '../../content/banks';
 import { TurnRotation } from '../../core/turnRotation';
-import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
@@ -19,7 +18,6 @@ import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
 import { NoLaughEngine } from './engine';
 import { game as findGame } from '../catalog';
-import { Icon } from '../../ui/Icon';
 
 /**
  * „არ გაიცინო“ — სრული ნაკადი.
@@ -58,10 +56,10 @@ function Setup({ engine, onClose }: { engine: NoLaughEngine; onClose: () => void
   const gameData = findGame('nolaugh');
   return (
     <View style={{ flex: 1 }}>
-      <RulesSheet visible={showRules} title="No Laugh" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+      <RulesSheet visible={showRules} title="არ გაიცინო" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
-        <ScreenHeader title="არ გაიცინო" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Don't Laugh"  onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -105,11 +103,11 @@ function Setup({ engine, onClose }: { engine: NoLaughEngine; onClose: () => void
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
               build={() => textEntries(LaughBank, 'laugh', 'ყველა')}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
@@ -125,6 +123,12 @@ function Setup({ engine, onClose }: { engine: NoLaughEngine; onClose: () => void
 // ── ვინ უძლებს
 
 function Announce({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void }) {
+  // „შემდეგი რაუნდი“ იმავე ადგილასაა — ორმაგი შეხება რაუნდს ნაადრევად არ უნდა იწყებდეს.
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setArmed(true), 1000);
+    return () => clearTimeout(t);
+  }, []);
   return (
     <View style={{ flex: 1, gap: 18 }}>
       <View style={Layout.topBar}>
@@ -138,9 +142,9 @@ function Announce({ engine, onExit }: { engine: NoLaughEngine; onExit: () => voi
 
       <PlayerCharacter player={engine.holder} />
       <View style={{ gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+        <FitText style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} maxLines={1}>
           {engine.holder?.name ?? '—'}
-        </Text>
+        </FitText>
         <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
           ამ რაუნდში არ უნდა გაიცინოს
         </Text>
@@ -152,7 +156,7 @@ function Announce({ engine, onExit }: { engine: NoLaughEngine; onExit: () => voi
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
           ტელეფონი ჯგუფს გადაეცი, არა მას.
         </Text>
-        <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginRound()} />
+        <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} enabled={armed} onPress={() => engine.beginRound()} />
       </View>
     </View>
   );
@@ -174,30 +178,16 @@ function Round({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void }
         <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           რაუნდი {engine.round} / {engine.totalRounds}
         </Text>
-        <View style={{ flex: 1 }} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={engine.isPaused ? 'გაგრძელება' : 'პაუზა'}
-          onPress={() => engine.togglePause()}
-          style={styles.roundButton}
-        >
-          <Icon
-            name={engine.isPaused ? 'play.fill' : 'pause.fill'}
-            size={14}
-            color={Colors.textSecondary}
-          />
-        </Pressable>
       </View>
 
       <View style={{ alignItems: 'center', gap: 4 }}>
         <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>არ უნდა გაიცინოს</Text>
-        <Text
+        <FitText
           style={[titleFont(24), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}
-          numberOfLines={1}
-          adjustsFontSizeToFit
+          maxLines={1}
         >
           {engine.holder?.name ?? '—'}
-        </Text>
+        </FitText>
       </View>
 
       <View style={{ alignItems: 'center', gap: 8 }}>
@@ -212,22 +202,17 @@ function Round({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void }
             ]}
           />
         </View>
-        {engine.isPaused ? <Text style={[body(13, '700'), { color: Colors.phosphor }]}>პაუზა</Text> : null}
       </View>
 
       <View style={Layout.content}>
         <GlassCard padding={24}>
           <View style={{ gap: 12, alignItems: 'center' }}>
-            <Text style={[body(12, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-              დავალება #{engine.tasksThisRound}
-            </Text>
-            <Text
+            <FitText
               style={[titleFont(23), Layout.centered, { color: Colors.textPrimary }]}
-              adjustsFontSizeToFit
-              numberOfLines={5}
+              maxLines={6}
             >
               {engine.currentTask}
-            </Text>
+            </FitText>
           </View>
         </GlassCard>
       </View>
@@ -262,38 +247,20 @@ function Result({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void 
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon
-          name={survived ? 'face.dashed.fill' : 'face.smiling'}
-          size={36}
-          tint={survived ? Colors.phosphor : Colors.neonMagenta}
-        />
-      </View>
-
       <Text style={[titleFont(34), Layout.centered, { color: survived ? Colors.phosphor : Colors.neonMagenta }]}>
         {survived ? 'გაუძლო' : 'გაიცინა'}
       </Text>
 
-      <Text
+      <FitText
         style={[body(17, '600'), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-        numberOfLines={2}
-        adjustsFontSizeToFit
+        maxLines={2}
       >
         {engine.holder?.name ?? '—'}
-      </Text>
+      </FitText>
 
       <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {survived ? 'ბოლომდე სერიოზული დარჩა — მას +2 ქულა.' : 'ჯგუფმა გატეხა — თითოეულ დანარჩენს +1 ქულა.'}
       </Text>
-
-      <View style={Layout.content}>
-        <GlassCard>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={[body(13, '500'), { color: Colors.textSecondary, flex: 1 }]}>დავალება დაიხარჯა</Text>
-            <Text style={[body(14, '900'), Layout.digits, { color: Colors.textPrimary }]}>{engine.tasksThisRound}</Text>
-          </View>
-        </GlassCard>
-      </View>
 
       <View style={{ flex: 1 }} />
 
@@ -313,7 +280,6 @@ function Result({ engine, onExit }: { engine: NoLaughEngine; onExit: () => void 
 
 function Summary({
   engine,
-  roster,
   onExit,
 }: {
   engine: NoLaughEngine;
@@ -324,7 +290,6 @@ function Summary({
   useAwardOnce(() => {
     Sound.play('win');
     Haptics.win();
-    PodiumAward.apply(engine.results, roster);
   });
 
   const champion = engine.champion;
@@ -335,17 +300,12 @@ function Summary({
       <View style={{ flex: 1, gap: 14 }}>
         <View style={{ flex: 1 }} />
 
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
-        </View>
-
-        <Text
+        <FitText
           style={[titleFont(28), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
-          adjustsFontSizeToFit
-          numberOfLines={2}
+          maxLines={2}
         >
           {champion ? champions.map((p) => p.name).join(', ') : 'ქულა ვერავინ აიღო'}
-        </Text>
+        </FitText>
 
         {champion ? (
           <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
@@ -353,9 +313,6 @@ function Summary({
           </Text>
         ) : null}
 
-        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
-          საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
-        </Text>
 
         <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
           {engine.ranking.map((player) => (
@@ -381,21 +338,12 @@ function Summary({
           <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
         </View>
       </View>
-
       {champion ? <Confetti /> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  roundButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.surface,
-  },
   barTrack: {
     height: 8,
     borderRadius: 4,

@@ -8,8 +8,8 @@ import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { PlayerAvatarView } from '../../ui/PlayerAvatarView';
 import { Confetti } from '../../ui/Confetti';
 import { Layout } from '../../ui/layout';
+import { FitText } from '../../ui/FitText';
 import { useObservable } from '../../core/observable';
-import { useAwardOnce } from '../../core/awardOnce';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import { game } from '../catalog';
@@ -57,7 +57,7 @@ function Setup({ engine, onExit }: Props) {
   return <View style={{ flex: 1 }}>
     <RulesSheet visible={rules} title="ერთ ტალღაზე" accent={Colors.phosphor}
       steps={game('wavelength')?.howTo ?? []} onClose={() => setRules(false)} />
-    <View style={Layout.header}><ScreenHeader title="ერთ ტალღაზე" subtitle="კლასიკური · ორი გუნდი"
+    <View style={Layout.header}><ScreenHeader title="Wavelength"
       onBack={onExit} onInfo={() => setRules(true)} /></View>
     <ScrollView contentContainerStyle={Layout.scroll}>
       <Text style={paragraph}>სახელზე შეხებით მოთამაშეს სხვა გუნდში გადაიყვან.</Text>
@@ -120,10 +120,9 @@ function Round({ engine, onExit }: Props) {
     case 'pass':
       content = <><View style={{ flex: 1 }} /><PlayerCharacter player={engine.clueGiver} />
         <View style={{ gap: 6 }}>
-          <Text style={[title(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+          <FitText style={[title(28), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>
             {engine.clueGiver?.name ?? ''}
-          </Text>
-          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+          </FitText>
         </View>
         <View style={{ flex: 1 }} />
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8 }]}>დანარჩენებმა ეკრანს არ შეხედოთ.</Text></>;
@@ -136,11 +135,11 @@ function Round({ engine, onExit }: Props) {
     case 'guess':
       content = <><TeamScores engine={engine} /><Text style={heading}>სად ჯდება მინიშნება?</Text>
         <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} interactive onValueChange={v => engine.setGuess(v)} /></GlassCard>
-        <Text style={paragraph}>იმსჯელეთ თანაგუნდელებმა და თითით მოატრიალეთ ისარი შეთანხმებულ ადგილზე.</Text></>;
+        <Text style={paragraph}>შეთანხმდით და ისარი დააყენეთ.</Text></>;
       footer = <PrimaryButton title="დაფიქსირება" onPress={guard(() => engine.lockGuess())} />; break;
     case 'side':
       content = <><Text style={heading}>{engine.teamName(engine.otherTeam)} — თქვენი ვარაუდი</Text>
-        <Text style={paragraph}>ტელეფონი მეტოქე გუნდს გადაეცით. სამიზნის ცენტრი დაფიქსირებული ისრის მარცხნივაა თუ მარჯვნივ?</Text>
+        <Text style={paragraph}>სამიზნე ისრის მარცხნივაა თუ მარჯვნივ?</Text>
         <GlassCard><SpectrumBar spectrum={engine.spectrum} guess={engine.guess} /></GlassCard>
         <Text style={paragraph}>სწორი მხარე +1 ქულაა, თუ ისარი 4-ქულიან ცენტრში არ დგას.</Text></>;
       footer = <><PrimaryButton title="ისრის მარცხნივ" onPress={guard(() => engine.chooseSide('left'))} />
@@ -154,7 +153,7 @@ function Round({ engine, onExit }: Props) {
       content = <><Text style={heading}>{engine.teamName(engine.activeTeam)} +{engine.lastPoints} · {engine.teamName(engine.otherTeam)} +{engine.otherPoints}</Text>
         <TeamScores engine={engine} /><GlassCard><SpectrumBar spectrum={engine.spectrum} target={engine.target} guess={engine.guess} showBands /></GlassCard>
         <BandScoreLegend /><Text style={paragraph}>მეტოქის ვარაუდი: {engine.sideGuess === 'left' ? 'მარცხნივ' : 'მარჯვნივ'} · {engine.lastPoints === 4 ? '4 ქულაზე მეტოქე ქულას ვერ იღებს' : engine.otherPoints ? 'სწორია!' : 'არ დაემთხვა'}</Text>
-        {engine.catchUp && <Text style={paragraph}>4 ქულა და ჯერ კიდევ ჩამორჩებით — კიდევ თქვენი სვლაა, ახალი მიმანიშნებლით!</Text>}
+        {engine.catchUp && <Text style={paragraph}>ისევ თქვენი სვლაა!</Text>}
         {engine.tiebreak && engine.winner === null && <Text style={paragraph}>დამატებითი სვლები — ორივე გუნდი კიდევ ერთხელ თამაშობს.</Text>}</>;
       footer = <PrimaryButton title={engine.winner !== null ? 'შედეგები' : engine.catchUp ? 'კიდევ ჩვენი სვლა' : 'შემდეგი გუნდი'} onPress={guard(() => engine.next())} />; break;
     default: return null;
@@ -162,11 +161,10 @@ function Round({ engine, onExit }: Props) {
   return <Frame engine={engine} onExit={onExit} footer={footer}>{content}</Frame>;
 }
 
-function Summary({ engine, roster, onExit }: Props & Pick<GameFlowProps, 'roster'>) {
-  useAwardOnce(() => engine.players.forEach(player => roster.addScore(engine.rewardFor(player), player.id)));
+function Summary({ engine, onExit }: Props & Pick<GameFlowProps, 'roster'>) {
   return <Frame engine={engine} onExit={onExit} footer={<><PrimaryButton title="კიდევ ვითამაშოთ" onPress={() => engine.restart()} /><GhostButton title="დასრულება" onPress={onExit} /></>}>
-    <Confetti /><Text style={heading}>გაიმარჯვა: {engine.teamName(engine.winner ?? 0)}</Text>
+    {engine.winner !== null ? <Confetti /> : null}<Text style={heading}>გაიმარჯვა: {engine.teamName(engine.winner ?? 0)}</Text>
     <Text style={paragraph}>{engine.teams[engine.winner ?? 0].map(p => p.name).join(' · ')}</Text>
-    <TeamScores engine={engine} /><Text style={paragraph}>აპის საერთო ტაბლოზე: გამარჯვებულებს +3, მეორე გუნდს +1</Text>
+    <TeamScores engine={engine} />
   </Frame>;
 }

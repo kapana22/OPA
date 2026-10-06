@@ -1,33 +1,32 @@
-import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
-import { CategoryChip, Divider, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow , RulesSheet } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, RulesSheet, ToggleRow } from '../../ui/Cards';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
 import { Confetti } from '../../ui/Confetti';
 import { DiscussionPanel } from '../../ui/DiscussionPanel';
+import { discussionLabel } from '../../core/settings';
 import { Layout } from '../../ui/layout';
+import { FitText } from '../../ui/FitText';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { Player } from '../../core/roster';
 import type { GameFlowProps } from '../registry';
-import { MafiaEngine, roleIcon, roleTitle, type MafiaRole } from './engine';
+import { DETECTIVE_MIN_PLAYERS, DOCTOR_MIN_PLAYERS, MAFIA_DISCUSSION_OPTIONS, MafiaEngine, roleIcon, roleTitle, type MafiaRole } from './engine';
+import { NARRATION, narrate, useNightMusic, type NarrationKey } from './narration';
 import { game as findGame } from '../catalog';
 import { Icon } from '../../ui/Icon';
 
 /**
  * „მაფია“ — სრული ნაკადი.
  *
- * პორტი: `Splash/Games/Mafia/*.swift` (7 ხედი).
- * **წამყვანი არ სჭირდება** — ღამით ტელეფონი წრეზე გადადის და თითოეული
- * თავის ეკრანს ხედავს.
+ * პორტი: `Splash/Games/Mafia/*.swift`.
+ * **წამყვანი აპია** — ღამით ტელეფონი მაგიდის შუაში დევს და აპი რიგრიგობით
+ * აღვიძებს როლებს. ტელეფონი წრეზე მხოლოდ როლების დარიგებისას გადადის.
  */
-
-/** იგივე არჩევანი, რაც იმპოსტორსა და Undercover-ში; 0 = ტაიმერის გარეშე. */
-const TIMER_OPTIONS = [0, 120, 180, 300];
 
 const roleNote: Record<MafiaRole, string> = {
   civilian: 'ღამით გძინავს. დღისით იპოვე მაფია.',
@@ -46,7 +45,7 @@ export function MafiaFlow({ roster, onExit }: GameFlowProps) {
     case 'reveal':
       return <Reveal engine={engine} onExit={onExit} />;
     case 'night':
-      return <Night key={engine.nightIndex} engine={engine} onExit={onExit} />;
+      return <Night key={engine.night} engine={engine} onExit={onExit} />;
     case 'morning':
       return <Morning engine={engine} onExit={onExit} />;
     case 'discussion':
@@ -56,7 +55,7 @@ export function MafiaFlow({ roster, onExit }: GameFlowProps) {
     case 'dayResult':
       return <DayResult engine={engine} onExit={onExit} />;
     case 'gameOver':
-      return <GameOver engine={engine} roster={roster} onExit={onExit} />;
+      return <GameOver engine={engine} onExit={onExit} />;
   }
 }
 
@@ -96,18 +95,17 @@ function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }
         </GlassCard>
 
         <GlassCard>
-          <View style={{ gap: 14 }}>
+          <View style={{ gap: 12 }}>
             <ToggleRow
               title="ექიმი"
-              subtitle="ღამით ერთ ადამიანს არჩენს"
-              value={engine.settings.includeDoctor}
+              subtitle={engine.players.length >= DOCTOR_MIN_PLAYERS ? 'ღამით ერთს გადაარჩენს' : `საჭიროა ${DOCTOR_MIN_PLAYERS} მოთამაშე`}
+              value={engine.hasDoctor}
               onChange={(v) => engine.setDoctor(v)}
             />
-            <Divider />
             <ToggleRow
               title="დეტექტივი"
-              subtitle="ღამით ერთ ადამიანს ამოწმებს"
-              value={engine.settings.includeDetective}
+              subtitle={engine.players.length >= DETECTIVE_MIN_PLAYERS ? 'ღამით ერთს შეამოწმებს' : `საჭიროა ${DETECTIVE_MIN_PLAYERS} მოთამაშე`}
+              value={engine.hasDetective}
               onChange={(v) => engine.setDetective(v)}
             />
           </View>
@@ -117,11 +115,11 @@ function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>განხილვის დრო</Text>
             <View style={Layout.segmentRow}>
-              {TIMER_OPTIONS.map((secs) => (
+              {MAFIA_DISCUSSION_OPTIONS.map((secs) => (
                 <CategoryChip
                   compact
                   key={secs}
-                  label={secs === 0 ? '∞' : `${secs / 60}:00`}
+                  label={discussionLabel(secs)}
                   selected={engine.settings.discussionSeconds === secs}
                   onPress={() => engine.setDiscussionSeconds(secs)}
                 />
@@ -129,6 +127,7 @@ function Setup({ engine, onClose }: { engine: MafiaEngine; onClose: () => void }
             </View>
           </View>
         </GlassCard>
+
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -178,133 +177,122 @@ function Reveal({ engine, onExit }: { engine: MafiaEngine; onExit: () => void })
   );
 }
 
-// ── ღამე
+// ── ღამე — ტელეფონი შუაში, აპი წამყვანია
+
+/** ძილის ფრაზის შემდეგ პაუზა, სანამ შემდეგი როლი გაიღვიძებს. */
+const SLEEP_GAP_MS = 4000;
 
 function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) {
-  // ახალი მოთამაშე = ახალი კომპონენტი (`key={nightIndex}`) — ტელეფონი ისევ
-  // უნდა გადაეცეს, წინა როლი კი ერთი კადრითაც არ უნდა გამოჩნდეს.
-  const [ready, setReady] = useState(false);
-  // „გადავეცი“/„დავიმახსოვრე“ იმავე ადგილასაა, სადაც „მე ვარ“ — ორმაგი შეხება
-  // წინა მოთამაშეს შემდეგის როლს აჩვენებდა. ახალ ეკრანზე პირველ წამს ვერ დააჭერ.
-  // ეკრანის გაჩენის დრო — effect-ში იწერება (რენდერი სუფთა უნდა იყოს).
-  const mountedAt = useRef(0);
+  const step = engine.nightStep;
+  const awake = engine.awake;
+  useNightMusic();
+
+  // წამყვანის ხმა: როლი იღვიძებს → „გაიღვიძე“; ქმედების შემდეგ → „დაიძინე“ და პაუზა.
   useEffect(() => {
-    mountedAt.current = Date.now();
-  }, []);
-  const player = engine.currentNightPlayer;
-  const role = player ? engine.roleOf(player) : 'civilian';
+    if (step === 'dusk' && !awake) return;
+    if (step !== 'dusk' && awake) {
+      narrate(`${step}Wake` as NarrationKey);
+      return;
+    }
+    narrate(step === 'dusk' ? 'citySleep' : (`${step}Sleep` as NarrationKey));
+    const timer = setTimeout(() => engine.nextNightStep(), SLEEP_GAP_MS);
+    return () => clearTimeout(timer);
+  }, [engine, step, awake, engine.night]);
 
   const header = (
     <View style={Layout.topBar}>
       <GameExitButton onExit={onExit} />
       <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>ღამე {engine.night}</Text>
       <View style={{ flex: 1 }} />
-      <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-        {engine.nightIndex + 1} / {engine.alive.length}
-      </Text>
     </View>
   );
 
-  if (!ready) {
+  if (step === 'dusk' && !awake) {
     return (
       <View style={{ flex: 1, gap: 18 }}>
         {header}
         <View style={{ flex: 1 }} />
-        <PlayerCharacter player={player} />
-        <View style={{ gap: 6, paddingHorizontal: 24 }}>
-          <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
-            {player?.name ?? '—'}
-          </Text>
-          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
+        <View style={{ alignItems: 'center' }}>
+          <GlyphIcon name="moon.stars.fill" size={36} tint={Colors.neonCyan} />
         </View>
+        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]}>ღამე {engine.night}</Text>
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+          ტელეფონი შუაში დადეთ.
+        </Text>
         <View style={{ flex: 1 }} />
         <View style={Layout.footer}>
-          <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
-            დანარჩენებო, თვალები დახუჭეთ
-          </Text>
-          <PrimaryButton
-            title="მე ვარ — გავაგრძელოთ"
-            icon="chevron.right"
-            tint={Colors.neonCyan}
-            onPress={() => {
-              if (Date.now() - mountedAt.current < 700) return;
-              setReady(true);
-            }}
-          />
+          <PrimaryButton title="ღამის დაწყება" icon="moon.stars.fill" tint={Colors.neonCyan} onPress={() => engine.sleepCity()} />
         </View>
       </View>
     );
   }
 
+  // ძილის პაუზა — ეკრანზე არაფერი, რაც ვინმეს როლს გასცემს.
+  if (step === 'dusk' || !awake) {
+    const line = step === 'dusk' ? NARRATION.citySleep : NARRATION[`${step}Sleep` as NarrationKey];
+    return (
+      <View style={{ flex: 1, gap: 18 }}>
+        {header}
+        <View style={{ flex: 1 }} />
+        <View style={{ alignItems: 'center' }}>
+          <GlyphIcon name="moon.stars.fill" size={36} tint={Colors.textSecondary} />
+        </View>
+        <Text style={[titleFont(24), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>{line}</Text>
+        <View style={{ flex: 1 }} />
+      </View>
+    );
+  }
+
   // დეტექტივს შედეგი უკვე აქვს — ჩვენება.
-  if (role === 'detective' && engine.checkResult !== null) {
+  if (step === 'detective' && engine.checkResult !== null) {
     const isMafia = engine.checkResult === true;
     return (
       <View style={{ flex: 1, gap: Space.m }}>
         {header}
         <View style={{ flex: 1 }} />
         <View style={{ alignItems: 'center' }}>
-          <GlyphIcon
-            name={isMafia ? 'scope' : 'person.fill'}
-            size={36}
-            tint={isMafia ? Colors.neonMagenta : Colors.phosphor}
-          />
+          <GlyphIcon name={isMafia ? 'scope' : 'person.fill'} size={36} tint={isMafia ? Colors.neonMagenta : Colors.phosphor} />
         </View>
-        <Text style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]}>{engine.checked?.name ?? '—'}</Text>
+        <FitText style={[titleFont(30), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>{engine.checked?.name ?? '—'}</FitText>
         <Text style={[titleFont(24), Layout.centered, { color: isMafia ? Colors.neonMagenta : Colors.phosphor }]}>
           {isMafia ? 'მაფიაა!' : 'მაფია არ არის'}
         </Text>
-        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-          დაიმახსოვრე — ჩაწერა არსად ხდება.
-        </Text>
         <View style={{ flex: 1 }} />
         <View style={Layout.footer}>
-          <PrimaryButton title="დავიმახსოვრე" icon="checkmark" tint={Colors.neonCyan} onPress={() => engine.detectiveDone(player ?? undefined)} />
+          <PrimaryButton title="დავიმახსოვრე" icon="checkmark" tint={Colors.neonCyan} onPress={() => engine.detectiveDone()} />
         </View>
       </View>
     );
   }
 
-  // `actor` — ეკრანის პატრონი: ორმაგი შეხება შემდეგ მოთამაშეს ჯერს ვერ გამოტოვებინებს.
-  const actor = player ?? undefined;
   const config =
-    role === 'mafia'
+    step === 'mafia'
       ? {
-          title: 'აირჩიე მსხვერპლი',
-          subtitle: 'ღამით ის დაიღუპება, თუ ექიმი არ გადაარჩენს',
-          // მაფია ერთმანეთს არ ხოცავს — ორი მაფიის შემთხვევაში ბრმად რომ არ ხმობდნენ.
+          title: 'მაფია, აირჩიეთ მსხვერპლი',
+          subtitle: 'ჩუმად შეთანხმდით და შეეხეთ სახელს.',
+          // მაფია ერთმანეთს არ ხოცავს.
           exclude: engine.alive.filter((p) => engine.roleOf(p) === 'mafia').map((p) => p.id),
-          onPick: (t: Player) => engine.mafiaChoose(t, actor),
+          onPick: (t: Player) => engine.mafiaChoose(t),
         }
-      : role === 'doctor'
+      : step === 'doctor'
         ? {
-            title: 'ვინ გადაარჩინო?',
-            subtitle: 'ერთსა და იმავე ადამიანს ზედიზედ ორ ღამეს ვერ გადაარჩენ',
-            // წუხანდელი გადარჩენილი ამაღამ ბადეში არ ჩანს — ძრავაც იმავეს ამოწმებს.
+            title: 'ექიმო, ვის გადაარჩენ?',
+            subtitle: 'ერთსა და იმავეს ზედიზედ ორ ღამეს ვერ გადაარჩენ.',
             exclude: engine.doctorExcluded,
-            onPick: (t: Player) => engine.doctorSave(t, actor),
+            onPick: (t: Player) => engine.doctorSave(t),
           }
-        : role === 'detective'
-          ? {
-              title: 'ვინ შეამოწმო?',
-              subtitle: 'გაიგებ, მაფიაა თუ არა',
-              exclude: player ? [player.id] : [],
-              onPick: (t: Player) => engine.detectiveCheck(t, actor),
-            }
-          : {
-              // მოქალაქეს ღამით ქმედება არ აქვს, მაგრამ ისიც სახელს ირჩევს — ყველა
-              // ჯერი ერთნაირად გამოიყურება და შეხების რაოდენობა როლს ვერ გასცემს.
-              title: 'ვის ეჭვობ?',
-              subtitle: 'მოქალაქე ხარ — არჩევანი თამაშზე არ მოქმედებს',
-              exclude: player ? [player.id] : [],
-              onPick: (_t: Player) => engine.skipNightTurn(actor),
-            };
+        : {
+            title: 'დეტექტივო, ვის შეამოწმებ?',
+            subtitle: 'გაიგებ, მაფიაა თუ არა.',
+            exclude: engine.alive.filter((p) => engine.roleOf(p) === 'detective').map((p) => p.id),
+            onPick: (t: Player) => engine.detectiveCheck(t),
+          };
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
       {header}
       <View style={{ flex: 1 }} />
-      <Text style={[titleFont(26), Layout.centered, { color: Colors.textPrimary }]}>{config.title}</Text>
+      <Text style={[titleFont(26), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}>{config.title}</Text>
       <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {config.subtitle}
       </Text>
@@ -323,9 +311,9 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
               }}
               style={[styles.nameCell, { borderColor: Colors.neonCyan + '80' }]}
             >
-              <Text style={[body(17, '700'), Layout.centered, { color: Colors.textPrimary }]} numberOfLines={2} adjustsFontSizeToFit>
+              <FitText style={[body(17, '700'), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>
                 {target.name}
-              </Text>
+              </FitText>
             </Pressable>
           ))}
       </ScrollView>
@@ -339,6 +327,9 @@ function Night({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) 
 
 function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) {
   const victim = engine.killed;
+  useEffect(() => {
+    narrate('cityWake');
+  }, []);
 
   return (
     <View style={{ flex: 1, gap: Space.m }}>
@@ -359,13 +350,12 @@ function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
       {victim ? (
         <>
           <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ღამით დაიღუპა</Text>
-          <Text
+          <FitText
             style={[titleFont(34), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}
-            adjustsFontSizeToFit
-            numberOfLines={2}
+            maxLines={2}
           >
             {victim.name}
-          </Text>
+          </FitText>
           <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary }]}>
             მისი როლი: {roleTitle[engine.roleOf(victim)]}
           </Text>
@@ -376,17 +366,6 @@ function Morning({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
           <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ამ ღამეს ყველა გადარჩა.</Text>
         </>
       )}
-
-      <View style={Layout.content}>
-        <GlassCard>
-          <View style={{ gap: 6 }}>
-            <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>ცოცხლები — {engine.alive.length}</Text>
-            <Text style={[body(15, '600'), { color: Colors.textPrimary }]}>
-              {engine.alive.map((p) => p.name).join(', ')}
-            </Text>
-          </View>
-        </GlassCard>
-      </View>
 
       <View style={{ flex: 1 }} />
 
@@ -454,13 +433,12 @@ function DayVote({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }
                 { backgroundColor: on ? Colors.neonCyan : Colors.surface, borderColor: on ? 'transparent' : Colors.stroke },
               ]}
             >
-              <Text
+              <FitText
                 style={[body(17, '700'), Layout.centered, { color: on ? Colors.ink : Colors.textPrimary }]}
-                numberOfLines={2}
-                adjustsFontSizeToFit
+                maxLines={2}
               >
                 {player.name}
-              </Text>
+              </FitText>
             </Pressable>
           );
         })}
@@ -517,32 +495,24 @@ function DayResult({ engine, onExit }: { engine: MafiaEngine; onExit: () => void
             />
           </View>
 
-          <Text
+          <FitText
             style={[titleFont(32), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-            adjustsFontSizeToFit
-            numberOfLines={2}
+            maxLines={2}
           >
             {votedOut.name}
-          </Text>
+          </FitText>
 
           <Text style={[titleFont(22), Layout.centered, { color: wasMafia ? Colors.phosphor : Colors.neonMagenta }]}>
             {roleTitle[role]} იყო
           </Text>
 
-          <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {wasMafia ? 'ქალაქმა ზუსტად მიაგნო.' : 'უდანაშაულო გააძევეს — მაფია ხარობს.'}
-          </Text>
+          {wasMafia ? (
+            <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
+              ქალაქმა ზუსტად მიაგნო.
+            </Text>
+          ) : null}
         </>
-      ) : (
-        <>
-          <View style={{ alignItems: 'center' }}>
-            <GlyphIcon name="moon.stars.fill" size={34} tint={Colors.neonCyan} />
-          </View>
-          <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}>
-            არავინ გააძევეს
-          </Text>
-        </>
-      )}
+      ) : null}
 
       <View style={{ flex: 1 }} />
 
@@ -560,19 +530,10 @@ function DayResult({ engine, onExit }: { engine: MafiaEngine; onExit: () => void
 
 // ── დასასრული
 
-function GameOver({
-  engine,
-  roster,
-  onExit,
-}: {
-  engine: MafiaEngine;
-  roster: GameFlowProps['roster'];
-  onExit: () => void;
-}) {
+function GameOver({ engine, onExit }: { engine: MafiaEngine; onExit: () => void }) {
   const cityWon = engine.winner === 'city';
 
   useAwardOnce(() => {
-    for (const [id, points] of Object.entries(engine.finalPoints)) roster.addScore(points, id);
     Haptics.win();
   });
 
@@ -595,19 +556,12 @@ function GameOver({
           {cityWon ? 'ქალაქმა გაიმარჯვა!' : 'მაფიამ გაიმარჯვა!'}
         </Text>
 
-        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-          {cityWon
-            ? 'ყველა მაფია გაძევდა — ქალაქს ახლა მშვიდად სძინავს.'
-            : 'მაფია რაოდენობით გაუტოლდა ქალაქს.'}
-        </Text>
-
         <ScrollView contentContainerStyle={Layout.content}>
           <GlassCard>
             <View style={{ gap: 10 }}>
               <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>ვინ ვინ იყო</Text>
               {engine.players.map((p) => {
                 const role = engine.roleOf(p);
-                const points = engine.finalPoints[p.id] ?? 0;
                 const out = engine.eliminated.has(p.id);
                 return (
                   <View key={p.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -620,9 +574,6 @@ function GameOver({
                     </Text>
                     <View style={{ flex: 1 }} />
                     <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>{roleTitle[role]}</Text>
-                    {points > 0 ? (
-                      <Text style={[body(14, '900'), Layout.digits, { color: Colors.phosphor }]}>+{points}</Text>
-                    ) : null}
                   </View>
                 );
               })}
@@ -643,7 +594,7 @@ function GameOver({
         </View>
       </View>
 
-      {cityWon ? <Confetti /> : null}
+      {engine.winner !== null ? <Confetti /> : null}
     </View>
   );
 }

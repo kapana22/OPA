@@ -16,7 +16,7 @@ import { usePortraitDefault } from '../src/core/portraitDefault';
  * თორემ შენახული შემადგენლობა პირველივე კადრში დაიკარგებოდა.
  */
 /**
- * ტაბლო, მოთამაშეები, პარამეტრები, წესები და ღამის შედეგები — **სრულ ეკრანზე**.
+ * მოთამაშეები, პარამეტრები და წესები — **სრულ ეკრანზე**.
  * ადრე ქვემოდან ამოსრიალებული ფურცელი იყო და დასახურად ჩამოსრიალება სჭირდებოდა;
  * ახლა ზემოთ „უკან“ ღილაკია (`PageHeader`), iOS-ზე კი უკან გასრიალება
  * ეკრანის ნებისმიერი ადგილიდან მუშაობს და არა მხოლოდ კიდიდან.
@@ -43,8 +43,6 @@ export default function RootLayout() {
               {/* კიდიდან შემთხვევითი გასრიალება რაუნდს უსიტყვოდ წყვეტდა — გასვლა მხოლოდ ✕-ით, დადასტურებით. */}
               <Stack.Screen name="game/[id]" options={{ gestureEnabled: false }} />
               <Stack.Screen name="players" options={PAGE} />
-              <Stack.Screen name="scoreboard" options={PAGE} />
-              <Stack.Screen name="night" options={PAGE} />
               <Stack.Screen name="settings" options={PAGE} />
               <Stack.Screen name="rules/[id]" options={PAGE} />
             </Stack>

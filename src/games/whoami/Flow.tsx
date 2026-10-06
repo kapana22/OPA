@@ -1,16 +1,17 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
+import { Colors, Radius, Space, body, display, title as titleFont } from '../../theme/theme';
+import { CategoryChip, GameExitButton, GlassCard, RankRow, ScreenHeader, CategoryChecklist, RulesSheet, ToggleRow } from '../../ui/Cards';
 import { textEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
+import { Confetti } from '../../ui/Confetti';
+import { FitText } from '../../ui/FitText';
 import { useLandscapeOnly } from '../../core/orientationLock';
 import { IdentityBank } from '../../content/banks';
 import { TurnRotation } from '../../core/turnRotation';
-import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
@@ -29,7 +30,6 @@ import { Icon } from '../../ui/Icon';
  */
 
 const TIME_OPTIONS = [60, 90, 120];
-const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
 
 export function WhoAmIFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new WhoAmIEngine([...roster.players]));
@@ -78,14 +78,14 @@ function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void 
       <RulesSheet visible={showRules} title="Who Am I?" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
-        <ScreenHeader title="Who Am I?" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Who Am I?"  onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი დრო აქვს თითოეულს</Text>
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>დრო</Text>
             <View style={Layout.segmentRow}>
               {TIME_OPTIONS.map((value) => (
                 <CategoryChip
@@ -97,9 +97,6 @@ function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void 
                 />
               ))}
             </View>
-            <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              კითხვა-პასუხი აღწერაზე ნელია — ერთი ჯერი შარადებზე გრძელი უნდა იყოს.
-            </Text>
           </View>
         </GlassCard>
 
@@ -125,48 +122,32 @@ function Setup({ engine, onClose }: { engine: WhoAmIEngine; onClose: () => void 
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
               build={() => textEntries(IdentityBank, 'identity', 'ყველა')}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
 
         <GlassCard>
-          <Pressable
-            accessibilityRole="switch"
-            accessibilityLabel="დახრის შებრუნება"
-            accessibilityState={{ checked: engine.settings.invertTilt }}
-            onPress={() => {
-              Haptics.tap();
-              engine.setInvertTilt(!engine.settings.invertTilt);
-            }}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
-          >
-            <View style={{ flex: 1, gap: 3 }}>
-              <Text style={[body(15, '700'), { color: Colors.textPrimary }]}>დახრის შებრუნება</Text>
-              <Text style={[caption(11), { color: Colors.textSecondary }]}>
-                თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება
-              </Text>
-            </View>
-            <Icon
-              name={engine.settings.invertTilt ? 'toggle-switch' : 'toggle-switch-off-outline'}
-              size={34}
-              color={engine.settings.invertTilt ? Colors.phosphor : Colors.textSecondary}
+          <View style={{ gap: 14 }}>
+            <ToggleRow
+              title="გამოტოვების ჯარიმა"
+              subtitle="გამოტოვებული სახელი −1 ქულაა"
+              value={engine.settings.skipPenalty}
+              onChange={(on) => engine.setSkipPenalty(on)}
             />
-          </Pressable>
+            <ToggleRow
+              title="დახრის შებრუნება"
+              subtitle="თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება"
+              value={engine.settings.invertTilt}
+              onChange={(on) => engine.setInvertTilt(on)}
+            />
+          </View>
         </GlassCard>
 
-        <GlassCard>
-          <ToggleRow
-            title="ჯარიმა გამოტოვებაზე"
-            subtitle="ყოველი გამოტოვებული სახელი −1 ქულა"
-            value={engine.settings.penalizePass}
-            onChange={(v) => engine.setPenalizePass(v)}
-          />
-        </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -202,9 +183,9 @@ function TurnIntro({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => voi
 
       {/* დიდად სახელი, ქვემოთ — მოკლედ და პატარა ასოებით. */}
       <View style={{ gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+        <FitText style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} maxLines={1}>
           {engine.currentPlayer?.name ?? ''}
-        </Text>
+        </FitText>
         <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი შუბლზე</Text>
       </View>
 
@@ -212,7 +193,7 @@ function TurnIntro({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => voi
 
       <View style={Layout.footer}>
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
-          კითხვებს შენ სვამ — მაგიდას მხოლოდ ორი პასუხის უფლება აქვს: კი და არა.
+          შენ კითხულობ, მაგიდა პასუხობს: კი ან არა.
         </Text>
         <PrimaryButton title="მზად ვარ" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginTurn()} />
       </View>
@@ -237,13 +218,12 @@ function Countdown({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => voi
       <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
-      <Text
+      <FitText
         style={[body(20, '700'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}
-        numberOfLines={2}
-        adjustsFontSizeToFit
+        maxLines={2}
       >
-        {engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე მიიდე
-      </Text>
+        {`${engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე მიიდე`}
+      </FitText>
       <Text style={[styles.huge, Layout.digits, { color: Colors.phosphor }]}>{engine.countdown}</Text>
     </View>
   );
@@ -279,13 +259,12 @@ function Play({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => void }) 
         </View>
 
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text
+          <FitText
             style={[styles.word, Layout.centered, { color: flash ? Colors.ink : Colors.textPrimary }]}
-            numberOfLines={3}
-            adjustsFontSizeToFit
+            maxLines={3}
           >
             {flash ? (flash.verdict === 'guessed' ? 'გამოიცანი' : 'გამოტოვება') : engine.currentIdentity}
-          </Text>
+          </FitText>
         </View>
 
         <Text
@@ -295,7 +274,7 @@ function Play({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => void }) 
             { color: flash ? Colors.ink : Colors.textSecondary, opacity: flash ? 0.6 : 1, paddingBottom: 10 },
           ]}
         >
-          წინ დახარე — მივხვდი · უკან — გამოტოვება · შუბლთან დააბრუნე
+          {engine.settings.invertTilt ? 'უკან — მივხვდი · წინ — გამოტოვება' : 'წინ — მივხვდი · უკან — გამოტოვება'}
         </Text>
       </View>
 
@@ -339,30 +318,20 @@ function TurnResult({ engine, onExit }: { engine: WhoAmIEngine; onExit: () => vo
       </View>
 
       <View style={{ alignItems: 'center', gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(24), { color: Colors.phosphor }]} numberOfLines={1} adjustsFontSizeToFit>
+        <FitText style={[titleFont(24), { color: Colors.phosphor }]} maxLines={1}>
           {engine.currentPlayer?.name ?? ''}
+        </FitText>
+        <Text style={[display(58), Layout.digits, { color: Colors.textPrimary }]}>{engine.turnScore}</Text>
+        <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>
+          {engine.settings.skipPenalty ? `ქულა · ${engine.turnGuessed} გამოცნობილი` : 'გამოცნობილი'}
         </Text>
-        {engine.settings.penalizePass ? (
-          <>
-            <Text
-              style={[display(58), Layout.digits, { color: engine.turnScore < 0 ? Colors.neonMagenta : Colors.textPrimary }]}
-            >
-              {signed(engine.turnScore)}
-            </Text>
-            <Text style={[body(14, '600'), Layout.digits, { color: Colors.textSecondary }]}>
-              {engine.turnGuessed} გამოცნობილი · {engine.turnPassed} გამოტოვებული
-            </Text>
-          </>
-        ) : (
-          <>
-            <Text style={[display(58), Layout.digits, { color: Colors.textPrimary }]}>{engine.turnGuessed}</Text>
-            <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>გამოცნობილი</Text>
-          </>
-        )}
-        {!engine.settings.penalizePass && engine.turnPassed > 0 ? (
+        {engine.turnPassed > 0 ? (
           <Text style={[body(13, '500'), Layout.digits, { color: Colors.textSecondary, opacity: 0.8 }]}>
             გამოტოვებული — {engine.turnPassed}
           </Text>
+        ) : null}
+        {engine.turnPenalty > 0 ? (
+          <Text style={[body(13, '600'), { color: Colors.neonMagenta }]}>ჯარიმა −{engine.turnPenalty}</Text>
         ) : null}
       </View>
 
@@ -428,7 +397,7 @@ function IdentityRow({ engine, entry }: { engine: WhoAmIEngine; entry: WhoAmIEnt
         ) : null}
       </View>
       <Text style={[body(14, '900'), Layout.digits, { color: guessed ? Colors.phosphor : Colors.textSecondary }]}>
-        {guessed ? '+1' : engine.settings.penalizePass && !entry.isOvertime ? '−1' : '0'}
+        {guessed ? '+1' : '0'}
       </Text>
     </Pressable>
   );
@@ -438,7 +407,6 @@ function IdentityRow({ engine, entry }: { engine: WhoAmIEngine; entry: WhoAmIEnt
 
 function Summary({
   engine,
-  roster,
   onExit,
 }: {
   engine: WhoAmIEngine;
@@ -447,7 +415,6 @@ function Summary({
 }) {
 
   useAwardOnce(() => {
-    PodiumAward.apply(engine.podiumResults, roster);
     Haptics.win();
   });
 
@@ -457,21 +424,18 @@ function Summary({
     <View style={{ flex: 1, gap: 14 }}>
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="brain.head.profile" size={31} tint={Colors.phosphor} />
-      </View>
-
-      <Text style={[titleFont(26), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}>
-        საუკეთესო გამომცნობი
-      </Text>
+      {champions.length > 0 ? (
+        <>
+          <Text style={[titleFont(26), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}>
+            საუკეთესო გამომცნობი
+          </Text>
+        </>
+      ) : null}
 
       <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        {champions.length > 0 ? `${champions.map((p) => p.name).join(', ')} — ${engine.scoreFor(champions[0])} ${engine.settings.penalizePass ? 'ქულა' : 'გამოცნობილი'}` : 'ამ პარტიაში ვერავინ გამოიცნო'}
+        {champions.length > 0 ? `${champions.map((p) => p.name).join(', ')} — ${engine.scoreFor(champions[0])} ${engine.settings.skipPenalty ? 'ქულა' : 'გამოცნობილი'}` : 'ამ პარტიაში ვერავინ გამოიცნო'}
       </Text>
 
-      <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
-        საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
-      </Text>
 
       <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
         {engine.ranking.map((player) => (
@@ -496,19 +460,12 @@ function Summary({
         />
         <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
       </View>
+      {champions.length > 0 ? <Confetti /> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scoreCell: {
-    minWidth: 72,
-    alignItems: 'center',
-    gap: 3,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: Radius.small,
-  },
   playTop: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 40, paddingTop: 12 },
   timer: { fontSize: 44, fontWeight: '900' },
   word: { fontSize: 72, fontWeight: '900', paddingHorizontal: 40 },

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Animated from 'react-native-reanimated';
 import { listExit, listLayout } from '../src/ui/motion';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Radius, Space, body, caption, toTT } from '../src/theme/theme';
+import { Colors, Controls, Radius, Space, body, caption, toTT } from '../src/theme/theme';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GlyphIcon } from '../src/ui/Cards';
 import { CharacterPicker } from '../src/ui/CharacterPicker';
@@ -17,6 +17,7 @@ import { MAX_PLAYERS, type Player } from '../src/core/roster';
 import { Haptics } from '../src/core/haptics';
 import { useDialog } from '../src/ui/Dialog';
 import { Icon } from '../src/ui/Icon';
+import { needsSingleColumn } from '../src/theme/responsive';
 
 /**
  * პორტი: `Splash/App/PlayersView.swift`.
@@ -30,6 +31,8 @@ export default function Players() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const roster = useRoster();
+  const { width, fontScale } = useWindowDimensions();
+  const largeText = needsSingleColumn(width, fontScale);
 
   const [characterPlayer, setCharacterPlayer] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
@@ -161,7 +164,7 @@ export default function Players() {
         ) : (
           <>
             <View style={styles.hintRow}>
-              <Text style={[caption(11), { color: Colors.textSecondary, flex: 1 }]} numberOfLines={3}>
+              <Text style={[caption(11), { color: Colors.textSecondary }]}>
                 {reordering ? 'ისრებით დაალაგე სუფრის რიგზე' : 'პერსონაჟის შესაცვლელად შეეხე მის სურათს'}
               </Text>
               {roster.count > 1 ? (
@@ -198,25 +201,27 @@ export default function Players() {
                   key={player.id}
                   exiting={listExit}
                   layout={listLayout}
-                  style={styles.row}
+                  style={[styles.row, largeText && { flexDirection: 'column', alignItems: 'stretch' }]}
                 >
-                  <Text style={[body(13, '900'), { color: Colors.textSecondary, width: 22 }]}>{index + 1}</Text>
+                  <View style={{ flex: largeText ? undefined : 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <Text style={[body(13, '900'), { color: Colors.textSecondary, width: 18 }]}>{index + 1}</Text>
                   <Pressable accessibilityRole="button" accessibilityLabel={`${player.name} — პერსონაჟის შეცვლა`}
-                    onPress={() => setCharacterPlayer(player.id)}>
+                    onPress={() => setCharacterPlayer(player.id)} style={styles.avatarTarget}>
                     <PlayerAvatarView player={player} size={44} />
                   </Pressable>
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={`${player.name}. სახელის შესაცვლელად დააჭირე`}
                     onPress={() => rename(player.id, player.name)}
-                    style={{ flex: 1 }}
+                    style={{ flex: 1, minHeight: Controls.icon.size, justifyContent: 'center' }}
                   >
-                    <Text style={[body(17, '600'), { color: Colors.textPrimary }]} numberOfLines={1}>
+                    <Text style={[body(17, '600'), { color: Colors.textPrimary }]} numberOfLines={largeText ? undefined : 2}>
                       {player.name}
                     </Text>
                   </Pressable>
-
-                  <Pressable
+                  </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
+                  {!reordering ? <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={`სქესის შეცვლა: ${player.gender === 'girl' ? 'გოგო' : 'ბიჭი'}`}
                     onPress={() => {
@@ -230,7 +235,7 @@ export default function Players() {
                     ]}
                   >
                     <Text style={{ fontSize: 16 }}>{player.gender === 'girl' ? '👧' : '👦'}</Text>
-                  </Pressable>
+                  </Pressable> : null}
 
                   {reordering ? (
                     <>
@@ -262,6 +267,7 @@ export default function Players() {
                       onPress={() => removePlayer(player, index)}
                     />
                   )}
+                  </View>
                 </Animated.View>
               ))}
             </ScrollView>
@@ -274,7 +280,7 @@ export default function Players() {
               <Text style={[body(14, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
                 {removed.player.name} წაიშალა
               </Text>
-              <Pressable accessibilityRole="button" accessibilityLabel={`${removed.player.name} — დაბრუნება`} onPress={undoRemove} hitSlop={8}>
+              <Pressable accessibilityRole="button" accessibilityLabel={`${removed.player.name} — დაბრუნება`} onPress={undoRemove} style={{ minHeight: Controls.icon.size, justifyContent: 'center' }}>
                 <Text style={[body(14, '900'), { color: Colors.phosphor }]}>დაბრუნება</Text>
               </Pressable>
             </View>
@@ -336,7 +342,7 @@ function RowIcon({
         name={name}
         size={16}
         color={Colors.textSecondary}
-        style={rotate ? { transform: [{ rotate: name === 'chevron.left' ? '90deg' : '-90deg' }] } : undefined}
+        style={rotate ? { transform: [{ rotate: '90deg' }] } : undefined}
       />
     </Pressable>
   );
@@ -355,12 +361,13 @@ const styles = StyleSheet.create({
   },
   addButton: { width: 50, height: 50, borderRadius: Radius.small, alignItems: 'center', justifyContent: 'center' },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  hintRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20 },
-  smallChip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 11, paddingVertical: 7, borderRadius: 999 },
+  hintRow: { alignItems: 'flex-end', gap: 8, paddingHorizontal: 20 },
+  smallChip: { minHeight: Controls.compact.minHeight, flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 11, paddingVertical: 7, borderRadius: Radius.small },
+  avatarTarget: { minWidth: Controls.icon.size, minHeight: Controls.icon.size, alignItems: 'center', justifyContent: 'center' },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
     paddingHorizontal: Space.m,
     paddingVertical: 15,
     borderRadius: Radius.small,
@@ -369,9 +376,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.stroke,
   },
   genderBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: Controls.icon.size,
+    height: Controls.icon.size,
+    borderRadius: Controls.icon.radius,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.surfaceHigh,
@@ -397,5 +404,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.stroke,
   },
-  rowIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.surfaceHigh },
+  rowIcon: { width: Controls.icon.size, height: Controls.icon.size, borderRadius: Controls.icon.radius, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.surfaceHigh },
 });

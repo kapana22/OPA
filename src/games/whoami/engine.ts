@@ -5,11 +5,12 @@ import { TurnRotation } from '../../core/turnRotation';
 import { TiltSensor } from '../../core/tiltSensor';
 import { Screen } from '../../core/screen';
 import { uuid } from '../../core/id';
-import { loadSettings, saveSettings, num, bool, categoryID } from '../../core/settings';
-import { IdentityBank } from '../../content/banks';
+import { loadSettings, saveSettings, num, bool, categoryIDs, cleanCategoryIDs, selectionKey } from '../../core/settings';
+import { IdentityBank, selectionName } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import type { Player } from '../../core/roster';
+import type { TiltDirection } from '../../core/tiltGate';
 
 /**
  * „ვინ ვარ მე?“ — სახელი შუბლზე, კითხვები კი / არა.
@@ -37,14 +38,22 @@ export interface WhoAmIFlash {
 export interface WhoAmISettings {
   seconds: number;
   laps: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
+  /** გამოტოვებული სახელი −1 ქულაა. */
+  skipPenalty: boolean;
+  /** დახრის შებრუნება — წინ „გამოტოვება“, უკან „გამოვიცანი“. */
   invertTilt: boolean;
-  /** გამოტოვება −1 ქულა ღირს — ალიასის `penalizeSkip`-ის ტყუპი; ნაგულისხმევად გამორთულია. */
-  penalizePass: boolean;
+}
+
+/** დახრის მიმართულება → პასუხი; `invert` — მიმართულებები გაცვლილია. */
+export function whoAmITiltVerdict(direction: TiltDirection, invert: boolean): WhoAmIVerdict {
+  const forward = direction === 'forward';
+  return forward !== invert ? 'guessed' : 'passed';
 }
 
 const KEY = 'splash.whoami.settings.v2'; // v1 ცალობით ჯერს ინახავდა
-const DEFAULTS: WhoAmISettings = { seconds: 90, laps: 1, categoryID: null, invertTilt: false, penalizePass: false };
+const DEFAULTS: WhoAmISettings = { seconds: 90, laps: 1, categoryIDs: [], skipPenalty: false, invertTilt: false };
 
 /** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება ან დახრა მეორე, უნახავ სიტყვას არ ჩაითვლის. */
 export const REGISTER_GAP_MS = 600;
@@ -74,9 +83,9 @@ export class WhoAmIEngine extends Observable {
     this.settings = loadSettings<WhoAmISettings>(KEY, DEFAULTS, (s) => ({
       seconds: num(s.seconds, DEFAULTS.seconds, 15, 180),
       laps: num(s.laps, DEFAULTS.laps, 1, 3),
-      categoryID: categoryID(s.categoryID, (id) => IdentityBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => IdentityBank.category(id) !== undefined),
+      skipPenalty: bool(s.skipPenalty, DEFAULTS.skipPenalty),
       invertTilt: bool(s.invertTilt, DEFAULTS.invertTilt),
-      penalizePass: bool(s.penalizePass, DEFAULTS.penalizePass),
     }));
   }
 
@@ -106,13 +115,13 @@ export class WhoAmIEngine extends Observable {
     return this.results.filter((e) => e.verdict === 'passed').length;
   }
 
-  /** დროის ამოწურვისას დარჩენილი სახელი ჯარიმას არ იწვევს — როგორც ალიასში. */
+  /** ჯარიმიანი გამოტოვებები — დროის ამოწურვისას ეკრანზე დარჩენილი სახელი არ ითვლება. */
   get turnPenalty(): number {
-    if (!this.settings.penalizePass) return 0;
+    if (!this.settings.skipPenalty) return 0;
     return this.results.filter((e) => e.verdict === 'passed' && !e.isOvertime).length;
   }
 
-  /** ჯერის ქულა; ჯარიმით შეიძლება უარყოფითიც იყოს (ალიასის მსგავსად). */
+  /** ჯერის ქულა — გამოცნობილი, ჯარიმის ჩართვისას გამოტოვებულების გამოკლებით. */
   get turnScore(): number {
     return this.turnGuessed - this.turnPenalty;
   }
@@ -140,7 +149,7 @@ export class WhoAmIEngine extends Observable {
     return best && this.scoreFor(best) > 0 ? best : null;
   }
 
-  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  /** ფრეზე ყველა პირველია. */
   get champions(): Player[] {
     const best = this.champion;
     if (!best) return [];
@@ -155,8 +164,7 @@ export class WhoAmIEngine extends Observable {
   }
 
   get categoryLabel(): string {
-    const cat = this.settings.categoryID ? IdentityBank.category(this.settings.categoryID) : undefined;
-    return cat?.name ?? 'ყველა კატეგორია';
+    return selectionName(IdentityBank.categories, this.settings.categoryIDs);
   }
 
   get podiumResults(): { player: Player; score: number }[] {
@@ -168,8 +176,8 @@ export class WhoAmIEngine extends Observable {
   startGame(): void {
     if (!this.canPlay) return;
     this.shoe = new ContentShoe(
-      `identity.${this.settings.categoryID ?? 'all'}`,
-      IdentityBank.deck(this.settings.categoryID),
+      `identity.${selectionKey(this.settings.categoryIDs)}`,
+      IdentityBank.deck(this.settings.categoryIDs),
     );
     this.scores = {};
     this.turnIndex = 0;
@@ -332,9 +340,7 @@ export class WhoAmIEngine extends Observable {
     this.tilt.start((direction) => {
       // გასვლის დიალოგი ღიაა — ტელეფონი ხელშია და მისი დახრა პასუხად არ ჩაითვლება.
       if (this.phase !== 'playing' || GamePause.isPaused) return;
-      const forward: WhoAmIVerdict = this.settings.invertTilt ? 'passed' : 'guessed';
-      const back: WhoAmIVerdict = this.settings.invertTilt ? 'guessed' : 'passed';
-      this.record(direction === 'forward' ? forward : back);
+      this.record(whoAmITiltVerdict(direction, this.settings.invertTilt));
     });
   }
 
@@ -363,17 +369,20 @@ export class WhoAmIEngine extends Observable {
     this.settings = { ...this.settings, laps: Math.min(Math.max(1, value), 3) };
     this.persist();
   }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => IdentityBank.category(id) !== undefined),
+    };
+    this.persist();
+  }
+
+  setSkipPenalty(on: boolean): void {
+    this.settings = { ...this.settings, skipPenalty: on };
     this.persist();
   }
   setInvertTilt(on: boolean): void {
     this.settings = { ...this.settings, invertTilt: on };
-    this.persist();
-  }
-
-  setPenalizePass(on: boolean): void {
-    this.settings = { ...this.settings, penalizePass: on };
     this.persist();
   }
 

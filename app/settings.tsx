@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Radius, Space, body, caption } from '../src/theme/theme';
+import { Colors, Space, body, caption } from '../src/theme/theme';
 import { SplashBackground } from '../src/ui/SplashBackground';
 import { GlassCard } from '../src/ui/Cards';
-import { PrimaryButton } from '../src/ui/Buttons';
+import { CompactButton, PrimaryButton } from '../src/ui/Buttons';
 import { PageHeader } from '../src/ui/PageHeader';
-import { Pressable } from '../src/ui/Pressable';
 import { Sound } from '../src/core/sound';
 import { Haptics } from '../src/core/haptics';
 import { ContentShoe } from '../src/core/contentShoe';
 import { useDialog } from '../src/ui/Dialog';
-import { Icon } from '../src/ui/Icon';
 
 /** პორტი: `Splash/App/SettingsView.swift`. */
 export default function Settings() {
@@ -62,7 +60,7 @@ export default function Settings() {
     <View style={{ flex: 1 }}>
       <SplashBackground />
       <PageHeader title="პარამეტრები" />
-      <View style={{ flex: 1, paddingHorizontal: 20, gap: 14 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20, gap: 14 }}>
 
         <GlassCard>
           <View style={{ gap: Space.m }}>
@@ -82,53 +80,33 @@ export default function Settings() {
           </View>
         </GlassCard>
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="მოსმენა"
+        <CompactButton
+          title="მოსმენა"
+          icon="speaker.wave.2.fill"
+          enabled={soundOn || hapticsOn}
           onPress={() => {
             Sound.play('correct');
             Haptics.success();
           }}
-          style={styles.testButton}
-        >
-          <Icon
-            name={'speaker.wave.2.fill'}
-            size={16}
-            color={soundOn || hapticsOn ? Colors.phosphor : Colors.textSecondary}
-          />
-          <Text style={[body(15, '700'), { color: soundOn || hapticsOn ? Colors.phosphor : Colors.textSecondary }]}>
-            მოსმენა
-          </Text>
-        </Pressable>
+        />
 
         <Text style={[caption(12), { color: Colors.textSecondary, opacity: 0.8, textAlign: 'center', paddingHorizontal: 12 }]}>
           აპს ახსოვს, რომელი სიტყვები და კითხვები უკვე ითამაშეთ, და გამეორებამდე მთელ კატეგორიას გადის.
         </Text>
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={didReset ? 'მეხსიერება განულდა' : 'კონტენტის მეხსიერების განულება'}
-          accessibilityState={{ disabled: didReset }}
-          disabled={didReset}
+        <CompactButton
+          title={didReset ? 'მეხსიერება განულდა' : 'კონტენტის მეხსიერების განულება'}
+          icon={didReset ? 'checkmark' : 'arrow.clockwise'}
+          enabled={!didReset}
           onPress={askReset}
-          style={styles.resetButton}
-        >
-          <Icon
-            name={didReset ? 'checkmark' : 'arrow.clockwise'}
-            size={16}
-            color={didReset ? Colors.phosphor : Colors.textSecondary}
-          />
-          <Text style={[body(14, '700'), { color: didReset ? Colors.phosphor : Colors.textSecondary }]}>
-            {didReset ? 'მეხსიერება განულდა' : 'კონტენტის მეხსიერების განულება'}
-          </Text>
-        </Pressable>
+        />
 
         <View style={{ flex: 1 }} />
 
         <View style={{ paddingBottom: insets.bottom + Space.m }}>
           <PrimaryButton title="მზადაა" tint={Colors.phosphor} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -164,22 +142,4 @@ function ToggleRow({
 const styles = StyleSheet.create({
   toggleRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   divider: { height: 1, backgroundColor: Colors.stroke },
-  testButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 15,
-    borderRadius: Radius.default,
-    backgroundColor: Colors.surface,
-  },
-  resetButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 14,
-    borderRadius: Radius.default,
-    backgroundColor: Colors.surface,
-  },
 });

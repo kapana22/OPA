@@ -6,16 +6,18 @@ import {
   Divider,
   GameExitButton,
   GlassCard,
-  GlyphIcon,
   ScreenHeader,
   Stepper,
-  ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
+  ToggleRow,
+  CategoryChecklist, RulesSheet } from '../../ui/Cards';
 import { keyedEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { PassPhoneReveal } from '../../ui/PassPhoneReveal';
 import { DiscussionPanel } from '../../ui/DiscussionPanel';
 import { Layout } from '../../ui/layout';
+import { Confetti } from '../../ui/Confetti';
+import { DISCUSSION_OPTIONS, discussionLabel } from '../../core/settings';
 import { PairBank } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
@@ -24,15 +26,14 @@ import type { GameFlowProps } from '../registry';
 import { SpyEngine, type SpyRole } from './engine';
 import { game as findGame } from '../catalog';
 import { Icon } from '../../ui/Icon';
+import { FitText } from '../../ui/FitText';
 
 /**
  * „სხვა სიტყვა“ (Undercover) — სრული ნაკადი.
  *
- * პორტი: `Splash/Games/Spy/*.swift` (7 ხედი).
+ * პორტი: `Splash/Games/Spy/*.swift`.
  * **ჯაშუშმა თვითონაც არ იცის, რომ ჯაშუშია** — ბარათი მოქალაქისას არ განსხვავდება.
  */
-
-const TIMER_OPTIONS = [0, 60, 120, 180, 300];
 
 const ROLE_ICON: Record<SpyRole, string> = {
   civilian: 'person.fill',
@@ -58,7 +59,7 @@ export function SpyFlow({ roster, onExit }: GameFlowProps) {
     case 'roundResult':
       return <RoundResult engine={engine} onExit={onExit} />;
     case 'gameOver':
-      return <GameOver engine={engine} roster={roster} onExit={onExit} />;
+      return <GameOver engine={engine} onExit={onExit} />;
   }
 }
 
@@ -72,7 +73,7 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
       <RulesSheet visible={showRules} title={gameData?.title ?? 'Spyfall'} accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
-        <ScreenHeader title="სხვა სიტყვა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Spyfall"  onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -113,11 +114,11 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
               build={() => keyedEntries(PairBank, 'pair', (c) => c.pairs.map((p) => `${p.a}|${p.b}`), 'შემთხვევითი')}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
@@ -126,18 +127,19 @@ function Setup({ engine, onClose }: { engine: SpyEngine; onClose: () => void }) 
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>განხილვის დრო</Text>
             <View style={Layout.segmentRow}>
-              {TIMER_OPTIONS.map((secs) => (
+              {DISCUSSION_OPTIONS.map((secs) => (
                 <CategoryChip
                   compact
                   key={secs}
-                  label={secs === 0 ? '∞' : `${secs / 60}:00`}
-                  selected={engine.settings.discussionSeconds === secs}
+                  label={discussionLabel(secs)}
+                  selected={engine.settings.discussionTimer === secs}
                   onPress={() => engine.setDiscussionSeconds(secs)}
                 />
               ))}
             </View>
           </View>
         </GlassCard>
+
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -188,9 +190,9 @@ function Discussion({ engine, onExit }: { engine: SpyEngine; onExit: () => void 
   return (
     <DiscussionPanel
       key={engine.turn}
-      title={`რაუნდი ${engine.turn} — თითოეული ერთი სიტყვით აღწერს თავისას`}
+      title="თითოეული ერთი სიტყვით აღწერს თავისას"
       starterName={engine.startingPlayer?.name}
-      seconds={engine.settings.discussionSeconds}
+      seconds={engine.settings.discussionTimer}
       tips={[]}
       accent={Colors.neonCyan}
       actionTitle="კენჭისყრა"
@@ -279,14 +281,10 @@ function MrWhiteGuess({ engine, onExit }: { engine: SpyEngine; onExit: () => voi
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="person.fill.questionmark" size={31} tint={Colors.neonCyan} />
-      </View>
-
       <View style={{ alignItems: 'center', gap: 6 }}>
         <Text style={[titleFont(26), Layout.centered, { color: Colors.phosphor }]}>მისტერ უაითი გააძევეს!</Text>
         <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-          {engine.lastEliminated?.name ?? '—'}, დაასახელე მოქალაქეების სიტყვა — და თამაშს მარტო წაიღებ.
+          {engine.lastEliminated?.name ?? '—'}, დაასახელე მოქალაქეების სიტყვა და მარტო მოიგებ.
         </Text>
       </View>
 
@@ -302,7 +300,9 @@ function MrWhiteGuess({ engine, onExit }: { engine: SpyEngine; onExit: () => voi
             }}
             style={styles.optionRow}
           >
-            <Text style={[body(18, '700'), { color: Colors.textPrimary }]}>{word}</Text>
+            <FitText style={[body(18, '700'), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>
+              {word}
+            </FitText>
           </Pressable>
         ))}
       </ScrollView>
@@ -335,10 +335,6 @@ function RoundResult({ engine, onExit }: { engine: SpyEngine; onExit: () => void
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name={badge.icon} size={32} tint={badge.color} />
-      </View>
-
       <Text
         style={[titleFont(32), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
         adjustsFontSizeToFit
@@ -350,26 +346,10 @@ function RoundResult({ engine, onExit }: { engine: SpyEngine; onExit: () => void
       <Text style={[body(18, '700'), Layout.centered, { color: badge.color }]}>{badge.title}</Text>
 
       {engine.mrWhiteGuess ? (
-        <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-          ვარაუდი: „{engine.mrWhiteGuess}“ — არასწორია
+        <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 24 }]}>
+          ვარაუდი: „{engine.mrWhiteGuess}“ · არასწორია
         </Text>
       ) : null}
-
-      <View style={Layout.content}>
-        <GlassCard>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Stat label="დარჩა" value={String(engine.alive.length)} />
-            <View style={styles.vDivider} />
-            <Stat label="რაუნდი" value={String(engine.turn)} />
-            <View style={styles.vDivider} />
-            <Stat label="გაძევდა" value={String(engine.eliminated.size)} />
-          </View>
-        </GlassCard>
-      </View>
-
-      <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-        თამაში გრძელდება — ტელეფონი ისევ მაგიდაზე.
-      </Text>
 
       <View style={{ flex: 1 }} />
 
@@ -385,69 +365,31 @@ function RoundResult({ engine, onExit }: { engine: SpyEngine; onExit: () => void
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', gap: 3 }}>
-      <Text style={[titleFont(20), { color: Colors.textPrimary, fontVariant: ['tabular-nums'] }]}>{value}</Text>
-      <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>{label}</Text>
-    </View>
-  );
-}
-
 // ── თამაშის დასასრული
 
-function GameOver({
-  engine,
-  roster,
-  onExit,
-}: {
-  engine: SpyEngine;
-  roster: GameFlowProps['roster'];
-  onExit: () => void;
-}) {
-
+function GameOver({ engine, onExit }: { engine: SpyEngine; onExit: () => void }) {
   useAwardOnce(() => {
-    for (const [id, points] of Object.entries(engine.finalPoints)) roster.addScore(points, id);
     Haptics.success();
   });
 
   const head =
     engine.winner === 'civilians'
-      ? {
-          icon: 'party.popper.fill',
-          title: 'მოქალაქეებმა გაიმარჯვეს!',
-          subtitle: 'ყველა ჯაშუში გაძევდა — ერთმაც ვერ გაძლო ბოლომდე.',
-          color: Colors.phosphor,
-        }
+      ? { icon: 'party.popper.fill', title: 'მოქალაქეებმა გაიმარჯვეს!', color: Colors.phosphor }
       : engine.winner === 'undercovers'
-        ? {
-            icon: 'theatermasks.fill',
-            title: 'ჯაშუშებმა გაიმარჯვეს!',
-            subtitle: 'მოქალაქეები იმდენად შემცირდნენ, რომ ჯაშუშები რაოდენობით გაუტოლდნენ.',
-            color: Colors.neonCyan,
-          }
+        ? { icon: 'theatermasks.fill', title: 'ჯაშუშებმა გაიმარჯვეს!', color: Colors.neonCyan }
         : engine.winner === 'mrWhite'
-          ? {
-              icon: 'person.fill.questionmark',
-              title: 'მისტერ უაითმა მარტო მოიგო!',
-              subtitle: `სიტყვა ზუსტად დაასახელა — „${engine.civilianWord}“.`,
-              color: Colors.phosphor,
-            }
-          : { icon: 'flag.checkered', title: 'თამაში დასრულდა', subtitle: '', color: Colors.textPrimary };
+          ? { icon: 'person.fill.questionmark', title: 'მისტერ უაითმა მარტო მოიგო!', color: Colors.phosphor }
+          : { icon: 'flag.checkered', title: 'თამაში დასრულდა', color: Colors.textPrimary };
 
   return (
     <View style={{ flex: 1, gap: 14 }}>
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name={head.icon} size={32} tint={head.color} />
-      </View>
-
       <Text style={[titleFont(28), Layout.centered, { color: head.color, paddingHorizontal: 24 }]}>{head.title}</Text>
 
-      {head.subtitle ? (
+      {engine.winner === 'mrWhite' ? (
         <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-          {head.subtitle}
+          სიტყვა ზუსტად დაასახელა: „{engine.civilianWord}“.
         </Text>
       ) : null}
 
@@ -466,7 +408,6 @@ function GameOver({
           <View style={{ gap: 10 }}>
             <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>ვინ ვინ იყო</Text>
             {engine.players.map((p) => {
-              const points = engine.finalPoints[p.id] ?? 0;
               const out = engine.eliminated.has(p.id);
               return (
                 <View key={p.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -485,11 +426,6 @@ function GameOver({
                   >
                     {p.name}
                   </Text>
-                  {points > 0 ? (
-                    <Text style={[body(15, '900'), { color: Colors.phosphor, fontVariant: ['tabular-nums'] }]}>
-                      +{points}
-                    </Text>
-                  ) : null}
                 </View>
               );
             })}
@@ -508,6 +444,7 @@ function GameOver({
         />
         <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
       </View>
+      {engine.winner ? <Confetti /> : null}
     </View>
   );
 }
@@ -517,7 +454,9 @@ function Row({ label, value, tint = Colors.textPrimary }: { label: string; value
     <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
       <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>{label}</Text>
       <View style={{ flex: 1 }} />
-      <Text style={[body(16, '700'), { color: tint, textAlign: 'right', flexShrink: 1 }]}>{value}</Text>
+      <FitText style={[body(16, '700'), { color: tint, textAlign: 'right', flexShrink: 1 }]} maxLines={3}>
+        {value}
+      </FitText>
     </View>
   );
 }
@@ -535,11 +474,11 @@ const styles = StyleSheet.create({
   },
   optionRow: {
     paddingVertical: 18,
+    paddingHorizontal: 16,
     borderRadius: Radius.small,
     alignItems: 'center',
     backgroundColor: Colors.surface,
     borderWidth: 1,
     borderColor: Colors.stroke,
   },
-  vDivider: { width: 1, height: 34, backgroundColor: Colors.stroke },
 });

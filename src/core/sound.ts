@@ -29,7 +29,32 @@ const SOURCES: Record<SoundEffect, number> = {
 
 const ENABLED_KEY = 'splash.sound.enabled.v1';
 
-let players: Partial<Record<SoundEffect, AudioPlayer>> = {};
+interface EffectPlayer {
+  player: AudioPlayer;
+  request: number;
+  active: boolean;
+  needsRewind: boolean;
+  rewind?: Promise<boolean>;
+}
+let players: Partial<Record<SoundEffect, EffectPlayer>> = {};
+
+// Share an in-flight rewind: a late stop/finish seek must never reset a new play.
+function rewind(state: EffectPlayer): Promise<boolean> {
+  if (state.rewind) return state.rewind;
+  state.needsRewind = true;
+  try {
+    state.player.pause(); // Media3 retains playWhenReady after STATE_ENDED.
+    state.rewind = state.player.seekTo(0).then(() => {
+      state.needsRewind = false;
+      return true;
+    }, () => false).finally(() => {
+      state.rewind = undefined;
+    });
+    return state.rewind;
+  } catch {
+    return Promise.resolve(false);
+  }
+}
 let prepared = false;
 /** ხმა ჩართულია თუ არა. ნაგულისხმევად — ჩართული. ყოველ ჯერზე იკითხება — იხ. `haptics.ts`. */
 function isOn(): boolean {
@@ -55,11 +80,13 @@ function prepareIfNeeded(): void {
   for (const key of Object.keys(SOURCES) as SoundEffect[]) {
     try {
       const player = createAudioPlayer(SOURCES[key]);
-      players[key] = player;
+      const state: EffectPlayer = { player, request: 0, active: true, needsRewind: false };
+      players[key] = state;
       try {
         player.addListener('playbackStatusUpdate', (status) => {
-          if (status.didJustFinish) {
-            void player.seekTo(0).catch(() => {});
+          if (status.didJustFinish && state.active) {
+            ++state.request;
+            void rewind(state);
           }
         });
       } catch {
@@ -92,55 +119,43 @@ export const Sound = {
   play(effect: SoundEffect): void {
     if (!isOn()) return;
     prepareIfNeeded();
-    const player = players[effect];
-    if (!player) return;
-    try {
-      if (player.playing) {
-        player.pause();
-        void player
-          .seekTo(0)
-          .then(() => {
-            try {
-              player.play();
-            } catch {}
-          })
-          .catch(() => {
-            try {
-              player.play();
-            } catch {}
-          });
-      } else {
-        // უკვე ნულზეა — მომენტალურად ჩაირთვება ყოველგვარი დაყოვნების გარეშე
-        player.play();
-      }
-    } catch {
+    const state = players[effect];
+    if (!state) return;
+    const request = ++state.request;
+    const playIfCurrent = () => {
+      if (!state.active || state.request !== request || !isOn()) return;
       try {
-        player.play();
-      } catch {}
+        state.needsRewind = true;
+        state.player.play();
+      } catch { /* An unavailable effect must not interrupt the game. */ }
+    };
+    if (state.needsRewind || state.rewind) {
+      void rewind(state).then((ready) => {
+        if (ready) playIfCurrent();
+      });
+    } else {
+      playIfCurrent();
     }
   },
 
   /** თამაშიდან გამოსვლისას ან ხმის გამორთვისას — ყველაფერი ჩუმდება. */
   stop(): void {
-    for (const player of Object.values(players)) {
-      try {
-        player?.pause();
-        // თორემ შემდეგი `play()` შეჩერებული ადგილიდან, ბგერის შუიდან გაგრძელდებოდა.
-        void player?.seekTo(0).catch(() => {});
-      } catch {
-        /* ignore */
-      }
+    for (const state of Object.values(players)) {
+      if (!state) continue;
+      ++state.request;
+      void rewind(state);
     }
   },
 
   /** აპის დახურვისას — ნატიური რესურსების გათავისუფლება. */
   release(): void {
-    for (const player of Object.values(players)) {
+    for (const state of Object.values(players)) {
+      if (!state) continue;
+      state.active = false;
+      ++state.request;
       try {
-        player?.remove();
-      } catch {
-        /* ignore */
-      }
+        state.player.remove();
+      } catch { /* ignore */ }
     }
     players = {};
     prepared = false;

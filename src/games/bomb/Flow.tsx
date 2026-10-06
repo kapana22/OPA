@@ -2,19 +2,21 @@ import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
-import { Colors, Space, body, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
+import { Colors, Controls, Space, body, title as titleFont } from '../../theme/theme';
+import { CategoryChip, GameExitButton, GlassCard, ScreenHeader, CategoryChecklist , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
+import { FitText } from '../../ui/FitText';
 import { useKeepScreenAwake } from '../../core/orientationLock';
 import { WordBank } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
-import { BombEngine } from './engine';
+import { BombEngine, BOMB_FUSE_RANGES } from './engine';
+import { Confetti } from '../../ui/Confetti';
 import { game as findGame } from '../catalog';
 
 /**
@@ -24,11 +26,8 @@ import { game as findGame } from '../catalog';
  * ტაიმერი **დამალულია** — არავინ იცის, როდის აფეთქდება; ეს თამაშის მთელი აზრია.
  */
 
-const RANGES: [string, number, number][] = [
-  ['მოკლე', 15, 35],
-  ['საშუალო', 20, 60],
-  ['გრძელი', 40, 90],
-];
+/** აფეთქების შემდეგ ღილაკი ცოტა ხანს არ მუშაობს — „გადავეცი“-ზე დაგვიანებული შეხება რაუნდს არ უნდა გადაახტეს. */
+const EXPLODED_LOCK_MS = 1000;
 
 export function BombFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new BombEngine([...roster.players]));
@@ -67,7 +66,7 @@ function Setup({ engine, onClose }: { engine: BombEngine; onClose: () => void })
       <RulesSheet visible={showRules} title="Bomb Party" accent={Colors.neonMagenta} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
-        <ScreenHeader title="Bomb Party" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Bomb Party"  onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -93,7 +92,7 @@ function Setup({ engine, onClose }: { engine: BombEngine; onClose: () => void })
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>ფითილის სიგრძე</Text>
             <View style={Layout.segmentRow}>
-              {RANGES.map(([name, lo, hi]) => (
+              {BOMB_FUSE_RANGES.map(([name, lo, hi]) => (
                 <CategoryChip
                   compact
                   key={name}
@@ -108,21 +107,25 @@ function Setup({ engine, onClose }: { engine: BombEngine; onClose: () => void })
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
               build={() => wordEntries(WordBank, 'შემთხვევითი', null, false)}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
+        {!engine.canPlay ? (
+          <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>საჭიროა მინიმუმ 2 მოთამაშე.</Text>
+        ) : null}
         <PrimaryButton
           title="ფითილის დანთება"
           icon="flame.fill"
           tint={Colors.neonMagenta}
+          enabled={engine.canPlay}
           onPress={() => engine.startGame()}
         />
       </View>
@@ -160,7 +163,6 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
       ) : null}
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>რაუნდი {engine.round}</Text>
         <View style={{ flex: 1 }} />
         <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>დარჩა {engine.alive.length}</Text>
       </View>
@@ -169,9 +171,9 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
 
       <PlayerCharacter player={engine.currentPlayer} compact />
       <View style={{ gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+        <FitText style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} maxLines={1}>
           {engine.currentPlayer?.name ?? '—'}
-        </Text>
+        </FitText>
         <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ბომბი აქვს</Text>
       </View>
 
@@ -179,9 +181,9 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
         <GlassCard>
           <View style={{ gap: 6, alignItems: 'center' }}>
             <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>დაასახელე</Text>
-            <Text style={[titleFont(24), Layout.centered, { color: Colors.phosphor }]}>
-              {engine.category.emoji} {engine.category.name}
-            </Text>
+            <FitText style={[titleFont(24), Layout.centered, { color: Colors.phosphor }]} maxLines={3}>
+              {`${engine.category.emoji} ${engine.category.name}`}
+            </FitText>
           </View>
         </GlassCard>
       </View>
@@ -190,7 +192,7 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
 
       <View style={Layout.footer}>
         <PrimaryButton
-          title="მოვასწარი — გადავეცი"
+          title="გადავეცი"
           icon="chevron.right"
           tint={Colors.neonMagenta}
           onPress={() => engine.pass()}
@@ -205,78 +207,76 @@ function Play({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
 function Exploded({ engine, onExit }: { engine: BombEngine; onExit: () => void }) {
   const victim = engine.victim;
   const left = victim ? engine.livesLeft(victim) : 0;
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setArmed(true), EXPLODED_LOCK_MS);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <View style={{ flex: 1, gap: Space.m }}>
-      <View style={Layout.exitSlot}>
+      <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
       </View>
 
-      <View style={{ flex: 1 }} />
-
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="burst.fill" size={44} tint={Colors.neonMagenta} />
-      </View>
-
-      <Text
-        style={[titleFont(34), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
-      >
-        {victim?.name ?? '—'}
-      </Text>
-
-      <Text style={[body(16, '600'), Layout.centered, { color: Colors.textSecondary }]}>
-        {left === 0 ? 'სიცოცხლე აღარ დარჩა — თამაშიდან გავიდა' : `დარჩა ${left} სიცოცხლე`}
-      </Text>
-
-      <View style={Layout.content}>
-        <GlassCard>
-          <View style={{ gap: 8 }}>
-            {engine.players.map((p) => {
-              const lives = engine.livesLeft(p);
-              const isVictim = p.id === victim?.id;
-              // ბომბი გადაცემისას აფეთქდა — სხვა ცოცხალ მოთამაშეზე შეხება ბრალს გადაიტანს.
-              const canPick = !isVictim && lives > 0;
-              return (
-                <Pressable
-                  key={p.id}
-                  disabled={!canPick}
-                  accessibilityRole={canPick ? 'button' : undefined}
-                  onPress={() => engine.reassignVictim(p)}
-                  style={{ flexDirection: 'row', alignItems: 'center', minHeight: 32 }}
-                >
-                  <Text
-                    style={[
-                      body(15, isVictim ? '800' : '600'),
-                      {
-                        color: isVictim ? Colors.neonMagenta : lives > 0 ? Colors.textPrimary : Colors.textSecondary,
-                        flex: 1,
-                      },
-                      lives === 0 && !isVictim ? Layout.struck : null,
-                    ]}
-                    numberOfLines={1}
-                  >
-                    {p.name}
-                  </Text>
-                  <Text style={{ fontSize: 13, color: Colors.neonMagenta }}>{'♥'.repeat(lives)}</Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </GlassCard>
-        <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, marginTop: 8 }]}>
-          ბომბი სხვას ეჭირა? შეეხე მის სახელს.
+      <ScrollView contentContainerStyle={[Layout.scroll, { flexGrow: 1, justifyContent: 'center', gap: Space.m }]}>
+        <PlayerCharacter player={victim} compact />
+        <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]}>
+          {victim?.name ?? '—'}
         </Text>
-      </View>
 
-      <View style={{ flex: 1 }} />
+        <Text style={[body(16, '600'), Layout.centered, { color: Colors.textSecondary }]}>
+          {left === 0 ? 'გავარდა' : `დარჩა ${left} სიცოცხლე`}
+        </Text>
+
+        <View>
+          <GlassCard>
+            <View style={{ gap: 8 }}>
+              {engine.players.map((p) => {
+                const lives = engine.livesLeft(p);
+                const isVictim = p.id === victim?.id;
+                // ბომბი გადაცემისას აფეთქდა — სხვა ცოცხალ მოთამაშეზე შეხება ბრალს გადაიტანს.
+                const canPick = !isVictim && lives > 0;
+                return (
+                  <Pressable
+                    key={p.id}
+                    disabled={!canPick}
+                    accessibilityRole={canPick ? 'button' : undefined}
+                    accessibilityLabel={canPick ? p.name : undefined}
+                    onPress={() => engine.reassignVictim(p)}
+                    style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: Controls.compact.minHeight }}
+                  >
+                    <Text
+                      style={[
+                        body(15, isVictim ? '800' : '600'),
+                        {
+                          color: isVictim ? Colors.neonMagenta : lives > 0 ? Colors.textPrimary : Colors.textSecondary,
+                          flex: 1,
+                        },
+                        lives === 0 && !isVictim ? Layout.struck : null,
+                      ]}
+                    >
+                      {p.name}
+                    </Text>
+                    <Text style={{ fontSize: 13, color: Colors.neonMagenta }}>{'♥'.repeat(lives)}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </GlassCard>
+          <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, marginTop: 8 }]}>
+            ბომბი სხვას ეჭირა? შეეხე მის სახელს.
+          </Text>
+        </View>
+
+      </ScrollView>
 
       <View style={Layout.footer}>
         <PrimaryButton
           title={engine.alive.length <= 1 ? 'შედეგი' : 'შემდეგი რაუნდი'}
           icon="chevron.right"
           tint={Colors.neonMagenta}
+          enabled={armed}
           onPress={() => engine.continueGame()}
         />
       </View>
@@ -288,7 +288,6 @@ function Exploded({ engine, onExit }: { engine: BombEngine; onExit: () => void }
 
 function GameOver({
   engine,
-  roster,
   onExit,
 }: {
   engine: BombEngine;
@@ -297,8 +296,6 @@ function GameOver({
 }) {
 
   useAwardOnce(() => {
-    // ერთი გადარჩენილია — პოდიუმი აქ არ სჭირდება, სამი ქულა პირდაპირ.
-    if (engine.winner) roster.addScore(3, engine.winner.id);
     Haptics.success();
   });
 
@@ -306,21 +303,18 @@ function GameOver({
     <View style={{ flex: 1, gap: Space.m }}>
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="trophy.fill" size={37} tint={Colors.phosphor} />
-      </View>
+      <PlayerCharacter player={engine.winner} compact />
 
-      <Text
+      <FitText
         style={[titleFont(34), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}
-        adjustsFontSizeToFit
-        numberOfLines={2}
+        maxLines={2}
       >
         {engine.winner?.name ?? 'ფრე'}
-      </Text>
+      </FitText>
 
-      <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>
-        ბოლო გადარჩენილი — ბომბმა ვერაფერი დააკლო
-      </Text>
+      {engine.winner ? (
+        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ბოლო გადარჩენილი</Text>
+      ) : null}
 
       <View style={{ flex: 1 }} />
 
@@ -335,6 +329,7 @@ function GameOver({
         />
         <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
       </View>
+      {engine.winner ? <Confetti /> : null}
     </View>
   );
 }

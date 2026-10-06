@@ -1,38 +1,27 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader , RulesSheet } from '../../ui/Cards';
-import { PrimaryButton, GhostButton } from '../../ui/Buttons';
-import { Pressable } from '../../ui/Pressable';
+import { ScrollView, Text, View } from 'react-native';
+import { Colors, Space, body, title as titleFont } from '../../theme/theme';
+import { CategoryChip, GameExitButton, GlassCard, ScreenHeader , RulesSheet } from '../../ui/Cards';
+import { PrimaryButton, GhostButton, CompactButton } from '../../ui/Buttons';
 import { BottleSpinner } from '../../ui/BottleSpinner';
 import { Layout } from '../../ui/layout';
+import { FitText } from '../../ui/FitText';
 import { useKeepScreenAwake } from '../../core/orientationLock';
 import { heatName, heatNote, type TruthDareHeat } from '../../content/banks';
-import { PodiumAward } from '../../core/podiumAward';
-import { Haptics } from '../../core/haptics';
-import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
-import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
-import { TruthDareEngine, TRUTHDARE_LAP_OPTIONS, orderTitle, type TruthDareOrder } from './engine';
-import { TurnRotation } from '../../core/turnRotation';
+import { TruthDareEngine, TRUTHDARE_ORDERS, orderTitle } from './engine';
 import { game as findGame } from '../catalog';
-import { Icon } from '../../ui/Icon';
 
 /**
  * „სიმართლე თუ მოქმედება“ — სრული ნაკადი.
  *
  * პორტი: `Splash/Games/TruthDare/*.swift` (5 ხედი).
- * სიმართლე +1, მოქმედება +2 — რისკი ქულით ფასდება. პასი ყოველთვის შეიძლება.
+ * ქულები არ არის — ჯერი უბრალოდ წრეზე გადადის.
  */
 
 const HEATS: TruthDareHeat[] = ['family', 'party', 'spicy'];
-const ORDERS: TruthDareOrder[] = ['circle', 'bottle'];
-function turnLabel(value: number): string {
-  if (value === -1) return 'უსასრულო';
-  return TurnRotation.label(value);
-}
 
 export function TruthDareFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new TruthDareEngine([...roster.players]));
@@ -46,7 +35,7 @@ export function TruthDareFlow({ roster, onExit }: GameFlowProps) {
     case 'task':
       return <Task engine={engine} onExit={onExit} />;
     case 'summary':
-      return <Summary engine={engine} roster={roster} onExit={onExit} />;
+      return null;
   }
 }
 
@@ -61,8 +50,7 @@ function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => vo
 
       <View style={Layout.header}>
         <ScreenHeader
-          title="სიმართლე თუ მოქმედება"
-          subtitle={`${engine.players.length} მოთამაშე`}
+          title="Truth or Dare"
           onBack={onClose}
          onInfo={() => setShowRules(true)} />
       </View>
@@ -91,7 +79,7 @@ function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => vo
           <View style={{ gap: 12 }}>
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>ვის ერგება ჯერი</Text>
             <View style={Layout.segmentRow}>
-              {ORDERS.map((order) => (
+              {TRUTHDARE_ORDERS.map((order) => (
                 <CategoryChip
                   compact
                   key={order}
@@ -101,45 +89,13 @@ function Setup({ engine, onClose }: { engine: TruthDareEngine; onClose: () => vo
                 />
               ))}
             </View>
-            <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              {engine.settings.order === 'circle'
-                ? 'ჯერი წრეზე ტრიალებს — ყველას თანაბრად ერგება.'
-                : 'ტელეფონი ბოთლივით ირჩევს.'}
-            </Text>
           </View>
         </GlassCard>
 
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ჯერი</Text>
-            <View style={Layout.chipRow}>
-              {TRUTHDARE_LAP_OPTIONS.map((value) => (
-                <CategoryChip
-                  key={value}
-                  label={turnLabel(value)}
-                  selected={engine.settings.laps === value}
-                  onPress={() => engine.setLaps(value)}
-                />
-              ))}
-            </View>
-            <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>
-              {engine.isEndless ? 'თამაში არ მთავრდება — შეჯამებას თვითონ გამოიძახებთ.' : `სულ ${engine.totalTurns} ჯერი.`}
-            </Text>
-          </View>
-        </GlassCard>
-
-        <GlassCard>
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-            <Icon name={'hand.raised.fill'} size={15} color={Colors.neonCyan} />
-            <Text style={[body(12, '500'), { color: Colors.textSecondary, flex: 1 }]}>
-              დავალება, რომელიც ვინმეს რეალურად აზარალებს, არ სრულდება — პასი ყოველთვის ნებადართულია.
-            </Text>
-          </View>
-        </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
-        <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.neonCyan} onPress={() => engine.startGame()} />
+        <PrimaryButton title="დაწყება" enabled={engine.canPlay} onPress={() => engine.startGame()} />
       </View>
     </View>
   );
@@ -157,9 +113,6 @@ function Turn({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
   const header = (
     <View style={Layout.topBar}>
       <GameExitButton onExit={onExit} />
-      <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-        {engine.isEndless ? `ჯერი ${engine.turn}` : `ჯერი ${engine.turn} / ${engine.totalTurns}`}
-      </Text>
       <View style={{ flex: 1 }} />
       <Text style={[body(13, '700'), { color: Colors.neonCyan }]}>{engine.heatName}</Text>
     </View>
@@ -189,65 +142,27 @@ function Turn({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
       {/* პორტრეტის ბარათი თვითონ ამბობს, ვისი ჯერია — ზემოთ ცალკე ხატულა ზედმეტი იყო. */}
       <PlayerCharacter player={engine.currentPlayer} compact />
       <View style={{ gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+        <FitText style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>
           {engine.currentPlayer?.name ?? '—'}
-        </Text>
-        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ჯერი გიდგება</Text>
+        </FitText>
       </View>
 
       <View style={{ flex: 1 }} />
 
       <View style={[Layout.footer, { gap: 12 }]}>
-        <ChoiceButton
+        <GhostButton
           title="სიმართლე"
-          subtitle="+1 ქულა"
           icon="bubble.left.and.bubble.right.fill"
-          tint={Colors.neonCyan}
           onPress={() => engine.pick('truth')}
         />
-        <ChoiceButton
+        <PrimaryButton
           title="მოქმედება"
-          subtitle="+2 ქულა"
           icon="figure.run"
           tint={Colors.phosphor}
           onPress={() => engine.pick('dare')}
         />
-        {engine.isEndless ? (
-          <GhostButton title="შეჯამება" icon="flag.checkered" onPress={() => engine.finishNow()} />
-        ) : null}
       </View>
     </View>
-  );
-}
-
-function ChoiceButton({
-  title,
-  subtitle,
-  icon,
-  tint,
-  onPress,
-}: {
-  title: string;
-  subtitle: string;
-  icon: string;
-  tint: string;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${title}. ${subtitle}`}
-      // ვიბრაციას `engine.pick()` თვითონ იძლევა — აქ მეორე ზედმეტი იყო.
-      onPress={onPress}
-      style={[styles.choice, { borderColor: tint + '59' }]}
-    >
-      <Icon name={icon} size={22} color={tint} style={{ width: 30 }} />
-      <View style={{ flex: 1, gap: 2 }}>
-        <Text style={[titleFont(21), { color: Colors.textPrimary }]}>{title}</Text>
-        <Text style={[body(12, '600'), { color: Colors.textSecondary }]}>{subtitle}</Text>
-      </View>
-      <Icon name={'chevron.right'} size={16} color={Colors.textSecondary} />
-    </Pressable>
   );
 }
 
@@ -262,196 +177,43 @@ function Task({ engine, onExit }: { engine: TruthDareEngine; onExit: () => void 
     <View style={{ flex: 1, gap: Space.m }}>
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(14, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-          {engine.isEndless ? `ჯერი ${engine.turn}` : `ჯერი ${engine.turn} / ${engine.totalTurns}`}
-        </Text>
         <View style={{ flex: 1 }} />
         <Text style={[body(14, '700'), { color: tint }]} numberOfLines={1}>
           {engine.currentPlayer?.name ?? '—'}
         </Text>
       </View>
 
-      <View style={{ flex: 1 }} />
-
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name={isTruth ? 'bubble.left.and.bubble.right.fill' : 'figure.run'} size={30} tint={tint} />
-      </View>
-
+      <ScrollView contentContainerStyle={[Layout.content, { flexGrow: 1, justifyContent: 'center', gap: 16, paddingVertical: 16 }]}>
       <Text style={[body(14, '700'), Layout.centered, { color: tint }]}>{isTruth ? 'სიმართლე' : 'მოქმედება'}</Text>
 
-      <View style={Layout.content}>
-        <GlassCard padding={26}>
-          <Text
-            style={[titleFont(24), Layout.centered, { color: Colors.textPrimary }]}
-            adjustsFontSizeToFit
-            numberOfLines={6}
+        <GlassCard padding={22}>
+          <FitText
+            style={[body(22, '700'), Layout.centered, { color: Colors.textPrimary }]}
+            maxLines={10}
           >
             {engine.currentText}
-          </Text>
+          </FitText>
         </GlassCard>
-      </View>
-
-      <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        {isTruth
-          ? 'პასუხი გულწრფელი უნდა იყოს.'
-          : 'შესრულება ახლავე, ყველას თვალწინ.'}
-      </Text>
-
-      <View style={{ flex: 1 }} />
-
-      <View style={Layout.footer}>
-        {engine.canSwap ? <GhostButton title="სხვა ბარათი" icon="shuffle" onPress={() => engine.swap()} /> : null}
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="პასი"
-            onPress={() => engine.pass()}
-            style={styles.passButton}
-          >
-            <Icon name={'hand.raised.fill'} size={16} color={Colors.textSecondary} />
-            <Text style={[body(16, '700'), { color: Colors.textSecondary }]}>პასი</Text>
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="შესრულდა"
-            onPress={() => engine.complete()}
-            style={[styles.doneButton, { backgroundColor: tint }]}
-          >
-            <Icon name={'checkmark'} size={16} color={Colors.onAccent} />
-            <Text style={[body(16, '700'), { color: Colors.onAccent }]}>შესრულდა</Text>
-          </Pressable>
-        </View>
-      </View>
-    </View>
-  );
-}
-
-// ── შეჯამება
-
-function Summary({
-  engine,
-  roster,
-  onExit,
-}: {
-  engine: TruthDareEngine;
-  roster: GameFlowProps['roster'];
-  onExit: () => void;
-}) {
-
-  useAwardOnce(() => {
-    PodiumAward.apply(engine.results, roster);
-    Sound.play('win');
-    Haptics.success();
-  });
-
-  const champion = engine.champion;
-  const fearless = engine.fearless;
-
-  return (
-    <View style={{ flex: 1, gap: 14 }}>
-      <View style={{ flex: 1 }} />
-
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="flame.fill" size={31} tint={Colors.neonCyan} />
-      </View>
-
-      <Text style={[titleFont(26), Layout.centered, { color: Colors.neonCyan, paddingHorizontal: 24 }]}>
-        ყველაზე გაბედული
-      </Text>
-
-      <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-        {champion ? `${champion.name} — ${engine.scoreFor(champion)} ქულა` : 'ამ პარტიაში ქულა ვერავინ აიღო'}
-      </Text>
-
-      {fearless.length > 0 ? (
-        <Text style={[body(12, '600'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 28 }]}>
-          პასის გარეშე: {fearless.map((p) => p.name).join(', ')}
-        </Text>
+      {engine.penalty !== null ? (
+          <GlassCard padding={20}>
+            <View style={{ gap: 8, alignItems: 'center' }}>
+              <Text style={[body(14, '700'), { color: Colors.warmCream }]}>ჯარიმა</Text>
+              <FitText style={[titleFont(20), Layout.centered, { color: Colors.textPrimary }]} maxLines={6}>
+                {engine.penalty}
+              </FitText>
+            </View>
+          </GlassCard>
       ) : null}
 
-      <Text
-        style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7, paddingHorizontal: 24 }]}
-      >
-        საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
-      </Text>
-
-      <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-        {engine.ranking.map((player, rank) => {
-          const passes = engine.passCount(player);
-          return (
-            <View key={player.id} style={styles.summaryRow}>
-              <Text style={[body(16, '900'), { color: Colors.textSecondary, width: 30 }]}>{rank + 1}</Text>
-              <View style={{ flex: 1, gap: 1 }}>
-                <Text style={[body(16, '600'), { color: Colors.textPrimary }]} numberOfLines={1}>
-                  {player.name}
-                </Text>
-                {passes > 0 ? (
-                  <Text style={[caption(11), { color: Colors.textSecondary }]}>პასი — {passes}</Text>
-                ) : null}
-              </View>
-              <Text
-                style={[titleFont(20), Layout.digits, { color: rank === 0 ? Colors.neonCyan : Colors.textPrimary }]}
-              >
-                {engine.scoreFor(player)}
-              </Text>
-            </View>
-          );
-        })}
       </ScrollView>
 
       <View style={Layout.footer}>
-        <PrimaryButton
-          title="თავიდან"
-          icon="arrow.clockwise"
-          tint={Colors.neonCyan}
-          onPress={() => {
-            engine.restart();
-          }}
-        />
-        <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
+        {engine.penalty === null ? <View style={{ flexDirection: 'row', gap: 10 }}>
+          {engine.canSwap ? <View style={{ flex: 1 }}><CompactButton title="სხვა ბარათი" onPress={() => engine.swap()} /></View> : null}
+          <View style={{ flex: 1 }}><CompactButton title="უარი" onPress={() => engine.refuse()} /></View>
+        </View> : null}
+        <PrimaryButton title="შემდეგი" icon="chevron.right" tint={tint} onPress={() => engine.next()} />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  choice: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderRadius: Radius.default,
-    backgroundColor: Colors.surface,
-    borderWidth: 1,
-  },
-  passButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 17,
-    borderRadius: Radius.default,
-    backgroundColor: Colors.surface,
-  },
-  doneButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 17,
-    borderRadius: Radius.default,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: Space.m,
-    paddingVertical: 13,
-    borderRadius: Radius.small,
-    backgroundColor: Colors.surface,
-  },
-});

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -129,10 +129,12 @@ function Grid({
   onOpen: (g: PartyGame) => void;
   onInfo: (g: PartyGame) => void;
 }) {
+  const { width } = useWindowDimensions();
+  const cellWidth = (width - Space.m * 2 - 12) / 2;
   return (
     <View style={styles.grid}>
       {games.map((game) => (
-        <View key={game.id} style={styles.gridCell}>
+        <View key={game.id} style={{ width: cellWidth }}>
           <GameTile game={game} playerCount={playerCount} onPlay={() => onOpen(game)} onInfo={() => onInfo(game)} />
         </View>
       ))}
@@ -175,6 +177,5 @@ const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   // `flexGrow` კენტ ბოლო ფილას მთელ რიგზე წელავდა — iOS-ის `LazyVGrid`
   // ამას არ აკეთებდა. ფიქსირებული სიგანე ორსვეტიან ბადეს ინარჩუნებს.
-  gridCell: { width: '48%' },
   empty: { alignItems: 'center', gap: 10, paddingVertical: 40 },
 });

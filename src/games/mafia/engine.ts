@@ -1,11 +1,12 @@
 import { Observable } from '../../core/observable';
 import { shuffled } from '../../core/shuffle';
-import { loadSettings, saveSettings, num, bool } from '../../core/settings';
+import { loadSettings, saveSettings, num, bool, discussionSeconds } from '../../core/settings';
 import type { Player } from '../../core/roster';
 
 /**
- * „მაფია“ — **წამყვანის გარეშე**: ღამეს აპი ატარებს, ტელეფონი წრეზე გადადის
- * და თითოეული თავის ქმედებას ფარულად ასრულებს.
+ * „მაფია“ — **აპი წამყვანია**: ღამით ტელეფონი მაგიდის შუაში დევს, ყველას
+ * თვალები დახუჭული აქვს, აპი კი რიგრიგობით აღვიძებს მაფიას, ექიმს და
+ * დეტექტივს (`narration.ts`). ტელეფონი წრეზე მხოლოდ როლების დარიგებისას გადადის.
  *
  * პორტი: `Splash/Games/Mafia/MafiaEngine.swift`.
  */
@@ -30,26 +31,35 @@ export const roleIcon: Record<MafiaRole, string> = {
 export type MafiaPhase =
   | 'setup'
   | 'reveal'    // როლების დარიგება
-  | 'night'     // ტელეფონი წრეზე — თითოეული თავის ქმედებას ასრულებს
+  | 'night'     // ტელეფონი შუაში — აპი როლებს რიგრიგობით აღვიძებს
   | 'morning'   // ვინ დაიღუპა
   | 'discussion' // დღის განხილვა ტაიმერით — მხოლოდ თუ ტაიმერი ჩართულია
-  | 'dayVote'   // ქალაქი ხმას აძლევს
+  | 'dayVote'   // ქალაქი მსჯელობს და ირჩევს, ვინ გააძევოს
   | 'dayResult' // ვინ გავიდა და რა როლი ჰქონდა
   | 'gameOver';
 
 export type MafiaWinner = 'city' | 'mafia';
 
+/** ღამის ნაბიჯი: `dusk` — ქალაქი იძინებს, მერე თითო როლი. */
+export type NightStep = 'dusk' | 'mafia' | 'doctor' | 'detective';
+
 export interface MafiaSettings {
   mafiaCount: number;
   includeDoctor: boolean;
   includeDetective: boolean;
-  /** დღის განხილვის ტაიმერი; 0 = ტაიმერის გარეშე (კლასიკა — პირდაპირ კენჭისყრაზე). */
+  /** დღის განხილვის ტაიმერი; 0 = ტაიმერის გარეშე (პირდაპირ კენჭისყრაზე). */
   discussionSeconds: number;
 }
 
+/** განხილვის დროის არჩევანი; 0 — განხილვის ეკრანი არ ჩნდება. */
+export const MAFIA_DISCUSSION_OPTIONS = [0, 120, 180, 300] as const;
+
+/** პატარა კომპანიაში ყველა სპეციალური როლი ზედმეტია — ჩვეულებრივი მოქალაქე აღარ რჩება. */
+export const DOCTOR_MIN_PLAYERS = 5;
+export const DETECTIVE_MIN_PLAYERS = 6;
+
 const KEY = 'splash.mafia.settings.v1';
 const DEFAULTS: MafiaSettings = { mafiaCount: 1, includeDoctor: true, includeDetective: true, discussionSeconds: 0 };
-const DISCUSSION = [30, 600] as const;
 
 export class MafiaEngine extends Observable {
   readonly players: Player[];
@@ -61,9 +71,11 @@ export class MafiaEngine extends Observable {
   eliminated = new Set<string>();
 
   revealIndex = 0;
-  nightIndex = 0;
+  nightStep: NightStep = 'dusk';
+  /** ამ ნაბიჯის როლს თვალები ახელილი აქვს; `false` — უკვე იძინებს (ან ქალაქი ჯერ არ დაძინებულა). */
+  awake = false;
 
-  mafiaVotes: Record<string, number> = {};
+  mafiaTargetID: string | null = null;
   savedID: string | null = null;
   /** წინა ღამეს გადარჩენილი — ექიმი მას ზედიზედ მეორე ღამეს ვერ აირჩევს. */
   lastSavedID: string | null = null;
@@ -81,7 +93,7 @@ export class MafiaEngine extends Observable {
       mafiaCount: num(s.mafiaCount, DEFAULTS.mafiaCount, 1, 6),
       includeDoctor: bool(s.includeDoctor, DEFAULTS.includeDoctor),
       includeDetective: bool(s.includeDetective, DEFAULTS.includeDetective),
-      discussionSeconds: s.discussionSeconds === 0 ? 0 : num(s.discussionSeconds, DEFAULTS.discussionSeconds, ...DISCUSSION),
+      discussionSeconds: discussionSeconds(s.discussionSeconds, DEFAULTS.discussionSeconds),
     }));
     this.clampSettings();
   }
@@ -91,6 +103,13 @@ export class MafiaEngine extends Observable {
   get alive(): Player[] {
     return this.players.filter((p) => !this.eliminated.has(p.id));
   }
+  get hasDoctor(): boolean {
+    return this.settings.includeDoctor && this.players.length >= DOCTOR_MIN_PLAYERS;
+  }
+  get hasDetective(): boolean {
+    return this.settings.includeDetective && this.players.length >= DETECTIVE_MIN_PLAYERS;
+  }
+
   /** მაფია ქალაქზე მეტი ვერასდროს იქნება. */
   get maxMafia(): number {
     return Math.max(1, Math.floor((this.players.length - 1) / 3));
@@ -99,8 +118,13 @@ export class MafiaEngine extends Observable {
   get currentRevealPlayer(): Player | null {
     return this.players[this.revealIndex] ?? null;
   }
-  get currentNightPlayer(): Player | null {
-    return this.alive[this.nightIndex] ?? null;
+  /** ამაღამ ვინ იღვიძებს — მკვდარი როლის ჯერი გამოიტოვება (როლი სიკვდილისას ცხადდება). */
+  get nightSteps(): NightStep[] {
+    const has = (role: MafiaRole) => this.alive.some((p) => this.roles[p.id] === role);
+    const steps: NightStep[] = ['mafia'];
+    if (has('doctor')) steps.push('doctor');
+    if (has('detective')) steps.push('detective');
+    return steps;
   }
 
   roleOf(player: Player): MafiaRole {
@@ -123,22 +147,6 @@ export class MafiaEngine extends Observable {
     return this.checkedID ? (this.player(this.checkedID) ?? null) : null;
   }
 
-  get finalPoints(): Record<string, number> {
-    if (this.winner === null) return {};
-    const points: Record<string, number> = {};
-    if (this.winner === 'city') {
-      for (const p of this.players) if (this.roles[p.id] !== 'mafia') points[p.id] = 2;
-    } else {
-      for (const p of this.playersWith('mafia')) points[p.id] = 3;
-    }
-    return points;
-  }
-
-  get results(): { player: Player; score: number }[] {
-    const points = this.finalPoints;
-    return this.players.map((p) => ({ player: p, score: points[p.id] ?? 0 }));
-  }
-
   // MARK: - თამაშის დაწყება
 
   startGame(): void {
@@ -146,10 +154,11 @@ export class MafiaEngine extends Observable {
     const pool = shuffled(this.players);
     this.roles = {};
 
+    // ექიმი და დეტექტივი ნაგულისხმევად თამაშობენ, მაგრამ მხოლოდ საკმარის კომპანიაში.
     let i = 0;
     for (let n = 0; n < this.settings.mafiaCount && i < pool.length; n++) this.roles[pool[i++].id] = 'mafia';
-    if (this.settings.includeDoctor && i < pool.length) this.roles[pool[i++].id] = 'doctor';
-    if (this.settings.includeDetective && i < pool.length) this.roles[pool[i++].id] = 'detective';
+    if (this.hasDoctor && i < pool.length) this.roles[pool[i++].id] = 'doctor';
+    if (this.hasDetective && i < pool.length) this.roles[pool[i++].id] = 'detective';
     for (; i < pool.length; i++) this.roles[pool[i].id] = 'civilian';
 
     this.eliminated = new Set();
@@ -176,8 +185,11 @@ export class MafiaEngine extends Observable {
   // MARK: - ღამე
 
   private beginNight(): void {
-    this.nightIndex = 0;
-    this.mafiaVotes = {};
+    this.nightStep = 'dusk';
+    // პირველ ღამეს ქალაქი ღილაკით იძინებს (ტელეფონი ჯერ შუაში უნდა დადონ);
+    // მომდევნო ღამეებში ტელეფონი უკვე შუაშია — ქალაქი მაშინვე იძინებს.
+    this.awake = this.night > 1;
+    this.mafiaTargetID = null;
     this.lastSavedID = this.savedID;
     this.savedID = null;
     this.checkedID = null;
@@ -187,28 +199,38 @@ export class MafiaEngine extends Observable {
     this.notify();
   }
 
-  /**
-   * ღამის ქმედება მხოლოდ მაშინ მიიღება, თუ ტელეფონი ახლა ამ როლის მქონეს
-   * უჭირავს. ორმაგი შეხება სხვაგვარად შემდეგ მოთამაშეს ჯერს გამოტოვებინებდა.
-   * `actor` — ვინც ღილაკს დააჭირა (ეკრანი მას იცნობს); ძველი ეკრანის
-   * დაგვიანებული შეხება ახალ მოთამაშეზე აღარ ითვლება.
-   */
-  private canAct(role: MafiaRole, actor?: Player): boolean {
-    const current = this.currentNightPlayer;
-    if (this.phase !== 'night' || !current || this.roleOf(current) !== role) return false;
-    return actor === undefined || actor.id === current.id;
+  /** ტელეფონი შუაშია — ქალაქი იძინებს. */
+  sleepCity(): void {
+    if (this.phase !== 'night' || this.nightStep !== 'dusk' || this.awake) return;
+    this.awake = true; // dusk-ზე `awake` ნიშნავს „ქალაქი დაიძინა, ველოდებით“.
+    this.notify();
   }
 
-  /** მოქალაქეს ღამით ქმედება არ აქვს — ტელეფონი მაინც გადადის, რომ როლი არ გაიცეს. */
-  skipNightTurn(actor?: Player): void {
-    if (!this.canAct('civilian', actor)) return;
-    this.advanceNight();
+  /** შემდეგი როლი იღვიძებს; ბოლოს — დილა. ეკრანი იძახებს ძილის ფრაზის შემდეგ. */
+  nextNightStep(): void {
+    if (this.phase !== 'night') return;
+    const atDusk = this.nightStep === 'dusk';
+    if (atDusk ? !this.awake : this.awake) return;
+    const steps = this.nightSteps;
+    const next = atDusk ? steps[0] : steps[steps.indexOf(this.nightStep) + 1];
+    if (next === undefined) {
+      this.resolveNight();
+      return;
+    }
+    this.nightStep = next;
+    this.awake = true;
+    this.notify();
   }
 
-  mafiaChoose(target: Player, actor?: Player): void {
-    if (!this.canAct('mafia', actor)) return;
-    this.mafiaVotes[target.id] = (this.mafiaVotes[target.id] ?? 0) + 1;
-    this.advanceNight();
+  private canAct(step: NightStep): boolean {
+    return this.phase === 'night' && this.nightStep === step && this.awake;
+  }
+
+  mafiaChoose(target: Player): void {
+    if (!this.canAct('mafia') || this.eliminated.has(target.id) || this.roleOf(target) === 'mafia') return;
+    this.mafiaTargetID = target.id;
+    this.awake = false;
+    this.notify();
   }
 
   /** ვის ვერ აირჩევს ექიმი ამაღამ — წუხანდელ გადარჩენილს (კლასიკური წესი). */
@@ -216,46 +238,33 @@ export class MafiaEngine extends Observable {
     return this.lastSavedID ? [this.lastSavedID] : [];
   }
 
-  doctorSave(target: Player, actor?: Player): void {
-    if (!this.canAct('doctor', actor)) return;
+  doctorSave(target: Player): void {
+    if (!this.canAct('doctor') || this.eliminated.has(target.id)) return;
     if (target.id === this.lastSavedID) return;
     this.savedID = target.id;
-    this.advanceNight();
+    this.awake = false;
+    this.notify();
   }
 
-  detectiveCheck(target: Player, actor?: Player): void {
+  detectiveCheck(target: Player): void {
     // ერთი შემოწმება ღამეში — მეორე შეხება შედეგს არ ცვლის.
-    if (!this.canAct('detective', actor) || this.checkResult !== null) return;
+    if (!this.canAct('detective') || this.checkResult !== null) return;
     this.checkedID = target.id;
     this.checkResult = this.roleOf(target) === 'mafia';
     this.notify();
   }
 
-  detectiveDone(actor?: Player): void {
-    if (!this.canAct('detective', actor) || this.checkResult === null) return;
-    this.advanceNight();
-  }
-
-  private advanceNight(): void {
-    if (this.nightIndex + 1 < this.alive.length) {
-      this.nightIndex += 1;
-      this.notify();
-    } else {
-      this.resolveNight();
-    }
+  detectiveDone(): void {
+    if (!this.canAct('detective') || this.checkResult === null) return;
+    this.awake = false;
+    this.notify();
   }
 
   private resolveNight(): void {
-    // ყველაზე მეტი ხმის მქონე მსხვერპლი; ფრეს შემთხვევაში შემთხვევითი.
-    const values = Object.values(this.mafiaVotes);
-    if (values.length > 0) {
-      const best = Math.max(...values);
-      const top = Object.keys(this.mafiaVotes).filter((id) => this.mafiaVotes[id] === best);
-      const target = top[Math.floor(Math.random() * top.length)];
-      if (target && target !== this.savedID) {
-        this.killedID = target;
-        this.eliminated.add(target);
-      }
+    const target = this.mafiaTargetID;
+    if (target && target !== this.savedID) {
+      this.killedID = target;
+      this.eliminated.add(target);
     }
     this.phase = 'morning';
     this.evaluate();
@@ -289,13 +298,14 @@ export class MafiaEngine extends Observable {
     this.notify();
   }
 
-  /** ქალაქმა დღეს არავინ გააძევა — შედეგის ეკრანი, მერე ღამე. */
+  /** ქალაქმა დღეს არავინ გააძევა — პირდაპირ შემდეგი ღამე. */
   voteNobody(): void {
     if (this.phase !== 'dayVote') return;
     this.votedOutID = null;
-    this.phase = 'dayResult';
-    this.evaluate();
-    this.notify();
+    this.settleOrContinue(() => {
+      this.night += 1;
+      this.beginNight();
+    });
   }
 
   continueGame(): void {
@@ -351,12 +361,9 @@ export class MafiaEngine extends Observable {
     this.persist();
   }
 
-  /** 0 = ტაიმერის გარეშე — `DiscussionPanel` ამას იცნობს. */
+  /** 0 = ტაიმერის გარეშე — განხილვის ეკრანი არ ჩნდება. */
   setDiscussionSeconds(value: number): void {
-    this.settings = {
-      ...this.settings,
-      discussionSeconds: value === 0 ? 0 : num(value, DEFAULTS.discussionSeconds, ...DISCUSSION),
-    };
+    this.settings = { ...this.settings, discussionSeconds: discussionSeconds(value, DEFAULTS.discussionSeconds) };
     this.persist();
   }
 
