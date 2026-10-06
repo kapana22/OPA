@@ -1,15 +1,16 @@
 import { PlayerCharacter } from './PlayerCharacter';
 import { PlayerAvatarView } from './PlayerAvatarView';
-import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Colors, Space, body, title as titleFont } from '../theme/theme';
+import { FitText } from './FitText';
 import { Haptics } from '../core/haptics';
 import { Sound } from '../core/sound';
+import { onPrivateRevealInterruption } from '../core/privateReveal';
 import { PrimaryButton } from './Buttons';
 import { GameExitButton } from './Cards';
 import { Pressable } from './Pressable';
-import { Icon } from './Icon';
 
 export interface RevealCard {
   word: string;
@@ -56,6 +57,10 @@ export function PassPhoneReveal({
   const [isHolding, setHolding] = useState(false);
   const [confirmed, setConfirmed] = useState(!confirmFirst);
   const tint = card.tint ?? Colors.textPrimary;
+  useEffect(() => onPrivateRevealInterruption(AppState, () => {
+    setHolding(false);
+    setConfirmed(!confirmFirst);
+  }), [confirmFirst]);
 
   // ახალი მოთამაშე — ტელეფონი ისევ გადასაცემია, დადასტურება თავიდან.
   // რენდერის დროს და არა effect-ში: ასე ძველი მოთამაშის ბარათი ერთი კადრითაც არ ჩანს.
@@ -70,7 +75,7 @@ export function PassPhoneReveal({
   const revealedLabel = [card.hint, card.word, card.note].filter(Boolean).join(', ');
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.root}>
       <View style={styles.header}>
         {onExit ? <GameExitButton onExit={onExit} /> : null}
         <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>{headerLeft ?? ''}</Text>
@@ -86,10 +91,9 @@ export function PassPhoneReveal({
         <>
           <PlayerCharacter name={playerName} />
           <View style={styles.passBlock} accessible accessibilityLabel={`გადაეცი ტელეფონი ${playerName}-ს`}>
-            <Text style={[titleFont(36), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+            <Text style={[titleFont(28), styles.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={2}>
               {playerName}
             </Text>
-            <Text style={[body(15, '500'), styles.centered, { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
           </View>
           <View style={{ flex: 1 }} />
           <View style={styles.footer}>
@@ -115,8 +119,7 @@ export function PassPhoneReveal({
         accessible
         accessibilityLabel={`გადაეცი ტელეფონი ${playerName}-ს. ${index + 1} ${total}-დან`}
       >
-        <Text style={[body(16, '500'), { color: Colors.textSecondary }]}>გადაეცი ტელეფონი</Text>
-        <Text style={[titleFont(36), styles.centered, { color: Colors.textPrimary }]}>{playerName}</Text>
+        <FitText style={[titleFont(28), styles.centered, { color: Colors.textPrimary }]} maxLines={2}>{playerName}</FitText>
       </View>
 
       <Pressable
@@ -124,6 +127,7 @@ export function PassPhoneReveal({
         accessibilityLabel={isHolding ? revealedLabel : 'დახურული ბარათი'}
         accessibilityHint={isHolding ? 'ხელს აიღებ — ბარათი დაიხურება' : 'დააჭირე და გეჭიროს, რომ ნახო'}
         onPressIn={() => {
+          if (AppState.currentState !== 'active') return;
           setHolding(true);
           Haptics.reveal();
           Sound.play('reveal');
@@ -146,20 +150,15 @@ export function PassPhoneReveal({
             {card.hint ? (
               <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>{card.hint}</Text>
             ) : null}
-            <Text
-              style={[titleFont(card.word.length > 12 ? 28 : 38), styles.centered, { color: tint }]}
-              adjustsFontSizeToFit
-              numberOfLines={3}
-            >
+            <FitText style={[titleFont(card.word.length > 12 ? 28 : 38), styles.centered, { color: tint }]} maxLines={3}>
               {card.word}
-            </Text>
+            </FitText>
             {card.note ? (
               <Text style={[body(13, '500'), styles.centered, { color: Colors.textSecondary }]}>{card.note}</Text>
             ) : null}
           </Animated.View>
         ) : (
           <View style={styles.cardInner}>
-            <Icon name={'hand.tap.fill'} size={34} color={Colors.textSecondary} />
             <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>დააჭირე და გეჭიროს</Text>
             <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>ხელს აიღებ — მაშინვე გაქრება</Text>
           </View>
@@ -173,23 +172,24 @@ export function PassPhoneReveal({
       </View>
         </>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, gap: Space.l },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 24, paddingTop: Space.m },
-  nameBlock: { gap: Space.l, alignItems: 'center', paddingHorizontal: 24 },
+  root: { flexGrow: 1, gap: Space.m },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingTop: Space.m },
+  nameBlock: { gap: 6, alignItems: 'center', paddingHorizontal: 20 },
   passBlock: { gap: 6, paddingHorizontal: 24 },
   centered: { textAlign: 'center' },
   card: {
-    height: 260,
-    marginHorizontal: 24,
-    borderRadius: 32,
+    minHeight: 210,
+    paddingVertical: 20,
+    marginHorizontal: 20,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardInner: { alignItems: 'center', gap: 12, paddingHorizontal: Space.m },
-  footer: { paddingHorizontal: 24, paddingBottom: Space.m, gap: 10 },
+  footer: { paddingHorizontal: 20, paddingBottom: Space.m, gap: 10 },
 });

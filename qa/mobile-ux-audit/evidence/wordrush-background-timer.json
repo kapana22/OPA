@@ -1,0 +1,610 @@
+[
+  {
+    "op": "route",
+    "arg": "/game/wordrush",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "45 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Word Rush",
+        "დრო",
+        "წრეები",
+        "ერთი წრე — თითო ჯერი ყველას.",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "30 წამი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "45 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Word Rush",
+        "დრო",
+        "წრეები",
+        "ერთი წრე — თითო ჯერი ყველას.",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "QA ნინო",
+        "ქმედებები",
+        "სხვა კატეგორია",
+        "დროის დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დროის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ქმედებები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 28,
+      "time": 1791063450531
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 27,
+      "time": 1791063452666
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 27,
+      "time": 1791063456462
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 25,
+      "time": 1791063459432
+    }
+  },
+  {
+    "op": "press",
+    "arg": "თამაშიდან გასვლა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გასვლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ქმედებები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "თამაშიდან გასვლა?",
+        "მიმდინარე რაუნდი დაიკარგება.",
+        "გაგრძელება",
+        "გასვლა"
+      ]
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 24,
+      "time": 1791063461599
+    }
+  },
+  {
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-timer-state.txt",
+    "result": {
+      "phase": "playing",
+      "remaining": 24,
+      "time": 1791063464879
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გაგრძელება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ქმედებები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ჩათვლა. ახლა 0",
+          "role": "button"
+        },
+        {
+          "label": "მინუს ერთი",
+          "role": "button"
+        },
+        {
+          "label": "დასრულება",
+          "role": "button"
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ქმედებები",
+        "შეეხე ყოველ სიტყვაზე",
+        "−1",
+        "დასრულება",
+        "ჯერის დასრულება?",
+        "გაგრძელება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "QA ნინო",
+        "შემდეგი"
+      ]
+    }
+  }
+]

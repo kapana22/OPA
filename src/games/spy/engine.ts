@@ -1,7 +1,7 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
 import { shuffled } from '../../core/shuffle';
-import { loadSettings, saveSettings, num, bool, categoryID } from '../../core/settings';
+import { loadSettings, saveSettings, num, bool, categoryIDs, cleanCategoryIDs, selectionKey, discussionSeconds } from '../../core/settings';
 import { PairBank } from '../../content/banks';
 import type { Player } from '../../core/roster';
 
@@ -19,7 +19,7 @@ export type SpyPhase =
   | 'setup'
   | 'reveal'        // ტელეფონის გადაცემა
   | 'discussion'    // აღწერების წრე
-  | 'voting'        // ვის ვაძევებთ
+  | 'voting'        // ვის ვაძევებთ — ტელეფონმა როლი უნდა გამოაჩინოს
   | 'mrWhiteGuess'  // გაძევებულ მისტერ უაითს ბოლო შანსი აქვს
   | 'roundResult'
   | 'gameOver';
@@ -28,9 +28,12 @@ export type SpyWinner = 'civilians' | 'undercovers' | 'mrWhite';
 
 export interface SpySettings {
   undercoverCount: number;
+  /** ერთ მოთამაშეს სიტყვა საერთოდ არ აქვს. ნაგულისხმევად გამორთულია. */
   includeMrWhite: boolean;
-  discussionSeconds: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
+  /** განხილვის ტაიმერი (წამი); `0` — ტაიმერის გარეშე. ნაგულისხმევად გამორთულია. */
+  discussionTimer: number;
 }
 
 export interface SpyCard {
@@ -40,9 +43,7 @@ export interface SpyCard {
 }
 
 const KEY = 'splash.spy.settings.v1';
-const DEFAULTS: SpySettings = { undercoverCount: 1, includeMrWhite: false, discussionSeconds: 120, categoryID: null };
-/** განხილვის დრო წამებში; 0 = ტაიმერის გარეშე. */
-const DISCUSSION = [30, 600] as const;
+const DEFAULTS: SpySettings = { undercoverCount: 1, includeMrWhite: false, categoryIDs: [], discussionTimer: 0 };
 /** რამდენ ბოლო წყვილს ვუვლით გვერდს, რომ საერთო სიტყვა არ გამეორდეს. */
 const SIMILARITY_WINDOW = 6;
 
@@ -69,7 +70,12 @@ export class SpyEngine extends Observable {
 
   mrWhiteOptions: string[] = [];
   mrWhiteGuess: string | null = null;
-  finalPoints: Record<string, number> = {};
+
+  /**
+   * მომხმარებლის არჩეული ჯაშუშების რაოდენობა. მისტერ უაითის ჩართვა ლიმიტს
+   * ამცირებს; გამორთვისას არჩეული რიცხვი ბრუნდება.
+   */
+  private wantedUndercovers: number;
 
   private shoes: Record<string, ContentShoe> = {};
 
@@ -79,9 +85,10 @@ export class SpyEngine extends Observable {
     this.settings = loadSettings<SpySettings>(KEY, DEFAULTS, (s) => ({
       undercoverCount: num(s.undercoverCount, DEFAULTS.undercoverCount, 1, 6),
       includeMrWhite: bool(s.includeMrWhite, DEFAULTS.includeMrWhite),
-      discussionSeconds: s.discussionSeconds === 0 ? 0 : num(s.discussionSeconds, DEFAULTS.discussionSeconds, ...DISCUSSION),
-      categoryID: categoryID(s.categoryID, (id) => PairBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => PairBank.category(id) !== undefined),
+      discussionTimer: discussionSeconds(s.discussionTimer, DEFAULTS.discussionTimer),
     }));
+    this.wantedUndercovers = this.settings.undercoverCount;
     this.clampSettings();
   }
 
@@ -89,12 +96,13 @@ export class SpyEngine extends Observable {
 
   /**
    * ოთხზე მისტერ უაითი + ჯაშუში ორი ორზე იქნებოდა — პირველივე შეცდომა
-   * თამაშს დაასრულებდა. ამიტომ ორივე როლს ხუთი მოთამაშე სჭირდება.
+   * თამაშს დაასრულებდა. ამიტომ მისტერ უაითს ხუთი მოთამაშე სჭირდება.
    */
   get canIncludeMrWhite(): boolean {
     return this.players.length >= 5;
   }
 
+  /** ჯაშუშები (მისტერ უაითის ჩათვლით) უმცირესობაში უნდა დარჩნენ. */
   private get maxSpecials(): number {
     return Math.max(1, Math.floor((this.players.length - 1) / 2));
   }
@@ -129,15 +137,11 @@ export class SpyEngine extends Observable {
       case 'civilian':
         return { word: this.civilianWord, note: null, isSpecial: false };
       case 'undercover':
-        // ჯაშუშმა არ იცის, რომ ჯაშუშია.
+        // ჯაშუშმა არ იცის, რომ ჯაშუშია — ბარათი მხოლოდ სიტყვით განსხვავდება.
         return { word: this.undercoverWord, note: null, isSpecial: false };
       case 'mrWhite':
         return { word: 'მისტერ უაითი ხარ', note: 'სიტყვა არ გაქვს. მოუსმინე და მოერგე.', isSpecial: true };
     }
-  }
-
-  get results(): { player: Player; score: number }[] {
-    return this.players.map((p) => ({ player: p, score: this.finalPoints[p.id] ?? 0 }));
   }
 
   // MARK: - პარამეტრების უსაფრთხო ცვლილება
@@ -146,27 +150,31 @@ export class SpyEngine extends Observable {
   // `settings`-ში — ამ მეთოდებს იძახებს და დიაპაზონი ყოველთვის ვალიდურია.
 
   setIncludeMrWhite(on: boolean): void {
-    const includeMrWhite = on && this.canIncludeMrWhite;
-    this.settings = { ...this.settings, includeMrWhite };
-    this.settings = { ...this.settings, undercoverCount: Math.min(this.settings.undercoverCount, this.maxUndercovers) };
+    this.settings = { ...this.settings, includeMrWhite: on && this.canIncludeMrWhite };
+    // გამორთვისას არჩეული რაოდენობა ბრუნდება, ჩართვისას ლიმიტში ჯდება.
+    this.settings = { ...this.settings, undercoverCount: this.clampUndercovers(this.wantedUndercovers) };
     this.persist();
   }
 
   setUndercoverCount(count: number): void {
+    this.wantedUndercovers = Math.max(1, Math.round(count));
     this.settings = { ...this.settings, undercoverCount: Math.min(Math.max(1, count), this.maxUndercovers) };
     this.persist();
   }
 
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
-    this.persist();
-  }
   /** 0 = ტაიმერის გარეშე („∞“) — `DiscussionPanel` ამას იცნობს. */
   setDiscussionSeconds(seconds: number): void {
-    this.settings = { ...this.settings, discussionSeconds: seconds === 0 ? 0 : num(seconds, DEFAULTS.discussionSeconds, ...DISCUSSION) };
+    this.settings = { ...this.settings, discussionTimer: discussionSeconds(seconds, DEFAULTS.discussionTimer) };
     this.persist();
   }
 
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => PairBank.category(id) !== undefined),
+    };
+    this.persist();
+  }
   // MARK: - თამაშის მიმდინარეობა
 
   startGame(): void {
@@ -198,7 +206,6 @@ export class SpyEngine extends Observable {
     this.winner = null;
     this.mrWhiteGuess = null;
     this.mrWhiteOptions = [];
-    this.finalPoints = {};
     this.startingPlayerID = this.pickStarter();
 
     this.phase = 'reveal';
@@ -226,14 +233,14 @@ export class SpyEngine extends Observable {
     if (this.roleOf(player) === 'mrWhite') {
       this.mrWhiteOptions = this.makeMrWhiteOptions();
       this.phase = 'mrWhiteGuess';
-      this.notify();
     } else {
       this.phase = 'roundResult';
       this.evaluate();
-      this.notify();
     }
+    this.notify();
   }
 
+  /** გაძევებული მისტერ უაითი მოქალაქეების სიტყვას გამოიცნობს — სწორია და მარტო იგებს. */
   submitMrWhiteGuess(word: string): void {
     if (this.phase !== 'mrWhiteGuess') return;
     this.mrWhiteGuess = word;
@@ -265,8 +272,9 @@ export class SpyEngine extends Observable {
   // MARK: - გამარჯვების შემოწმება
 
   private evaluate(): void {
+    // მისტერ უაითი ჯაშუშების მხარესაა: სანამ ცოცხალია, მოქალაქეებს ჯერ არ მოუგიათ.
     const specialsAlive = this.alive.filter((p) => this.roles[p.id] !== 'civilian').length;
-    const civiliansAlive = this.alive.filter((p) => this.roles[p.id] === 'civilian').length;
+    const civiliansAlive = this.alive.length - specialsAlive;
 
     if (specialsAlive === 0) this.finish('civilians');
     else if (specialsAlive >= civiliansAlive) this.finish('undercovers');
@@ -275,19 +283,6 @@ export class SpyEngine extends Observable {
 
   private finish(result: SpyWinner): void {
     this.winner = result;
-    const points: Record<string, number> = {};
-
-    if (result === 'civilians') {
-      for (const p of this.playersWith('civilian')) points[p.id] = 2;
-    } else if (result === 'undercovers') {
-      // გუნდური გამარჯვებაა — როგორც მოქალაქეებისას, ამოვარდნილიც იღებს.
-      // Mr White-იც ამ გუნდშია: `evaluate()` მასაც სპეციალურად თვლის.
-      for (const p of this.players) if (this.roleOf(p) !== 'civilian') points[p.id] = 3;
-    } else {
-      for (const p of this.playersWith('mrWhite')) points[p.id] = 4;
-    }
-
-    this.finalPoints = points;
     this.phase = 'gameOver';
     this.notify();
   }
@@ -295,8 +290,8 @@ export class SpyEngine extends Observable {
   // MARK: - წყვილის არჩევა
 
   private drawPair() {
-    const key = `pair.${this.settings.categoryID ?? 'all'}`;
-    const pool = PairBank.pairs(this.settings.categoryID).map((p) => `${p.a}|${p.b}`);
+    const key = `pair.${selectionKey(this.settings.categoryIDs)}`;
+    const pool = PairBank.pairs(this.settings.categoryIDs).map((p) => `${p.a}|${p.b}`);
     const shoe = this.shoes[key] ?? new ContentShoe(key, pool);
     this.shoes[key] = shoe;
 
@@ -305,10 +300,10 @@ export class SpyEngine extends Observable {
     const blocked = new Set(shoe.recent.slice(0, SIMILARITY_WINDOW).flatMap((id) => id.split('|')));
     const drawn = shoe.draw((id) => id.split('|').some((w) => blocked.has(w)));
 
-    const found = drawn ? PairBank.pair(drawn) : undefined;
+    const found = drawn ? PairBank.pair(drawn, this.settings.categoryIDs) : undefined;
     if (found) return found;
     // დასტა ვერაფერს დააბრუნებს მხოლოდ მაშინ, თუ კატეგორია ცარიელია.
-    return PairBank.randomPair(this.settings.categoryID);
+    return PairBank.randomPair(this.settings.categoryIDs);
   }
 
   /** მისტერ უაითი არასდროს იწყებს — სიტყვის გარეშე პირველი აღწერა მაშინვე გასცემს. */
@@ -333,9 +328,13 @@ export class SpyEngine extends Observable {
 
   // MARK: - პარამეტრები
 
+  private clampUndercovers(count: number): number {
+    return Math.min(Math.max(1, count), this.maxUndercovers);
+  }
+
   private clampSettings(): void {
     if (!this.canIncludeMrWhite) this.settings.includeMrWhite = false;
-    this.settings.undercoverCount = Math.min(Math.max(1, this.settings.undercoverCount), this.maxUndercovers);
+    this.settings.undercoverCount = this.clampUndercovers(this.settings.undercoverCount);
   }
 
   private persist(): void {

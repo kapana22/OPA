@@ -4,9 +4,9 @@ import { Ticker } from '../../core/ticker';
 import { Screen } from '../../core/screen';
 import { shuffled } from '../../core/shuffle';
 import { uuid } from '../../core/id';
-import { loadSettings, saveSettings, num, bool, categoryID } from '../../core/settings';
+import { loadSettings, saveSettings, num, bool, categoryIDs, cleanCategoryIDs, selectionKey } from '../../core/settings';
 import { getJSON, setJSON } from '../../core/storage';
-import { CharadesBank } from '../../content/banks';
+import { CharadesBank, selectionName } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import type { Player } from '../../core/roster';
@@ -48,8 +48,10 @@ export interface AliasSettings {
   teamCount: number;
   seconds: number;
   target: number;
-  categoryID: string | null;
-  penalizeSkip: boolean;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
+  /** გამოტოვებული სიტყვა −1 ქულაა. */
+  skipPenalty: boolean;
 }
 
 interface SavedLayout {
@@ -59,11 +61,11 @@ interface SavedLayout {
 
 const KEY = 'splash.alias.settings.v1';
 const TEAMS_KEY = 'splash.alias.teams.v1';
-const DEFAULTS: AliasSettings = { teamCount: 2, seconds: 60, target: 50, categoryID: null, penalizeSkip: true };
+const DEFAULTS: AliasSettings = { teamCount: 2, seconds: 60, target: 50, categoryIDs: [], skipPenalty: false };
 /** ზღვრები ერთ ადგილას — ჩატვირთვაც და ეკრანიდან შეცვლაც ერთსა და იმავეს ამოწმებს. */
 const LIMITS = { seconds: [15, 180], target: [10, 200] } as const;
 
-/** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება ორ ჯარიმას და უნახავ სიტყვას არ დახარჯავს. */
+/** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება უნახავ სიტყვას არ დახარჯავს. */
 export const REGISTER_GAP_MS = 600;
 
 export class AliasEngine extends Observable {
@@ -97,8 +99,8 @@ export class AliasEngine extends Observable {
       teamCount: num(s.teamCount, DEFAULTS.teamCount, 2, 4),
       seconds: num(s.seconds, DEFAULTS.seconds, ...LIMITS.seconds),
       target: num(s.target, DEFAULTS.target, ...LIMITS.target),
-      categoryID: categoryID(s.categoryID, (id) => CharadesBank.category(id) !== undefined),
-      penalizeSkip: bool(s.penalizeSkip, DEFAULTS.penalizeSkip),
+      categoryIDs: categoryIDs(s, (id) => CharadesBank.category(id) !== undefined),
+      skipPenalty: bool(s.skipPenalty, DEFAULTS.skipPenalty),
     }));
     this.loadLayout();
   }
@@ -159,12 +161,13 @@ export class AliasEngine extends Observable {
     return this.results.filter((e) => e.verdict === 'skipped').length;
   }
 
-  /** დროის ამოწურვისას დარჩენილი სიტყვა ჯარიმას არ იწვევს. */
+  /** ჯარიმიანი გამოტოვებები — დროის ამოწურვისას ეკრანზე დარჩენილი სიტყვა არ ითვლება. */
   get turnPenalty(): number {
-    if (!this.settings.penalizeSkip) return 0;
+    if (!this.settings.skipPenalty) return 0;
     return this.results.filter((e) => e.verdict === 'skipped' && !e.isOvertime).length;
   }
 
+  /** ჯერის ქულა — გამოცნობილი, ჯარიმის ჩართვისას გამოტოვებულების გამოკლებით. */
   get turnScore(): number {
     return this.turnCorrect - this.turnPenalty;
   }
@@ -203,8 +206,7 @@ export class AliasEngine extends Observable {
   }
 
   get categoryLabel(): string {
-    const cat = this.settings.categoryID ? CharadesBank.category(this.settings.categoryID) : undefined;
-    return cat?.name ?? 'ყველა კატეგორია';
+    return selectionName(CharadesBank.categories, this.settings.categoryIDs);
   }
 
   // MARK: - გუნდები
@@ -291,8 +293,8 @@ export class AliasEngine extends Observable {
     if (!this.teamsAreValid) return;
     // კატეგორია რომ ამოიწუროს, სიტყვები მთელი ბანკიდან მოდის — იგივე არ მეორდება.
     this.shoe = new WideningShoe(
-      `word.${this.settings.categoryID ?? 'charades-all'}`,
-      CharadesBank.deck(this.settings.categoryID),
+      `word.${selectionKey(this.settings.categoryIDs, 'charades-all')}`,
+      CharadesBank.deck(this.settings.categoryIDs),
       'word.charades-all',
       CharadesBank.all,
     );
@@ -464,12 +466,16 @@ export class AliasEngine extends Observable {
     this.settings = { ...this.settings, target: num(value, DEFAULTS.target, ...LIMITS.target) };
     this.persist();
   }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => CharadesBank.category(id) !== undefined),
+    };
     this.persist();
   }
-  setPenalizeSkip(on: boolean): void {
-    this.settings = { ...this.settings, penalizeSkip: on };
+
+  setSkipPenalty(on: boolean): void {
+    this.settings = { ...this.settings, skipPenalty: on };
     this.persist();
   }
 

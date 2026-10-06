@@ -1,7 +1,7 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
 import { Ticker } from '../../core/ticker';
-import { loadSettings, saveSettings, num, categoryID } from '../../core/settings';
+import { loadSettings, saveSettings, num, categoryIDs, cleanCategoryIDs, selectionKey } from '../../core/settings';
 import { WordBank, type WordCategory } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
@@ -17,13 +17,21 @@ export type BombPhase = 'setup' | 'playing' | 'exploded' | 'gameOver';
 
 export interface BombSettings {
   lives: number;
+  /** ფითილის სიგრძე (წამი) — შემთხვევითი `minSeconds`…`maxSeconds` შუალედში. */
   minSeconds: number;
   maxSeconds: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
 }
 
 const KEY = 'splash.bomb.settings.v1';
-const DEFAULTS: BombSettings = { lives: 3, minSeconds: 20, maxSeconds: 60, categoryID: null };
+/** ფითილის სიგრძის არჩევანი: სახელი, მინიმუმი, მაქსიმუმი (წამი). */
+export const BOMB_FUSE_RANGES: readonly (readonly [string, number, number])[] = [
+  ['მოკლე', 15, 35],
+  ['საშუალო', 20, 60],
+  ['გრძელი', 40, 90],
+];
+const DEFAULTS: BombSettings = { lives: 3, minSeconds: 20, maxSeconds: 60, categoryIDs: [] };
 
 export class BombEngine extends Observable {
   readonly players: Player[];
@@ -41,7 +49,8 @@ export class BombEngine extends Observable {
   /** ფიტილის ბოლო მეოთხედი — ეკრანი წითლად ფეთქავს. ერთხელ ირთვება. */
   isHot = false;
 
-  private categoryShoe = new ContentShoe('bomb.category', WordBank.categories.map((c) => c.id));
+  /** კატეგორიების დასტები მონიშვნის მიხედვით — ყოველ რაუნდზე შემდეგი კატეგორია. */
+  private categoryShoes: Record<string, ContentShoe> = {};
   private fuse = 0;
   private elapsed = 0;
   private nextTickAt = 0;
@@ -54,12 +63,15 @@ export class BombEngine extends Observable {
       lives: num(s.lives, DEFAULTS.lives, 1, 5),
       minSeconds: num(s.minSeconds, DEFAULTS.minSeconds, 5, 300),
       maxSeconds: num(s.maxSeconds, DEFAULTS.maxSeconds, 5, 300),
-      categoryID: categoryID(s.categoryID, (id) => WordBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => WordBank.category(id) !== undefined),
     }));
   }
 
   // MARK: - წარმოებული
 
+  get canPlay(): boolean {
+    return this.players.length >= 2;
+  }
   get alive(): Player[] {
     return this.players.filter((p) => (this.lives[p.id] ?? 0) > 0);
   }
@@ -70,6 +82,10 @@ export class BombEngine extends Observable {
   get victim(): Player | null {
     return this.players.find((p) => p.id === this.victimID) ?? null;
   }
+  /** მიმდინარე რაუნდის ფითილი (წამი). */
+  get fuseSeconds(): number {
+    return this.fuse;
+  }
   livesLeft(player: Player): number {
     return this.lives[player.id] ?? 0;
   }
@@ -77,6 +93,7 @@ export class BombEngine extends Observable {
   // MARK: - მიმდინარეობა
 
   startGame(): void {
+    if (!this.canPlay) return;
     this.lives = Object.fromEntries(this.players.map((p) => [p.id, this.settings.lives]));
     this.round = 1;
     this.winner = null;
@@ -153,15 +170,25 @@ export class BombEngine extends Observable {
     this.isHot = false;
     this.nextTickAt = 0;
     this.victimID = null;
-    this.category = (this.settings.categoryID ? WordBank.category(this.settings.categoryID) : undefined) ?? this.nextCategory();
+    this.category = this.nextCategory();
     this.phase = 'playing';
     this.startTicker();
     this.notify();
   }
 
+  /**
+   * შემდეგი კატეგორია მონიშნულებიდან (არაფერი მონიშნული — ყველადან).
+   * ერთი მონიშნული კატეგორია ყოველ რაუნდზე იგივე რჩება.
+   */
   private nextCategory(): WordCategory {
-    const id = this.categoryShoe.draw();
-    return (id ? WordBank.category(id) : undefined) ?? WordBank.randomCategory();
+    const ids = this.settings.categoryIDs;
+    const key = ids.length === 0 ? 'bomb.category' : `bomb.category.${selectionKey(ids)}`;
+    const shoe = (this.categoryShoes[key] ??= new ContentShoe(
+      key,
+      ids.length === 0 ? WordBank.categories.map((c) => c.id) : ids,
+    ));
+    const id = shoe.draw();
+    return (id ? WordBank.category(id) : undefined) ?? WordBank.randomCategory(ids);
   }
 
   private startTicker(): void {
@@ -227,8 +254,11 @@ export class BombEngine extends Observable {
     this.settings = { ...this.settings, minSeconds: lo, maxSeconds: hi };
     this.persist();
   }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => WordBank.category(id) !== undefined),
+    };
     this.persist();
   }
 

@@ -1,0 +1,79 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "1",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "ექიმი",
+      "role": "switch",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "დეტექტივი",
+      "role": "switch",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "∞",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "2:00",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "3:00",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "5:00",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "როლების დარიგება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Mafia",
+    "6 მოთამაშე",
+    "მაფია",
+    "ექიმი",
+    "ღამით ერთს გადაარჩენს",
+    "დეტექტივი",
+    "ღამით ერთს შეამოწმებს",
+    "განხილვის დრო",
+    "როლების დარიგება"
+  ]
+}

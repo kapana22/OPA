@@ -1,7 +1,7 @@
 import { Observable } from '../../core/observable';
 import { WideningShoe } from '../../core/wideningShoe';
 import { shuffled } from '../../core/shuffle';
-import { loadSettings, saveSettings, num, bool, categoryID } from '../../core/settings';
+import { loadSettings, saveSettings, num, bool, categoryIDs, cleanCategoryIDs, discussionSeconds } from '../../core/settings';
 import { WordBank, type WordCategory } from '../../content/banks';
 import type { Player } from '../../core/roster';
 
@@ -14,22 +14,21 @@ import type { Player } from '../../core/roster';
 export type ImpostorPhase =
   | 'setup'         // პარამეტრები და კატეგორია
   | 'reveal'        // ტელეფონის გადაცემა, როლის ნახვა
-  | 'discussion'    // აღწერები + ტაიმერი
-  | 'voting'        // ვინ არის იმპოსტორი?
+  | 'discussion'    // აღწერები; კენჭისყრა მაგიდასთან, ხმამაღლა
+  | 'caughtCheck'   // მაგიდამ იმპოსტორი დაიჭირა? (მხოლოდ ბოლო შანსით)
   | 'impostorGuess' // დაჭერილმა იმპოსტორმა სიტყვა უნდა გამოიცნოს
-  | 'result';
-
-export type ImpostorOutcome =
-  | 'impostorCaught'      // ჯგუფმა იპოვა და სიტყვაც ვერ გამოიცნო
-  | 'impostorGuessedWord' // იპოვეს, მაგრამ სიტყვა გამოიცნო
-  | 'impostorEscaped';    // ვერ იპოვეს
+  | 'result';       // სიტყვა და ვინ იყო იმპოსტორი
 
 export interface ImpostorSettings {
   impostorCount: number;
+  /** იმპოსტორის ბარათზე კატეგორია ჩანს. ნაგულისხმევად ჩართულია. */
   impostorKnowsCategory: boolean;
+  /** დაჭერილ იმპოსტორს სიტყვის გამოცნობის ბოლო შანსი აქვს. ნაგულისხმევად ჩართულია. */
   impostorCanGuess: boolean;
-  discussionSeconds: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
+  /** განხილვის ტაიმერი (წამი); `0` — ტაიმერის გარეშე. ნაგულისხმევად გამორთულია. */
+  discussionTimer: number;
 }
 
 export interface ImpostorCard {
@@ -43,11 +42,9 @@ const DEFAULTS: ImpostorSettings = {
   impostorCount: 1,
   impostorKnowsCategory: true,
   impostorCanGuess: true,
-  discussionSeconds: 180,
-  categoryID: null,
+  categoryIDs: [],
+  discussionTimer: 0,
 };
-/** განხილვის დრო წამებში; 0 = ტაიმერის გარეშე. */
-const DISCUSSION = [30, 600] as const;
 
 export class ImpostorEngine extends Observable {
   readonly players: Player[];
@@ -62,11 +59,11 @@ export class ImpostorEngine extends Observable {
 
   revealIndex = 0;
   startingPlayerID: string | null = null;
-  accusedID: string | null = null;
-  outcome: ImpostorOutcome | null = null;
   guessOptions: string[] = [];
+  /** დაჭერილი იმპოსტორის ვარაუდი; `null` — ბოლო შანსი არ გამოუყენებია. */
   impostorGuess: string | null = null;
-  roundPoints: Record<string, number> = {};
+  /** მაგიდამ იმპოსტორი დაიჭირა? `null` — არ უკითხავს (ბოლო შანსი გამორთულია). */
+  caught: boolean | null = null;
 
   /** დასტები კატეგორიების მიხედვით — გასაღები კონტენტისაა, არა თამაშისა. */
   private shoes: Record<string, WideningShoe> = {};
@@ -78,8 +75,8 @@ export class ImpostorEngine extends Observable {
       impostorCount: num(s.impostorCount, DEFAULTS.impostorCount, 1, 6),
       impostorKnowsCategory: bool(s.impostorKnowsCategory, DEFAULTS.impostorKnowsCategory),
       impostorCanGuess: bool(s.impostorCanGuess, DEFAULTS.impostorCanGuess),
-      discussionSeconds: s.discussionSeconds === 0 ? 0 : num(s.discussionSeconds, DEFAULTS.discussionSeconds, ...DISCUSSION),
-      categoryID: categoryID(s.categoryID, (id) => WordBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => WordBank.category(id) !== undefined),
+      discussionTimer: discussionSeconds(s.discussionTimer, DEFAULTS.discussionTimer),
     }));
     this.clampSettings();
   }
@@ -99,8 +96,16 @@ export class ImpostorEngine extends Observable {
   get startingPlayer(): Player | null {
     return this.players.find((p) => p.id === this.startingPlayerID) ?? null;
   }
-  get accused(): Player | null {
-    return this.players.find((p) => p.id === this.accusedID) ?? null;
+
+  /** ვინ მოიგო: დაიჭირეს და ვერ გამოიცნო — ჯგუფმა; სხვა შემთხვევაში იმპოსტორმა. `null` — უცნობია. */
+  get winner(): 'group' | 'impostor' | null {
+    if (this.phase !== 'result' || this.caught === null) return null;
+    return this.caught && !this.guessedRight ? 'group' : 'impostor';
+  }
+
+  /** ვარაუდი გაკეთდა და სწორია. */
+  get guessedRight(): boolean {
+    return this.impostorGuess !== null && this.impostorGuess === this.secretWord;
   }
 
   isImpostor(player: Player): boolean {
@@ -119,20 +124,15 @@ export class ImpostorEngine extends Observable {
     return { word: this.secretWord, isImpostor: false, hint: this.category.name };
   }
 
-  get results(): { player: Player; score: number }[] {
-    return this.players.map((p) => ({ player: p, score: this.roundPoints[p.id] ?? 0 }));
-  }
-
   // MARK: - რაუნდის მიმდინარეობა
 
   startRound(): void {
     this.clampSettings();
-    this.category =
-      (this.settings.categoryID ? WordBank.category(this.settings.categoryID) : undefined) ?? WordBank.randomCategory();
+    // ყოველ რაუნდზე შემთხვევითი კატეგორია მონიშნულებიდან (არაფერი მონიშნული — ყველადან).
+    this.category = WordBank.randomCategory(this.settings.categoryIDs);
     this.secretWord = this.drawWord(this.category);
-    // კატეგორია ამოიწურა და სიტყვა ბანკიდან მოვიდა — მინიშნებაც და ვარაუდის
-    // ვარიანტებიც სიტყვის ნამდვილი კატეგორიიდან, თორემ სწორი პასუხი ერთადერთი
-    // „უცხო“ ვარიანტი იქნებოდა.
+    // კატეგორია ამოიწურა და სიტყვა ბანკიდან მოვიდა — მინიშნება სიტყვის
+    // ნამდვილი კატეგორიიდან უნდა იყოს, თორემ იმპოსტორს შეცდომაში შეიყვანს.
     if (!this.category.words.includes(this.secretWord)) {
       this.category = WordBank.categories.find((c) => c.words.includes(this.secretWord)) ?? this.category;
     }
@@ -144,11 +144,9 @@ export class ImpostorEngine extends Observable {
     this.startingPlayerID = starters[Math.floor(Math.random() * starters.length)]?.id ?? null;
 
     this.revealIndex = 0;
-    this.accusedID = null;
-    this.outcome = null;
-    this.impostorGuess = null;
     this.guessOptions = [];
-    this.roundPoints = {};
+    this.impostorGuess = null;
+    this.caught = null;
 
     this.phase = 'reveal';
     this.notify();
@@ -160,33 +158,36 @@ export class ImpostorEngine extends Observable {
     this.notify();
   }
 
-  beginVoting(): void {
-    this.phase = 'voting';
+  /** განხილვა და კენჭისყრა მაგიდასთან დასრულდა — ვაჩვენებთ სიტყვას და იმპოსტორებს. */
+  showResult(): void {
+    if (this.phase !== 'discussion') return;
+    // ბოლო შანსი ჩართულია — ჯერ ვკითხულობთ, დაიჭირეს თუ არა, სიტყვა ჯერ არ ჩანს.
+    this.phase = this.settings.impostorCanGuess ? 'caughtCheck' : 'result';
     this.notify();
   }
 
-  accuse(player: Player): void {
-    if (this.phase !== 'voting') return;
-    this.accusedID = player.id;
+  /** მაგიდამ იმპოსტორი დაიჭირა — ტელეფონი მას გადაეცემა ბოლო შანსისთვის. */
+  impostorCaught(): void {
+    if (this.phase !== 'caughtCheck') return;
+    this.caught = true;
+    this.guessOptions = this.makeGuessOptions();
+    this.phase = 'impostorGuess';
+    this.notify();
+  }
 
-    if (!this.isImpostor(player)) {
-      this.finish('impostorEscaped');
-      return;
-    }
-
-    if (this.settings.impostorCanGuess) {
-      this.guessOptions = this.makeGuessOptions();
-      this.phase = 'impostorGuess';
-      this.notify();
-    } else {
-      this.finish('impostorCaught');
-    }
+  /** ვერ დაიჭირეს — პირდაპირ პასუხზე. */
+  impostorNotCaught(): void {
+    if (this.phase !== 'caughtCheck') return;
+    this.caught = false;
+    this.phase = 'result';
+    this.notify();
   }
 
   submitGuess(word: string): void {
     if (this.phase !== 'impostorGuess') return;
     this.impostorGuess = word;
-    this.finish(word === this.secretWord ? 'impostorGuessedWord' : 'impostorCaught');
+    this.phase = 'result';
+    this.notify();
   }
 
   nextRound(): void {
@@ -197,29 +198,6 @@ export class ImpostorEngine extends Observable {
 
   backToSetup(): void {
     this.phase = 'setup';
-    this.notify();
-  }
-
-  // MARK: - ქულები
-
-  private finish(outcome: ImpostorOutcome): void {
-    this.outcome = outcome;
-    const points: Record<string, number> = {};
-
-    if (outcome === 'impostorCaught') {
-      for (const p of this.players) if (!this.isImpostor(p)) points[p.id] = 2;
-    } else if (outcome === 'impostorGuessedWord') {
-      for (const p of this.players) if (!this.isImpostor(p)) points[p.id] = 1;
-      for (const p of this.impostors) points[p.id] = 2;
-    } else {
-      for (const p of this.impostors) points[p.id] = 3;
-    }
-    // კენჭისყრა ერთია — რამდენიმე იმპოსტორისას დანარჩენები ვერ იპოვეს.
-    // ვინც ეჭვს გადაურჩა, გაქცეულის ქულას იღებს, დაჭერილის ბედს არ იზიარებს.
-    for (const p of this.impostors) if (p.id !== this.accusedID) points[p.id] = 3;
-
-    this.roundPoints = points;
-    this.phase = 'result';
     this.notify();
   }
 
@@ -257,11 +235,14 @@ export class ImpostorEngine extends Observable {
   }
   /** 0 = ტაიმერის გარეშე („∞“) — `DiscussionPanel` ამას იცნობს. */
   setDiscussionSeconds(value: number): void {
-    this.settings = { ...this.settings, discussionSeconds: value === 0 ? 0 : num(value, DEFAULTS.discussionSeconds, ...DISCUSSION) };
+    this.settings = { ...this.settings, discussionTimer: discussionSeconds(value, DEFAULTS.discussionTimer) };
     this.persist();
   }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => WordBank.category(id) !== undefined),
+    };
     this.persist();
   }
 

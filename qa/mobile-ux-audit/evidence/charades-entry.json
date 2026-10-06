@@ -1,0 +1,181 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "30 წმ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "60 წმ",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "90 წმ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "120 წმ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა ერთხელ",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "ყველა ორჯერ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა სამჯერ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა, 651 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🏔 საქართველო, 40 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🏃 ქმედებები, 74 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "😄 ემოციები, 84 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🎉 ზეიმი, 46 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🎬 ფილმები, 48 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დახრის შებრუნება",
+      "role": "switch",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Heads Up",
+    "ტელეფონი შუბლზე",
+    "დრო",
+    "რამდენი ჯერი",
+    "კატეგორიები",
+    "ყველა",
+    "ქართული სუფრა",
+    "საქართველო",
+    "ცნობილი ქართველები",
+    "ქართული ტრადიცია",
+    "ყოფა-ცხოვრება",
+    "ქმედებები",
+    "ემოციები",
+    "ზეიმი",
+    "ფილმები",
+    "მსოფლიოს ცნობილები",
+    "სიტუაციები",
+    "დახრის შებრუნება",
+    "თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება",
+    "დაწყება"
+  ]
+}

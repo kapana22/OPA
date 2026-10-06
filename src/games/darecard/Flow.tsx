@@ -1,24 +1,16 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
-import {useState} from 'react';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, RulesSheet, ScreenHeader } from '../../ui/Cards';
+import { Colors, Space, body, caption, Elevation } from '../../theme/theme';
+import { CategoryChip, GameExitButton, GlassCard, RulesSheet, ScreenHeader } from '../../ui/Cards';
 import { game as findGame } from '../catalog';
-import { PrimaryButton, GhostButton } from '../../ui/Buttons';
-import { Pressable } from '../../ui/Pressable';
-import { Confetti } from '../../ui/Confetti';
+import { PrimaryButton, CompactButton, GhostButton } from '../../ui/Buttons';
 import { Layout } from '../../ui/layout';
-import { dareKindIcon, dareKindLabel, heatName, heatNote, type TruthDareHeat } from '../../content/banks';
-import { PARTY_FORFEITS, forfeitNote, forfeitShort, forfeitTitle } from '../../core/partyForfeit';
-import { PodiumAward } from '../../core/podiumAward';
-import { Haptics } from '../../core/haptics';
-import { Sound } from '../../core/sound';
+import { FitText } from '../../ui/FitText';
+import { dareKindLabel, heatName, heatNote, type TruthDareHeat } from '../../content/banks';
 import { useObservable } from '../../core/observable';
-import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
-import { DareCardEngine, DARECARD_LAP_OPTIONS } from './engine';
-import { TurnRotation } from '../../core/turnRotation';
-import { Icon } from '../../ui/Icon';
+import { DareCardEngine } from './engine';
 
 /**
  * „გააკეთე ან...“ (Do or Pay) — სრული ნაკადი.
@@ -39,7 +31,7 @@ export function DareCardFlow({ roster, onExit }: GameFlowProps) {
     case 'card':
       return <Play key={`${engine.drawn}:${engine.currentCard.text}`} engine={engine} onExit={onExit} />;
     case 'summary':
-      return <Summary engine={engine} roster={roster} onExit={onExit} />;
+      return null;
   }
 }
 
@@ -55,28 +47,13 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
       <View style={Layout.header}>
         <ScreenHeader
           title="Do or Pay"
-          subtitle="ბარათი კარნახობს"
+
           onBack={onClose}
           onInfo={() => setShowRules(true)}
         />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რა მოსდევს უარს</Text>
-            {PARTY_FORFEITS.map((option) => (
-              <RadioRow
-                key={option}
-                title={forfeitTitle[option]}
-                subtitle={forfeitNote[option]}
-                selected={engine.settings.forfeit === option}
-                onPress={() => engine.setForfeit(option)}
-              />
-            ))}
-          </View>
-        </GlassCard>
 
         <GlassCard>
           <View style={{ gap: 12 }}>
@@ -96,24 +73,6 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
           </View>
         </GlassCard>
 
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ბარათი</Text>
-            <View style={Layout.chipRow}>
-              {DARECARD_LAP_OPTIONS.map((laps) => (
-                <CategoryChip
-                  key={laps}
-                  label={laps === 0 ? 'სანამ მოგბეზრდებათ' : TurnRotation.label(laps)}
-                  selected={engine.settings.laps === laps}
-                  onPress={() => engine.setLaps(laps)}
-                />
-              ))}
-            </View>
-            {engine.isEndless ? null : (
-              <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>სულ {engine.totalCards} ბარათი.</Text>
-            )}
-          </View>
-        </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -132,7 +91,6 @@ function Setup({ engine, onClose }: { engine: DareCardEngine; onClose: () => voi
 // ── ბარათი
 
 function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }) {
-  const [outcomes, setOutcomes] = useState<Record<string, 'done' | 'forfeit'>>({});
   const card = engine.currentCard;
   const holder = engine.holder?.name ?? '—';
 
@@ -143,31 +101,13 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
         ? `${holder} და ${engine.rival?.name ?? '—'}`
         : holder;
 
-  const forfeitLabel =
-    engine.settings.forfeit === 'tableChoice'
-      ? 'ვერ გავაკეთე — მაგიდის სურვილი'
-      : engine.settings.forfeit === 'point'
-        ? 'ვერ გავაკეთე — ქულა მინუსში'
-        : 'ვერ გავაკეთე — ვიხდი';
-
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, gap: Space.m }}>
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-          {engine.isEndless ? `ბარათი ${engine.drawn}` : `ბარათი ${engine.drawn} / ${engine.totalCards}`}
-        </Text>
         <View style={{ flex: 1 }} />
         {engine.canSwap ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="სხვა ბარათი"
-            onPress={() => engine.swapCard()}
-            style={styles.pill}
-          >
-            <Icon name={'shuffle'} size={12} color={Colors.textSecondary} />
-            <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
-          </Pressable>
+          <CompactButton title="სხვა ბარათი" onPress={() => engine.swapCard()} />
         ) : null}
       </View>
 
@@ -177,237 +117,53 @@ function Play({ engine, onExit }: { engine: DareCardEngine; onExit: () => void }
       <View style={{ paddingHorizontal: 20 }}>
         <View style={[styles.cardFace, Elevation.card]}>
           <View style={styles.kindBadge}>
-            <Icon name={dareKindIcon[card.kind]} size={14} color={Colors.ink} />
-            <Text style={[body(13, '900'), { color: Colors.ink }]}>{dareKindLabel[card.kind]}</Text>
+            <Text style={[body(12, '600'), { color: Colors.textSecondary }]}>{dareKindLabel[card.kind]}</Text>
           </View>
 
-          <Text
-            style={[titleFont(22), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 20 }]}
-            numberOfLines={2}
-            adjustsFontSizeToFit
+          <FitText
+            style={[body(20, '700'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 20 }]}
+            maxLines={2}
           >
             {subject}
-          </Text>
+          </FitText>
 
-          <Text
-            style={[titleFont(card.text.length > 70 ? 24 : 28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
-            adjustsFontSizeToFit
-            numberOfLines={8}
+          <FitText
+            style={[body(22, '700'), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 20 }]}
+            maxLines={12}
           >
             {card.text}
-          </Text>
+          </FitText>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.surface, paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill }}>
-             <Icon name={'lightning.fill'} size={14} color={Colors.coral} />
-             <Text style={[body(13, '700'), { color: Colors.coral }]}>
-               {forfeitShort[engine.settings.forfeit]}
-             </Text>
-          </View>
         </View>
       </View>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
-        {engine.needsDuelWinner ? (
-          <>
-            {/* დუელს გამარჯვებული სჭირდება — თორემ ორივეს ერთი და იგივე ეწერება. */}
-            <Text style={[body(13, '700'), Layout.centered, { color: Colors.textSecondary }]}>ვინ მოიგო?</Text>
-            {engine.holder ? (
-              <PrimaryButton
-                title={engine.holder.name}
-                icon="crown.fill"
-                tint={Colors.phosphor}
-                onPress={() => engine.resolveDuel(engine.holder!)}
-              />
-            ) : null}
-            {engine.rival ? (
-              <PrimaryButton
-                title={engine.rival.name}
-                icon="crown.fill"
-                tint={Colors.neonCyan}
-                onPress={() => engine.resolveDuel(engine.rival!)}
-              />
-            ) : null}
-          </>
-        ) : card.kind === 'group' || card.kind === 'target' ? (
-          <>
-            <Text style={[body(13, '600'), { color: Colors.textSecondary }]}>
-              მონიშნე მხოლოდ ისინი, ვისაც ბარათი ეხება. თითოეულს თავისი შედეგი ეწერება.
-            </Text>
-            <View style={{ gap: 8 }}>
-              {engine.players.map(player => (
-                <View key={player.id} style={{ gap: 4 }}>
-                  <Text style={[body(14, '700'), { color: Colors.textPrimary }]}>{player.name}</Text>
-                  <View style={Layout.segmentRow}>
-                    {(['done', 'forfeit'] as const).map(outcome => (
-                      <CategoryChip key={outcome} compact
-                        label={outcome === 'done' ? 'შეასრულა' : 'იხდის'}
-                        selected={outcomes[player.id] === outcome}
-                        onPress={() => setOutcomes(previous => {
-                          const next = { ...previous };
-                          if (next[player.id] === outcome) delete next[player.id];
-                          else next[player.id] = outcome;
-                          return next;
-                        })} />
-                    ))}
-                  </View>
-                </View>
-              ))}
-            </View>
-            <PrimaryButton title="შედეგების დაფიქსირება" enabled={Object.keys(outcomes).length > 0}
-              onPress={() => engine.resolveParticipants(outcomes)} />
-            <GhostButton title="არავის ეხება — შემდეგი" onPress={() => engine.skipCard()} />
-          </>
-        ) : (
-          <>
-            <PrimaryButton title="გავაკეთე" icon="checkmark" tint={Colors.phosphor} onPress={() => engine.markDone()} />
-            <GhostButton title={forfeitLabel} icon="xmark" onPress={() => engine.markForfeit()} />
-          </>
-        )}
+        <PrimaryButton
+          title="შემდეგი"
+          icon="chevron.right"
+          tint={Colors.phosphor}
+          onPress={() => engine.next()}
+        />
 
         {engine.isEndless ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              Haptics.tap();
-              engine.finishNow();
-            }}
-            style={{ alignItems: 'center', paddingTop: 4 }}
-          >
-            <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>დასრულება</Text>
-          </Pressable>
+          <GhostButton title="დასრულება" onPress={onExit} />
         ) : null}
       </View>
     </ScrollView>
   );
 }
 
-// ── შეჯამება
-
-function Summary({
-  engine,
-  roster,
-  onExit,
-}: {
-  engine: DareCardEngine;
-  roster: GameFlowProps['roster'];
-  onExit: () => void;
-}) {
-
-  useAwardOnce(() => {
-    Sound.play('win');
-    Haptics.win();
-    PodiumAward.apply(engine.results, roster);
-  });
-
-  const champion = engine.champion;
-  const champions = engine.champions;
-  const worst = engine.mostForfeits;
-  const forfeitLine =
-    worst.length > 0 && engine.forfeitCount(worst[0]) > 0
-      ? `ყველაზე ხშირად იხადა — ${worst.map((p) => p.name).join(', ')} (${engine.forfeitCount(worst[0])})`
-      : null;
-
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, gap: 14 }}>
-        <View style={{ flex: 1 }} />
-
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon name="flame.fill" size={31} tint={Colors.phosphor} />
-        </View>
-
-        <Text style={[titleFont(28), Layout.centered, { color: Colors.phosphor }]}>
-          {champion === null ? 'არავინ დაიძაბა' : 'ვინც არ დაიხია'}
-        </Text>
-
-        {champion ? (
-          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {champions.map((p) => `${p.name} — ${engine.doneCount(p)} შესრულებული ბარათი`).join('\n')}
-          </Text>
-        ) : null}
-
-        {forfeitLine ? (
-          <Text
-            style={[body(13, '600'), Layout.centered, { color: Colors.textSecondary, opacity: 0.9, paddingHorizontal: 32 }]}
-          >
-            {forfeitLine}
-          </Text>
-        ) : null}
-
-        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
-          საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
-        </Text>
-
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
-          {engine.ranking.map((player, rank) => {
-            const forfeits = engine.forfeitCount(player);
-            return (
-              <View
-                key={player.id}
-                style={[styles.summaryRow, { backgroundColor: rank === 0 ? Colors.phosphor + '24' : Colors.surface }]}
-              >
-                <Text style={[body(16, '900'), { color: Colors.textSecondary, width: 30 }]}>{rank + 1}</Text>
-                <Text style={[body(16, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
-                  {player.name}
-                </Text>
-                {forfeits > 0 ? (
-                  <Text style={[caption(10), { color: Colors.textSecondary }]}>{forfeits} ჯარიმა</Text>
-                ) : null}
-                <Text
-                  style={[titleFont(20), Layout.digits, { color: rank === 0 ? Colors.phosphor : Colors.textPrimary }]}
-                >
-                  {engine.scoreFor(player)}
-                </Text>
-              </View>
-            );
-          })}
-        </ScrollView>
-
-        <View style={Layout.footer}>
-          <PrimaryButton
-            title="თავიდან"
-            icon="arrow.clockwise"
-            tint={Colors.phosphor}
-            onPress={() => {
-              engine.restart();
-            }}
-          />
-          <GhostButton
-            title="პარამეტრები"
-            icon="slider.horizontal.3"
-            onPress={() => {
-              engine.backToSetup();
-            }}
-          />
-          <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
-        </View>
-      </View>
-
-      {champion ? <Confetti /> : null}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 11,
-    paddingVertical: 7,
-    borderRadius: 999,
-    backgroundColor: Colors.surface,
-  },
   cardFace: {
     alignItems: 'center',
     gap: 18,
-    paddingVertical: 34,
-    borderRadius: 30,
+    paddingVertical: 22,
+    borderRadius: 22,
     backgroundColor: Colors.surfaceHigh,
-    borderWidth: 1.5,
-    borderColor: Colors.phosphor + '4D',
+    borderWidth: 1,
+    borderColor: Colors.stroke,
   },
   kindBadge: {
     flexDirection: 'row',
@@ -416,14 +172,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     paddingVertical: 7,
     borderRadius: 999,
-    backgroundColor: Colors.phosphor,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: Space.m,
-    paddingVertical: 13,
-    borderRadius: Radius.small,
+    backgroundColor: Colors.surface,
   },
 });

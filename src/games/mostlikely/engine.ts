@@ -1,30 +1,27 @@
 import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
-import { loadSettings, saveSettings, num, oneOf, categoryID } from '../../core/settings';
+import { loadSettings, saveSettings, categoryIDs, cleanCategoryIDs, selectionKey } from '../../core/settings';
 import { PromptBank } from '../../content/banks';
 import type { Player } from '../../core/roster';
 
 /**
- * „ვინ არის ყველაზე...“ — ეკრანზე კითხვაა, ჯგუფი კი ირჩევს, ვის ერგება.
+ * „ვინ არის ყველაზე...“ — ეკრანზე კითხვაა, მაგიდა ერთდროულად უთითებს.
  *
- * ორი რეჟიმი:
- * - **სწრაფი** — ყველა ერთად უთითებს, ერთი შეხება და გადავდივართ.
- * - **ფარული** — ტელეფონი წრეზე გადადის, თითოეული ფარულად აძლევს ხმას.
+ * ტელეფონი მხოლოდ კითხვას აჩვენებს. ქულები და სახელების მონიშვნა არ არის —
+ * ეს საუბრის თამაშია. Point at One-ის კითხვებიც აქაა (`PromptBank`).
  *
  * პორტი: `Splash/Games/MostLikely/MostLikelyEngine.swift`.
  */
 
-export type MostLikelyPhase = 'setup' | 'prompt' | 'voting' | 'result' | 'summary';
-export type MostLikelyMode = 'quick' | 'secret';
+export type MostLikelyPhase = 'setup' | 'prompt' | 'summary';
 
 export interface MostLikelySettings {
-  mode: MostLikelyMode;
-  rounds: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
 }
 
 const SETTINGS_KEY = 'splash.mostlikely.settings.v1';
-const DEFAULTS: MostLikelySettings = { mode: 'quick', rounds: 10, categoryID: null };
+const DEFAULTS: MostLikelySettings = { categoryIDs: [] };
 
 export class MostLikelyEngine extends Observable {
   readonly players: Player[];
@@ -33,16 +30,6 @@ export class MostLikelyEngine extends Observable {
   phase: MostLikelyPhase = 'setup';
   round = 1;
   currentPrompt = '';
-
-  /** ვინ ვის მისცა ხმა (ფარულ რეჟიმში). */
-  votes: Record<string, string> = {};
-  voterIndex = 0;
-  /** ვინ რამდენი ხმა აიღო მიმდინარე რაუნდში. */
-  tally: Record<string, number> = {};
-  /** რაუნდის გამარჯვებული(ები) — ფრეც შესაძლებელია. */
-  roundWinners: string[] = [];
-  /** მთელი თამაშის ჯამი. */
-  totals: Record<string, number> = {};
 
   /**
    * დებულებების დასტა — ადრე ყოველ პარტიაზე ნულიდან ირეოდა, ამიტომ ერთი და
@@ -56,119 +43,28 @@ export class MostLikelyEngine extends Observable {
     this.loadSettings();
   }
 
-  // MARK: - წარმოებული მნიშვნელობები
-
-  get currentVoter(): Player | null {
-    return this.players[this.voterIndex] ?? null;
-  }
-  get isSecret(): boolean {
-    return this.settings.mode === 'secret';
-  }
-  get totalVotes(): number {
-    return Object.values(this.tally).reduce((a, b) => a + b, 0);
-  }
-
-  player(id: string): Player | undefined {
-    return this.players.find((p) => p.id === id);
-  }
-  votesFor(player: Player): number {
-    return this.tally[player.id] ?? 0;
-  }
-  totalFor(player: Player): number {
-    return this.totals[player.id] ?? 0;
-  }
-
-  /** საბოლოო რეიტინგი — ვინ ყველაზე ხშირად დაასახელეს. */
-  get ranking(): Player[] {
-    return [...this.players].sort((x, y) => {
-      const a = this.totals[x.id] ?? 0;
-      const b = this.totals[y.id] ?? 0;
-      return a !== b ? b - a : x.name.localeCompare(y.name, 'ka');
-    });
-  }
-
-  /** ყველაზე ხშირად დასახელებული(ები) — ფრე ანბანით აღარ წყდება. */
-  get leaders(): Player[] {
-    const best = Math.max(0, ...this.players.map((p) => this.totals[p.id] ?? 0));
-    if (best === 0) return [];
-    return this.ranking.filter((p) => (this.totals[p.id] ?? 0) === best);
-  }
-
-  /** ვისზეც მთელი თამაშის განმავლობაში არავის მიუთითებია. */
-  get neverNamed(): Player[] {
-    if (!Object.values(this.totals).some((v) => v > 0)) return [];
-    return this.players.filter((p) => (this.totals[p.id] ?? 0) === 0);
-  }
-
-  /** შეჯამების ეკრანისთვის — პოდიუმზე გადასაცემი შედეგები. */
-  get results(): { player: Player; score: number }[] {
-    return this.players.map((p) => ({ player: p, score: this.totals[p.id] ?? 0 }));
-  }
-
   // MARK: - თამაშის მიმდინარეობა
 
   startGame(): void {
     this.shoe = new ContentShoe(
-      `prompt.${this.settings.categoryID ?? 'all'}`,
-      PromptBank.deck(this.settings.categoryID),
+      `prompt.${selectionKey(this.settings.categoryIDs)}`,
+      PromptBank.deck(this.settings.categoryIDs),
     );
     this.round = 1;
-    this.totals = {};
     this.loadPrompt();
   }
 
-  beginVoting(): void {
-    if (this.phase !== 'prompt') return;
-    this.votes = {};
-    this.voterIndex = 0;
-    this.tally = {};
-    this.roundWinners = [];
-    this.phase = 'voting';
-    this.notify();
-  }
-
-  /** სწრაფი რეჟიმი — ჯგუფმა ერთად აირჩია. */
-  pick(player: Player): void {
-    // ორმაგი შეხება ქულას ორჯერ დაარიცხავდა.
-    if (this.phase !== 'voting' || !this.player(player.id)) return;
-    this.tally = { [player.id]: 1 };
-    this.roundWinners = [player.id];
-    this.award();
-    this.phase = 'result';
-    this.notify();
-  }
-
-  /** ფარული რეჟიმი — მიმდინარე მოთამაშემ ხმა მისცა. */
-  castVote(target: Player): void {
-    if (this.phase !== 'voting' || !this.player(target.id)) return;
-    const voter = this.currentVoter;
-    // საკუთარ თავს ხმას ვერ მისცემ — თორემ ყველა თავის თავს დაასახელებდა.
-    if (!voter || voter.id === target.id) return;
-    this.votes[voter.id] = target.id;
-    this.tally[target.id] = (this.tally[target.id] ?? 0) + 1;
-
-    if (this.voterIndex + 1 < this.players.length) {
-      this.voterIndex += 1;
-    } else {
-      const values = Object.values(this.tally);
-      const best = values.length > 0 ? Math.max(...values) : 0;
-      this.roundWinners = best > 0 ? Object.keys(this.tally).filter((id) => this.tally[id] === best) : [];
-      this.award();
-      this.phase = 'result';
-    }
-    this.notify();
-  }
-
-  /** შემდეგი კითხვა; თუ რაუნდები ამოიწურა — შედეგი. */
+  /** შემდეგი კითხვა — ლიმიტი არ არის, მაგიდა თვითონ ასრულებს. */
   next(): void {
-    if (this.phase !== 'result') return;
-    if (this.round >= this.settings.rounds) {
-      this.phase = 'summary';
-      this.notify();
-    } else {
-      this.round += 1;
-      this.loadPrompt();
-    }
+    if (this.phase !== 'prompt') return;
+    this.round += 1;
+    this.loadPrompt();
+  }
+
+  finish(): void {
+    if (this.phase !== 'prompt') return;
+    this.phase = 'summary';
+    this.notify();
   }
 
   /** კითხვა არ მოგვწონს — ვცვლით რაუნდის დახარჯვის გარეშე. */
@@ -190,30 +86,17 @@ export class MostLikelyEngine extends Observable {
   private loadPrompt(): void {
     // დასტა ამოიწურა — თავიდან ვურევთ.
     this.currentPrompt = this.shoe.draw() ?? '—';
-    this.votes = {};
-    this.voterIndex = 0;
-    this.tally = {};
-    this.roundWinners = [];
     this.phase = 'prompt';
     this.notify();
   }
 
-  private award(): void {
-    for (const id of this.roundWinners) this.totals[id] = (this.totals[id] ?? 0) + 1;
-  }
-
   // MARK: - პარამეტრები
 
-  setMode(mode: MostLikelyMode): void {
-    this.settings = { ...this.settings, mode };
-    this.saveSettings();
-  }
-  setRounds(count: number): void {
-    this.settings = { ...this.settings, rounds: Math.min(Math.max(3, count), 30) };
-    this.saveSettings();
-  }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => PromptBank.category(id) !== undefined),
+    };
     this.saveSettings();
   }
 
@@ -222,12 +105,10 @@ export class MostLikelyEngine extends Observable {
     this.notify();
   }
 
-  /** იგივე ზღვრები, რაც `setRounds`-ს — შენახული `0` ან წაშლილი კატეგორია ვერ გავა. */
+  /** წაშლილი კატეგორია ვერ გავა. */
   private loadSettings(): void {
     this.settings = loadSettings<MostLikelySettings>(SETTINGS_KEY, DEFAULTS, (s) => ({
-      mode: oneOf(s.mode, ['quick', 'secret'] as const, DEFAULTS.mode),
-      rounds: num(s.rounds, DEFAULTS.rounds, 3, 30),
-      categoryID: categoryID(s.categoryID, (id) => PromptBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => PromptBank.category(id) !== undefined),
     }));
   }
 }

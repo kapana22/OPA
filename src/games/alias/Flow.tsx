@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, ScreenHeader, ToggleRow, CategoryPicker , RulesSheet } from '../../ui/Cards';
+import { CategoryChip, GameExitButton, GlassCard, ScreenHeader, CategoryChecklist, RulesSheet, ToggleRow } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton, GhostButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
-import { Confetti } from '../../ui/Confetti';
 import { useDialog } from '../../ui/Dialog';
 import { Layout } from '../../ui/layout';
+import { Confetti } from '../../ui/Confetti';
+import { FitText } from '../../ui/FitText';
 import { useKeepScreenAwake } from '../../core/orientationLock';
 import { CharadesBank } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
@@ -32,7 +33,6 @@ const TARGET_OPTIONS = [30, 50, 70];
 const TEAM_COLORS = [Colors.neonCyan, Colors.neonMagenta, Colors.phosphor, Colors.amber];
 
 const teamColor = (index: number) => TEAM_COLORS[((index % TEAM_COLORS.length) + TEAM_COLORS.length) % TEAM_COLORS.length];
-const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
 
 export function AliasFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new AliasEngine([...roster.players]));
@@ -69,10 +69,9 @@ function Setup({ engine, onClose }: { engine: AliasEngine; onClose: () => void }
       <RulesSheet visible={showRules} title="Alias" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
         <View style={Layout.header}>
-          <ScreenHeader title="Alias" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+          <ScreenHeader title="Alias" onBack={onClose}  onInfo={() => setShowRules(true)} />
         </View>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: Space.m }}>
-          <GlyphIcon name="person.2.fill" size={32} tint={Colors.phosphor} />
           <Text style={[titleFont(24), Layout.centered, { color: Colors.textPrimary }]}>ალიასი გუნდური თამაშია</Text>
           <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
             {engine.players.length === 0
@@ -91,7 +90,7 @@ function Setup({ engine, onClose }: { engine: AliasEngine; onClose: () => void }
     <View style={{ flex: 1 }}>
       <RulesSheet visible={showRules} title="Alias" accent={Colors.neonCyan} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
       <View style={Layout.header}>
-        <ScreenHeader title="Alias" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Alias" onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -157,21 +156,21 @@ function Setup({ engine, onClose }: { engine: AliasEngine; onClose: () => void }
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
               build={() => wordEntries(CharadesBank, 'ყველა', 'word.charades-all')}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
 
         <GlassCard>
           <ToggleRow
-            title="ჯარიმა გამოტოვებაზე"
-            subtitle="ყოველი გამოტოვებული სიტყვა −1 ქულა"
-            value={engine.settings.penalizeSkip}
-            onChange={(v) => engine.setPenalizeSkip(v)}
+            title="გამოტოვების ჯარიმა"
+            subtitle="გამოტოვებული სიტყვა −1 ქულაა"
+            value={engine.settings.skipPenalty}
+            onChange={(on) => engine.setSkipPenalty(on)}
           />
         </GlassCard>
       </ScrollView>
@@ -204,13 +203,6 @@ function Teams({ engine }: { engine: AliasEngine }) {
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
-        <GlassCard padding={16}>
-          <View style={{ gap: 8 }}>
-            <Tip icon="hand.tap.fill" text="მოთამაშეს შეეხე და ის მომდევნო გუნდში გადავა." />
-            <Tip icon="square.and.pencil" text="გუნდის სახელს შეეხე, რომ გადაარქვა." />
-          </View>
-        </GlassCard>
-
         {engine.teams.map((team) => {
           const color = teamColor(team.id);
           const squad = engine.members(team);
@@ -285,14 +277,6 @@ function Teams({ engine }: { engine: AliasEngine }) {
   );
 }
 
-function Tip({ icon, text }: { icon: string; text: string }) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-      <Icon name={icon} size={15} color={Colors.textSecondary} />
-      <Text style={[body(13, '500'), { color: Colors.textSecondary, flex: 1 }]}>{text}</Text>
-    </View>
-  );
-}
 
 // ── ტაბლოს ზოლი
 
@@ -350,17 +334,16 @@ function TurnIntro({ engine, onExit }: { engine: AliasEngine; onExit: () => void
 
       {team && explainer ? (
         <View style={{ alignItems: 'center', gap: 10 }}>
-          <Text style={[titleFont(26), { color }]} numberOfLines={1} adjustsFontSizeToFit>
+          <FitText style={[titleFont(26), { color }]} maxLines={1}>
             {team.name}
-          </Text>
+          </FitText>
           <Text style={[body(14, '500'), { color: Colors.textSecondary }]}>ხსნის</Text>
-          <Text
-            style={[display(46), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
-            adjustsFontSizeToFit
-            numberOfLines={2}
+          <FitText
+            style={[titleFont(28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 24 }]}
+            maxLines={2}
           >
             {explainer.name}
-          </Text>
+          </FitText>
           {squad.length > 0 ? (
             <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
               გამოიცნობენ: {squad.map((p) => p.name).join(', ')}
@@ -373,7 +356,7 @@ function TurnIntro({ engine, onExit }: { engine: AliasEngine; onExit: () => void
 
       <View style={Layout.footer}>
         <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 28 }]}>
-          ტელეფონი იმას გადაეცი, ვინც ხსნის — სიტყვას მხოლოდ ის ხედავს.
+          სიტყვას მხოლოდ ამხსნელი ხედავს.
         </Text>
         <PrimaryButton title="მზად ვართ" icon="play.fill" tint={color} onPress={() => engine.beginTurn()} />
       </View>
@@ -455,17 +438,16 @@ function Play({ engine, onExit }: { engine: AliasEngine; onExit: () => void }) {
             },
           ]}
         >
-          <Text
+          <FitText
             style={[
               display(engine.currentWord.length > 14 ? 40 : 54),
               Layout.centered,
               { color: Colors.textPrimary },
             ]}
-            numberOfLines={4}
-            adjustsFontSizeToFit
+            maxLines={3}
           >
             {engine.currentWord}
-          </Text>
+          </FitText>
         </View>
       </View>
 
@@ -474,12 +456,6 @@ function Play({ engine, onExit }: { engine: AliasEngine; onExit: () => void }) {
       <View style={styles.counters}>
         <Counter icon="check-circle" value={engine.turnCorrect} color={Colors.phosphor} />
         <Counter icon="skip-next-circle" value={engine.turnSkipped} color={Colors.neonCyan} />
-        <View style={{ flex: 1 }} />
-        <Text
-          style={[body(20, '900'), Layout.digits, { color: engine.turnScore < 0 ? Colors.neonMagenta : Colors.textPrimary }]}
-        >
-          {signed(engine.turnScore)}
-        </Text>
       </View>
 
       <View style={[Layout.footer, { flexDirection: 'row', gap: 12 }]}>
@@ -501,7 +477,6 @@ function Counter({ icon, value, color }: { icon: string; value: number; color: s
 
 function BigControl({
   title,
-  icon,
   onPress,
   filled,
 }: {
@@ -511,22 +486,9 @@ function BigControl({
   filled?: boolean;
 }) {
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={title}
-      onPress={onPress}
-      style={[
-        styles.bigControl,
-        { backgroundColor: filled ? Colors.neonCyan : Colors.surface },
-      ]}
-    >
-      <Icon
-        name={icon}
-        size={20}
-        color={filled ? Colors.ink : Colors.textPrimary}
-      />
-      <Text style={[body(16, '700'), { color: filled ? Colors.ink : Colors.textPrimary }]}>{title}</Text>
-    </Pressable>
+    <View style={{ flex: 1 }}>
+      {filled ? <PrimaryButton title={title} onPress={onPress} /> : <GhostButton title={title} onPress={onPress} />}
+    </View>
   );
 }
 
@@ -546,17 +508,16 @@ function TurnResult({ engine, onExit }: { engine: AliasEngine; onExit: () => voi
       </View>
 
       <View style={{ alignItems: 'center', gap: 8, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(24), { color }]} numberOfLines={1} adjustsFontSizeToFit>
+        <FitText style={[titleFont(24), { color }]} maxLines={1}>
           {team?.name ?? ''}
-        </Text>
-        <Text
-          style={[display(58), Layout.digits, { color: engine.turnScore < 0 ? Colors.neonMagenta : Colors.textPrimary }]}
-        >
-          {signed(engine.turnScore)}
-        </Text>
+        </FitText>
+        <Text style={[display(58), Layout.digits, { color: Colors.textPrimary }]}>{engine.turnScore}</Text>
         <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>
           {engine.turnCorrect} გამოცნობილი · {engine.turnSkipped} გამოტოვებული
         </Text>
+        {engine.turnPenalty > 0 ? (
+          <Text style={[body(13, '600'), { color: Colors.neonMagenta }]}>ჯარიმა −{engine.turnPenalty}</Text>
+        ) : null}
       </View>
 
       {engine.results.length > 0 ? (
@@ -577,11 +538,11 @@ function TurnResult({ engine, onExit }: { engine: AliasEngine; onExit: () => voi
 
       {engine.turnEndsInTie ? (
         <Text style={[body(12, '600'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 28 }]}>
-          ფრეა — ყველაზე მეტი ქულა რამდენიმე გუნდს აქვს, ამიტომ კიდევ ერთი წრე ითამაშება.
+          ფრეა, კიდევ ერთი წრე.
         </Text>
       ) : reachedTarget && !engine.turnEndsMatch ? (
         <Text style={[body(12, '600'), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 28 }]}>
-          ლიმიტი გადალახეთ — წრე ბოლომდე მიდის, რომ ყველა გუნდს თანაბარი ცდა ჰქონდეს.
+          ლიმიტი გადალახეთ. წრე ბოლომდე მიდის.
         </Text>
       ) : null}
 
@@ -620,12 +581,12 @@ function WordRow({ engine, entry }: { engine: AliasEngine; entry: AliasEntry }) 
         </Text>
         {entry.isOvertime ? (
           <Text style={[body(11, '500'), { color: Colors.textSecondary, opacity: 0.8 }]}>
-            ბოლო სიტყვა — ჯარიმა არ ერიცხება
+            ბოლო სიტყვა — დრო ამოიწურა
           </Text>
         ) : null}
       </View>
       <Text style={[body(14, '900'), Layout.digits, { color: correct ? Colors.phosphor : Colors.textSecondary }]}>
-        {correct ? '+1' : engine.settings.penalizeSkip && !entry.isOvertime ? '−1' : '0'}
+        {correct ? '+1' : '0'}
       </Text>
     </Pressable>
   );
@@ -635,7 +596,6 @@ function WordRow({ engine, entry }: { engine: AliasEngine; entry: AliasEntry }) 
 
 function Winner({
   engine,
-  roster,
   onExit,
 }: {
   engine: AliasEngine;
@@ -646,11 +606,6 @@ function Winner({
   const color = teamColor(winner?.id ?? 0);
 
   useAwardOnce(() => {
-    // გამარჯვებული გუნდის თითოეულ მოთამაშეს +3, დანარჩენებს +1.
-    for (const team of engine.teams) {
-      const reward = team.id === winner?.id ? 3 : 1;
-      for (const player of engine.members(team)) roster.addScore(reward, player.id);
-    }
     Haptics.win();
   });
 
@@ -659,31 +614,15 @@ function Winner({
       <View style={{ flex: 1, gap: 12 }}>
         <View style={{ flex: 1 }} />
 
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon name="trophy.fill" size={32} tint={Colors.phosphor} />
-        </View>
-
         <Text style={[body(14, '500'), Layout.centered, { color: Colors.textSecondary }]}>გამარჯვებული გუნდი</Text>
 
-        <Text
+        <FitText
           style={[titleFont(34), Layout.centered, { color, paddingHorizontal: 24 }]}
-          adjustsFontSizeToFit
-          numberOfLines={2}
+          maxLines={2}
         >
           {winner?.name ?? '—'}
-        </Text>
+        </FitText>
 
-        {winner ? (
-          <Text style={[body(14, '600'), Layout.centered, Layout.digits, { color: Colors.textSecondary }]}>
-            {winner.score} ქულა · {engine.lap - 1} წრე
-          </Text>
-        ) : null}
-
-        <Text
-          style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.75, paddingHorizontal: 32 }]}
-        >
-          საერთო ტაბლოზე გამარჯვებული გუნდის თითოეულ მოთამაშეს +3 ერიცხება, დანარჩენებს — +1.
-        </Text>
 
         <ScrollView
           style={{ flex: 1 }}
@@ -693,29 +632,18 @@ function Winner({
           {engine.standings.map((team: AliasTeam) => {
             const isWinner = team.id === winner?.id;
             const tint = teamColor(team.id);
-            const squad = engine.members(team).map((p) => p.name).join(', ');
             return (
               <View
                 key={team.id}
                 style={[styles.teamRow, { backgroundColor: isWinner ? tint + '2E' : Colors.surface }]}
               >
                 <Text style={[body(16, '900'), { color: Colors.textSecondary, width: 24 }]}>{isWinner ? '★' : '•'}</Text>
-                <View style={{ flex: 1, gap: 3 }}>
-                  <Text style={[body(16, '700'), { color: Colors.textPrimary }]} numberOfLines={1}>
-                    {team.name}
-                  </Text>
-                  <Text style={[body(12, '500'), { color: Colors.textSecondary }]} numberOfLines={2}>
-                    {squad || '—'}
-                  </Text>
-                </View>
-                <View style={{ alignItems: 'flex-end', gap: 2 }}>
-                  <Text style={[titleFont(20), Layout.digits, { color: isWinner ? tint : Colors.textPrimary }]}>
-                    {team.score}
-                  </Text>
-                  <Text style={[body(12, '900'), Layout.digits, { color: Colors.phosphor }]}>
-                    {isWinner ? '+3' : '+1'}
-                  </Text>
-                </View>
+                <Text style={[body(16, '700'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
+                  {team.name}
+                </Text>
+                <Text style={[titleFont(20), Layout.digits, { color: isWinner ? tint : Colors.textPrimary }]}>
+                  {team.score}
+                </Text>
               </View>
             );
           })}
@@ -740,8 +668,7 @@ function Winner({
           <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
         </View>
       </View>
-
-      <Confetti />
+      {winner ? <Confetti /> : null}
     </View>
   );
 }
@@ -779,7 +706,7 @@ const styles = StyleSheet.create({
   },
   teamRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: 12,
     paddingHorizontal: Space.m,
     paddingVertical: 13,

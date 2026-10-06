@@ -1,0 +1,33 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "შემდეგი კითხვა",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    },
+    {
+      "label": "დასრულება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Herd Mentality",
+    "დაასახელე რამე, რასაც დაბადების დღეზე ჭამენ.",
+    "სამზე ერთად თქვით პასუხი",
+    "შემდეგი კითხვა",
+    "დასრულება"
+  ]
+}

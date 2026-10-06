@@ -1,18 +1,18 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Colors, Radius, Space, body, caption, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker , RulesSheet } from '../../ui/Cards';
+import { Colors, Radius, Space, body, title as titleFont } from '../../theme/theme';
+import { CategoryChip, GameExitButton, GlassCard, RankRow, ScreenHeader, CategoryChecklist , RulesSheet } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
-import { PrimaryButton, GhostButton } from '../../ui/Buttons';
+import { PrimaryButton, GhostButton, CompactButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { useDialog } from '../../ui/Dialog';
-import { Confetti } from '../../ui/Confetti';
 import { Layout } from '../../ui/layout';
+import { Confetti } from '../../ui/Confetti';
+import { FitText } from '../../ui/FitText';
 import { useKeepScreenAwake } from '../../core/orientationLock';
 import { GamePause } from '../../core/ticker';
 import { CharadesBank } from '../../content/banks';
-import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
@@ -59,16 +59,16 @@ function Setup({ engine, onClose }: { engine: WordRushEngine; onClose: () => voi
   const gameData = findGame('wordrush');
   return (
     <View style={{ flex: 1 }}>
-      <RulesSheet visible={showRules} title="Word Rush" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
+      <RulesSheet visible={showRules} title="სიტყვის რბოლა" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
 
       <View style={Layout.header}>
-        <ScreenHeader title="სიტყვის რბოლა" subtitle={`${engine.players.length} მოთამაშე`} onBack={onClose}  onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Word Rush"  onBack={onClose}  onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი წამი აქვს თითოეულს</Text>
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>დრო</Text>
             <View style={Layout.segmentRow}>
               {SECOND_OPTIONS.map((value) => (
                 <CategoryChip
@@ -103,18 +103,27 @@ function Setup({ engine, onClose }: { engine: WordRushEngine; onClose: () => voi
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
-              build={() => wordEntries(CharadesBank, 'შემთხვევითი', null)}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
+              build={() => wordEntries(CharadesBank, 'ყველა', null)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
-        <PrimaryButton title="დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.startGame()} />
+        {!engine.canPlay ? (
+          <Text style={[body(13, '500'), Layout.centered, { color: Colors.textSecondary }]}>საჭიროა მინიმუმ 2 მოთამაშე.</Text>
+        ) : null}
+        <PrimaryButton
+          title="დაწყება"
+          icon="play.fill"
+          tint={Colors.phosphor}
+          enabled={engine.canPlay}
+          onPress={() => engine.startGame()}
+        />
       </View>
     </View>
   );
@@ -127,48 +136,36 @@ function Intro({ engine, onExit }: { engine: WordRushEngine; onExit: () => void 
     <ScrollView contentContainerStyle={{ flexGrow: 1, gap: Space.m, paddingVertical: Space.m }}>
       <View style={[Layout.topBar, { paddingTop: 0 }]}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
+        {engine.settings.rounds > 1 ? <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
           წრე {engine.round} / {engine.settings.rounds}
-        </Text>
+        </Text> : null}
       </View>
 
       <View style={{ flex: 1 }} />
 
       <PlayerCharacter player={engine.currentPlayer} compact />
       <View style={{ gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+        <FitText style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>
           {engine.currentPlayer?.name ?? '—'}
-        </Text>
-        <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი გადაეცი</Text>
+        </FitText>
       </View>
 
       <View style={Layout.content}>
         <View style={styles.categoryBox}>
-          <Text style={[caption(12), { color: Colors.textSecondary }]}>კატეგორია</Text>
-          <Text style={[titleFont(24), Layout.centered, { color: Colors.textPrimary }]}>{engine.categoryName}</Text>
+          <FitText style={[body(20, '700'), Layout.centered, { color: Colors.textPrimary }]} maxLines={3}>{engine.categoryName}</FitText>
         </View>
       </View>
 
       {engine.canSwapCategory ? (
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => {
-            Haptics.tap();
-            engine.swapCategory();
-          }}
-          style={{ alignItems: 'center' }}
-        >
-          <Text style={[body(14, '700'), { color: Colors.textSecondary }]}>სხვა კატეგორია</Text>
-        </Pressable>
+        <View style={[Layout.content, { alignItems: 'center' }]}>
+          <CompactButton title="სხვა კატეგორია" onPress={() => engine.swapCategory()} />
+        </View>
       ) : null}
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
-        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 8 }]}>
-          ასახელებ ამ კატეგორიის სიტყვებს, სანამ დრო გაქვს.
-        </Text>
-        <PrimaryButton title="დროის დაწყება" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginTurn()} />
+        <PrimaryButton title="დროის დაწყება" onPress={() => engine.beginTurn()} />
       </View>
     </ScrollView>
   );
@@ -231,7 +228,7 @@ function Play({ engine, onExit }: { engine: WordRushEngine; onExit: () => void }
         style={styles.tapArea}
       >
         <Text style={[styles.bigCount, { color: Colors.phosphor }]}>{engine.turnCount}</Text>
-        <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>შეეხე ყოველ ჩათვლილ სიტყვაზე</Text>
+        <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>შეეხე ყოველ სიტყვაზე</Text>
         {engine.starter && engine.turnCount === 0 ? (
           <Text style={[body(13, '500'), { color: Colors.textSecondary, opacity: 0.7, paddingTop: 4 }]}>
             დასაწყისისთვის: {engine.starter}
@@ -266,14 +263,6 @@ function Play({ engine, onExit }: { engine: WordRushEngine; onExit: () => void }
 
 // ── ჯერის შედეგი
 
-function verdictFor(count: number): string {
-  if (count === 0) return 'ერთიც ვერ მოასწარი';
-  if (count <= 5) return 'დასაწყისისთვის ცუდი არაა';
-  if (count <= 11) return 'კარგი ტემპი';
-  if (count <= 17) return 'მაგიდა შენზეა';
-  return 'რბოლის რეკორდი';
-}
-
 function TurnResult({ engine, onExit }: { engine: WordRushEngine; onExit: () => void }) {
   const count = engine.lastTurn?.count ?? 0;
 
@@ -285,32 +274,11 @@ function TurnResult({ engine, onExit }: { engine: WordRushEngine; onExit: () => 
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="bolt.fill" size={30} tint={Colors.phosphor} />
-      </View>
-
-      <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]}>
+      <FitText style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} maxLines={2}>
         {engine.lastTurn?.player.name ?? '—'}
-      </Text>
+      </FitText>
 
       <Text style={[styles.bigCount, Layout.centered, { color: Colors.phosphor, fontSize: 92 }]}>{count}</Text>
-
-      <Text style={[body(16, '600'), Layout.centered, { color: Colors.textSecondary }]}>{verdictFor(count)}</Text>
-
-      {engine.players.length > 1 ? (
-        <View style={[Layout.content, { gap: 8, paddingTop: 4 }]}>
-          {engine.ranking.slice(0, 3).map((player) => (
-            <View key={player.id} style={styles.miniRow}>
-              <Text style={[body(15, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
-                {player.name}
-              </Text>
-              <Text style={[body(16, '900'), Layout.digits, { color: Colors.phosphor }]}>
-                {engine.totalFor(player)}
-              </Text>
-            </View>
-          ))}
-        </View>
-      ) : null}
 
       <View style={{ flex: 1 }} />
 
@@ -330,7 +298,6 @@ function TurnResult({ engine, onExit }: { engine: WordRushEngine; onExit: () => 
 
 function Summary({
   engine,
-  roster,
   onExit,
 }: {
   engine: WordRushEngine;
@@ -341,7 +308,6 @@ function Summary({
   useAwardOnce(() => {
     Sound.play('win');
     Haptics.win();
-    PodiumAward.apply(engine.results, roster);
   });
 
   const best = engine.best;
@@ -351,10 +317,6 @@ function Summary({
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, gap: 14 }}>
         <View style={{ flex: 1 }} />
-
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
-        </View>
 
         <Text style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]}>
           {best === null ? 'სიტყვა ვერავინ თქვა' : 'რბოლის გამარჯვებული'}
@@ -366,9 +328,6 @@ function Summary({
           </Text>
         ) : null}
 
-        <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
-          საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
-        </Text>
 
         <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
           {engine.ranking.map((player) => (
@@ -394,7 +353,6 @@ function Summary({
           <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
         </View>
       </View>
-
       {best ? <Confetti /> : null}
     </View>
   );
@@ -405,6 +363,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     paddingVertical: 20,
+    paddingHorizontal: 16,
     borderRadius: Radius.default,
     backgroundColor: Colors.surface,
   },
@@ -420,14 +379,6 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingVertical: 16,
     borderRadius: Radius.default,
-    backgroundColor: Colors.surface,
-  },
-  miniRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: Space.m,
-    paddingVertical: 12,
-    borderRadius: Radius.small,
     backgroundColor: Colors.surface,
   },
 });

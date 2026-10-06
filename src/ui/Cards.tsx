@@ -1,14 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View, Modal, type StyleProp, type ViewStyle } from 'react-native';
-import { Colors, Radius, Space, body, caption, title as titleFont, toTT, glow } from '../theme/theme';
+import { ALL_ORIENTATIONS } from './modalOrientations';
+import { StyleSheet, Text, View, Modal, ScrollView, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
+import { Colors, Controls, Radius, Space, body, caption, title as titleFont, toTT, glow } from '../theme/theme';
 import { Haptics } from '../core/haptics';
 import { GamePause } from '../core/ticker';
 import { Sound } from '../core/sound';
 import { Pressable } from './Pressable';
-import { GhostButton } from './Buttons';
+import { GhostButton, IconButton, PrimaryButton } from './Buttons';
 import { SplashBackground } from './SplashBackground';
 import { useDialog } from './Dialog';
 import { Icon } from './Icon';
+import { categoryPresentation } from './categoryPresentation';
+import { needsSingleColumn } from '../theme/responsive';
 
 /** პორტი: `Splash/Components/Cards.swift` + `GameExitButton.swift`. */
 
@@ -42,17 +45,7 @@ export function ScreenHeader({
   return (
     <View style={styles.header}>
       {onBack ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="უკან"
-          onPress={() => {
-            Haptics.tap();
-            onBack();
-          }}
-          style={styles.backButton}
-        >
-          <Icon name={'chevron.left'} size={19} color={Colors.textPrimary} />
-        </Pressable>
+        <IconButton label="უკან" icon="chevron.left" onPress={onBack} />
       ) : null}
 
       <View style={styles.headerText}>
@@ -65,18 +58,7 @@ export function ScreenHeader({
       </View>
 
       {onInfo ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="თამაშის წესები"
-          onPress={() => {
-            Haptics.tap();
-            onInfo();
-          }}
-          hitSlop={8}
-          style={styles.infoButton}
-        >
-          <Icon name={'questionmark'} size={14} color={Colors.textSecondary} />
-        </Pressable>
+        <IconButton label="თამაშის წესები" icon="questionmark" onPress={onInfo} />
       ) : null}
     </View>
   );
@@ -131,7 +113,7 @@ export function GlyphIcon({
         justifyContent: 'center',
       }}
     >
-      <Icon name={name} size={size} color={tint} weight="duotone" />
+      <Icon name={name} size={size} color={tint} weight="regular" />
     </View>
   );
 }
@@ -140,11 +122,10 @@ export function GlyphIcon({
 export function GameExitButton({ onExit }: { onExit: () => void }) {
   const dialog = useDialog();
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel="თამაშიდან გასვლა"
+    <IconButton
+      label="თამაშიდან გასვლა"
+      icon="xmark"
       onPress={() => {
-        Haptics.tap();
         // სანამ წყვეტენ, რაუნდი არ უნდა ჩაიწვას დიალოგის უკან.
         GamePause.hold('exit-dialog');
         dialog({
@@ -165,12 +146,7 @@ export function GameExitButton({ onExit }: { onExit: () => void }) {
           ],
         });
       }}
-      // წრე 30px-ია, სამიზნე კი 44pt — თითი ბნელ ოთახში ზუსტად ვერ ხვდება.
-      hitSlop={8}
-      style={styles.exitButton}
-    >
-      <Icon name={'xmark'} size={14} color={Colors.textSecondary} />
-    </Pressable>
+    />
   );
 }
 
@@ -213,33 +189,7 @@ const styles = StyleSheet.create({
   card: { borderRadius: Radius.default, backgroundColor: Colors.surface, width: '100%' },
   header: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   headerText: { flex: 1, gap: 1 },
-  backButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: Colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  infoButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.surface,
-    borderWidth: 1,
-    borderColor: 'rgba(203,184,246,0.22)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   sectionLabel: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingTop: 6 },
-  exitButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: Colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   comingSoon: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: Space.l },
 });
 
@@ -272,10 +222,13 @@ export function CategoryChip({
   remaining?: number | null;
 }) {
   const low = typeof remaining === 'number' && remaining < LOW_FRESH;
+  const { width, fontScale } = useWindowDimensions();
+  const wrapCompact = needsSingleColumn(width, fontScale);
   const dim = selected ? Colors.onAccent + 'A6' : Colors.textSecondary;
   const a11y = [label, count !== undefined ? `${count} ჩანაწერი` : null, low ? `დარჩა ${remaining}` : null]
     .filter(Boolean)
     .join(', ');
+  const presentation = categoryPresentation(label);
   return (
     <Pressable
       accessibilityRole="button"
@@ -287,24 +240,27 @@ export function CategoryChip({
       }}
       style={[
         {
-          paddingVertical: 11,
-          borderRadius: 14,
+          minHeight: Controls.compact.minHeight,
+          paddingVertical: Controls.compact.paddingVertical,
+          borderRadius: Controls.compact.radius,
+          justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: selected ? Colors.phosphor : Colors.surfaceHigh,
           opacity: low && !selected ? 0.6 : 1,
         },
-        compact ? { flex: 1, minWidth: 0, paddingHorizontal: 6 } : { flexGrow: 1, minWidth: 68, paddingHorizontal: 10 },
+        compact ? { flexGrow: 1, flexBasis: wrapCompact ? '42%' : 0, minWidth: 0, paddingHorizontal: 6 } : { flexGrow: 1, minWidth: 68, paddingHorizontal: 10 },
       ]}
     >
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+      {presentation.icon && !compact ? <Icon name={presentation.icon} size={18} weight="regular" color={selected ? Colors.onAccent : Colors.textSecondary} /> : null}
       <Text
-        style={[body(14, selected ? '900' : '600'), { color: selected ? Colors.onAccent : Colors.textPrimary }]}
-        numberOfLines={1}
-        adjustsFontSizeToFit
+        style={[body(14, selected ? '700' : '600'), { color: selected ? Colors.onAccent : Colors.textPrimary, textAlign: 'center', flexShrink: 1 }]}
       >
-        {label}
+        {presentation.title}
         {count !== undefined ? <Text style={[body(13, '600'), { color: dim }]}>{` · ${count}`}</Text> : null}
         {low ? <Text style={[body(13, '600'), { color: dim }]}>{` · დარჩა ${remaining}`}</Text> : null}
       </Text>
+      </View>
     </Pressable>
   );
 }
@@ -321,35 +277,95 @@ export interface PickerEntry {
 }
 
 /**
- * კატეგორიის ჩიპების რიგი რაოდენობებით.
- *
- * `build` ერთხელ, ეკრანის გახსნისას გამოიძახება — ჩანაწერები საცავიდან
- * იკითხება და ყოველ დაჭერაზე თხუთმეტი დასტის თავიდან დათვლა უაზროა.
+ * კატეგორიების ჩამონათვალი — რამდენიმე კატეგორია ერთად ირჩევა.
+ * არცერთი მონიშნული = „ყველა“. `build`-ის „ყველა“ ჩანაწერი (`id: null`)
+ * ზემოთ ცალკე ღილაკად ჩნდება, დანარჩენი ორ სვეტად.
  */
-export function CategoryPicker({
+export function CategoryChecklist({
   build,
-  selectedID,
-  onSelect,
+  selectedIDs,
+  onChange,
 }: {
   build: () => PickerEntry[];
-  selectedID: string | null;
-  onSelect: (id: string | null) => void;
+  selectedIDs: readonly string[];
+  onChange: (ids: string[]) => void;
 }) {
-  // ერთხელ, გახსნისას — ჩიპების რიგი თამაშის შუაში არ უნდა ხტოდეს.
+  // ერთხელ, გახსნისას — რიგი თამაშის შუაში არ უნდა ხტოდეს.
+  const { width, fontScale } = useWindowDimensions();
+  const singleColumn = needsSingleColumn(width, fontScale);
   const entries = React.useMemo(() => build(), []); // eslint-disable-line react-hooks/exhaustive-deps
+  const all = entries.find((e) => e.id === null);
+  const cats = entries.filter((e): e is PickerEntry & { id: string } => e.id !== null);
+  const chosen = new Set(selectedIDs.filter((id) => cats.some((c) => c.id === id)));
+  const isAll = chosen.size === 0;
+
+  const toggle = (id: string) => {
+    const next = new Set(chosen);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    // ყველა მონიშნული = „ყველა“: სია სუფთა რჩება.
+    onChange(next.size === cats.length ? [] : cats.filter((c) => next.has(c.id)).map((c) => c.id));
+  };
+
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-      {entries.map((e) => (
-        <CategoryChip
-          key={e.id ?? '__all'}
-          label={e.label}
-          count={e.count}
-          remaining={e.remaining}
-          selected={selectedID === e.id}
-          onPress={() => onSelect(e.id)}
-        />
-      ))}
+    <View style={{ gap: 8 }}>
+      <CheckTile
+        label={all?.label ?? 'ყველა'}
+        count={all?.count}
+        checked={isAll}
+        fullWidth
+        onPress={() => onChange([])}
+      />
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 8 }}>
+        {cats.map((c) => (
+          <View key={c.id} style={{ width: singleColumn ? '100%' : '48%' }}>
+            <CheckTile label={c.label} count={c.count} checked={chosen.has(c.id)} onPress={() => toggle(c.id)} />
+          </View>
+        ))}
+      </View>
     </View>
+  );
+}
+
+function CheckTile({ label, count, checked, onPress, fullWidth = false }: { label: string; count?: number; checked: boolean; onPress: () => void; fullWidth?: boolean }) {
+  const presentation = categoryPresentation(label);
+  return (
+    <Pressable
+      accessibilityRole="checkbox"
+      accessibilityLabel={count !== undefined ? `${label}, ${count} ჩანაწერი` : label}
+      accessibilityState={{ checked }}
+      onPress={() => {
+        Haptics.tap();
+        onPress();
+      }}
+      style={{
+        flexDirection: fullWidth ? 'row' : 'column',
+        alignItems: fullWidth ? 'center' : 'stretch',
+        gap: 8,
+        minHeight: fullWidth ? 48 : 98,
+        flex: fullWidth ? undefined : 1,
+        paddingHorizontal: 12,
+        paddingVertical: 12,
+        borderRadius: Controls.compact.radius,
+        borderWidth: 1.5,
+        borderColor: checked ? Colors.phosphor : 'transparent',
+        backgroundColor: Colors.surfaceHigh,
+      }}
+    >
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      {!fullWidth && presentation.icon ? <Icon name={presentation.icon} size={20} weight="regular" color={Colors.textSecondary} /> : null}
+      <Icon
+        name={checked ? 'checkbox-marked' : 'checkbox-blank-outline'}
+        size={18}
+        color={checked ? Colors.phosphor : Colors.textSecondary}
+      />
+      </View>
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <Text style={[body(14, '600'), { color: Colors.textPrimary }]}>
+          {presentation.title}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -373,7 +389,7 @@ export function RadioRow({
         Haptics.tap();
         onPress();
       }}
-      style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: Controls.compact.minHeight }}
     >
       <Icon
         name={selected ? 'radiobox-marked' : 'radiobox-blank'}
@@ -388,7 +404,7 @@ export function RadioRow({
   );
 }
 
-/** ტაბლოს რიგი — ადგილი, სახელი, ქულა. */
+/** შედეგის რიგი — ადგილი, სახელი, ქულა. */
 export function RankRow({
   rank,
   name,
@@ -512,9 +528,9 @@ export function Stepper({
 
 const stepperStyles = StyleSheet.create({
   button: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: Controls.icon.size,
+    height: Controls.icon.size,
+    borderRadius: Controls.icon.radius,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.surfaceHigh,
@@ -529,7 +545,6 @@ export function Divider() {
 export function RulesSheet({
   visible,
   title,
-  accent = Colors.phosphor,
   steps,
   onClose,
 }: {
@@ -540,9 +555,9 @@ export function RulesSheet({
   onClose: () => void;
 }) {
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal supportedOrientations={ALL_ORIENTATIONS} visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.65)' }}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose}>{null}</Pressable>
+        <Pressable animate={false} style={StyleSheet.absoluteFill} onPress={onClose}>{null}</Pressable>
         <View
           style={{
             backgroundColor: '#1E1231',
@@ -554,6 +569,7 @@ export function RulesSheet({
             paddingBottom: 36,
             paddingHorizontal: 22,
             gap: 18,
+            maxHeight: '90%',
           }}
         >
           {/* Handle */}
@@ -561,29 +577,14 @@ export function RulesSheet({
 
           {/* Header */}
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={[titleFont(21), { color: Colors.warmCream, textTransform: 'uppercase', letterSpacing: 0.6 }]}>
+            <Text style={[titleFont(18), { color: Colors.warmCream, flex: 1, marginRight: 12 }]}>
               {toTT(title)} · წესები
             </Text>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="დახურვა"
-              onPress={onClose}
-              hitSlop={10}
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 16,
-                backgroundColor: 'rgba(255,255,255,0.08)',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Icon name={'xmark'} size={16} color={Colors.textSecondary} />
-            </Pressable>
+            <IconButton label="დახურვა" icon="xmark" onPress={onClose} />
           </View>
 
           {/* Steps */}
-          <View style={{ gap: 12 }}>
+          <ScrollView style={{ flexShrink: 1 }} contentContainerStyle={{ gap: 16 }}>
             {steps.map((s, i) => (
               <View
                 key={i}
@@ -591,11 +592,6 @@ export function RulesSheet({
                   flexDirection: 'row',
                   alignItems: 'flex-start',
                   gap: 12,
-                  backgroundColor: 'rgba(255,255,255,0.04)',
-                  padding: 12,
-                  borderRadius: 16,
-                  borderWidth: 1,
-                  borderColor: 'rgba(255,255,255,0.06)',
                 }}
               >
                 <View
@@ -603,7 +599,7 @@ export function RulesSheet({
                     width: 24,
                     height: 24,
                     borderRadius: 12,
-                    backgroundColor: accent,
+                    backgroundColor: Colors.phosphor,
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginTop: 1,
@@ -614,25 +610,10 @@ export function RulesSheet({
                 <Text style={[body(14, '500'), { color: Colors.textPrimary, flex: 1, lineHeight: 20 }]}>{s}</Text>
               </View>
             ))}
-          </View>
+          </ScrollView>
 
           {/* Dismiss button */}
-          <Pressable
-            accessibilityRole="button"
-            onPress={onClose}
-            style={{
-              backgroundColor: Colors.phosphor,
-              paddingVertical: 14,
-              borderRadius: Radius.pill,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 6,
-            }}
-          >
-            <Text style={[body(15, '900'), { color: Colors.ink, textTransform: 'uppercase', letterSpacing: 0.5 }]}>
-              {toTT('გასაგებია')}
-            </Text>
-          </Pressable>
+          <PrimaryButton title="გასაგებია" onPress={onClose} />
         </View>
       </View>
     </Modal>

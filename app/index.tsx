@@ -26,8 +26,8 @@ import { newestFirst } from '../src/state/homeFilter';
 import { Haptics } from '../src/core/haptics';
 import { useDialog } from '../src/ui/Dialog';
 import { Onboarded, Onboarding } from '../src/ui/Onboarding';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 import { Icon } from '../src/ui/Icon';
+import { IconButton } from '../src/ui/Buttons';
 
 const FAMILIES: GameFamily[] = ['loud', 'bluff', 'reading', 'candid'];
 
@@ -62,13 +62,6 @@ function Home() {
 
   const [query, setQuery] = useState('');
 
-  // „შემირჩიე“ — აიქონი ერთხელ ბრუნდება, თითქოს კამათელი გაგორდა.
-  const shuffleTurn = useSharedValue(0);
-  const shuffleStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${shuffleTurn.value * 360}deg` }] }));
-  const spinShuffle = () => {
-    shuffleTurn.value = 0;
-    shuffleTurn.value = withTiming(1, { duration: 320, easing: Easing.out(Easing.quad) });
-  };
   const [searchOpen, setSearchOpen] = useState(false);
 
   const columnWidth = Math.floor((windowWidth - 32 - 12) / 2);
@@ -95,24 +88,6 @@ function Home() {
     }
     return map;
   }, []);
-
-  const openRandom = (): PartyGame | null => {
-    const playable = GameCatalog.filter((g) => !g.comingSoon && roster.count >= g.minPlayers);
-    if (playable.length === 0) {
-      dialog({
-        title: 'ჯერ ცოტანი ხართ',
-        message: 'დაამატე მოთამაშეები და სცადე თავიდან.',
-        actions: [
-          { label: 'მოთამაშეების დამატება', primary: true, onPress: () => router.push('/players') },
-          { label: 'კარგი' },
-        ],
-      });
-      return null;
-    }
-    const chosen = playable[Math.floor(Math.random() * playable.length)];
-    open(chosen);
-    return chosen;
-  };
 
   const openInfo = (g: PartyGame) => router.push(`/rules/${g.id}`);
 
@@ -161,7 +136,7 @@ function Home() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {/* ── 1. HEADER ROW (OPA Logo + Shuffle + Search) ── */}
+        {/* ── 1. HEADER ROW (OPA Logo + Search) ── */}
         <View style={[styles.headerRow, styles.gutter]}>
           <Image
             source={require('../assets/Logo.png')}
@@ -172,44 +147,18 @@ function Home() {
           />
 
           <View style={styles.headerActions}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="შემთხვევითი თამაშის არჩევა. შემირჩიე"
-              onPress={() => {
-                Haptics.medium();
-                spinShuffle();
-                openRandom();
-              }}
-              style={styles.randomHeaderButton}
-            >
-              <Animated.View style={shuffleStyle}>
-                <Icon name={'shuffle'} size={14} color={Colors.phosphor} />
-              </Animated.View>
-              <Text style={styles.randomHeaderText}>{toTT('შემირჩიე')}</Text>
-            </Pressable>
-
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={searchOpen ? 'ძიების დახურვა' : 'თამაშის ძიება'}
-              onPress={() => {
-                Haptics.tap();
-                setSearchOpen((prev) => !prev);
-              }}
-              style={styles.iconButton}
-            >
-              <Icon
-                name={searchOpen ? 'xmark' : 'magnifyingglass'}
-                size={18}
-                color={Colors.textPrimary}
-              />
-            </Pressable>
+            <IconButton
+              label={searchOpen ? 'ძიების დახურვა' : 'თამაშის ძიება'}
+              icon={searchOpen ? 'xmark' : 'magnifyingglass'}
+              onPress={() => setSearchOpen((prev) => !prev)}
+            />
           </View>
         </View>
 
         {/* ── 2. WELCOME TITLE ── */}
         <View style={[styles.welcomeRow, styles.gutter]}>
-          <View style={{ width: 3, height: 25, backgroundColor: Colors.phosphor, ...glow(Colors.phosphor, 'strong') }} />
-          <Text style={[titleFont(23), styles.welcomeTitle, { color: Colors.warmCream }]}>
+          <View style={{ width: 3, height: 20, backgroundColor: Colors.phosphor, ...glow(Colors.phosphor, 'strong') }} />
+          <Text style={[titleFont(21), styles.welcomeTitle, { color: Colors.warmCream }]}>
             {toTT('რას ვითამაშებთ?')}
           </Text>
         </View>
@@ -376,19 +325,6 @@ function Home() {
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="ტაბლო"
-            onPress={() => {
-              Haptics.tap();
-              router.push('/scoreboard');
-            }}
-            style={styles.dockItem}
-          >
-            <Icon name={'trophy.fill'} size={22} color={Colors.textSecondary} />
-            <Text numberOfLines={1} style={styles.dockText}>ტაბლო</Text>
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
             accessibilityLabel="პარამეტრები"
             onPress={() => {
               Haptics.tap();
@@ -468,33 +404,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  randomHeaderButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 999,
-    backgroundColor: 'rgba(198, 255, 0, 0.12)',
-    borderWidth: 1.2,
-    borderColor: 'rgba(198, 255, 0, 0.35)',
-  },
-  randomHeaderText: {
-    fontSize: 11,
-    fontFamily: FontFamilies.heavy,
-    color: Colors.phosphor,
-    letterSpacing: 0.4,
-  },
-  iconButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(203, 184, 246, 0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(203, 184, 246, 0.20)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   welcomeRow: {
     flexDirection: 'row',

@@ -2,7 +2,7 @@ import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
 import { WideningShoe } from '../../core/wideningShoe';
 import { Ticker } from '../../core/ticker';
-import { loadSettings, saveSettings, num, categoryID } from '../../core/settings';
+import { loadSettings, saveSettings, num, categoryIDs, cleanCategoryIDs, selectionKey } from '../../core/settings';
 import { CharadesBank, type WordCategory } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
@@ -19,11 +19,12 @@ export type WordRushPhase = 'setup' | 'intro' | 'playing' | 'turnResult' | 'summ
 export interface WordRushSettings {
   seconds: number;
   rounds: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
 }
 
 const KEY = 'splash.wordrush.settings.v1';
-const DEFAULTS: WordRushSettings = { seconds: 45, rounds: 1, categoryID: null };
+const DEFAULTS: WordRushSettings = { seconds: 45, rounds: 1, categoryIDs: [] };
 
 export class WordRushEngine extends Observable {
   readonly players: Player[];
@@ -44,7 +45,8 @@ export class WordRushEngine extends Observable {
   lastTurn: { player: Player; count: number } | null = null;
 
   private ticker = new Ticker();
-  private categoryShoe: ContentShoe | null = null;
+  /** კატეგორიების დასტები მონიშვნის მიხედვით — ყოველ ჯერზე შემდეგი კატეგორია. */
+  private categoryShoes: Record<string, ContentShoe> = {};
 
   constructor(players: Player[]) {
     super();
@@ -52,12 +54,15 @@ export class WordRushEngine extends Observable {
     this.settings = loadSettings<WordRushSettings>(KEY, DEFAULTS, (s) => ({
       seconds: num(s.seconds, DEFAULTS.seconds, 10, 180),
       rounds: num(s.rounds, DEFAULTS.rounds, 1, 5),
-      categoryID: categoryID(s.categoryID, (id) => CharadesBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => CharadesBank.category(id) !== undefined),
     }));
   }
 
   // MARK: - წარმოებული მნიშვნელობები
 
+  get canPlay(): boolean {
+    return this.players.length >= 2;
+  }
   get currentPlayer(): Player | null {
     return this.players[this.turnIndex] ?? null;
   }
@@ -88,7 +93,7 @@ export class WordRushEngine extends Observable {
     return top && this.totalFor(top) > 0 ? top : null;
   }
 
-  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  /** ფრეზე ყველა პირველია. */
   get champions(): Player[] {
     const best = this.best;
     if (!best) return [];
@@ -114,6 +119,7 @@ export class WordRushEngine extends Observable {
   // MARK: - თამაშის მიმდინარეობა
 
   startGame(): void {
+    if (!this.canPlay) return;
     this.totals = {};
     this.round = 1;
     this.turnIndex = 0;
@@ -189,12 +195,12 @@ export class WordRushEngine extends Observable {
     this.notify();
   }
 
-  /** მხოლოდ შემთხვევით რეჟიმში აქვს აზრი — ფიქსირებული კატეგორია იგივე დარჩებოდა,
+  /** აზრი მაშინ აქვს, როცა ასარჩევი ერთზე მეტია — ერთი მონიშნული კატეგორია იგივე დარჩებოდა,
    *  სიტყვა კი საერთო დასტიდან (`word.<id>`) ტყუილად დაიხარჯებოდა.
    *  ჯერზე მხოლოდ ერთხელ — თორემ ყველა მსუბუქ კატეგორიამდე ცვლიდა და ქულები
    *  არათანაბარ დავალებებზე შედარდებოდა. */
   get canSwapCategory(): boolean {
-    return this.settings.categoryID === null && !this.swappedThisTurn;
+    return this.settings.categoryIDs.length !== 1 && !this.swappedThisTurn;
   }
   swapCategory(): void {
     if (!this.canSwapCategory || this.phase !== 'intro') return;
@@ -221,14 +227,15 @@ export class WordRushEngine extends Observable {
     const categories = CharadesBank.categories;
     let category: WordCategory | undefined;
 
-    if (this.settings.categoryID) {
-      category = categories.find((c) => c.id === this.settings.categoryID);
+    const ids = this.settings.categoryIDs;
+    if (ids.length === 1) {
+      category = categories.find((c) => c.id === ids[0]);
     } else {
-      if (!this.categoryShoe) {
-        this.categoryShoe = new ContentShoe('wordrush.category', categories.map((c) => c.id));
-      }
-      const id = this.categoryShoe.draw();
-      category = (id ? categories.find((c) => c.id === id) : undefined) ?? categories[Math.floor(Math.random() * categories.length)];
+      // შემთხვევითი კატეგორია მონიშნულებიდან (არაფერი მონიშნული — ყველადან).
+      const key = ids.length === 0 ? 'wordrush.category' : `wordrush.category.${selectionKey(ids)}`;
+      const shoe = (this.categoryShoes[key] ??= new ContentShoe(key, ids.length === 0 ? categories.map((c) => c.id) : ids));
+      const id = shoe.draw();
+      category = (id ? categories.find((c) => c.id === id) : undefined) ?? CharadesBank.randomCategory(ids);
     }
     this.categoryName = category?.name ?? 'სიტყვები';
 
@@ -269,8 +276,11 @@ export class WordRushEngine extends Observable {
     this.settings = { ...this.settings, rounds: Math.min(Math.max(1, value), 5) };
     this.persist();
   }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => CharadesBank.category(id) !== undefined),
+    };
     this.persist();
   }
 

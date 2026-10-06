@@ -49,10 +49,6 @@ export class WavelengthEngine extends Observable {
   get guessers(): Player[] { return this.teams[this.activeTeam].filter((p) => p.id !== this.clueGiver?.id); }
   get distance(): number { return Math.abs(this.guess - this.target); }
   teamName(index: number): string { return `გუნდი ${index + 1}`; }
-  rewardFor(player: Player): number {
-    if (this.winner === null) return 0;
-    return this.teams[this.winner].some((p) => p.id === player.id) ? 3 : 1;
-  }
   movePlayer(id: string): void {
     if (this.phase !== 'setup') return;
     const from = this.teams.findIndex((team) => team.some((p) => p.id === id));

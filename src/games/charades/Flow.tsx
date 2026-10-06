@@ -1,16 +1,17 @@
 import { PlayerCharacter } from '../../ui/PlayerCharacter';
 import React, { useEffect, useState } from 'react';
 import { AppState, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Colors, Radius, Space, body, caption, display, title as titleFont } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RankRow, ScreenHeader, CategoryPicker, RulesSheet } from '../../ui/Cards';
+import { Colors, Radius, Space, body, display, title as titleFont } from '../../theme/theme';
+import { CategoryChip, GameExitButton, GlassCard, RankRow, ScreenHeader, CategoryChecklist, RulesSheet, ToggleRow } from '../../ui/Cards';
 import { wordEntries } from '../categoryEntries';
 import { PrimaryButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
 import { Layout } from '../../ui/layout';
+import { Confetti } from '../../ui/Confetti';
+import { FitText } from '../../ui/FitText';
 import { useLandscapeOnly } from '../../core/orientationLock';
 import { CharadesBank } from '../../content/banks';
 import { TurnRotation } from '../../core/turnRotation';
-import { PodiumAward } from '../../core/podiumAward';
 import { Haptics } from '../../core/haptics';
 import { useObservable } from '../../core/observable';
 import { useAwardOnce } from '../../core/awardOnce';
@@ -79,7 +80,7 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
     <View style={{ flex: 1 }}>
       <RulesSheet visible={showRules} title="Heads Up" accent={Colors.phosphor} steps={gameData?.howTo ?? []} onClose={() => setShowRules(false)} />
       <View style={Layout.header}>
-        <ScreenHeader title="Heads Up" subtitle="ტელეფონი შუბლზე" onBack={onClose} onInfo={() => setShowRules(true)} />
+        <ScreenHeader title="Heads Up" onBack={onClose} onInfo={() => setShowRules(true)} />
       </View>
 
       <ScrollView contentContainerStyle={Layout.scroll}>
@@ -123,39 +124,24 @@ function Setup({ engine, onClose }: { engine: CharadesEngine; onClose: () => voi
 
         <GlassCard>
           <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორია</Text>
-            <CategoryPicker
+            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>კატეგორიები</Text>
+            <CategoryChecklist
               build={() => wordEntries(CharadesBank, 'ყველა', 'word.charades-all')}
-              selectedID={engine.settings.categoryID}
-              onSelect={(id) => engine.setCategory(id)}
+              selectedIDs={engine.settings.categoryIDs}
+              onChange={(ids) => engine.setCategories(ids)}
             />
           </View>
         </GlassCard>
 
         <GlassCard>
-          <Pressable
-            accessibilityRole="switch"
-            accessibilityLabel="დახრის შებრუნება"
-            accessibilityState={{ checked: engine.settings.invertTilt }}
-            onPress={() => {
-              Haptics.tap();
-              engine.setInvertTilt(!engine.settings.invertTilt);
-            }}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
-          >
-            <View style={{ flex: 1, gap: 3 }}>
-              <Text style={[body(15, '700'), { color: Colors.textPrimary }]}>დახრის შებრუნება</Text>
-              <Text style={[caption(11), { color: Colors.textSecondary }]}>
-                თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება
-              </Text>
-            </View>
-            <Icon
-              name={engine.settings.invertTilt ? 'toggle-switch' : 'toggle-switch-off-outline'}
-              size={34}
-              color={engine.settings.invertTilt ? Colors.phosphor : Colors.textSecondary}
-            />
-          </Pressable>
+          <ToggleRow
+            title="დახრის შებრუნება"
+            subtitle="თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება"
+            value={engine.settings.invertTilt}
+            onChange={(on) => engine.setInvertTilt(on)}
+          />
         </GlassCard>
+
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -191,9 +177,9 @@ function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
 
       {/* დიდად სახელი, ქვემოთ — მოკლედ და პატარა ასოებით. */}
       <View style={{ gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(36), Layout.centered, { color: Colors.textPrimary }]} adjustsFontSizeToFit numberOfLines={1}>
+        <FitText style={[titleFont(28), Layout.centered, { color: Colors.textPrimary }]} maxLines={1}>
           {engine.currentPlayer?.name ?? ''}
-        </Text>
+        </FitText>
         <Text style={[body(15, '500'), Layout.centered, { color: Colors.textSecondary }]}>ტელეფონი შუბლზე</Text>
       </View>
 
@@ -201,7 +187,7 @@ function TurnIntro({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
 
       <View style={Layout.footer}>
         <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.8, paddingHorizontal: 28 }]}>
-          გამოიცანი — წინ დახარე; ვერ იცნობ — უკან.
+          {engine.settings.invertTilt ? 'უკან — გამოვიცანი, წინ — გამოტოვება' : 'წინ — გამოვიცანი, უკან — გამოტოვება'}
         </Text>
         <PrimaryButton title="მზად ვარ" icon="play.fill" tint={Colors.phosphor} onPress={() => engine.beginTurn()} />
       </View>
@@ -226,13 +212,12 @@ function Countdown({ engine, onExit }: { engine: CharadesEngine; onExit: () => v
       <View style={Layout.exitSlot}>
         <GameExitButton onExit={onExit} />
       </View>
-      <Text
+      <FitText
         style={[body(20, '700'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 40 }]}
-        numberOfLines={2}
-        adjustsFontSizeToFit
+        maxLines={2}
       >
-        {engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე მიიდე
-      </Text>
+        {`${engine.currentPlayer?.name ?? ''} — ტელეფონი შუბლზე მიიდე`}
+      </FitText>
       <Text style={[styles.huge, Layout.digits, { color: Colors.phosphor }]}>{engine.countdown}</Text>
     </View>
   );
@@ -269,13 +254,12 @@ function Play({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }
         </View>
 
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text
+          <FitText
             style={[styles.word, Layout.centered, { color: flash ? Colors.ink : Colors.textPrimary }]}
-            numberOfLines={3}
-            adjustsFontSizeToFit
+            maxLines={3}
           >
             {flash ? (flash.verdict === 'correct' ? 'გამოიცანი' : 'გამოტოვება') : engine.currentWord}
-          </Text>
+          </FitText>
         </View>
 
         <Text
@@ -285,7 +269,7 @@ function Play({ engine, onExit }: { engine: CharadesEngine; onExit: () => void }
             { color: flash ? Colors.ink : Colors.textSecondary, opacity: flash ? 0.6 : 1, paddingBottom: 10 },
           ]}
         >
-          წინ დახარე — გამოვიცანი · უკან — გამოტოვება · შუბლთან დააბრუნე
+          {engine.settings.invertTilt ? 'უკან — გამოვიცანი · წინ — გამოტოვება' : 'წინ — გამოვიცანი · უკან — გამოტოვება'}
         </Text>
       </View>
 
@@ -330,9 +314,9 @@ function TurnResult({ engine, onExit }: { engine: CharadesEngine; onExit: () => 
       </View>
 
       <View style={{ alignItems: 'center', gap: 6, paddingHorizontal: 24 }}>
-        <Text style={[titleFont(24), { color: Colors.phosphor }]} numberOfLines={1} adjustsFontSizeToFit>
+        <FitText style={[titleFont(24), { color: Colors.phosphor }]} maxLines={1}>
           {engine.currentPlayer?.name ?? ''}
-        </Text>
+        </FitText>
         <Text style={[display(58), Layout.digits, { color: Colors.textPrimary }]}>{engine.correctCount}</Text>
         <Text style={[body(14, '600'), { color: Colors.textSecondary }]}>გამოცნობილი სიტყვა</Text>
         {engine.skippedCount > 0 ? (
@@ -417,7 +401,6 @@ function WordRow({ engine, entry }: { engine: CharadesEngine; entry: CharadesEnt
 
 function Summary({
   engine,
-  roster,
   onExit,
 }: {
   engine: CharadesEngine;
@@ -426,7 +409,6 @@ function Summary({
 }) {
 
   useAwardOnce(() => {
-    PodiumAward.apply(engine.podiumResults, roster);
     Haptics.win();
   });
 
@@ -436,13 +418,13 @@ function Summary({
     <View style={{ flex: 1, gap: 14 }}>
       <View style={{ flex: 1 }} />
 
-      <View style={{ alignItems: 'center' }}>
-        <GlyphIcon name="trophy.fill" size={31} tint={Colors.phosphor} />
-      </View>
-
-      <Text style={[titleFont(26), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}>
-        საუკეთესო გამომცნობი
-      </Text>
+      {champions.length > 0 ? (
+        <>
+          <Text style={[titleFont(26), Layout.centered, { color: Colors.phosphor, paddingHorizontal: 24 }]}>
+            საუკეთესო გამომცნობი
+          </Text>
+        </>
+      ) : null}
 
       <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
         {champions.length > 0
@@ -450,9 +432,6 @@ function Summary({
           : 'ამ პარტიაში სიტყვა ვერავინ გამოიცნო'}
       </Text>
 
-      <Text style={[body(12, '500'), Layout.centered, { color: Colors.textSecondary, opacity: 0.7 }]}>
-        საერთო ტაბლოზე პირველ სამს +3 / +2 / +1 ერიცხება
-      </Text>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 24, gap: 8 }}>
         {engine.ranking.map((player) => (
@@ -477,27 +456,12 @@ function Summary({
         />
         <PrimaryButton title="დასრულება" icon="xmark" tint={Colors.surfaceHigh} onPress={onExit} />
       </View>
+      {champions.length > 0 ? <Confetti /> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  stepBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.phosphor,
-  },
-  scoreCell: {
-    minWidth: 72,
-    alignItems: 'center',
-    gap: 3,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: Radius.small,
-  },
   playTop: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 40, paddingTop: 12 },
   timer: { fontSize: 44, fontWeight: '900' },
   word: { fontSize: 72, fontWeight: '900', paddingHorizontal: 40 },

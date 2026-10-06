@@ -1,0 +1,46 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "1",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "2",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "3",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "No Yes No",
+    "30 წამი",
+    "წრეები",
+    "დაწყება"
+  ]
+}

@@ -137,18 +137,6 @@ export class Roster extends Observable {
     this.save();
   }
 
-  addScore(points: number, id: string): void {
-    const p = this._players.find((x) => x.id === id);
-    if (!p) return;
-    p.score += points;
-    this.save();
-  }
-
-  resetScores(): void {
-    for (const p of this._players) p.score = 0;
-    this.save();
-  }
-
   /**
    * რიგის შეცვლა გადათრევით.
    *
@@ -176,10 +164,6 @@ export class Roster extends Observable {
       }
     } while (this._players.map((p) => p.id).join(',') === before);
     this.save();
-  }
-
-  get leaderboard(): Player[] {
-    return [...this._players].sort((a, b) => (a.score !== b.score ? b.score - a.score : a.name.localeCompare(b.name, 'ka')));
   }
 
   // MARK: - შენახვა

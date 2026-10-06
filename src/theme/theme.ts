@@ -1,4 +1,4 @@
-import { PixelRatio } from 'react-native';
+import { PixelRatio, Platform } from 'react-native';
 
 /**
  * ერთადერთი ადგილი, სადაც ფერები და ფონტები განისაზღვრება.
@@ -43,12 +43,12 @@ export const Colors = {
   lavender: '#CBB8F6',
   lavenderDark: '#22163B', // background-ის იისფერი ატმოსფერო
 
-  // სემანტიკური ალიასები (მხოლოდ ამ 5 ფერზე დაფუძნებული, Theme.swift-ის ანალოგიურად):
+  // სემანტიკური ფერები: მუქ ზედაპირზე ტექსტსა და მდგომარეობას მკაფიოდ აჩვენებს.
   neonCyan: '#CBB8F6',
-  neonMagenta: '#5B1CB5',
+  neonMagenta: '#FAF5E8', // კრემისფერი კონტრასტი მუქ ზედაპირზე
   amber: '#FAF5E8',
-  danger: '#380B70',
-  coral: '#5B1CB5',
+  danger: '#FAF5E8',
+  coral: '#CBB8F6',
   indigo: '#380B70',
   aqua: '#C6FF00',
   sky: '#CBB8F6',
@@ -91,6 +91,21 @@ export const Radius = {
 
 // MARK: - დაშორება
 export const Space = { xs: 6, s: 10, m: 16, l: 24, xl: 32 } as const;
+const MIN_TOUCH = Platform.OS === 'android' ? 48 : 44;
+
+/** საერთო კონტროლები: მოქმედება, კომპაქტური არჩევანი და ნავიგაცია. */
+export const Controls = {
+  action: { minHeight: 56, radius: Radius.default, paddingVertical: 14, paddingHorizontal: 20, fontSize: 17, iconSize: 20 },
+  compact: { minHeight: MIN_TOUCH, radius: Radius.small, paddingVertical: 10, paddingHorizontal: 12, fontSize: 14, iconSize: 18 },
+  icon: { size: MIN_TOUCH, radius: MIN_TOUCH / 2, glyphSize: 20 },
+  gap: 8,
+  pressedScale: 0.975,
+  primaryBackground: Colors.phosphor,
+  primaryForeground: Colors.onAccent,
+  secondaryBackground: Colors.surfaceHigh,
+  secondaryForeground: Colors.textPrimary,
+  border: Colors.stroke,
+} as const;
 
 // MARK: - ჩრდილი (Elevation)
 export const Elevation = {
@@ -221,4 +236,4 @@ export function glow(
   };
 }
 
-export const Theme = { Colors, Radius, Space, Elevation, glow, display, title, body, caption, toTT } as const;
+export const Theme = { Colors, Radius, Space, Controls, Elevation, glow, display, title, body, caption, toTT } as const;

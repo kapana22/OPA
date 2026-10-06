@@ -1,22 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors, Radius, Space, body, caption, title as titleFont, Elevation } from '../../theme/theme';
-import { CategoryChip, GameExitButton, GlassCard, GlyphIcon, RadioRow, ScreenHeader , RulesSheet } from '../../ui/Cards';
-import { PrimaryButton, GhostButton } from '../../ui/Buttons';
+import { GameExitButton, ScreenHeader , RulesSheet } from '../../ui/Cards';
+import { CompactButton, GhostButton, PrimaryButton } from '../../ui/Buttons';
 import { Pressable } from '../../ui/Pressable';
-import { Confetti } from '../../ui/Confetti';
 import { Layout } from '../../ui/layout';
+import { FitText } from '../../ui/FitText';
 import { ruleKindIcon, ruleKindLabel, type RuleCard } from '../../content/banks';
-import { PARTY_FORFEITS, forfeitNote, forfeitShort, forfeitTitle } from '../../core/partyForfeit';
-import { PodiumAward } from '../../core/podiumAward';
-import { Haptics } from '../../core/haptics';
-import { Sound } from '../../core/sound';
 import { useObservable } from '../../core/observable';
-import { useAwardOnce } from '../../core/awardOnce';
 import type { GameFlowProps } from '../registry';
-import { RuleCardEngine, RULECARD_LAP_OPTIONS, type ActiveRule } from './engine';
-import { TurnRotation } from '../../core/turnRotation';
-import type { Player } from '../../core/roster';
+import { RuleCardEngine, type ActiveRule } from './engine';
 import { game as findGame } from '../catalog';
 import { Icon } from '../../ui/Icon';
 
@@ -27,7 +20,6 @@ import { Icon } from '../../ui/Icon';
  * `rule` ტიპის ბარათი **ბოლომდე რჩება ძალაში** — ეს თამაშის მთელი აზრია.
  */
 
-const LIMIT_OPTIONS = [4, 6, 8];
 
 /** სიაში სრული წინადადება არ ეტევა — მოკლე სახელი უპირატესია. */
 const listLabel = (card: RuleCard) => card.short ?? card.text;
@@ -35,6 +27,7 @@ const listLabel = (card: RuleCard) => card.short ?? card.text;
 export function RuleCardFlow({ roster, onExit }: GameFlowProps) {
   const [engine] = useState(() => new RuleCardEngine([...roster.players]));
   useObservable(engine);
+  useEffect(() => { if (engine.phase === 'setup' && engine.canPlay) engine.startGame(); }, [engine]);
 
   switch (engine.phase) {
     case 'setup':
@@ -42,7 +35,7 @@ export function RuleCardFlow({ roster, onExit }: GameFlowProps) {
     case 'card':
       return <Play engine={engine} onExit={onExit} />;
     case 'summary':
-      return <Summary engine={engine} roster={roster} onExit={onExit} />;
+      return null;
   }
 }
 
@@ -61,59 +54,6 @@ function Setup({ engine, onClose }: { engine: RuleCardEngine; onClose: () => voi
 
       <ScrollView contentContainerStyle={Layout.scroll}>
 
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რა მოსდევს დარღვევას</Text>
-            {PARTY_FORFEITS.map((option) => (
-              <RadioRow
-                key={option}
-                title={forfeitTitle[option]}
-                subtitle={forfeitNote[option]}
-                selected={engine.settings.forfeit === option}
-                onPress={() => engine.setForfeit(option)}
-              />
-            ))}
-          </View>
-        </GlassCard>
-
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>რამდენი ბარათი</Text>
-            <View style={Layout.chipRow}>
-              {RULECARD_LAP_OPTIONS.map((laps) => (
-                <CategoryChip
-                  key={laps}
-                  label={laps === 0 ? 'სანამ მოგბეზრდებათ' : TurnRotation.label(laps)}
-                  selected={engine.settings.laps === laps}
-                  onPress={() => engine.setLaps(laps)}
-                />
-              ))}
-            </View>
-            {engine.isEndless ? null : (
-              <Text style={[body(12, '500'), { color: Colors.textSecondary }]}>სულ {engine.totalCards} ბარათი.</Text>
-            )}
-          </View>
-        </GlassCard>
-
-        <GlassCard>
-          <View style={{ gap: 12 }}>
-            <Text style={[body(17, '700'), { color: Colors.textPrimary }]}>წესების ჭერი</Text>
-            <View style={Layout.segmentRow}>
-              {LIMIT_OPTIONS.map((n) => (
-                <CategoryChip
-                  compact
-                  key={n}
-                  label={String(n)}
-                  selected={engine.settings.ruleLimit === n}
-                  onPress={() => engine.setRuleLimit(n)}
-                />
-              ))}
-            </View>
-            <Text style={[caption(11), { color: Colors.textSecondary }]}>
-              ჭერზე მისვლისას მოდის „შვება“ — ერთი წესი უქმდება. თორემ წესები უსასრულოდ გროვდება.
-            </Text>
-          </View>
-        </GlassCard>
       </ScrollView>
 
       <View style={Layout.footer}>
@@ -132,23 +72,14 @@ function Setup({ engine, onClose }: { engine: RuleCardEngine; onClose: () => voi
 // ── ბარათი
 
 function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }) {
-  const [charged, setCharged] = useState<Set<string>>(new Set());
-  // „წესი დაირღვა“ — ნებისმიერ ბარათზე, ბარათს არ ცვლის.
-  const [breaking, setBreaking] = useState(false);
-  const [breakers, setBreakers] = useState<Set<string>>(new Set());
+  // ბარათის გაჩენის დრო — „შვების“ სიაზე ორმაგი შეხება წესს შემთხვევით არ უნდა მოხსნიდეს.
+  const shownAt = useRef(Number.MAX_SAFE_INTEGER);
+  useEffect(() => {
+    shownAt.current = Date.now();
+  }, [engine.drawn]);
   const card = engine.currentCard;
   const isRule = card.kind === 'rule';
   const isRelief = card.kind === 'relief';
-  const canReportBreak = engine.activeRules.length > 0;
-
-  // ახალი ბარათი — ჯარიმების არჩევანი იწმინდება (რენდერში, effect-ის გარეშე).
-  const [seenCard, setSeenCard] = useState(card.text);
-  if (seenCard !== card.text) {
-    setSeenCard(card.text);
-    setCharged(new Set());
-    setBreaking(false);
-    setBreakers(new Set());
-  }
 
   const tint = isRule ? Colors.neonMagenta : isRelief ? Colors.neonCyan : Colors.phosphor;
 
@@ -156,36 +87,9 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
     <View style={{ flex: 1, gap: 12 }}>
       <View style={Layout.topBar}>
         <GameExitButton onExit={onExit} />
-        <Text style={[body(13, '700'), Layout.digits, { color: Colors.textSecondary }]}>
-          {engine.isEndless ? `ბარათი ${engine.drawn}` : `ბარათი ${engine.drawn} / ${engine.totalCards}`}
-        </Text>
         <View style={{ flex: 1 }} />
-        {canReportBreak ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="წესი დაირღვა"
-            accessibilityState={{ selected: breaking }}
-            onPress={() => {
-              Haptics.tap();
-              setBreakers(new Set());
-              setBreaking((v) => !v);
-            }}
-            style={[styles.pill, breaking ? { backgroundColor: Colors.neonMagenta + '3D' } : null]}
-          >
-            <Icon name={'exclamationmark.circle.fill'} size={12} color={Colors.neonMagenta} />
-            <Text style={[body(12, '700'), { color: Colors.neonMagenta }]}>წესი დაირღვა</Text>
-          </Pressable>
-        ) : null}
-        {engine.canSwap && !breaking ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="სხვა ბარათი"
-            onPress={() => engine.swapCard()}
-            style={styles.pill}
-          >
-            <Icon name={'shuffle'} size={12} color={Colors.textSecondary} />
-            <Text style={[body(12, '700'), { color: Colors.textSecondary }]}>სხვა</Text>
-          </Pressable>
+        {engine.canSwap ? (
+          <CompactButton title="სხვა ბარათი" onPress={() => engine.swapCard()} />
         ) : null}
       </View>
 
@@ -216,51 +120,27 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
             <Text style={[body(13, '900'), { color: Colors.ink }]}>{ruleKindLabel[card.kind]}</Text>
           </View>
 
-          <Text
+          <FitText
             style={[titleFont(22), Layout.centered, { color: tint, paddingHorizontal: 20 }]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
+            maxLines={1}
           >
             {engine.holder?.name ?? '—'}
-          </Text>
+          </FitText>
 
-          <Text
+          <FitText
             style={[titleFont(card.text.length > 75 ? 24 : 28), Layout.centered, { color: Colors.textPrimary, paddingHorizontal: 22 }]}
-            adjustsFontSizeToFit
-            numberOfLines={8}
+            maxLines={8}
           >
             {card.text}
-          </Text>
+          </FitText>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.surface, paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill }}>
-             <Icon name={isRule ? 'infinity' : 'lightning.fill'} size={14} color={isRule ? Colors.neonMagenta : Colors.coral} />
-             <Text style={[body(13, '700'), { color: isRule ? Colors.neonMagenta : Colors.coral }]}>
-               {isRule ? 'ბოლომდე მოქმედებს' : forfeitShort[engine.settings.forfeit]}
-             </Text>
-          </View>
         </View>
       </View>
 
       <View style={{ flex: 1 }} />
 
       <View style={Layout.footer}>
-        {breaking && canReportBreak ? (
-          <>
-            <ChargePicker players={engine.players} charged={breakers} setCharged={setBreakers} />
-            <PrimaryButton
-              title="დაფიქსირება"
-              icon="checkmark"
-              tint={Colors.neonMagenta}
-              enabled={breakers.size > 0}
-              onPress={() => {
-                engine.recordBreak(engine.players.filter((p) => breakers.has(p.id)));
-                setBreakers(new Set());
-                setBreaking(false);
-              }}
-            />
-            <GhostButton title="გაუქმება" icon="xmark" onPress={() => setBreaking(false)} />
-          </>
-        ) : isRule ? (
+        {isRule ? (
           <PrimaryButton
             title="წესი მიღებულია"
             icon="checkmark"
@@ -286,7 +166,10 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
                     key={rule.id}
                     accessibilityRole="button"
                     accessibilityLabel={`მოხსნა — ${listLabel(rule.card)}`}
-                    onPress={() => engine.removeRule(rule)}
+                    onPress={() => {
+                      if (Date.now() - shownAt.current < 600) return;
+                      engine.removeRule(rule);
+                    }}
                     style={styles.ruleRow}
                   >
                     <Icon name="close-circle" size={17} color={Colors.neonCyan} />
@@ -299,201 +182,13 @@ function Play({ engine, onExit }: { engine: RuleCardEngine; onExit: () => void }
             </>
           )
         ) : (
-          <>
-            <ChargePicker players={engine.players} charged={charged} setCharged={setCharged} />
-
-            <PrimaryButton
-              title={charged.size === 0 ? 'არავის დაურღვევია' : 'დაფიქსირდა — შემდეგი'}
-              icon={charged.size === 0 ? 'checkmark' : 'chevron.right'}
-              tint={Colors.phosphor}
-              onPress={() =>
-                charged.size === 0
-                  ? engine.markDone()
-                  : engine.finishForfeits(engine.players.filter((p) => charged.has(p.id)))
-              }
-            />
-          </>
+          <PrimaryButton title="შემდეგი" icon="chevron.right" tint={Colors.phosphor} onPress={() => engine.markDone()} />
         )}
 
-        {engine.isEndless && !breaking ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              Haptics.tap();
-              engine.finishNow();
-            }}
-            style={{ alignItems: 'center', paddingTop: 4 }}
-          >
-            <Text style={[body(13, '700'), { color: Colors.textSecondary }]}>დასრულება</Text>
-          </Pressable>
+        {engine.isEndless ? (
+          <GhostButton title="დასრულება" onPress={onExit} />
         ) : null}
       </View>
-    </View>
-  );
-}
-
-/** „ვინ იხდის?“ — სახელების ჩართვა-გამორთვა; ბარათის ჯარიმაც და წესის დარღვევაც ამას იყენებს. */
-function ChargePicker({
-  players,
-  charged,
-  setCharged,
-}: {
-  players: readonly Player[];
-  charged: Set<string>;
-  setCharged: (update: (prev: Set<string>) => Set<string>) => void;
-}) {
-  return (
-    <View style={{ gap: 6 }}>
-      <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary }]}>
-        ვინ იხდის? შეეხე სახელს
-      </Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-        {players.map((player) => {
-          const on = charged.has(player.id);
-          return (
-            <Pressable
-              key={player.id}
-              accessibilityRole="button"
-              accessibilityLabel={player.name}
-              accessibilityState={{ selected: on }}
-              onPress={() => {
-                Haptics.tap();
-                setCharged((prev) => {
-                  const next = new Set(prev);
-                  if (on) next.delete(player.id);
-                  else next.add(player.id);
-                  return next;
-                });
-              }}
-              style={[styles.nameChip, { backgroundColor: on ? Colors.neonMagenta : Colors.surface }]}
-            >
-              <Text style={[body(13, '700'), { color: on ? Colors.ink : Colors.textPrimary }]} numberOfLines={1}>
-                {player.name}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
-    </View>
-  );
-}
-
-// ── შეჯამება
-
-function Summary({
-  engine,
-  roster,
-  onExit,
-}: {
-  engine: RuleCardEngine;
-  roster: GameFlowProps['roster'];
-  onExit: () => void;
-}) {
-
-  useAwardOnce(() => {
-    Sound.play('win');
-    Haptics.win();
-    PodiumAward.apply(engine.results, roster);
-  });
-
-  const lawmaker = engine.lawmaker;
-  const lawmakers = engine.lawmakers;
-  const worst = engine.mostForfeits;
-  const forfeitLine =
-    worst.length > 0 && engine.forfeitCount(worst[0]) > 0
-      ? `ყველაზე ხშირად იხადა — ${worst.map((p) => p.name).join(', ')} (${engine.forfeitCount(worst[0])})`
-      : null;
-
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, gap: 14 }}>
-        <View style={{ flex: 1 }} />
-
-        <View style={{ alignItems: 'center' }}>
-          <GlyphIcon name="checklist" size={31} tint={Colors.neonMagenta} />
-        </View>
-
-        <Text style={[titleFont(27), Layout.centered, { color: Colors.neonMagenta, paddingHorizontal: 24 }]}>
-          {lawmaker === null ? 'წესი არავის შემოუტანია' : 'მაგიდის კანონმდებელი'}
-        </Text>
-
-        {lawmaker ? (
-          <Text style={[body(15, '600'), Layout.centered, { color: Colors.textSecondary, paddingHorizontal: 32 }]}>
-            {lawmakers.map((p) => p.name).join(', ')} — {engine.broughtCount(lawmaker)} შემოტანილი წესი
-          </Text>
-        ) : null}
-
-        {forfeitLine ? (
-          <Text
-            style={[body(13, '600'), Layout.centered, { color: Colors.textSecondary, opacity: 0.9, paddingHorizontal: 32 }]}
-          >
-            {forfeitLine}
-          </Text>
-        ) : null}
-
-        {engine.activeRules.length > 0 ? (
-          <View style={{ gap: 5, paddingHorizontal: 28 }}>
-            <Text style={[caption(11), Layout.centered, { color: Colors.textSecondary }]}>
-              ბოლოს ეს წესები მოქმედებდა
-            </Text>
-            {engine.activeRules.map((rule) => (
-              <Text
-                key={rule.id}
-                style={[body(13, '500'), Layout.centered, { color: Colors.textPrimary }]}
-                numberOfLines={1}
-              >
-                • {listLabel(rule.card)}
-              </Text>
-            ))}
-          </View>
-        ) : null}
-
-        <ScrollView contentContainerStyle={[Layout.content, { gap: 8 }]}>
-          {engine.ranking.map((player, rank) => {
-            const forfeits = engine.forfeitCount(player);
-            return (
-              <View
-                key={player.id}
-                style={[styles.summaryRow, { backgroundColor: rank === 0 ? Colors.neonMagenta + '24' : Colors.surface }]}
-              >
-                <Text style={[body(16, '900'), { color: Colors.textSecondary, width: 30 }]}>{rank + 1}</Text>
-                <Text style={[body(16, '600'), { color: Colors.textPrimary, flex: 1 }]} numberOfLines={1}>
-                  {player.name}
-                </Text>
-                {forfeits > 0 ? (
-                  <Text style={[caption(10), { color: Colors.textSecondary }]}>{forfeits} ჯარიმა</Text>
-                ) : null}
-                <Text
-                  style={[titleFont(20), Layout.digits, { color: rank === 0 ? Colors.neonMagenta : Colors.textPrimary }]}
-                >
-                  {engine.scoreFor(player)}
-                </Text>
-              </View>
-            );
-          })}
-        </ScrollView>
-
-        <View style={Layout.footer}>
-          <PrimaryButton
-            title="თავიდან"
-            icon="arrow.clockwise"
-            tint={Colors.neonMagenta}
-            onPress={() => {
-              engine.restart();
-            }}
-          />
-          <GhostButton
-            title="პარამეტრები"
-            icon="slider.horizontal.3"
-            onPress={() => {
-              engine.backToSetup();
-            }}
-          />
-          <GhostButton title="დასრულება" icon="xmark" onPress={onExit} />
-        </View>
-      </View>
-
-      {lawmaker ? <Confetti /> : null}
     </View>
   );
 }
@@ -543,7 +238,6 @@ const styles = StyleSheet.create({
     borderRadius: Radius.small,
     backgroundColor: Colors.surface,
   },
-  nameChip: { paddingHorizontal: 13, paddingVertical: 9, borderRadius: 999 },
   summaryRow: {
     flexDirection: 'row',
     alignItems: 'center',

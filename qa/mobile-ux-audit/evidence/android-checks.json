@@ -1,0 +1,1352 @@
+[
+  {
+    "op": "route",
+    "arg": "/",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშის ძიება",
+          "role": "button"
+        },
+        {
+          "label": "ბოლოს ითამაშეთ Heads Up",
+          "role": "button"
+        },
+        {
+          "label": "Most Likely. ვის შეეფერება ეს აღწერა?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Most Likely",
+          "role": "button"
+        },
+        {
+          "label": "Heads Up. შუბლზე დაიდე და გამოიცანი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Heads Up",
+          "role": "button"
+        },
+        {
+          "label": "No Yes No. უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — No Yes No",
+          "role": "button"
+        },
+        {
+          "label": "Imposter. გამოიცანი, ვინ ბლეფობს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Imposter",
+          "role": "button"
+        },
+        {
+          "label": "Truth or Dare. სიმართლე თუ მოქმედება?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Truth or Dare",
+          "role": "button"
+        },
+        {
+          "label": "Spyfall. იპოვე, ვის აქვს სხვა სიტყვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Spyfall",
+          "role": "button"
+        },
+        {
+          "label": "Bomb Party. თქვი სიტყვა და გადაეცი ტელეფონი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Bomb Party",
+          "role": "button"
+        },
+        {
+          "label": "Don't Laugh. ეცადე, არ გაგეცინოს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Don't Laugh",
+          "role": "button"
+        },
+        {
+          "label": "Alias. აუხსენი სიტყვა შენს გუნდს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Alias",
+          "role": "button"
+        },
+        {
+          "label": "Who Am I?. კითხვებით გამოიცანი, ვინ ხარ.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Am I?",
+          "role": "button"
+        },
+        {
+          "label": "Word Rush. რამდენ სიტყვას მოასწრებ?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Word Rush",
+          "role": "button"
+        },
+        {
+          "label": "Mafia. გამოიცანი, ვინ არის მაფია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Mafia",
+          "role": "button"
+        },
+        {
+          "label": "Who Wrote It?. გამოიცანი, ვინ დაწერა პასუხი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Wrote It?",
+          "role": "button"
+        },
+        {
+          "label": "2 Truths, 1 Lie. სამი ამბიდან რომელია ტყუილი?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — 2 Truths, 1 Lie",
+          "role": "button"
+        },
+        {
+          "label": "Herd Mentality. უპასუხე ისე, როგორც უმრავლესობა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Herd Mentality",
+          "role": "button"
+        },
+        {
+          "label": "The Line. ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — The Line",
+          "role": "button"
+        },
+        {
+          "label": "Rate Them. გამოიცანი მეგობრის შეფასება.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Rate Them",
+          "role": "button"
+        },
+        {
+          "label": "Wavelength. გამოიცანით ადგილი შკალაზე.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Wavelength",
+          "role": "button"
+        },
+        {
+          "label": "Never Have I Ever. აღიარე, თუ შენც გაგიკეთებია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Never Have I Ever",
+          "role": "button"
+        },
+        {
+          "label": "House Rules. დაიმახსოვრე და დაიცავი წესები.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — House Rules",
+          "role": "button"
+        },
+        {
+          "label": "Do or Pay. შეასრულე დავალება ან მიიღე ჯარიმა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "მოთამაშეები",
+          "role": "button"
+        },
+        {
+          "label": "პარამეტრები",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ᲠᲐᲡ ᲕᲘᲗᲐᲛᲐᲨᲔᲑᲗ?",
+        "ᲑᲝᲚᲝᲡ ᲘᲗᲐᲛᲐᲨᲔᲗ",
+        "შუბლზე დაიდე და გამოიცანი.",
+        "ᲞᲝᲞᲣᲚᲐᲠᲣᲚᲘ",
+        "ვის შეეფერება ეს აღწერა?",
+        "უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+        "გამოიცანი, ვინ ბლეფობს.",
+        "სიმართლე თუ მოქმედება?",
+        "იპოვე, ვის აქვს სხვა სიტყვა.",
+        "ᲮᲛᲐᲣᲠᲘ ᲓᲐ ᲡᲘᲡᲬᲠᲐᲤᲔ",
+        "7",
+        "თქვი სიტყვა და გადაეცი ტელეფონი.",
+        "ეცადე, არ გაგეცინოს.",
+        "აუხსენი სიტყვა შენს გუნდს.",
+        "კითხვებით გამოიცანი, ვინ ხარ.",
+        "რამდენ სიტყვას მოასწრებ?",
+        "ᲑᲚᲔᲤᲘ ᲓᲐ ᲒᲐᲛᲝᲪᲜᲝᲑᲐ",
+        "5",
+        "გამოიცანი, ვინ არის მაფია.",
+        "გამოიცანი, ვინ დაწერა პასუხი.",
+        "სამი ამბიდან რომელია ტყუილი?",
+        "ᲛᲐᲒᲘᲓᲘᲡ ᲙᲘᲗᲮᲕᲐ",
+        "უპასუხე ისე, როგორც უმრავლესობა.",
+        "ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+        "გამოიცანი მეგობრის შეფასება.",
+        "გამოიცანით ადგილი შკალაზე.",
+        "ᲒᲣᲚᲐᲮᲓᲘᲚᲐᲓ",
+        "4",
+        "აღიარე, თუ შენც გაგიკეთებია.",
+        "დაიმახსოვრე და დაიცავი წესები.",
+        "შეასრულე დავალება ან მიიღე ჯარიმა.",
+        "თამაშები",
+        "მოთამაშე",
+        "მართვა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/games",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "No Yes No. უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — No Yes No",
+          "role": "button"
+        },
+        {
+          "label": "Herd Mentality. უპასუხე ისე, როგორც უმრავლესობა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Herd Mentality",
+          "role": "button"
+        },
+        {
+          "label": "The Line. ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — The Line",
+          "role": "button"
+        },
+        {
+          "label": "Rate Them. გამოიცანი მეგობრის შეფასება.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Rate Them",
+          "role": "button"
+        },
+        {
+          "label": "House Rules. დაიმახსოვრე და დაიცავი წესები.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — House Rules",
+          "role": "button"
+        },
+        {
+          "label": "Do or Pay. შეასრულე დავალება ან მიიღე ჯარიმა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "Most Likely. ვის შეეფერება ეს აღწერა?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Most Likely",
+          "role": "button"
+        },
+        {
+          "label": "Imposter. გამოიცანი, ვინ ბლეფობს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Imposter",
+          "role": "button"
+        },
+        {
+          "label": "Spyfall. იპოვე, ვის აქვს სხვა სიტყვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Spyfall",
+          "role": "button"
+        },
+        {
+          "label": "Heads Up. შუბლზე დაიდე და გამოიცანი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Heads Up",
+          "role": "button"
+        },
+        {
+          "label": "Bomb Party. თქვი სიტყვა და გადაეცი ტელეფონი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Bomb Party",
+          "role": "button"
+        },
+        {
+          "label": "Mafia. გამოიცანი, ვინ არის მაფია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Mafia",
+          "role": "button"
+        },
+        {
+          "label": "Who Wrote It?. გამოიცანი, ვინ დაწერა პასუხი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Wrote It?",
+          "role": "button"
+        },
+        {
+          "label": "2 Truths, 1 Lie. სამი ამბიდან რომელია ტყუილი?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — 2 Truths, 1 Lie",
+          "role": "button"
+        },
+        {
+          "label": "Never Have I Ever. აღიარე, თუ შენც გაგიკეთებია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Never Have I Ever",
+          "role": "button"
+        },
+        {
+          "label": "Don't Laugh. ეცადე, არ გაგეცინოს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Don't Laugh",
+          "role": "button"
+        },
+        {
+          "label": "Alias. აუხსენი სიტყვა შენს გუნდს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Alias",
+          "role": "button"
+        },
+        {
+          "label": "Wavelength. გამოიცანით ადგილი შკალაზე.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Wavelength",
+          "role": "button"
+        },
+        {
+          "label": "Who Am I?. კითხვებით გამოიცანი, ვინ ხარ.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Am I?",
+          "role": "button"
+        },
+        {
+          "label": "Word Rush. რამდენ სიტყვას მოასწრებ?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Word Rush",
+          "role": "button"
+        },
+        {
+          "label": "Truth or Dare. სიმართლე თუ მოქმედება?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Truth or Dare",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ყველა თამაში",
+        "21 თამაში",
+        "ყველა",
+        "ჩვენს კომპანიას",
+        "10-15 წუთი",
+        "ჩუმი",
+        "ბლეფი და გამოცნობა",
+        "ხმაური და სისწრაფე",
+        "მაგიდის კითხვა",
+        "გულახდილად",
+        "21 ᲗᲐᲛᲐᲨᲘ",
+        "უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+        "უპასუხე ისე, როგორც უმრავლესობა.",
+        "ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+        "გამოიცანი მეგობრის შეფასება.",
+        "დაიმახსოვრე და დაიცავი წესები.",
+        "შეასრულე დავალება ან მიიღე ჯარიმა.",
+        "ვის შეეფერება ეს აღწერა?",
+        "გამოიცანი, ვინ ბლეფობს.",
+        "იპოვე, ვის აქვს სხვა სიტყვა.",
+        "შუბლზე დაიდე და გამოიცანი.",
+        "თქვი სიტყვა და გადაეცი ტელეფონი.",
+        "გამოიცანი, ვინ არის მაფია.",
+        "გამოიცანი, ვინ დაწერა პასუხი.",
+        "სამი ამბიდან რომელია ტყუილი?",
+        "აღიარე, თუ შენც გაგიკეთებია.",
+        "ეცადე, არ გაგეცინოს.",
+        "აუხსენი სიტყვა შენს გუნდს.",
+        "გამოიცანით ადგილი შკალაზე.",
+        "კითხვებით გამოიცანი, ვინ ხარ.",
+        "რამდენ სიტყვას მოასწრებ?",
+        "სიმართლე თუ მოქმედება?",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/players",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "Ana — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Ana. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "Ana — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "AnaGioN — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "AnaGioN. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "AnaGioN — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Luka — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Luka. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Luka — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Mari — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Mari. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Mari — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 4/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "Ana",
+        "👦",
+        "AnaGioN",
+        "Luka",
+        "Mari",
+        "მზად ვართ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "focus",
+    "arg": "სახელი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "დამატება",
+          "role": "button"
+        },
+        {
+          "label": "არევა",
+          "role": "button"
+        },
+        {
+          "label": "დალაგება",
+          "role": "button"
+        },
+        {
+          "label": "Ana — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Ana. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "სქესის შეცვლა: ბიჭი",
+          "role": "button"
+        },
+        {
+          "label": "Ana — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "AnaGioN — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "AnaGioN. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "AnaGioN — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Luka — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Luka. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Luka — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "Mari — პერსონაჟის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "Mari. სახელის შესაცვლელად დააჭირე",
+          "role": "button"
+        },
+        {
+          "label": "Mari — წაშლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მოთამაშეები 4/12",
+        "პერსონაჟის შესაცვლელად შეეხე მის სურათს",
+        "ᲐᲠᲔᲕᲐ",
+        "ᲓᲐᲚᲐᲒᲔᲑᲐ",
+        "Ana",
+        "👦",
+        "AnaGioN",
+        "Luka",
+        "Mari",
+        "მზად ვართ",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/settings",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "მოსმენა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "კონტენტის მეხსიერების განულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "მზადაა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "პარამეტრები",
+        "ხმა",
+        "ტაიმერის ტკაცუნი, აფეთქება, გამარჯვება",
+        "ვიბრაცია",
+        "ყოველი შეხება და რაუნდის დასასრული",
+        "მოსმენა",
+        "აპს ახსოვს, რომელი სიტყვები და კითხვები უკვე ითამაშეთ, და გამეორებამდე მთელ კატეგორიას გადის.",
+        "კონტენტის მეხსიერების განულება",
+        "მზადაა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/rules/mafia",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "გასაგებია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "წესები",
+        "იპოვეთ მაფია წამყვანის გარეშე.",
+        "4–12",
+        "~25 წთ",
+        "ცოცხალი",
+        "აირჩიე, რამდენი მაფიაა და ითამაშებს თუ არა ექიმი და დეტექტივი.",
+        "ტელეფონი წრეზე გადაეცით, თითოეული ფარულად ნახავს როლს.",
+        "ღამით ტელეფონი შუაში დადეთ და თვალები დახუჭეთ. აპი თვითონ გააღვიძებს, ვისაც საჭიროა.",
+        "დილით აპი იტყვის, ვინ დაიღუპა.",
+        "ერთად იმსჯელეთ და აირჩიეთ, ვინ გააძევოთ.",
+        "ქალაქი იგებს, თუ მაფიას გააძევებს. მაფია იგებს, თუ ქალაქს რაოდენობით გაუტოლდება.",
+        "გასაგებია",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "scroll",
+    "arg": "900",
+    "result": {
+      "scrolled": true
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/game/charades",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წმ",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "90 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "120 წმ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა ერთხელ",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "ყველა ორჯერ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა სამჯერ",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დახრის შებრუნება",
+          "role": "switch",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Heads Up",
+        "დრო",
+        "რამდენი ჯერი",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დახრის შებრუნება",
+        "თუ დახრა პირიქით მუშაობს — ჩართე და მიმართულებები გაიცვლება",
+        "დაწყება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/game/truthdare",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "ოჯახური",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "წვეულება",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "ცხარე",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ბოთლით",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "რიგით",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Truth or Dare",
+        "დონე",
+        "მეგობრებში, ხმაურით — ოდნავ უხერხული, მაგრამ უსაფრთხო.",
+        "ვის ერგება ჯერი",
+        "დაწყება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/game/wordrush",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "45 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Word Rush",
+        "დრო",
+        "წრეები",
+        "ერთი წრე — თითო ჯერი ყველას.",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "დაწყება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "სიტუაციები",
+        "სხვა კატეგორია",
+        "დროის დაწყება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "თამაშიდან გასვლა",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გაგრძელება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გასვლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "სიტუაციები",
+        "სხვა კატეგორია",
+        "დროის დაწყება",
+        "თამაშიდან გასვლა?",
+        "მიმდინარე რაუნდი დაიკარგება.",
+        "გაგრძელება",
+        "გასვლა",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "გაგრძელება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა კატეგორია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დროის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Ana",
+        "სიტუაციები",
+        "სხვა კატეგორია",
+        "დროის დაწყება",
+        "!",
+        "Open debugger to view warnings."
+      ]
+    }
+  },
+  {
+    "op": "meta",
+    "result": {
+      "appState": "active",
+      "screen": {
+        "fontScale": 1,
+        "height": 914.2857142857143,
+        "scale": 2.625,
+        "width": 411.42857142857144
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 914.2857142857143,
+        "scale": 2.625,
+        "width": 411.42857142857144
+      }
+    }
+  },
+  {
+    "op": "bounds",
+    "result": [
+      {
+        "height": 48,
+        "label": "თამაშიდან გასვლა",
+        "role": "button",
+        "width": 48,
+        "x": 20.190475463867188,
+        "y": 67.80950927734375
+      },
+      {
+        "height": 48,
+        "label": "სხვა კატეგორია",
+        "role": "button",
+        "width": 152.38095092773438,
+        "x": 129.5238037109375,
+        "y": 556.5714111328125
+      },
+      {
+        "height": 56,
+        "label": "დროის დაწყება",
+        "role": "button",
+        "width": 371.4285888671875,
+        "x": 20.190475463867188,
+        "y": 802.2857055664062
+      }
+    ]
+  }
+]

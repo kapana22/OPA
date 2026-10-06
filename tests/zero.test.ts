@@ -9,10 +9,8 @@ import { MafiaEngine } from '../src/games/mafia/engine';
 import { MostLikelyEngine } from '../src/games/mostlikely/engine';
 import { NeverEngine } from '../src/games/never/engine';
 import { NoLaughEngine } from '../src/games/nolaugh/engine';
-import { PointOneEngine } from '../src/games/pointone/engine';
 import { RuleCardEngine } from '../src/games/rulecard/engine';
 import { SpyEngine } from '../src/games/spy/engine';
-import { StandardsEngine } from '../src/games/standards/engine';
 import { TenButEngine } from '../src/games/tenbut/engine';
 import { TruthDareEngine } from '../src/games/truthdare/engine';
 import { TwoTruthsEngine } from '../src/games/twotruths/engine';
@@ -33,8 +31,8 @@ const ENGINES: [string, new (p: never[]) => { startGame?: () => void }][] = [
   ['herd', HerdEngine as never], ['impostor', ImpostorEngine as never],
   ['mafia', MafiaEngine as never], ['mostlikely', MostLikelyEngine as never],
   ['never', NeverEngine as never], ['nolaugh', NoLaughEngine as never],
-  ['pointone', PointOneEngine as never], ['rulecard', RuleCardEngine as never],
-  ['spy', SpyEngine as never], ['standards', StandardsEngine as never],
+  ['rulecard', RuleCardEngine as never],
+  ['spy', SpyEngine as never],
   ['tenbut', TenButEngine as never], ['truthdare', TruthDareEngine as never],
   ['twotruths', TwoTruthsEngine as never], ['wavelength', WavelengthEngine as never],
   ['whoami', WhoAmIEngine as never], ['whowrote', WhoWroteEngine as never],

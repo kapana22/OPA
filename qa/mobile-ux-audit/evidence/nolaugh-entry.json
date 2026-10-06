@@ -1,0 +1,116 @@
+{
+  "controls": [
+    {
+      "label": "უკან",
+      "role": "button"
+    },
+    {
+      "label": "თამაშის წესები",
+      "role": "button"
+    },
+    {
+      "label": "30 წამი",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "45 წამი",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "60 წამი",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა ერთხელ",
+      "role": "button",
+      "state": {
+        "selected": true
+      }
+    },
+    {
+      "label": "ყველა ორჯერ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა სამჯერ",
+      "role": "button",
+      "state": {
+        "selected": false
+      }
+    },
+    {
+      "label": "ყველა, 277 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": true
+      }
+    },
+    {
+      "label": "🔊 ხმები და ხმაური, 69 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "😐 სახე და მიმიკა, 67 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "💬 სიტყვები, 58 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🙌 მოძრაობა, 46 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "🇬🇪 ქართულად, 37 ჩანაწერი",
+      "role": "checkbox",
+      "state": {
+        "checked": false
+      }
+    },
+    {
+      "label": "დაწყება",
+      "role": "button",
+      "state": {
+        "disabled": false
+      }
+    }
+  ],
+  "texts": [
+    "Don't Laugh",
+    "რამდენ ხანს უნდა გაუძლოს",
+    "რაუნდები",
+    "კატეგორიები",
+    "ყველა",
+    "ხმები და ხმაური",
+    "სახე და მიმიკა",
+    "სიტყვები",
+    "მოძრაობა",
+    "ქართულად",
+    "დაწყება"
+  ]
+}

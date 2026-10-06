@@ -1,0 +1,800 @@
+[
+  {
+    "op": "route",
+    "arg": "/game/never",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "ყველა, 276 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "☕️ ყოველდღიური, 66 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏠 სახლში და ოჯახში, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "✈️ მოგზაურობა, 65 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎒 სკოლა და სამსახური, 57 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍽 სუფრა და სტუმრობა, 38 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Never Have I Ever",
+        "კატეგორიები",
+        "ყველა",
+        "ყოველდღიური",
+        "სახლში და ოჯახში",
+        "მოგზაურობა",
+        "სკოლა და სამსახური",
+        "სუფრა და სტუმრობა",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა დებულება",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სხვა",
+        "მე არასდროს",
+        "გამომიტოვებია ნათესავის ზარი და მერე მითქვამს, რომ ვერ გავიგონე.",
+        "თუ გაგიკეთებია, ერთი თითი მოკეცე.",
+        "შემდეგი",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა დებულება",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სხვა",
+        "მე არასდროს",
+        "შევსულვარ ლიფტში და ღილაკზე დაჭერა დამვიწყებია.",
+        "თუ გაგიკეთებია, ერთი თითი მოკეცე.",
+        "შემდეგი",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა დებულება",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სხვა",
+        "მე არასდროს",
+        "მითქვამს „ვთანხმდები“ შეხვედრაზე, რომელსაც არ ვუსმენდი.",
+        "თუ გაგიკეთებია, ერთი თითი მოკეცე.",
+        "შემდეგი",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშის ძიება",
+          "role": "button"
+        },
+        {
+          "label": "ბოლოს ითამაშეთ Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "Heads Up. შუბლზე დაიდე და გამოიცანი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Heads Up",
+          "role": "button"
+        },
+        {
+          "label": "Most Likely. ვის შეეფერება ეს აღწერა?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Most Likely",
+          "role": "button"
+        },
+        {
+          "label": "Rate Them. გამოიცანი მეგობრის შეფასება.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Rate Them",
+          "role": "button"
+        },
+        {
+          "label": "Spyfall. იპოვე, ვის აქვს სხვა სიტყვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Spyfall",
+          "role": "button"
+        },
+        {
+          "label": "Mafia. გამოიცანი, ვინ არის მაფია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Mafia",
+          "role": "button"
+        },
+        {
+          "label": "No Yes No. უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — No Yes No",
+          "role": "button"
+        },
+        {
+          "label": "Bomb Party. თქვი სიტყვა და გადაეცი ტელეფონი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Bomb Party",
+          "role": "button"
+        },
+        {
+          "label": "Don't Laugh. ეცადე, არ გაგეცინოს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Don't Laugh",
+          "role": "button"
+        },
+        {
+          "label": "Alias. აუხსენი სიტყვა შენს გუნდს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Alias",
+          "role": "button"
+        },
+        {
+          "label": "Who Am I?. კითხვებით გამოიცანი, ვინ ხარ.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Am I?",
+          "role": "button"
+        },
+        {
+          "label": "Word Rush. რამდენ სიტყვას მოასწრებ?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Word Rush",
+          "role": "button"
+        },
+        {
+          "label": "Imposter. გამოიცანი, ვინ ბლეფობს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Imposter",
+          "role": "button"
+        },
+        {
+          "label": "Who Wrote It?. გამოიცანი, ვინ დაწერა პასუხი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Wrote It?",
+          "role": "button"
+        },
+        {
+          "label": "2 Truths, 1 Lie. სამი ამბიდან რომელია ტყუილი?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — 2 Truths, 1 Lie",
+          "role": "button"
+        },
+        {
+          "label": "Herd Mentality. უპასუხე ისე, როგორც უმრავლესობა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Herd Mentality",
+          "role": "button"
+        },
+        {
+          "label": "The Line. ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — The Line",
+          "role": "button"
+        },
+        {
+          "label": "Wavelength. გამოიცანით ადგილი შკალაზე.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Wavelength",
+          "role": "button"
+        },
+        {
+          "label": "Never Have I Ever. აღიარე, თუ შენც გაგიკეთებია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Never Have I Ever",
+          "role": "button"
+        },
+        {
+          "label": "House Rules. დაიმახსოვრე და დაიცავი წესები.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — House Rules",
+          "role": "button"
+        },
+        {
+          "label": "Do or Pay. შეასრულე დავალება ან მიიღე ჯარიმა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "Truth or Dare. სიმართლე თუ მოქმედება?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Truth or Dare",
+          "role": "button"
+        },
+        {
+          "label": "მოთამაშეები",
+          "role": "button"
+        },
+        {
+          "label": "პარამეტრები",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ᲠᲐᲡ ᲕᲘᲗᲐᲛᲐᲨᲔᲑᲗ?",
+        "ᲑᲝᲚᲝᲡ ᲘᲗᲐᲛᲐᲨᲔᲗ",
+        "შეასრულე დავალება ან მიიღე ჯარიმა.",
+        "ᲞᲝᲞᲣᲚᲐᲠᲣᲚᲘ",
+        "შუბლზე დაიდე და გამოიცანი.",
+        "ვის შეეფერება ეს აღწერა?",
+        "გამოიცანი მეგობრის შეფასება.",
+        "იპოვე, ვის აქვს სხვა სიტყვა.",
+        "გამოიცანი, ვინ არის მაფია.",
+        "უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+        "ᲮᲛᲐᲣᲠᲘ ᲓᲐ ᲡᲘᲡᲬᲠᲐᲤᲔ",
+        "7",
+        "თქვი სიტყვა და გადაეცი ტელეფონი.",
+        "ეცადე, არ გაგეცინოს.",
+        "აუხსენი სიტყვა შენს გუნდს.",
+        "კითხვებით გამოიცანი, ვინ ხარ.",
+        "რამდენ სიტყვას მოასწრებ?",
+        "ᲑᲚᲔᲤᲘ ᲓᲐ ᲒᲐᲛᲝᲪᲜᲝᲑᲐ",
+        "5",
+        "გამოიცანი, ვინ ბლეფობს.",
+        "გამოიცანი, ვინ დაწერა პასუხი.",
+        "სამი ამბიდან რომელია ტყუილი?",
+        "ᲛᲐᲒᲘᲓᲘᲡ ᲙᲘᲗᲮᲕᲐ",
+        "უპასუხე ისე, როგორც უმრავლესობა.",
+        "ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+        "გამოიცანით ადგილი შკალაზე.",
+        "ᲒᲣᲚᲐᲮᲓᲘᲚᲐᲓ",
+        "4",
+        "აღიარე, თუ შენც გაგიკეთებია.",
+        "დაიმახსოვრე და დაიცავი წესები.",
+        "სიმართლე თუ მოქმედება?",
+        "თამაშები",
+        "მოთამაშე",
+        "მართვა"
+      ]
+    }
+  },
+  {
+    "op": "route",
+    "arg": "/game/never",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "ყველა, 276 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "☕️ ყოველდღიური, 66 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏠 სახლში და ოჯახში, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "✈️ მოგზაურობა, 65 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎒 სკოლა და სამსახური, 57 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍽 სუფრა და სტუმრობა, 38 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Never Have I Ever",
+        "კატეგორიები",
+        "ყველა",
+        "ყოველდღიური",
+        "სახლში და ოჯახში",
+        "მოგზაურობა",
+        "სკოლა და სამსახური",
+        "სუფრა და სტუმრობა",
+        "დაწყება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა დებულება",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სხვა",
+        "მე არასდროს",
+        "მიცდია მეზობლის კარის გაღება ჩემი გასაღებით.",
+        "თუ გაგიკეთებია, ერთი თითი მოკეცე.",
+        "შემდეგი",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "შემდეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "სხვა დებულება",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "სხვა",
+        "მე არასდროს",
+        "დამიმალავს ბოლო ნაჭერი მეორე დღისთვის.",
+        "თუ გაგიკეთებია, ერთი თითი მოკეცე.",
+        "შემდეგი",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "op": "press",
+    "arg": "დასრულება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშის ძიება",
+          "role": "button"
+        },
+        {
+          "label": "ბოლოს ითამაშეთ Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "Heads Up. შუბლზე დაიდე და გამოიცანი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Heads Up",
+          "role": "button"
+        },
+        {
+          "label": "Most Likely. ვის შეეფერება ეს აღწერა?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Most Likely",
+          "role": "button"
+        },
+        {
+          "label": "Rate Them. გამოიცანი მეგობრის შეფასება.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Rate Them",
+          "role": "button"
+        },
+        {
+          "label": "Spyfall. იპოვე, ვის აქვს სხვა სიტყვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Spyfall",
+          "role": "button"
+        },
+        {
+          "label": "Mafia. გამოიცანი, ვინ არის მაფია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Mafia",
+          "role": "button"
+        },
+        {
+          "label": "No Yes No. უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — No Yes No",
+          "role": "button"
+        },
+        {
+          "label": "Bomb Party. თქვი სიტყვა და გადაეცი ტელეფონი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Bomb Party",
+          "role": "button"
+        },
+        {
+          "label": "Don't Laugh. ეცადე, არ გაგეცინოს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Don't Laugh",
+          "role": "button"
+        },
+        {
+          "label": "Alias. აუხსენი სიტყვა შენს გუნდს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Alias",
+          "role": "button"
+        },
+        {
+          "label": "Who Am I?. კითხვებით გამოიცანი, ვინ ხარ.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Am I?",
+          "role": "button"
+        },
+        {
+          "label": "Word Rush. რამდენ სიტყვას მოასწრებ?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Word Rush",
+          "role": "button"
+        },
+        {
+          "label": "Imposter. გამოიცანი, ვინ ბლეფობს.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Imposter",
+          "role": "button"
+        },
+        {
+          "label": "Who Wrote It?. გამოიცანი, ვინ დაწერა პასუხი.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Who Wrote It?",
+          "role": "button"
+        },
+        {
+          "label": "2 Truths, 1 Lie. სამი ამბიდან რომელია ტყუილი?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — 2 Truths, 1 Lie",
+          "role": "button"
+        },
+        {
+          "label": "Herd Mentality. უპასუხე ისე, როგორც უმრავლესობა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Herd Mentality",
+          "role": "button"
+        },
+        {
+          "label": "The Line. ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — The Line",
+          "role": "button"
+        },
+        {
+          "label": "Wavelength. გამოიცანით ადგილი შკალაზე.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Wavelength",
+          "role": "button"
+        },
+        {
+          "label": "Never Have I Ever. აღიარე, თუ შენც გაგიკეთებია.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Never Have I Ever",
+          "role": "button"
+        },
+        {
+          "label": "House Rules. დაიმახსოვრე და დაიცავი წესები.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — House Rules",
+          "role": "button"
+        },
+        {
+          "label": "Do or Pay. შეასრულე დავალება ან მიიღე ჯარიმა.",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Do or Pay",
+          "role": "button"
+        },
+        {
+          "label": "Truth or Dare. სიმართლე თუ მოქმედება?",
+          "role": "button"
+        },
+        {
+          "label": "წესები — Truth or Dare",
+          "role": "button"
+        },
+        {
+          "label": "მოთამაშეები",
+          "role": "button"
+        },
+        {
+          "label": "პარამეტრები",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ᲠᲐᲡ ᲕᲘᲗᲐᲛᲐᲨᲔᲑᲗ?",
+        "ᲑᲝᲚᲝᲡ ᲘᲗᲐᲛᲐᲨᲔᲗ",
+        "შეასრულე დავალება ან მიიღე ჯარიმა.",
+        "ᲞᲝᲞᲣᲚᲐᲠᲣᲚᲘ",
+        "შუბლზე დაიდე და გამოიცანი.",
+        "ვის შეეფერება ეს აღწერა?",
+        "გამოიცანი მეგობრის შეფასება.",
+        "იპოვე, ვის აქვს სხვა სიტყვა.",
+        "გამოიცანი, ვინ არის მაფია.",
+        "უპასუხე ისე, რომ „კი“ ან „არა“ არ თქვა.",
+        "ᲮᲛᲐᲣᲠᲘ ᲓᲐ ᲡᲘᲡᲬᲠᲐᲤᲔ",
+        "7",
+        "თქვი სიტყვა და გადაეცი ტელეფონი.",
+        "ეცადე, არ გაგეცინოს.",
+        "აუხსენი სიტყვა შენს გუნდს.",
+        "კითხვებით გამოიცანი, ვინ ხარ.",
+        "რამდენ სიტყვას მოასწრებ?",
+        "ᲑᲚᲔᲤᲘ ᲓᲐ ᲒᲐᲛᲝᲪᲜᲝᲑᲐ",
+        "5",
+        "გამოიცანი, ვინ ბლეფობს.",
+        "გამოიცანი, ვინ დაწერა პასუხი.",
+        "სამი ამბიდან რომელია ტყუილი?",
+        "ᲛᲐᲒᲘᲓᲘᲡ ᲙᲘᲗᲮᲕᲐ",
+        "უპასუხე ისე, როგორც უმრავლესობა.",
+        "ნორმაა თუ გადამეტებაა? იმსჯელეთ ერთად.",
+        "გამოიცანით ადგილი შკალაზე.",
+        "ᲒᲣᲚᲐᲮᲓᲘᲚᲐᲓ",
+        "4",
+        "აღიარე, თუ შენც გაგიკეთებია.",
+        "დაიმახსოვრე და დაიცავი წესები.",
+        "სიმართლე თუ მოქმედება?",
+        "თამაშები",
+        "მოთამაშე",
+        "მართვა"
+      ]
+    }
+  }
+]

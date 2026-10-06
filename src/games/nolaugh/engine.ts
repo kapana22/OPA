@@ -2,8 +2,8 @@ import { Observable } from '../../core/observable';
 import { ContentShoe } from '../../core/contentShoe';
 import { Ticker } from '../../core/ticker';
 import { TurnRotation } from '../../core/turnRotation';
-import { loadSettings, saveSettings, num, categoryID } from '../../core/settings';
-import { LaughBank } from '../../content/banks';
+import { loadSettings, saveSettings, num, categoryIDs, cleanCategoryIDs, selectionKey } from '../../core/settings';
+import { LaughBank, selectionName } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import type { Player } from '../../core/roster';
@@ -21,11 +21,12 @@ export type NoLaughVerdict = 'survived' | 'laughed';
 export interface NoLaughSettings {
   seconds: number;
   laps: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
 }
 
 const KEY = 'splash.nolaugh.settings.v2'; // v1 ცალობით რაუნდს ინახავდა
-const DEFAULTS: NoLaughSettings = { seconds: 45, laps: 1, categoryID: null };
+const DEFAULTS: NoLaughSettings = { seconds: 45, laps: 1, categoryIDs: [] };
 
 export class NoLaughEngine extends Observable {
   readonly players: Player[];
@@ -34,9 +35,7 @@ export class NoLaughEngine extends Observable {
   phase: NoLaughPhase = 'setup';
   round = 1;
   currentTask = '';
-  tasksThisRound = 1;
   remaining = 0;
-  isPaused = false;
   verdict: NoLaughVerdict = 'survived';
   scores: Record<string, number> = {};
 
@@ -49,7 +48,7 @@ export class NoLaughEngine extends Observable {
     this.settings = loadSettings<NoLaughSettings>(KEY, DEFAULTS, (s) => ({
       seconds: num(s.seconds, DEFAULTS.seconds, 15, 120),
       laps: num(s.laps, DEFAULTS.laps, 1, 3),
-      categoryID: categoryID(s.categoryID, (id) => LaughBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => LaughBank.category(id) !== undefined),
     }));
   }
 
@@ -75,7 +74,7 @@ export class NoLaughEngine extends Observable {
   }
 
   get categoryName(): string {
-    return (this.settings.categoryID ? LaughBank.category(this.settings.categoryID) : undefined)?.name ?? 'ყველა კატეგორია';
+    return selectionName(LaughBank.categories, this.settings.categoryIDs);
   }
 
   scoreFor(player: Player): number {
@@ -95,7 +94,7 @@ export class NoLaughEngine extends Observable {
     return top && this.scoreFor(top) > 0 ? top : null;
   }
 
-  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  /** ფრეზე ყველა პირველია. */
   get champions(): Player[] {
     const best = this.champion;
     if (!best) return [];
@@ -117,8 +116,8 @@ export class NoLaughEngine extends Observable {
 
   startGame(): void {
     this.shoe = new ContentShoe(
-      `laugh.${this.settings.categoryID ?? 'all'}`,
-      LaughBank.deck(this.settings.categoryID),
+      `laugh.${selectionKey(this.settings.categoryIDs)}`,
+      LaughBank.deck(this.settings.categoryIDs),
     );
     this.round = 1;
     this.scores = {};
@@ -128,9 +127,7 @@ export class NoLaughEngine extends Observable {
 
   beginRound(): void {
     if (this.phase !== 'announce') return;
-    this.tasksThisRound = 1;
     this.remaining = this.settings.seconds;
-    this.isPaused = false;
     this.verdict = 'survived';
     this.drawTask();
     this.phase = 'round';
@@ -140,15 +137,7 @@ export class NoLaughEngine extends Observable {
 
   nextTask(): void {
     if (this.phase !== 'round') return;
-    this.tasksThisRound += 1;
     this.drawTask();
-    Haptics.tap();
-    this.notify();
-  }
-
-  togglePause(): void {
-    if (this.phase !== 'round') return;
-    this.isPaused = !this.isPaused;
     Haptics.tap();
     this.notify();
   }
@@ -198,7 +187,6 @@ export class NoLaughEngine extends Observable {
 
   private startTicker(): void {
     this.ticker.start(1, () => {
-      if (this.isPaused) return;
       if (this.remaining <= 0) {
         this.survive();
         return;
@@ -236,8 +224,11 @@ export class NoLaughEngine extends Observable {
     this.settings = { ...this.settings, laps: Math.min(Math.max(1, value), 3) };
     this.persist();
   }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => LaughBank.category(id) !== undefined),
+    };
     this.persist();
   }
 

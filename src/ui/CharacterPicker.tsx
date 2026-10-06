@@ -1,19 +1,23 @@
 import { useState } from 'react';
-import { Image, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ALL_ORIENTATIONS } from './modalOrientations';
+import { Image, Modal, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRoster } from '../state/state';
-import { Colors, Radius, body, title, toTT } from '../theme/theme';
+import { Colors, Controls, Radius, body, title, toTT } from '../theme/theme';
 import { PLAYER_CHARACTERS } from './playerCharacters';
 import { Pressable } from './Pressable';
 import { GhostButton } from './Buttons';
 import { Haptics } from '../core/haptics';
 import type { PlayerGender } from '../core/characters';
+import { needsSingleColumn } from '../theme/responsive';
 
 type FilterType = 'all' | PlayerGender;
 
 export function CharacterPicker({ playerID, onClose }: { playerID: string | null; onClose: () => void }) {
   const roster = useRoster();
   const insets = useSafeAreaInsets();
+  const { width, fontScale } = useWindowDimensions();
+  const singleColumn = needsSingleColumn(width, fontScale);
   const player = roster.players.find(p => p.id === playerID);
   const [filter, setFilter] = useState<FilterType>('all');
 
@@ -30,14 +34,11 @@ export function CharacterPicker({ playerID, onClose }: { playerID: string | null
   );
 
   return (
-    <Modal visible={!!player} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal supportedOrientations={ALL_ORIENTATIONS} visible={!!player} transparent animationType="slide" onRequestClose={onClose}>
       <View style={[styles.backdrop, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }]}>
         <View style={styles.header}>
           <Text style={[title(22), { color: Colors.textPrimary }]}>
             {player?.name} — {toTT('პერსონაჟი')}
-          </Text>
-          <Text style={[body(13, '500'), { color: Colors.textSecondary }]}>
-            დაკავებულს თუ აირჩევ, პერსონაჟებს გაცვლით.
           </Text>
         </View>
 
@@ -46,8 +47,8 @@ export function CharacterPicker({ playerID, onClose }: { playerID: string | null
           {(
             [
               { key: 'all', label: 'ყველა' },
-              { key: 'boy', label: '👦 ბიჭები' },
-              { key: 'girl', label: '👧 გოგოები' },
+              { key: 'boy', label: 'ბიჭები' },
+              { key: 'girl', label: 'გოგოები' },
             ] as const
           ).map((tab) => {
             const active = filter === tab.key;
@@ -56,11 +57,12 @@ export function CharacterPicker({ playerID, onClose }: { playerID: string | null
                 key={tab.key}
                 accessibilityRole="button"
                 accessibilityLabel={tab.label}
+                accessibilityState={{ selected: active }}
                 onPress={() => {
                   Haptics.tap();
                   setFilter(tab.key);
                 }}
-                style={[styles.filterTab, active && styles.filterTabActive]}
+                style={[styles.filterTab, singleColumn && { flexBasis: '42%' }, active && styles.filterTabActive]}
               >
                 <Text
                   style={[
@@ -76,6 +78,9 @@ export function CharacterPicker({ playerID, onClose }: { playerID: string | null
         </View>
 
         <ScrollView contentContainerStyle={styles.grid}>
+          <Text style={[body(13, '500'), { color: Colors.textSecondary, width: '100%' }]}>
+            დაკავებულს თუ აირჩევ, პერსონაჟებს გაცვლით.
+          </Text>
           {items.map(({ character, id }) => {
             const owner = roster.players.find((p) => p.characterID === id);
             const selected = player?.characterID === id;
@@ -91,6 +96,7 @@ export function CharacterPicker({ playerID, onClose }: { playerID: string | null
                 }}
                 style={[
                   styles.card,
+                  singleColumn && { width: '100%' },
                   selected && styles.cardSelected,
                 ]}
               >
@@ -106,7 +112,6 @@ export function CharacterPicker({ playerID, onClose }: { playerID: string | null
                     body(10, '600'),
                     { color: owner ? Colors.textSecondary : Colors.phosphor, textAlign: 'center' },
                   ]}
-                  numberOfLines={1}
                 >
                   {owner ? (owner.id === player?.id ? 'არჩეულია' : owner.name) : 'თავისუფალია'}
                 </Text>
@@ -132,6 +137,7 @@ const styles = StyleSheet.create({
   },
   filterRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     backgroundColor: Colors.surface,
     padding: 3,
     borderRadius: Radius.small,
@@ -141,6 +147,7 @@ const styles = StyleSheet.create({
   },
   filterTab: {
     flex: 1,
+    minHeight: Controls.compact.minHeight,
     paddingVertical: 8,
     alignItems: 'center',
     justifyContent: 'center',

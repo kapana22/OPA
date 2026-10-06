@@ -5,11 +5,12 @@ import { TurnRotation } from '../../core/turnRotation';
 import { TiltSensor } from '../../core/tiltSensor';
 import { Screen } from '../../core/screen';
 import { uuid } from '../../core/id';
-import { loadSettings, saveSettings, num, bool, categoryID } from '../../core/settings';
-import { CharadesBank } from '../../content/banks';
+import { loadSettings, saveSettings, num, bool, categoryIDs, cleanCategoryIDs, selectionKey } from '../../core/settings';
+import { CharadesBank, selectionName } from '../../content/banks';
 import { Haptics } from '../../core/haptics';
 import { Sound } from '../../core/sound';
 import type { Player } from '../../core/roster';
+import type { TiltDirection } from '../../core/tiltGate';
 
 /**
  * „ტელეფონი შუბლზე“ (Heads Up) — მაგიდა ხსნის, მფლობელი გამოიცნობს.
@@ -37,12 +38,20 @@ export interface CharadesFlash {
 export interface CharadesSettings {
   seconds: number;
   laps: number;
-  categoryID: string | null;
+  /** მონიშნული კატეგორიები; `[]` — ყველა. */
+  categoryIDs: string[];
+  /** დახრის შებრუნება — წინ „გამოტოვება“, უკან „გამოვიცანი“. */
   invertTilt: boolean;
 }
 
+/** დახრის მიმართულება → პასუხი; `invert` — მიმართულებები გაცვლილია. */
+export function tiltVerdict(direction: TiltDirection, invert: boolean): CharadesVerdict {
+  const forward = direction === 'forward';
+  return forward !== invert ? 'correct' : 'skipped';
+}
+
 const KEY = 'splash.charades.settings.v2'; // v1 ცალობით ჯერს ინახავდა
-const DEFAULTS: CharadesSettings = { seconds: 60, laps: 1, categoryID: null, invertTilt: false };
+const DEFAULTS: CharadesSettings = { seconds: 60, laps: 1, categoryIDs: [], invertTilt: false };
 
 /** ორ პასუხს შორის მინიმალური შუალედი (მწმ) — ორმაგი შეხება ან დახრა მეორე, უნახავ სიტყვას არ ჩაითვლის. */
 export const REGISTER_GAP_MS = 600;
@@ -72,7 +81,7 @@ export class CharadesEngine extends Observable {
     this.settings = loadSettings<CharadesSettings>(KEY, DEFAULTS, (s) => ({
       seconds: num(s.seconds, DEFAULTS.seconds, 15, 180),
       laps: num(s.laps, DEFAULTS.laps, 1, 3),
-      categoryID: categoryID(s.categoryID, (id) => CharadesBank.category(id) !== undefined),
+      categoryIDs: categoryIDs(s, (id) => CharadesBank.category(id) !== undefined),
       invertTilt: bool(s.invertTilt, DEFAULTS.invertTilt),
     }));
   }
@@ -127,7 +136,7 @@ export class CharadesEngine extends Observable {
     return best && this.scoreFor(best) > 0 ? best : null;
   }
 
-  /** ფრეზე ყველა პირველი — `PodiumAward`-იც ყველას +3-ს აძლევს. */
+  /** ფრეზე ყველა პირველია. */
   get champions(): Player[] {
     const best = this.champion;
     if (!best) return [];
@@ -142,8 +151,7 @@ export class CharadesEngine extends Observable {
   }
 
   get categoryLabel(): string {
-    const cat = this.settings.categoryID ? CharadesBank.category(this.settings.categoryID) : undefined;
-    return cat?.name ?? 'ყველა კატეგორია';
+    return selectionName(CharadesBank.categories, this.settings.categoryIDs);
   }
 
   get podiumResults(): { player: Player; score: number }[] {
@@ -156,8 +164,8 @@ export class CharadesEngine extends Observable {
     if (!this.canPlay) return;
     // კატეგორია რომ ამოიწუროს, სიტყვები მთელი ბანკიდან მოდის — იგივე არ მეორდება.
     this.shoe = new WideningShoe(
-      `word.${this.settings.categoryID ?? 'charades-all'}`,
-      CharadesBank.deck(this.settings.categoryID),
+      `word.${selectionKey(this.settings.categoryIDs, 'charades-all')}`,
+      CharadesBank.deck(this.settings.categoryIDs),
       'word.charades-all',
       CharadesBank.all,
     );
@@ -326,9 +334,7 @@ export class CharadesEngine extends Observable {
     this.tilt.start((direction) => {
       // გასვლის დიალოგი ღიაა — ტელეფონი ხელშია და მისი დახრა პასუხად არ ჩაითვლება.
       if (this.phase !== 'playing' || GamePause.isPaused) return;
-      const forward: CharadesVerdict = this.settings.invertTilt ? 'skipped' : 'correct';
-      const back: CharadesVerdict = this.settings.invertTilt ? 'correct' : 'skipped';
-      this.record(direction === 'forward' ? forward : back);
+      this.record(tiltVerdict(direction, this.settings.invertTilt));
     });
   }
 
@@ -357,10 +363,14 @@ export class CharadesEngine extends Observable {
     this.settings = { ...this.settings, laps: Math.min(Math.max(1, value), 3) };
     this.persist();
   }
-  setCategory(id: string | null): void {
-    this.settings = { ...this.settings, categoryID: id };
+  setCategories(ids: string[]): void {
+    this.settings = {
+      ...this.settings,
+      categoryIDs: cleanCategoryIDs(ids, (id) => CharadesBank.category(id) !== undefined),
+    };
     this.persist();
   }
+
   setInvertTilt(on: boolean): void {
     this.settings = { ...this.settings, invertTilt: on };
     this.persist();

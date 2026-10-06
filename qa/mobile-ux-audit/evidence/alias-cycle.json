@@ -1,0 +1,3338 @@
+[
+  {
+    "at": "2026-10-03T21:31:44.146Z",
+    "op": "route",
+    "arg": "/game/alias",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "2 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "3 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "4 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "30",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "50",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "70",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "გამოტოვების ჯარიმა",
+          "role": "switch",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "გუნდების შედგენა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Alias",
+        "გუნდები",
+        "მეტი გუნდისთვის მეტი მოთამაშეა საჭირო — თითოში ორი მაინც.",
+        "რაუნდის ხანგრძლივობა",
+        "ქულების ლიმიტი",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "გამოტოვების ჯარიმა",
+        "გამოტოვებული სიტყვა −1 ქულაა",
+        "გუნდების შედგენა"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:31:46.074Z",
+    "op": "press",
+    "arg": "30 წამი",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "2 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "3 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "4 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "30",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "50",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "70",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "გამოტოვების ჯარიმა",
+          "role": "switch",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "გუნდების შედგენა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Alias",
+        "გუნდები",
+        "მეტი გუნდისთვის მეტი მოთამაშეა საჭირო — თითოში ორი მაინც.",
+        "რაუნდის ხანგრძლივობა",
+        "ქულების ლიმიტი",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "გამოტოვების ჯარიმა",
+        "გამოტოვებული სიტყვა −1 ქულაა",
+        "გუნდების შედგენა"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:31:47.981Z",
+    "op": "press",
+    "arg": "30",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "2 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "3 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "4 გუნდი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "30 წამი",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "60 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "90 წამი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "30",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "50",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "70",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "ყველა, 651 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍽 ქართული სუფრა, 51 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏔 საქართველო, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⭐️ ცნობილი ქართველები, 58 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎭 ქართული ტრადიცია, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏙 ყოფა-ცხოვრება, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏃 ქმედებები, 74 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "😄 ემოციები, 84 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 ზეიმი, 46 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌟 მსოფლიოს ცნობილები, 73 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 სიტუაციები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "გამოტოვების ჯარიმა",
+          "role": "switch",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "გუნდების შედგენა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Alias",
+        "გუნდები",
+        "მეტი გუნდისთვის მეტი მოთამაშეა საჭირო — თითოში ორი მაინც.",
+        "რაუნდის ხანგრძლივობა",
+        "ქულების ლიმიტი",
+        "კატეგორიები",
+        "ყველა",
+        "ქართული სუფრა",
+        "საქართველო",
+        "ცნობილი ქართველები",
+        "ქართული ტრადიცია",
+        "ყოფა-ცხოვრება",
+        "ქმედებები",
+        "ემოციები",
+        "ზეიმი",
+        "ფილმები",
+        "მსოფლიოს ცნობილები",
+        "სიტუაციები",
+        "გამოტოვების ჯარიმა",
+        "გამოტოვებული სიტყვა −1 ქულაა",
+        "გუნდების შედგენა"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:31:50.006Z",
+    "op": "press",
+    "arg": "გუნდების შედგენა",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "ცისფრები — სახელის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "მარიამ — შემდეგ გუნდში",
+          "role": "button"
+        },
+        {
+          "label": "დათო — შემდეგ გუნდში",
+          "role": "button"
+        },
+        {
+          "label": "ლუკა — შემდეგ გუნდში",
+          "role": "button"
+        },
+        {
+          "label": "ვარდისფრები — სახელის შეცვლა",
+          "role": "button"
+        },
+        {
+          "label": "ნინო — შემდეგ გუნდში",
+          "role": "button"
+        },
+        {
+          "label": "ანა — შემდეგ გუნდში",
+          "role": "button"
+        },
+        {
+          "label": "გიორგი — შემდეგ გუნდში",
+          "role": "button"
+        },
+        {
+          "label": "ხელახლა არევა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "თამაშის დაწყება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გუნდები",
+        "2 გუნდი · 6 მოთამაშე",
+        "ცისფრები",
+        "მარიამ",
+        "დათო",
+        "ლუკა",
+        "ვარდისფრები",
+        "ნინო",
+        "ანა",
+        "გიორგი",
+        "ხელახლა არევა",
+        "თამაშის დაწყება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:31:52.181Z",
+    "op": "press",
+    "arg": "თამაშის დაწყება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ვარდისფრები",
+        "ხსნის",
+        "მარიამ",
+        "სიტყვას მხოლოდ ამხსნელი ხედავს.",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:31:54.115Z",
+    "op": "press",
+    "arg": "მზად ვართ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "მოემზადეთ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:16.117Z",
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-alias-score.txt",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:16.402Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:17.679Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:18.977Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:20.244Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:21.543Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:22.838Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:24.124Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:25.421Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:26.691Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ოჯახური",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:27.983Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "საფერავი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "შიში. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "შიმშილი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "მაჰათმა განდი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "სიხარული. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "იატაკის დაგვა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "კონტეინერი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "გაღიზიანება. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ღომი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "კურიერისგან ამანათის მიღება. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "საკურიერო მომსახურება. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ტრანსფორმერები. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "გულგრილობა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ტომი და ჯერი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "თექა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ვენახი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ოჯახური. გამოტოვებული",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი დასრულდა",
+        "ცისფრები",
+        "სადავო სიტყვას შეეხე — ნიშანი შეიცვლება.",
+        "საფერავი",
+        "+1",
+        "შიში",
+        "შიმშილი",
+        "მაჰათმა განდი",
+        "სიხარული",
+        "იატაკის დაგვა",
+        "კონტეინერი",
+        "გაღიზიანება",
+        "ღომი",
+        "კურიერისგან ამანათის მიღება",
+        "საკურიერო მომსახურება",
+        "ტრანსფორმერები",
+        "გულგრილობა",
+        "ტომი და ჯერი",
+        "თექა",
+        "ვენახი",
+        "ოჯახური",
+        "ბოლო სიტყვა — დრო ამოიწურა",
+        "0",
+        "შემდეგი გუნდი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:30.151Z",
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ვარდისფრები",
+        "ხსნის",
+        "ნინო",
+        "სიტყვას მხოლოდ ამხსნელი ხედავს.",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:32.065Z",
+    "op": "press",
+    "arg": "მზად ვართ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "მოემზადეთ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:37.709Z",
+    "op": "press",
+    "arg": "გამოტოვება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "სათამაშოების ისტორია",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:39.630Z",
+    "op": "press",
+    "arg": "გამოიცნეს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:39.916Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:41.182Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:42.478Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:43.786Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:45.090Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:46.398Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:47.673Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:48.943Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:50.242Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:51.537Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:52.819Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:54.125Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:55.409Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:56.686Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:57.987Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:32:59.279Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:33:00.557Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:33:01.846Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:33:03.132Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:33:04.506Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "იუბილე",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:33:05.807Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ელექტროენერგია. გამოტოვებული",
+          "role": "button"
+        },
+        {
+          "label": "სათამაშოების ისტორია. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "იუბილე. გამოტოვებული",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი დასრულდა",
+        "ვარდისფრები",
+        "სადავო სიტყვას შეეხე — ნიშანი შეიცვლება.",
+        "ელექტროენერგია",
+        "0",
+        "სათამაშოების ისტორია",
+        "+1",
+        "იუბილე",
+        "ბოლო სიტყვა — დრო ამოიწურა",
+        "შემდეგი გუნდი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:33:07.959Z",
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ვარდისფრები",
+        "ხსნის",
+        "დათო",
+        "სიტყვას მხოლოდ ამხსნელი ხედავს.",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:33:08.384Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ვარდისფრები",
+        "ხსნის",
+        "დათო",
+        "სიტყვას მხოლოდ ამხსნელი ხედავს.",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:16.786Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ვარდისფრები",
+        "ხსნის",
+        "დათო",
+        "სიტყვას მხოლოდ ამხსნელი ხედავს.",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:18.711Z",
+    "op": "press",
+    "arg": "მზად ვართ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "მოემზადეთ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:43.978Z",
+    "op": "eval",
+    "arg": "/tmp/freands-fix/qa-alias-score.txt",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "სანთელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:44.274Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "სანთელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:45.580Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "სანთელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:46.886Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "სანთელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:48.193Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "სანთელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:49.501Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "სანთელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:50.800Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "სანთელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:52.101Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "ელარჯი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ნიკოლოზ ბასილაშვილი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "დგომა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "კერამიკა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ფიოდორ დოსტოევსკი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ფეხსაცმლის შეკეთება. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ჯიუტობა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ალადინი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ღობე. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "სოლიდარობა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "დათო ტურაშვილი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ბოსტანი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "რობერტ დე ნირო. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "აღტაცება. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ხაშლამა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ასვლა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "შილაფლავი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ერთგულება. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "მოწიწება. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "კარნავალი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "მიქელანჯელო. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "დერეფანი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "სიცილი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ჩარლი ჩაპლინი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ბანკის ბარათის დაბლოკვა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "წყლის გათიშვა ბანაობისას. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ილიკო სუხიშვილი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "სახლში გასაღების ჩაკეტვა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "რუსთავი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "სტივენ ჰოკინგი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "ფეიერვერკი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "კბილების გამოხეხვა. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "სანთელი. გამოტოვებული",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი გუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი დასრულდა",
+        "ცისფრები",
+        "სადავო სიტყვას შეეხე — ნიშანი შეიცვლება.",
+        "ელარჯი",
+        "+1",
+        "ნიკოლოზ ბასილაშვილი",
+        "დგომა",
+        "კერამიკა",
+        "ფიოდორ დოსტოევსკი",
+        "ფეხსაცმლის შეკეთება",
+        "ჯიუტობა",
+        "ალადინი",
+        "ღობე",
+        "სოლიდარობა",
+        "დათო ტურაშვილი",
+        "ბოსტანი",
+        "რობერტ დე ნირო",
+        "აღტაცება",
+        "ხაშლამა",
+        "ასვლა",
+        "შილაფლავი",
+        "ერთგულება",
+        "მოწიწება",
+        "კარნავალი",
+        "მიქელანჯელო",
+        "დერეფანი",
+        "სიცილი",
+        "ჩარლი ჩაპლინი",
+        "ბანკის ბარათის დაბლოკვა",
+        "წყლის გათიშვა ბანაობისას",
+        "ილიკო სუხიშვილი",
+        "სახლში გასაღების ჩაკეტვა",
+        "რუსთავი",
+        "სტივენ ჰოკინგი",
+        "ფეიერვერკი",
+        "კბილების გამოხეხვა",
+        "სანთელი",
+        "ბოლო სიტყვა — დრო ამოიწურა",
+        "0",
+        "ლიმიტი გადალახეთ. წრე ბოლომდე მიდის.",
+        "შემდეგი გუნდი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:54.301Z",
+    "op": "press",
+    "arg": "შემდეგი გუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ვარდისფრები",
+        "ხსნის",
+        "ანა",
+        "სიტყვას მხოლოდ ამხსნელი ხედავს.",
+        "მზად ვართ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:35:56.231Z",
+    "op": "press",
+    "arg": "მზად ვართ",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "მოემზადეთ"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:01.969Z",
+    "op": "press",
+    "arg": "გამოტოვება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "ალექსანდრე მაკედონელი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:03.906Z",
+    "op": "press",
+    "arg": "გამოიცნეს",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:04.200Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:05.519Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:06.825Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:08.131Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:09.436Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:10.771Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:12.054Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:13.366Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:14.674Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:15.966Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:17.273Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:18.574Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:19.867Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:21.169Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:22.474Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:23.777Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:25.080Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:26.388Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:27.691Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გამოტოვება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გამოიცნეს",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ვარდისფრები",
+        "თუშეთი",
+        "გამოტოვება",
+        "გამოიცნეს"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:28.978Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "პელე. გამოტოვებული",
+          "role": "button"
+        },
+        {
+          "label": "ალექსანდრე მაკედონელი. ჩათვლილი",
+          "role": "button"
+        },
+        {
+          "label": "თუშეთი. გამოტოვებული",
+          "role": "button"
+        },
+        {
+          "label": "შედეგები",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "რაუნდი დასრულდა",
+        "ვარდისფრები",
+        "სადავო სიტყვას შეეხე — ნიშანი შეიცვლება.",
+        "პელე",
+        "0",
+        "ალექსანდრე მაკედონელი",
+        "+1",
+        "თუშეთი",
+        "ბოლო სიტყვა — დრო ამოიწურა",
+        "შედეგები"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:31.273Z",
+    "op": "press",
+    "arg": "შედეგები",
+    "result": {
+      "controls": [
+        {
+          "label": "ახალი პარტია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გუნდების შეცვლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გამარჯვებული გუნდი",
+        "ცისფრები",
+        "★",
+        "•",
+        "ვარდისფრები",
+        "ახალი პარტია",
+        "გუნდების შეცვლა",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:31.723Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "ახალი პარტია",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "გუნდების შეცვლა",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გამარჯვებული გუნდი",
+        "ცისფრები",
+        "★",
+        "•",
+        "ვარდისფრები",
+        "ახალი პარტია",
+        "გუნდების შეცვლა",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:36:33.681Z",
+    "op": "press",
+    "arg": "ახალი პარტია",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "მზად ვართ",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ცისფრები",
+        "ვარდისფრები",
+        "ხსნის",
+        "ლუკა",
+        "სიტყვას მხოლოდ ამხსნელი ხედავს.",
+        "მზად ვართ"
+      ]
+    }
+  }
+]

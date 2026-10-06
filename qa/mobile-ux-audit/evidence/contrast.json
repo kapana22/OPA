@@ -1,0 +1,128 @@
+[
+  {
+    "text": "primary",
+    "background": "#07080A",
+    "ratio": 20.04,
+    "target": 4.5
+  },
+  {
+    "text": "secondary",
+    "background": "#07080A",
+    "ratio": 11.42,
+    "target": 4.5
+  },
+  {
+    "text": "cream",
+    "background": "#07080A",
+    "ratio": 18.4,
+    "target": 4.5
+  },
+  {
+    "text": "lavender",
+    "background": "#07080A",
+    "ratio": 11.19,
+    "target": 4.5
+  },
+  {
+    "text": "lime",
+    "background": "#07080A",
+    "ratio": 16.89,
+    "target": 4.5
+  },
+  {
+    "text": "primary",
+    "background": "#23143C",
+    "ratio": 16.98,
+    "target": 4.5
+  },
+  {
+    "text": "secondary",
+    "background": "#23143C",
+    "ratio": 9.87,
+    "target": 4.5
+  },
+  {
+    "text": "cream",
+    "background": "#23143C",
+    "ratio": 15.6,
+    "target": 4.5
+  },
+  {
+    "text": "lavender",
+    "background": "#23143C",
+    "ratio": 9.48,
+    "target": 4.5
+  },
+  {
+    "text": "lime",
+    "background": "#23143C",
+    "ratio": 14.32,
+    "target": 4.5
+  },
+  {
+    "text": "primary",
+    "background": "#302046",
+    "ratio": 14.78,
+    "target": 4.5
+  },
+  {
+    "text": "secondary",
+    "background": "#302046",
+    "ratio": 8.7,
+    "target": 4.5
+  },
+  {
+    "text": "cream",
+    "background": "#302046",
+    "ratio": 13.58,
+    "target": 4.5
+  },
+  {
+    "text": "lavender",
+    "background": "#302046",
+    "ratio": 8.25,
+    "target": 4.5
+  },
+  {
+    "text": "lime",
+    "background": "#302046",
+    "ratio": 12.46,
+    "target": 4.5
+  },
+  {
+    "text": "primary",
+    "background": "#44305D",
+    "ratio": 11.5,
+    "target": 4.5
+  },
+  {
+    "text": "secondary",
+    "background": "#44305D",
+    "ratio": 6.89,
+    "target": 4.5
+  },
+  {
+    "text": "cream",
+    "background": "#44305D",
+    "ratio": 10.56,
+    "target": 4.5
+  },
+  {
+    "text": "lavender",
+    "background": "#44305D",
+    "ratio": 6.42,
+    "target": 4.5
+  },
+  {
+    "text": "lime",
+    "background": "#44305D",
+    "ratio": 9.69,
+    "target": 4.5
+  },
+  {
+    "text": "ink on lime",
+    "background": "#C6FF00",
+    "ratio": 16.89,
+    "target": 4.5
+  }
+]

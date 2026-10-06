@@ -72,10 +72,9 @@ describe('შარადები / „ვინ ვარ მე?“ — ო�
   });
 });
 
-describe('ალიასი — ორმაგი შეხება ორ ჯარიმას არ იძლევა', () => {
-  it('register() შუალედის გარეშე ერთხელ ითვლება', () => {
+describe('ალიასი — ორმაგი შეხება ორჯერ არ ითვლება', () => {
+  it('register() შუალედის გარეშე ერთხელ ითვლება, გამოტოვება ჯარიმას არ იწვევს', () => {
     const a = new AliasEngine(names(4));
-    a.setPenalizeSkip(true);
     a.goToTeams();
     a.startMatch();
     a.beginTurn();
@@ -83,7 +82,8 @@ describe('ალიასი — ორმაგი შეხება ორ �
     expect(a.phase).toBe('playing');
     a.register('skipped');
     a.register('skipped');
-    expect(a.turnScore).toBe(-1);
+    expect(a.results.length).toBe(1);
+    expect(a.turnScore).toBe(0);
     vi.advanceTimersByTime(600);
     a.register('correct');
     expect(a.results.length).toBe(2);
@@ -145,7 +145,7 @@ describe('ბომბი — აფეთქების შემდეგ მ
 describe('სიტყვის რბოლა — კატეგორიის ცვლა ჯერზე ერთხელ', () => {
   it('მეორე ცვლა არ ხდება, შემდეგ ჯერზე ისევ შეიძლება', () => {
     const e = new WordRushEngine(names(2));
-    e.setCategory(null);
+    e.setCategories([]);
     e.startGame();
     expect(e.canSwapCategory).toBe(true);
     e.swapCategory();

@@ -1,0 +1,3333 @@
+[
+  {
+    "at": "2026-10-03T21:18:52.177Z",
+    "op": "route",
+    "arg": "/game/bomb",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "4",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "5",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "მოკლე",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "საშუალო",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "გრძელი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "შემთხვევითი, 2165 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍕 საკვები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥘 ქართული კერძები, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍎 ხილი და ბოსტნეული, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐾 ცხოველები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌿 ბუნება, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌍 ქვეყნები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🗽 ცნობილი ადგილები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📍 ადგილები, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🇬🇪 საქართველო, 43 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "💼 პროფესიები, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⚽️ სპორტი, 42 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏠 სახლის ნივთები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎒 სკოლა, 99 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎵 მუსიკა, 85 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚗 ტრანსპორტი, 72 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👗 ტანსაცმელი, 89 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ტექნოლოგია, 94 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 87 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📖 ზღაპრები, 60 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎲 სათამაშოები, 69 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥤 სასმელები, 65 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🖐 სხეული, 106 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🔧 ხელსაწყოები, 62 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👵 ოჯახი და ნათესავები, 64 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 დღესასწაულები, 47 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌦 ამინდი და სეზონები, 57 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚀 კოსმოსი, 55 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌊 ზღვა და მდინარე, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🙂 ემოციები და ხასიათი, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍳 სამზარეულო, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ინტერნეტი და აპები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐉 მითები და ჯადოქრობა, 54 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🩺 ჯანმრთელობა, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "ფითილის დანთება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Bomb Party",
+        "სიცოცხლე",
+        "ფითილის სიგრძე",
+        "კატეგორიები",
+        "შემთხვევითი",
+        "საკვები",
+        "ქართული კერძები",
+        "ხილი და ბოსტნეული",
+        "ცხოველები",
+        "ბუნება",
+        "ქვეყნები",
+        "ცნობილი ადგილები",
+        "ადგილები",
+        "საქართველო",
+        "პროფესიები",
+        "სპორტი",
+        "სახლის ნივთები",
+        "სკოლა",
+        "მუსიკა",
+        "ტრანსპორტი",
+        "ტანსაცმელი",
+        "ტექნოლოგია",
+        "ფილმები",
+        "ზღაპრები",
+        "სათამაშოები",
+        "სასმელები",
+        "სხეული",
+        "ხელსაწყოები",
+        "ოჯახი და ნათესავები",
+        "დღესასწაულები",
+        "ამინდი და სეზონები",
+        "კოსმოსი",
+        "ზღვა და მდინარე",
+        "ემოციები და ხასიათი",
+        "სამზარეულო",
+        "ინტერნეტი და აპები",
+        "მითები და ჯადოქრობა",
+        "ჯანმრთელობა",
+        "ფითილის დანთება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:18:54.121Z",
+    "op": "press",
+    "arg": "1",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "4",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "5",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "მოკლე",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "საშუალო",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "გრძელი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "შემთხვევითი, 2165 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍕 საკვები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥘 ქართული კერძები, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍎 ხილი და ბოსტნეული, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐾 ცხოველები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌿 ბუნება, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌍 ქვეყნები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🗽 ცნობილი ადგილები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📍 ადგილები, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🇬🇪 საქართველო, 43 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "💼 პროფესიები, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⚽️ სპორტი, 42 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏠 სახლის ნივთები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎒 სკოლა, 99 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎵 მუსიკა, 85 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚗 ტრანსპორტი, 72 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👗 ტანსაცმელი, 89 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ტექნოლოგია, 94 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 87 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📖 ზღაპრები, 60 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎲 სათამაშოები, 69 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥤 სასმელები, 65 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🖐 სხეული, 106 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🔧 ხელსაწყოები, 62 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👵 ოჯახი და ნათესავები, 64 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 დღესასწაულები, 47 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌦 ამინდი და სეზონები, 57 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚀 კოსმოსი, 55 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌊 ზღვა და მდინარე, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🙂 ემოციები და ხასიათი, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍳 სამზარეულო, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ინტერნეტი და აპები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐉 მითები და ჯადოქრობა, 54 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🩺 ჯანმრთელობა, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "ფითილის დანთება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Bomb Party",
+        "სიცოცხლე",
+        "ფითილის სიგრძე",
+        "კატეგორიები",
+        "შემთხვევითი",
+        "საკვები",
+        "ქართული კერძები",
+        "ხილი და ბოსტნეული",
+        "ცხოველები",
+        "ბუნება",
+        "ქვეყნები",
+        "ცნობილი ადგილები",
+        "ადგილები",
+        "საქართველო",
+        "პროფესიები",
+        "სპორტი",
+        "სახლის ნივთები",
+        "სკოლა",
+        "მუსიკა",
+        "ტრანსპორტი",
+        "ტანსაცმელი",
+        "ტექნოლოგია",
+        "ფილმები",
+        "ზღაპრები",
+        "სათამაშოები",
+        "სასმელები",
+        "სხეული",
+        "ხელსაწყოები",
+        "ოჯახი და ნათესავები",
+        "დღესასწაულები",
+        "ამინდი და სეზონები",
+        "კოსმოსი",
+        "ზღვა და მდინარე",
+        "ემოციები და ხასიათი",
+        "სამზარეულო",
+        "ინტერნეტი და აპები",
+        "მითები და ჯადოქრობა",
+        "ჯანმრთელობა",
+        "ფითილის დანთება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:18:56.062Z",
+    "op": "press",
+    "arg": "მოკლე",
+    "result": {
+      "controls": [
+        {
+          "label": "უკან",
+          "role": "button"
+        },
+        {
+          "label": "თამაშის წესები",
+          "role": "button"
+        },
+        {
+          "label": "1",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "2",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "3",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "4",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "5",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "მოკლე",
+          "role": "button",
+          "state": {
+            "selected": true
+          }
+        },
+        {
+          "label": "საშუალო",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "გრძელი",
+          "role": "button",
+          "state": {
+            "selected": false
+          }
+        },
+        {
+          "label": "შემთხვევითი, 2165 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": true
+          }
+        },
+        {
+          "label": "🍕 საკვები, 56 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥘 ქართული კერძები, 50 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍎 ხილი და ბოსტნეული, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐾 ცხოველები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌿 ბუნება, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌍 ქვეყნები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🗽 ცნობილი ადგილები, 40 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📍 ადგილები, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🇬🇪 საქართველო, 43 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "💼 პროფესიები, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "⚽️ სპორტი, 42 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🏠 სახლის ნივთები, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎒 სკოლა, 99 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎵 მუსიკა, 85 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚗 ტრანსპორტი, 72 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👗 ტანსაცმელი, 89 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ტექნოლოგია, 94 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎬 ფილმები, 87 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📖 ზღაპრები, 60 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎲 სათამაშოები, 69 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🥤 სასმელები, 65 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🖐 სხეული, 106 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🔧 ხელსაწყოები, 62 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "👵 ოჯახი და ნათესავები, 64 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🎉 დღესასწაულები, 47 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌦 ამინდი და სეზონები, 57 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🚀 კოსმოსი, 55 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🌊 ზღვა და მდინარე, 63 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🙂 ემოციები და ხასიათი, 93 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🍳 სამზარეულო, 67 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "📱 ინტერნეტი და აპები, 48 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🐉 მითები და ჯადოქრობა, 54 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "🩺 ჯანმრთელობა, 78 ჩანაწერი",
+          "role": "checkbox",
+          "state": {
+            "checked": false
+          }
+        },
+        {
+          "label": "ფითილის დანთება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "Bomb Party",
+        "სიცოცხლე",
+        "ფითილის სიგრძე",
+        "კატეგორიები",
+        "შემთხვევითი",
+        "საკვები",
+        "ქართული კერძები",
+        "ხილი და ბოსტნეული",
+        "ცხოველები",
+        "ბუნება",
+        "ქვეყნები",
+        "ცნობილი ადგილები",
+        "ადგილები",
+        "საქართველო",
+        "პროფესიები",
+        "სპორტი",
+        "სახლის ნივთები",
+        "სკოლა",
+        "მუსიკა",
+        "ტრანსპორტი",
+        "ტანსაცმელი",
+        "ტექნოლოგია",
+        "ფილმები",
+        "ზღაპრები",
+        "სათამაშოები",
+        "სასმელები",
+        "სხეული",
+        "ხელსაწყოები",
+        "ოჯახი და ნათესავები",
+        "დღესასწაულები",
+        "ამინდი და სეზონები",
+        "კოსმოსი",
+        "ზღვა და მდინარე",
+        "ემოციები და ხასიათი",
+        "სამზარეულო",
+        "ინტერნეტი და აპები",
+        "მითები და ჯადოქრობა",
+        "ჯანმრთელობა",
+        "ფითილის დანთება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:18:58.075Z",
+    "op": "press",
+    "arg": "ფითილის დანთება",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:18:59.996Z",
+    "op": "press",
+    "arg": "გადავეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:00.291Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:01.583Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:02.874Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:04.159Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:05.451Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:06.756Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:08.048Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:09.345Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:10.639Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:11.973Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🥘 ქართული კერძები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:13.265Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი რაუნდი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "გიორგი",
+        "გავარდა",
+        "ნინო",
+        "♥",
+        "",
+        "ანა",
+        "ლუკა",
+        "მარიამ",
+        "დათო",
+        "ბომბი სხვას ეჭირა? შეეხე მის სახელს.",
+        "შემდეგი რაუნდი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:15.171Z",
+    "op": "press",
+    "arg": "შემდეგი რაუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:17.082Z",
+    "op": "press",
+    "arg": "გადავეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:17.385Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:18.677Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:19.986Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:21.274Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:22.561Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:23.849Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:25.174Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:26.470Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:27.765Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:29.051Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:30.340Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:31.639Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:32.936Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:34.229Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:35.526Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:36.824Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:38.132Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:39.429Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🍕 საკვები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:40.720Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი რაუნდი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ლუკა",
+        "გავარდა",
+        "ნინო",
+        "♥",
+        "გიორგი",
+        "",
+        "ანა",
+        "მარიამ",
+        "დათო",
+        "ბომბი სხვას ეჭირა? შეეხე მის სახელს.",
+        "შემდეგი რაუნდი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:42.647Z",
+    "op": "press",
+    "arg": "შემდეგი რაუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მარიამ",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:44.558Z",
+    "op": "press",
+    "arg": "გადავეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:44.850Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:46.138Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:47.424Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:48.713Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:50.001Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:51.293Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:52.582Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:53.876Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:55.167Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:56.478Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:57.770Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:19:59.063Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:00.356Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "💼 პროფესიები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:01.641Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი რაუნდი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "დათო",
+        "გავარდა",
+        "ნინო",
+        "♥",
+        "გიორგი",
+        "",
+        "ანა",
+        "ლუკა",
+        "მარიამ",
+        "ბომბი სხვას ეჭირა? შეეხე მის სახელს.",
+        "შემდეგი რაუნდი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:03.562Z",
+    "op": "press",
+    "arg": "შემდეგი რაუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:05.471Z",
+    "op": "press",
+    "arg": "გადავეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:05.760Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:07.066Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:08.357Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:09.650Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:10.936Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:12.225Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:13.516Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:14.802Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:16.089Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:17.378Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:18.666Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:19.960Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:21.254Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:22.545Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:23.844Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🎉 დღესასწაულები",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:25.134Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შემდეგი რაუნდი",
+          "role": "button",
+          "state": {
+            "disabled": true
+          }
+        }
+      ],
+      "texts": [
+        "ანა",
+        "გავარდა",
+        "ნინო",
+        "♥",
+        "გიორგი",
+        "",
+        "ლუკა",
+        "მარიამ",
+        "დათო",
+        "ბომბი სხვას ეჭირა? შეეხე მის სახელს.",
+        "შემდეგი რაუნდი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:27.047Z",
+    "op": "press",
+    "arg": "შემდეგი რაუნდი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მარიამ",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:28.966Z",
+    "op": "press",
+    "arg": "გადავეცი",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:29.251Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:30.536Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:31.826Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:33.118Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:34.406Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:35.694Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:36.981Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:38.266Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:39.574Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:40.867Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:42.164Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:43.525Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🚗 ტრანსპორტი",
+        "გადავეცი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:44.814Z",
+    "op": "snapshot",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "შედეგი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "გავარდა",
+        "",
+        "გიორგი",
+        "ანა",
+        "ლუკა",
+        "მარიამ",
+        "♥",
+        "დათო",
+        "ბომბი სხვას ეჭირა? შეეხე მის სახელს.",
+        "შედეგი"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:46.796Z",
+    "op": "press",
+    "arg": "შედეგი",
+    "result": {
+      "controls": [
+        {
+          "label": "თავიდან",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        },
+        {
+          "label": "დასრულება",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "მარიამ",
+        "ბოლო გადარჩენილი",
+        "თავიდან",
+        "დასრულება"
+      ]
+    }
+  },
+  {
+    "at": "2026-10-03T21:20:49.016Z",
+    "op": "press",
+    "arg": "თავიდან",
+    "result": {
+      "controls": [
+        {
+          "label": "თამაშიდან გასვლა",
+          "role": "button"
+        },
+        {
+          "label": "გადავეცი",
+          "role": "button",
+          "state": {
+            "disabled": false
+          }
+        }
+      ],
+      "texts": [
+        "ნინო",
+        "ბომბი აქვს",
+        "დაასახელე",
+        "🏠 სახლის ნივთები",
+        "გადავეცი"
+      ]
+    }
+  }
+]

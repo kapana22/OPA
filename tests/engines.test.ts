@@ -1,10 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { __resetForTests } from '../src/core/storage';
-import { StandardsBank, DareCardBank } from '../src/content/banks';
+import { StandardsBank, DareCardBank, PointOneBank, PromptBank } from '../src/content/banks';
 import type { Player } from '../src/core/roster';
 import { StandardsEngine } from '../src/games/standards/engine';
 import { TenButEngine } from '../src/games/tenbut/engine';
-import { PointOneEngine } from '../src/games/pointone/engine';
 import { NeverEngine } from '../src/games/never/engine';
 import { MostLikelyEngine } from '../src/games/mostlikely/engine';
 import { DareCardEngine } from '../src/games/darecard/engine';
@@ -25,163 +24,40 @@ const names = (n: number): Player[] =>
 beforeEach(() => __resetForTests());
 
 // ═══ „10-ია, მაგრამ...“
-describe('TenBut — ქულა სიზუსტისა და გაკვირვებისთვის', () => {
-  it('ქულები საფეხურებად ნაწილდება, სამიზნეს გაკვირვებისთვის ქულა აღარ ერგება', () => {
-    const players = names(5);
-    const e = new TenButEngine(players);
-    e.setLaps(1);
-    e.startGame();
-    expect(e.currentHolder?.id).toBe(e.target?.id);
-
-    e.beginRating();
-    e.submit(8); // სამიზნემ 8 დაწერა
-    const guessers = e.guessers;
-    expect(guessers.some((g) => g.id === e.target?.id)).toBe(false);
-
-    e.submit(8); // ზუსტი  → +3
-    e.submit(7); // ერთით  → +2
-    e.submit(6); // ორით   → +1
-    e.submit(2); // ექვსით → 0; სამიზნეს ქულა არ ერიცხება (ტყუილს აჯილდოებდა)
-
-    expect(e.roundPoint(guessers[0])).toBe(3);
-    expect(e.roundPoint(guessers[1])).toBe(2);
-    expect(e.roundPoint(guessers[2])).toBe(1);
-    expect(e.roundPoint(guessers[3])).toBe(0);
-    expect(e.roundPoint(e.target!)).toBe(0);
-  });
-
-  it('სამიზნე შემდეგ რაუნდში იცვლება', () => {
-    const e = new TenButEngine(names(5));
-    e.setLaps(1);
-    e.startGame();
-    e.beginRating();
-    e.submit(5);
-    for (let i = 0; i < 4; i++) e.submit(5);
-    const first = e.target!;
-    e.next();
-    expect(e.target?.id).not.toBe(first.id);
-  });
-
-  it('წრეები რაუნდებად და ზღვრები', () => {
-    const t = new TenButEngine(names(5));
-    t.setLaps(2);
-    t.startGame();
-    expect(t.totalRounds).toBe(10);
-    t.setLaps(0);
-    expect(t.settings.laps).toBe(1);
-    t.setLaps(99);
-    expect(t.settings.laps).toBe(3);
-  });
-
-  it('შეფასების ზღვრები იკვეცება', () => {
-    const t = new TenButEngine(names(4));
-    t.startGame();
-    t.beginRating();
-    t.submit(99);
-    expect(t.targetScore).toBe(10);
-    t.submit(-5);
-    expect(t.guessFor(t.guessers[0])).toBe(0);
-  });
-
-  it.each([3, 4])('%i კაცზე რაუნდს ასრულებს და ქულა ირიცხება', (count) => {
-    const players = names(count);
-    const t = new TenButEngine(players);
-    t.setLaps(1);
-    t.startGame();
-    t.beginRating();
-    t.submit(7);
-    for (let i = 0; i < count - 1; i++) t.submit(7);
-    expect(t.phase).toBe('result');
-    const totals = players.map((p) => t.totalFor(p));
-    expect(totals.every((v) => v >= 0)).toBe(true);
-    expect(totals.reduce((a, b) => a + b, 0)).toBeGreaterThan(0);
-  });
-});
-
 // ═══ „ნორმაა თუ არა?“
-describe('Standards — პროგნოზი მკითხავს, ქულა უმცირესობასაც', () => {
-  it('ზუსტ პროგნოზზე +3, უმცირესობას ქულა აღარ ერგება', () => {
-    const players = names(5);
-    const e = new StandardsEngine(players);
-    e.setLaps(1);
-    e.startGame();
-    const reader = e.reader!;
-    expect(e.currentVoter?.id).toBe(reader.id);
-    expect(e.currentVoterIsReader).toBe(true);
-
-    e.beginVoting();
-    e.cast('normal', 2); // მკითხავი: „ნორმაა“, პროგნოზი 2
-    expect(e.currentVoterIsReader).toBe(false);
-    e.cast('normal');
-    e.cast('tooMuch');
-    e.cast('tooMuch');
-    e.cast('tooMuch');
-
-    expect(e.normalVotes).toBe(2);
-    expect(e.minoritySide).toBe('normal');
-    expect(players.filter((p) => e.isInMinority(p))).toHaveLength(2);
-    // მხოლოდ ზუსტი პროგნოზი — 3; უმცირესობაში მყოფი მეორე მოთამაშე ქულას არ იღებს
-    expect(e.roundPoint(reader)).toBe(3);
-    expect(players.filter((p) => e.roundPoint(p) > 0)).toHaveLength(1);
-  });
-
-  it('ერთსულოვნებაზე უმცირესობის ქულა არავის ერგება', () => {
-    const players = names(5);
-    const e = new StandardsEngine(players);
-    e.setLaps(1);
-    e.startGame();
-    e.beginVoting();
-    for (let i = 0; i < 5; i++) e.currentVoterIsReader ? e.cast('normal', 5) : e.cast('normal');
-    expect(e.minoritySide).toBeNull();
-    expect(players.filter((p) => e.roundPoint(p) > 0)).toHaveLength(1);
-  });
-
-  it.each([3, 4])('%i კაცზე უმცირესობა ერთია', (count) => {
-    const st = new StandardsEngine(names(count));
-    st.setLaps(1);
-    st.startGame();
-    st.beginVoting();
-    st.cast('normal', 1);
-    for (let i = 0; i < count - 1; i++) st.cast('tooMuch');
-    expect(st.phase).toBe('result');
-    expect(st.minoritySide).toBe('normal');
-  });
-});
-
-// ═══ „როგორც ყველა“
-describe('PointOne — ერთი მრიცხველი, არა ორი', () => {
-  it('ვარსკვლავები და არდასახელებულები ცალკე ითვლება', () => {
-    const players = names(5);
-    const e = new PointOneEngine(players);
-    e.setRounds(3);
-    e.startGame();
-    for (let r = 0; r < 3; r++) {
-      e.begin();
-      e.toggle(players[0]);
-      e.toggle(players[1]);
-      e.next();
-    }
-    expect(new Set(e.starsOfTheNight.map((p) => p.id))).toEqual(new Set([players[0].id, players[1].id]));
-    expect(e.totalFor(players[0])).toBe(3);
-    expect(e.totalFor(players[1])).toBe(3);
-    expect(new Set(e.neverNamed.map((p) => p.name))).toEqual(new Set(['ლაშა', 'მარი', 'დათო']));
-  });
-});
 
 // ═══ დასტის მეხსიერება ძრავებს შორის
+describe('TenBut — ბარათი და „შემდეგი“', () => {
+  it('სამიზნე წრეზე იცვლება, ლიმიტი არ არის; „სხვა ჩვევა“ რაუნდს არ ხარჯავს', () => {
+    const players = names(3);
+    const e = new TenButEngine(players);
+    e.startGame();
+    expect(e.phase).toBe('card');
+    expect(e.target?.id).toBe(players[0].id);
+    e.swapFlaw();
+    expect(e.round).toBe(1);
+    e.next();
+    expect(e.target?.id).toBe(players[1].id);
+    e.next();
+    e.next();
+    expect(e.target?.id).toBe(players[0].id); // წრე თავიდან
+    expect(e.phase).toBe('card');
+    e.finish();
+    expect(e.phase).toBe('summary');
+    e.next();
+    expect(e.round).toBe(4);
+  });
+});
+
 describe('დასტა — მეხსიერება პარტიებს შორის', () => {
   it('18 რაუნდი სამ პარტიაზე — გამეორება არ არის', () => {
     const players = names(4);
     const seen: string[] = [];
     for (let party = 0; party < 3; party++) {
       const e = new TenButEngine(players);
-      e.setLaps(2);
       e.startGame();
       for (let i = 0; i < 6; i++) {
         seen.push(e.currentFlaw);
-        // next() მხოლოდ შედეგის ეკრანიდან მუშაობს — რაუნდს ბოლომდე ვატარებთ.
-        e.beginRating();
-        for (let k = 0; k < players.length; k++) e.submit(5);
         e.next();
       }
     }
@@ -189,11 +65,9 @@ describe('დასტა — მეხსიერება პარტიე�
   });
 
   it('კატეგორიის შეცვლა პარტიებს შორის მეხსიერებას არ ურევს', () => {
-    const players = names(4);
     const run = (categoryID: string) => {
-      const e = new StandardsEngine(players);
-      e.setCategory(categoryID);
-      e.setLaps(1);
+      const e = new StandardsEngine();
+      e.setCategories([categoryID]);
       e.startGame();
       return Array.from({ length: 4 }, () => {
         const x = e.currentExpectation;
@@ -213,66 +87,39 @@ describe('დასტა — მეხსიერება პარტიე�
 });
 
 // ═══ დანარჩენი ძრავები — ძირითადი ნაკადი
-describe('Never — სიცოცხლეები', () => {
-  it('მონიშვნა სიცოცხლეს აკლებს და გადაბრუნება აბრუნებს', () => {
-    const players = names(4);
-    const e = new NeverEngine(players);
-    e.setLives(3);
+describe('Never — რაუნდები', () => {
+  it('ლიმიტი არ არის — მაგიდა თვითონ ასრულებს; თითების რაოდენობა 1–10-ში რჩება', () => {
+    const e = new NeverEngine(names(4));
+    e.setLives(99);
+    expect(e.settings.startingLives).toBe(10);
     e.startGame();
-    expect(e.livesLeft(players[0])).toBe(3);
-
-    e.toggle(players[0]);
-    expect(e.livesLeft(players[0])).toBe(2);
-    expect(e.isMarked(players[0])).toBe(true);
-
-    e.toggle(players[0]); // გადავიფიქრეთ
-    expect(e.livesLeft(players[0])).toBe(3);
-    expect(e.isMarked(players[0])).toBe(false);
-  });
-
-  it('სიცოცხლის ამოწურვისას ამოვარდნის რიგი ინახება', () => {
-    const players = names(4);
-    const e = new NeverEngine(players);
-    e.setLives(1);
-    e.startGame();
-    e.toggle(players[2]);
-    expect(e.isOut(players[2])).toBe(true);
-    expect(e.outOrder).toEqual([players[2].id]);
-    expect(e.eliminatedThisRound.map((p) => p.id)).toEqual([players[2].id]);
+    for (let i = 0; i < 50; i++) e.next();
+    expect(e.phase).toBe('round');
+    e.finish();
+    expect(e.phase).toBe('summary');
   });
 });
 
-describe('MostLikely — სწრაფი და ფარული რეჟიმი', () => {
-  it('სწრაფ რეჟიმში ერთი შეხება რაუნდს ასრულებს', () => {
-    const players = names(4);
-    const e = new MostLikelyEngine(players);
-    e.setMode('quick');
-    e.setRounds(3);
+describe('MostLikely — კითხვა და „შემდეგი“, ქულების გარეშე', () => {
+  it('ლიმიტი არ არის, „სხვა“ რაუნდს არ ხარჯავს, „დასრულება“ ასრულებს', () => {
+    const e = new MostLikelyEngine(names(4));
     e.startGame();
     expect(e.phase).toBe('prompt');
-    e.beginVoting();
-    e.pick(players[1]);
-    expect(e.phase).toBe('result');
-    expect(e.totalFor(players[1])).toBe(1);
+    e.skipPrompt();
+    expect(e.round).toBe(1);
+    for (let i = 0; i < 40; i++) e.next();
+    expect(e.phase).toBe('prompt');
+    e.finish();
+    expect(e.phase).toBe('summary');
+    e.next();
+    expect(e.round).toBe(41);
   });
 
-  it('ფარულ რეჟიმში ყველა იძლევა ხმას და ფრეც შესაძლებელია', () => {
-    const players = names(4);
-    const e = new MostLikelyEngine(players);
-    e.setMode('secret');
-    e.setRounds(3);
-    e.startGame();
-    e.beginVoting();
-    // საკუთარ თავს ხმას ვერავინ აძლევს.
-    e.castVote(players[1]);
-    e.castVote(players[0]);
-    e.castVote(players[1]);
-    e.castVote(players[0]);
-    expect(e.phase).toBe('result');
-    // ორ-ორი ხმა — ორივე გამარჯვებულია
-    expect(new Set(e.roundWinners)).toEqual(new Set([players[0].id, players[1].id]));
-    expect(e.totalFor(players[0])).toBe(1);
-    expect(e.totalFor(players[1])).toBe(1);
+  it('Point at One-ის კითხვები Most Likely To-შია', () => {
+    const extra = PointOneBank.categories.flatMap((c) => c.items);
+    const all = new Set(PromptBank.all);
+    expect(extra.every((t) => all.has(t))).toBe(true);
+    expect(PromptBank.category('trust')).toBeDefined();
   });
 });
 
@@ -282,7 +129,6 @@ describe('DareCard — ბარათების დასტა', () => {
     const players = names(4);
     const e = new DareCardEngine(players);
     e.setHeat('party');
-    e.setForfeit('tableChoice');
     e.setLaps(3); // 4 × 3 = 12
     e.startGame();
 
@@ -291,24 +137,17 @@ describe('DareCard — ბარათების დასტა', () => {
 
     const seen: string[] = [];
     const kinds = new Set<string>();
-    let duels = 0;
+    const holders = new Set<string>();
 
     while (e.phase === 'card') {
       seen.push(e.currentCard.text);
       kinds.add(e.currentCard.kind);
+      holders.add(e.holder!.id);
       if (e.currentCard.kind === 'duel') {
         expect(e.rival).not.toBeNull();
         expect(e.rival?.id).not.toBe(e.holder?.id);
-        expect(e.needsDuelWinner).toBe(true);
-        duels += 1;
-        e.resolveDuel(e.holder!);
-      } else if (e.currentCard.kind === 'group' || e.currentCard.kind === 'target') {
-        e.resolveParticipants({ [e.holder!.id]: seen.length % 3 === 0 ? 'forfeit' : 'done' });
-      } else if (seen.length % 3 === 0) {
-        e.markForfeit();
-      } else {
-        e.markDone();
       }
+      e.next();
     }
 
     expect(seen).toHaveLength(12);
@@ -320,13 +159,7 @@ describe('DareCard — ბარათების დასტა', () => {
     // მოწმდება და არა ერთ შემთხვევით ნიმუშზე.
     expect(kinds.size).toBeGreaterThanOrEqual(2);
 
-    const totalDone = players.reduce((n, p) => n + e.doneCount(p), 0);
-    const totalForfeit = players.reduce((n, p) => n + e.forfeitCount(p), 0);
-    // დუელი ორ ჩანაწერს ტოვებს — გამარჯვებულს და წაგებულს.
-    expect(totalDone + totalForfeit).toBe(12 + duels);
-
-    const holders = players.filter((p) => e.doneCount(p) + e.forfeitCount(p) > 0);
-    expect(holders.length).toBeGreaterThanOrEqual(4);
+    expect(holders.size).toBeGreaterThanOrEqual(4);
   });
 
   it('დასტა ოთხივე ტიპს შეიცავს — მრავალფეროვნება დასტაშია, არა ნიმუშში', () => {
@@ -334,19 +167,6 @@ describe('DareCard — ბარათების დასტა', () => {
     expect(kinds).toEqual(new Set(['solo', 'group', 'target', 'duel']));
   });
 
-  it('ჩემპიონი ყველაზე მეტს ასრულებს', () => {
-    const players = names(4);
-    const e = new DareCardEngine(players);
-    e.setLaps(2);
-    e.startGame();
-    while (e.phase === 'card') {
-      if (e.currentCard.kind === 'duel') e.resolveDuel(e.holder!);
-      else if (e.currentCard.kind === 'group' || e.currentCard.kind === 'target') e.resolveParticipants({ [e.holder!.id]: 'done' });
-      else e.markDone();
-    }
-    const best = Math.max(...players.map((p) => e.doneCount(p)));
-    expect(e.champion === null || e.doneCount(e.champion) === best).toBe(true);
-  });
 });
 
 // ═══ „მაგიდის წესები“
